@@ -73,6 +73,15 @@ export default function Home() {
     { value: toNum(hoursMoving), word: 'hours moving' },
   ].filter((m) => Number.isFinite(m.value) && m.value > 0)
 
+  // fun equivalents of the totals, for the space beside the cards
+  const funv = (needle) => toNum((fun.find((f) => (f.comparison || '').toLowerCase().includes(needle)) || {}).value)
+  const funFacts = [
+    { num: fmtInt(funv('marathon')), suffix: '', label: 'marathons' },
+    { num: fmtNum(funv('kilimanjaro'), 1), suffix: '×', label: 'up Kilimanjaro' },
+    { num: fmtNum(funv('everest'), 1), suffix: '×', label: 'up Everest' },
+    { num: String(Math.round(funv('moon') * 100)), suffix: '%', label: 'to the Moon' },
+  ].filter((f) => f.num && f.num !== 'NaN' && f.num !== '0')
+
   // ---- Derived series for the front-page charts ----
   const hours = Array.from({ length: 24 }, () => 0)
   const weekday = Object.fromEntries(WEEKDAYS.map((w) => [w, 0]))
@@ -150,7 +159,9 @@ export default function Home() {
   const gridYears = [...new Set(items.map((d) => d.year))].sort((a, b) => a - b)
   const yearCounts = gridYears.map((y) => [String(y), fmtInt(items.filter((d) => d.year === y).length)])
 
-  const menuItems = nav.filter((r) => r.route !== '/')
+  const menuItems = nav
+    .filter((r) => r.route !== '/')
+    .map((r, i) => ({ ...r, number: String(i + 1).padStart(2, '0') }))
 
   return (
     <Layout>
@@ -177,11 +188,25 @@ export default function Home() {
               2019 and turned into a near-daily habit: running, walking, hiking and riding, mostly
               around Tanzania and, over time, in {countryCount || 'seven'} countries.
             </p>
+            <div className="hero__extra">
+              <p className="eyebrow">Put another way, that is</p>
+              <ul className="funfacts">
+                {funFacts.map((f, i) => (
+                  <li key={i}>
+                    <span className="funfacts__num">
+                      {f.num}
+                      {f.suffix ? <span className="funfacts__suffix">{f.suffix}</span> : null}
+                    </span>
+                    <span className="funfacts__lbl">{f.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           <div className="hero__cards" aria-label="Headline figures">
-            <StatCard value={fmtInt(km)} unit="km" label="Distance moved" note="Roughly a third of the way around the planet." source="Overview" />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note={everests ? `About ${fmtNum(everests)} times the height of Everest.` : undefined} source="Overview" />
-            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Consecutive active days, and still counting." source="Fun Stats" />
+            <StatCard value={fmtInt(km)} unit="km" label="Distance moved" note="Roughly a third of the way around the planet." />
+            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Climbing grew from incidental to a core part of the training." />
+            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Consecutive active days, and still counting." />
           </div>
         </section>
       </Container>
