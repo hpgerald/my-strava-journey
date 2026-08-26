@@ -1,0 +1,16 @@
+metric,category,dimension,baseline_label,baseline_value,target_label,target_value,unit,direction,plain_language,source_page
+Activities logged in the year,Volume,count,2019 (Aug-Dec),27.0,2026 (Jan-Aug),258.0,activities,Grow x9.6,From a 27-activity debut half-year to 258 in eight months of 2026.,Yearly Trends
+Distance in the year,Volume,distance,2019 (Aug-Dec),304.9,2026 (Jan-Aug),2046.7,km,Grow x6.7,Yearly distance is roughly seven times the debut year.,Yearly Trends
+Moving time in the year,Volume,time,2019 (Aug-Dec),33.3,2026 (Jan-Aug),437.6,hours,Grow x13.1,More than thirteen times as many moving hours in the saddle and on foot.,Yearly Trends
+Calories burned in the year,Volume,energy,2019 (Aug-Dec),31574.0,2026 (Jan-Aug),224187.0,kcal,Grow x7.1,"A far larger training load, measured in energy spent.",Yearly Trends
+Elevation gained in the year,Terrain,elevation,2019 (Aug-Dec),518.0,2026 (Jan-Aug),17962.0,m,Grow x34.7,Climbing has gone from incidental to a defining feature of the training.,Yearly Trends
+Total relative effort in the year,Effort,effort,2019 (Aug-Dec),2398.0,2026 (Jan-Aug),8496.0,score,Grow x3.5,"The season's overall cardiovascular load, far higher now.",Zones & Effort
+Avg relative effort per activity,Effort,effort,2019 (Aug-Dec),126.0,2026 (Jan-Aug),39.0,score,Reduce x3.2,Each session is rated far less brutal now: fitness caught up with ambition.,Zones & Effort
+Avg cadence,Effort,cadence,2019 (Aug-Dec),53.8,2026 (Jan-Aug),57.2,spm,Grow x1.1,A higher cadence in 2026 reflects more running-focused training.,Zones & Effort
+Kudos received in the year,Recognition,kudos,2019 (Aug-Dec),3.0,2026 (Jan-Aug),9543.0,kudos,Sharp rise,"A bigger, more engaged following cheers the work on.",Activity Log
+Segment achievements in the year,Recognition,achievements,2019 (Aug-Dec),1.0,2026 (Jan-Aug),1344.0,achievements,Sharp rise,More segment badges as routes and efforts multiplied.,Activity Log
+Walk distance in the year,By sport,distance,2019 (Aug-Dec),13.4,2026 (Jan-Aug),916.4,km,Grow x68.4,Walking is now the single biggest source of distance.,Yearly Trends
+Run distance in the year,By sport,distance,2019 (Aug-Dec),218.0,2026 (Jan-Aug),859.8,km,Grow x3.9,Running distance kept climbing across the years.,Yearly Trends
+Trail Run distance in the year,By sport,distance,2019 (Aug-Dec),0.0,2026 (Jan-Aug),254.9,km,New,Trail running did not exist in 2019; now it is a staple.,Yearly Trends
+Gravel Ride distance in the year,By sport,distance,2019 (Aug-Dec),42.4,2026 (Jan-Aug),9.0,km,Reduce x4.7,Gravel riding spiked mid-journey and has since eased off.,Yearly Trends
+Ride distance in the year,By sport,distance,2019 (Aug-Dec),31.1,2026 (Jan-Aug),6.6,km,Reduce x4.7,Road riding was an early focus that later gave way to feet.,Yearly Trends

@@ -1,0 +1,107 @@
+/* ============================================================================
+   tokens.css  ·  Design tokens for My Strava Journey
+   Monochrome only: black / white / grey ramp. Meaning comes from type, scale,
+   rules and whitespace, never colour. Editorial, Pentagram-influenced.
+   ========================================================================== */
+
+:root {
+  /* ---- Palette: ink, paper, and a neutral grey ramp (no accent colour) ---- */
+  --ink: #111111;
+  --paper: #ffffff;
+
+  --grey-95: #1c1c1c;
+  --grey-85: #2b2b2b;
+  --grey-70: #454545;
+  --grey-55: #6b6b6b;
+  --grey-45: #8a8a8a;
+  --grey-35: #a6a6a6;
+  --grey-25: #c7c7c7;
+  --grey-15: #dcdcdc;
+  --grey-10: #e7e7e7;
+  --grey-06: #f1f1f1;
+  --grey-03: #f8f8f8;
+
+  /* ---- Accent: a single restrained colour (Strava orange), data only ---- */
+  --accent: #fc4c02;
+  --accent-strong: #d84102; /* hover / small emphasis text (passes contrast) */
+  --accent-ink: #b23400;    /* accent-coloured small text on paper: 6:1, safely AA */
+  --accent-soft: #ffe6da;   /* light tint fill / track */
+  --accent-mute: rgba(252, 76, 2, 0.14);
+
+  /* Semantic roles */
+  --fg: var(--ink);
+  --bg: var(--paper);
+  --fg-muted: var(--grey-55);
+  --fg-faint: #707070; /* 4.7:1 on white — passes AA for small secondary text */
+  --rule: var(--ink);
+  --rule-faint: var(--grey-15);
+  --fill-soft: var(--grey-03);
+  --fill-track: var(--grey-10);
+
+  /* ---- Type families (self-hosted via @fontsource) ----
+     Two-typeface system: Archivo for display, Inter for everything else.
+     --font-mono maps to Inter as well; numeric contexts use tabular figures so
+     digits still align. No monospace/serif font is loaded, so there is no
+     serif fallback anywhere. */
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* ---- Fluid type scale (neo-grotesque, big type) ---- */
+  --fs-2xs: clamp(0.66rem, 0.63rem + 0.15vw, 0.72rem);
+  --fs-xs:  clamp(0.74rem, 0.70rem + 0.18vw, 0.82rem);
+  --fs-sm:  clamp(0.84rem, 0.80rem + 0.22vw, 0.94rem);
+  --fs-base: clamp(0.98rem, 0.94rem + 0.28vw, 1.10rem);
+  --fs-md:  clamp(1.14rem, 1.05rem + 0.5vw, 1.35rem);
+  --fs-lg:  clamp(1.35rem, 1.18rem + 0.9vw, 1.85rem);
+  --fs-xl:  clamp(1.7rem, 1.35rem + 1.7vw, 2.6rem);
+  --fs-2xl: clamp(2.2rem, 1.6rem + 3vw, 3.8rem);
+  --fs-3xl: clamp(2.9rem, 1.9rem + 5vw, 5.6rem);
+  --fs-4xl: clamp(3.4rem, 1.9rem + 7.5vw, 8rem);
+
+  /* ---- Line heights & tracking ---- */
+  --lh-tight: 1.02;
+  --lh-snug: 1.12;
+  --lh-title: 1.05;
+  --lh-body: 1.55;
+  --tr-mega: -0.04em;
+  --tr-tight: -0.03em;
+  --tr-snug: -0.015em;
+  --tr-wide: 0.02em;
+  --tr-caps: 0.12em;
+
+  /* ---- Spacing scale (rem) ---- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* ---- Structure ---- */
+  --container: 78rem;
+  --measure: 46rem;
+  --hair: 1px;
+  --rule-heavy: 2px;
+  --radius: 0px; /* sharp, editorial */
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 180ms;
+  --dur-slow: 320ms;
+
+  /* ---- Focus ---- */
+  --focus-ring: 2px solid var(--ink);
+  --focus-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}
