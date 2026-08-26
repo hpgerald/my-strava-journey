@@ -1,5 +1,5 @@
 import { useWidth } from './useWidth.js'
-import { linScale, linePath, areaPath } from './primitives.js'
+import { linScale, smoothLinePath, smoothAreaPath } from './primitives.js'
 
 // A grid of tiny area charts, one per series, all sharing a y-scale so they are
 // comparable. Avoids categorical colour entirely (each panel is labelled).
@@ -37,8 +37,8 @@ export default function SmallMultiples({ series, height = 92, columns }) {
                   {s.sub}
                 </text>
               ) : null}
-              {pts.length > 1 && <path d={areaPath(pts, sy(0))} fill="var(--accent-mute)" />}
-              {pts.length > 1 && <path d={linePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinejoin="round" strokeLinecap="round" />}
+              {pts.length > 1 && <path d={smoothAreaPath(pts, sy(0))} fill="var(--accent-mute)" />}
+              {pts.length > 1 && <path d={smoothLinePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinejoin="round" strokeLinecap="round" />}
               <line x1={m.l} x2={m.l + iw} y1={sy(0)} y2={sy(0)} stroke="var(--rule-faint)" strokeWidth="1" />
             </svg>
           </div>

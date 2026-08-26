@@ -72,9 +72,6 @@ export default function About() {
               <Fact label="Data source">{meta.data_source || 'Strava API'}</Fact>
               <Fact label="Last refreshed">{meta.last_refreshed || 'recently'}</Fact>
             </dl>
-            <p className="source" style={{ marginTop: 'var(--sp-4)' }}>
-              Every figure on this site traces back to one of these sources.
-            </p>
           </aside>
         </div>
       </section>

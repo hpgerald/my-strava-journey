@@ -742,3 +742,94 @@ text.chart-panel-title {
 .factsheet__key { font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--fg-muted); }
 .factsheet__val { margin: 0; font-size: var(--fs-sm); text-align: right; }
 @media (max-width: 40rem) { .factsheet { position: static; } }
+
+/* ---- Radial hours clock (Home) ----------------------------------------- */
+.radial__center {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  pointer-events: none; width: 8rem;
+}
+.radial__big {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl);
+  line-height: 1; letter-spacing: var(--tr-tight); font-feature-settings: 'tnum' 1;
+}
+.radial__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); margin-top: 3px; }
+
+/* ---- Compact index (Home side menu) ------------------------------------ */
+.index--compact .index__link { padding: var(--sp-3) var(--sp-3); grid-template-columns: 2.6rem 1fr auto; gap: var(--sp-3); }
+.index--compact .index__title { font-size: var(--fs-md); }
+.index--compact .index__num { font-size: var(--fs-sm); }
+.index--compact .index__sub { font-size: var(--fs-xs); }
+
+/* ---- Cumulative-curve mini facts (Home) -------------------------------- */
+.cume-facts { display: flex; flex-wrap: wrap; gap: var(--sp-5) var(--sp-6); margin-top: var(--sp-3); }
+.cume-facts > div { display: flex; flex-direction: column; gap: 2px; }
+.cume-facts__num {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl);
+  line-height: 1; letter-spacing: var(--tr-tight); color: var(--accent-ink);
+  font-feature-settings: 'tnum' 1;
+}
+.cume-facts__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); }
+
+/* ---- Heat strip (Home seasonality) ------------------------------------- */
+.heatstrip__readout { display: flex; align-items: baseline; gap: var(--sp-3); margin-bottom: var(--sp-3); min-height: 2.2rem; }
+.heatstrip__num { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--accent-ink); }
+.heatstrip__cap { font-size: var(--fs-sm); color: var(--fg-muted); }
+.heatstrip__row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+.heatstrip__cellwrap { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: default; }
+.heatstrip__cell { width: 100%; height: 44px; border-radius: 4px; transition: filter var(--dur) var(--ease); }
+.heatstrip__cellwrap.is-hi .heatstrip__cell { outline: 2px solid var(--ink); outline-offset: 1px; }
+.heatstrip__lbl { font-size: var(--fs-2xs); color: var(--fg-faint); }
+
+/* ---- Dot grid: every activity as one unit (Home) ----------------------- */
+.dotgrid__legend {
+  list-style: none; margin: var(--sp-4) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4);
+}
+.dotgrid__legend li { display: inline-flex; align-items: baseline; gap: 0.45em; font-size: var(--fs-2xs); }
+.dotgrid__swatch { width: 0.7em; height: 0.7em; border-radius: 50%; align-self: center; }
+.dotgrid__count { color: var(--fg-faint); }
+
+/* ---- Animated hero: headline left, key figures stacked right ----------- */
+.hero {
+  padding-block: clamp(2rem, 6vw, 4.5rem) var(--sp-7);
+  display: grid;
+  gap: var(--sp-6);
+  align-items: stretch;
+}
+@media (min-width: 60rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1.72fr) minmax(15rem, 1fr);
+    gap: var(--sp-8);
+  }
+}
+.hero__cards { display: flex; flex-direction: column; gap: var(--sp-4); }
+.hero__cards .stat { min-height: 0; }   /* natural height, not stretched to the column */
+@media (min-width: 60rem) {
+  .hero__cards { justify-content: center; }   /* centre the three cards beside the headline */
+}
+.hero__lede { margin-top: var(--sp-5); }
+.hero__head {
+  /* sized so the longest rotating phrase fits one line in the left column */
+  font-size: clamp(2.2rem, 1.2rem + 3.6vw, 4.6rem);
+  margin: var(--sp-4) 0 0;
+  line-height: 1.03;
+}
+.hero__anchor { display: block; }
+.hero__slot {
+  display: block;
+  min-height: 1.08em;              /* reserve one line so the anchors never jump */
+  color: var(--accent-strong);    /* the rotating claim carries the accent */
+}
+.hero__rot { display: inline-block; animation: heroRotIn 0.5s var(--ease) both; }
+.hero__rotnum { font-feature-settings: 'tnum' 1; }
+@keyframes heroRotIn {
+  from { opacity: 0; transform: translateY(0.34em); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__rot { animation: none; }
+}
+
+/* heat strip: quietest-month sub line */
+.heatstrip__sub { margin: 0 0 var(--sp-4); font-size: var(--fs-sm); color: var(--fg-muted); }

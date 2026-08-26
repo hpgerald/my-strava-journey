@@ -13,8 +13,8 @@ export default function Footer() {
               My Strava Journey
             </p>
             <p className="measure text-muted" style={{ margin: 0 }}>
-              Seven years of my Strava activity, laid out so anyone can read it. Every number
-              traces back to its source. It's a record of showing up, not a finish line.
+              Seven years of my Strava activity, laid out so anyone can read it. It's a record of
+              showing up, not a finish line.
             </p>
           </div>
           <div>
@@ -40,9 +40,9 @@ export default function Footer() {
             <p className="mono text-muted" style={{ margin: 0, fontSize: 'var(--fs-sm)' }}>
               {meta.coverage_start || '2019'} &ndash; {meta.coverage_end || 'now'}
               <br />
-              {meta.total_activities || '—'} activities
+              {meta.total_activities || '1,996'} activities
               <br />
-              Refreshed {meta.last_refreshed || '—'}
+              Refreshed {meta.last_refreshed || 'recently'}
             </p>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
-import { linScale, extent, niceTicks, linePath, areaPath, bisectNearest } from './primitives.js'
+import { linScale, extent, niceTicks, smoothLinePath, smoothAreaPath, bisectNearest } from './primitives.js'
 
 // Responsive area + line for a single series over time. Accent for the mark,
 // recessive grey axes, hover crosshair + tooltip.
@@ -66,8 +66,8 @@ export default function AreaLine({ points, height = 260, yUnit = '', formatX = (
           </g>
         ))}
         {/* area + line */}
-        <path d={areaPath(pts, sy(0))} fill="var(--accent-mute)" />
-        <path d={linePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        <path d={smoothAreaPath(pts, sy(0))} fill="var(--accent-mute)" />
+        <path d={smoothLinePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         {/* x ticks */}
         {xTicks.map((t, i) => (
           <text key={i} x={sx(t.x)} y={height - 8} textAnchor="middle" className="chart-tick">

@@ -1,5 +1,5 @@
 import { useWidth } from './useWidth.js'
-import { linScale, extent, linePath, areaPath } from './primitives.js'
+import { linScale, extent, smoothLinePath, smoothAreaPath } from './primitives.js'
 
 // A small framed trend, larger and more legible than a sparkline, for pairing
 // beside body text. Shows the shape of a yearly series with its first and last
@@ -24,8 +24,8 @@ export default function MiniTrend({ values, startLabel, endLabel, caption, unit 
       {caption ? <figcaption className="minitrend__cap eyebrow">{caption}</figcaption> : null}
       <svg width="100%" height={height} viewBox={`0 0 ${w} ${height}`} role="img" aria-label={caption || 'trend'} style={{ display: 'block' }}>
         <line x1={m.l} x2={m.l + iw} y1={sy(Math.min(0, lo))} y2={sy(Math.min(0, lo))} stroke="var(--rule-faint)" strokeWidth="1" />
-        <path d={areaPath(pts, sy(Math.min(0, lo)))} fill="var(--accent-mute)" />
-        <path d={linePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        <path d={smoothAreaPath(pts, sy(Math.min(0, lo)))} fill="var(--accent-mute)" />
+        <path d={smoothLinePath(pts)} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         <circle cx={first[0]} cy={first[1]} r="3" fill="var(--paper)" stroke="var(--ink)" strokeWidth="1.5" />
         <circle cx={last[0]} cy={last[1]} r="3.6" fill="var(--accent)" stroke="var(--paper)" strokeWidth="1.5" />
         <text x={first[0]} y={first[1] - 8} textAnchor="start" className="chart-tick">{fmt(values[0])}</text>
