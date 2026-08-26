@@ -1,0 +1,13 @@
+term,definition
+Relative Effort,"Strava's measure of how hard a session was, from heart-rate time-in-zone. Higher means more cardiovascular strain."
+Kudos,"A thumbs-up from another Strava athlete, the platform's version of a like."
+PR,Personal Record: a best-ever time over a segment or standard distance.
+Achievement,A Strava badge earned on a segment (for example a top-10 or a personal best).
+Elevation gain,"Total metres climbed over an activity, summed over every uphill section."
+Cadence,"Steps per minute when running, or pedal revolutions per minute when cycling."
+Moving time,"Time spent actually moving, with auto-pauses removed. Elapsed time includes stops."
+FTP,Functional Threshold Power: the highest power in watts a cyclist can hold for about an hour.
+Heart-rate zones,"Five bands from easy (Z1) to maximal (Z5), based on max heart rate, used to gauge intensity."
+Pace zones,"Running speed bands in minutes per kilometre, from easy to fastest."
+Trainer,An indoor session (treadmill or stationary trainer) flagged by Strava; these carry no GPS.
+Relative Effort score,Same as Relative Effort; shown as a single number per activity.

@@ -1,0 +1,10 @@
+number,title,subtitle,route,category,source_page
+01,The Journey,"Seven years, one athlete, in totals",/,overview,authored
+02,By the Numbers,"Then versus now, side by side",/numbers,dashboard,authored
+03,Sports,What the training is actually made of,/sports,section,authored
+04,Records,"Longest, highest, most-loved",/records,section,authored
+05,Where,Seven countries and seventeen regions,/where,geography,authored
+06,Rhythm,"When, and how hard",/rhythm,section,authored
+07,Gear,The shoes and bikes that did the work,/gear,section,authored
+08,Timeline,The story in order,/timeline,timeline,authored
+09,What It Means,Reading these numbers as an athlete,/what-it-means,personas,authored

@@ -1,0 +1,18 @@
+region,activities,distance_km,moving_time_h,elevation_m,first_activity_date,last_activity_date,top_sport,source_page
+Dodoma,371,1992.4,422.6,13000,2021-07-18,2026-08-23,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Kilimanjaro,232,1733.5,347.8,32704,2021-07-06,2026-07-20,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Dar es Salaam,207,1416.1,288.7,4782,2019-10-12,2026-08-04,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Morogoro,85,751.7,128.2,22746,2021-07-25,2026-07-05,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Iringa,40,292.6,32.0,2418,2022-09-26,2025-08-12,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Arusha,27,687.6,36.7,7527,2019-11-03,2025-07-26,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Pwani,24,205.6,21.3,2370,2021-12-10,2026-06-30,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Zanzibar Urban/West,15,211.4,12.5,324,2022-03-06,2025-02-02,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Manyara,9,148.0,30.5,4413,2019-08-17,2026-07-12,GravelRide,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Mbeya,8,82.2,19.5,1770,2022-10-15,2026-06-19,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Mara,7,119.8,9.0,774,2022-04-16,2025-04-20,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Mwanza,5,16.3,3.0,133,2021-10-23,2021-10-24,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Njombe,4,14.9,5.6,753,2026-06-20,2026-06-21,TrailRun,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Tanga,3,16.2,3.7,675,2023-08-04,2025-08-05,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Zanzibar Central/South,3,14.6,2.3,71,2023-10-12,2025-02-01,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Rukwa,2,18.1,4.0,361,2026-02-13,2026-02-14,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Singida,1,3.8,1.4,50,2026-08-08,2026-08-08,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
