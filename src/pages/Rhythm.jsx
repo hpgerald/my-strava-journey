@@ -135,6 +135,7 @@ export default function Rhythm() {
               colLabels={BUCKETS.map((b) => b[1])}
               get={(r, c) => matrix[r][c]}
               unit="activities"
+              rowH={50}
             />
           </Figure>
           <Figure
@@ -148,6 +149,7 @@ export default function Rhythm() {
             <Columns
               data={effort.map((r) => ({ label: r.year, value: toNum(r.total_relative_effort) }))}
               unit="effort"
+              height={393}
               formatY={(v) => fmtInt(v)}
             />
           </Figure>

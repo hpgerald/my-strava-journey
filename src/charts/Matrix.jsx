@@ -3,7 +3,7 @@ import { useWidth } from './useWidth.js'
 
 // Heatmap matrix (e.g. weekday x time-of-day). Grey ramp by value, the single
 // peak cell drawn in the accent. rows/cols are label arrays; get(r,c) -> number.
-export default function Matrix({ rowLabels, colLabels, get, unit = '' }) {
+export default function Matrix({ rowLabels, colLabels, get, unit = '', rowH }) {
   const [ref, width] = useWidth(680)
   const [hover, setHover] = useState(null)
 
@@ -11,9 +11,12 @@ export default function Matrix({ rowLabels, colLabels, get, unit = '' }) {
   const gutterT = 22
   const gap = 3
   const nCols = colLabels.length
-  const cell = Math.max(20, Math.min(58, (width - gutterL - (nCols - 1) * gap) / nCols))
-  const contentW = Math.min(width, gutterL + nCols * cell + (nCols - 1) * gap)
-  const h = gutterT + rowLabels.length * (cell + gap)
+  // cell width tracks the container; cell height is fixed when rowH is given, so
+  // the matrix has a deterministic total height (lets a neighbour chart match it)
+  const cellW = Math.max(20, Math.min(58, (width - gutterL - (nCols - 1) * gap) / nCols))
+  const cellH = rowH ?? cellW
+  const contentW = Math.min(width, gutterL + nCols * cellW + (nCols - 1) * gap)
+  const h = gutterT + rowLabels.length * (cellH + gap)
 
   let max = 0
   let peak = null
@@ -40,30 +43,30 @@ export default function Matrix({ rowLabels, colLabels, get, unit = '' }) {
     <div ref={ref} style={{ position: 'relative' }}>
       <svg width={contentW} height={h} viewBox={`0 0 ${contentW} ${h}`} role="img" aria-label="Heatmap matrix" style={{ display: 'block', maxWidth: '100%' }} onMouseLeave={() => setHover(null)}>
         {colLabels.map((cl, c) => (
-          <text key={c} x={gutterL + c * (cell + gap) + cell / 2} y={14} textAnchor="middle" className="chart-tick">
+          <text key={c} x={gutterL + c * (cellW + gap) + cellW / 2} y={14} textAnchor="middle" className="chart-tick">
             {cl}
           </text>
         ))}
         {rowLabels.map((rl, r) => (
           <g key={r}>
-            <text x={gutterL - 10} y={gutterT + r * (cell + gap) + cell / 2 + 3} textAnchor="end" className="chart-tick">
+            <text x={gutterL - 10} y={gutterT + r * (cellH + gap) + cellH / 2 + 3} textAnchor="end" className="chart-tick">
               {rl}
             </text>
             {colLabels.map((_, c) => {
               const v = get(r, c) || 0
               const isPeak = peak && peak[0] === r && peak[1] === c
-              const x = gutterL + c * (cell + gap)
-              const y = gutterT + r * (cell + gap)
+              const x = gutterL + c * (cellW + gap)
+              const y = gutterT + r * (cellH + gap)
               return (
                 <rect
                   key={c}
                   x={x}
                   y={y}
-                  width={cell}
-                  height={cell}
+                  width={cellW}
+                  height={cellH}
                   rx="2"
                   fill={isPeak ? 'var(--accent)' : shade(v)}
-                  onMouseEnter={() => setHover({ x: x + cell / 2, y, r, c, v })}
+                  onMouseEnter={() => setHover({ x: x + cellW / 2, y, r, c, v })}
                 />
               )
             })}
