@@ -1,8 +1,8 @@
 key,value,source_page
 coverage_start,2019-08-17,Notes
-coverage_end,2026-08-24,Notes
-total_activities,1996,Notes
+coverage_end,2026-08-28,Notes
+total_activities,2000,Notes
 units,"Metric (km, meters, km/h)",Notes
 data_source,Strava API via connected Strava MCP,Notes
-last_refreshed,2026-08-25,Notes
+last_refreshed,2026-08-29,Notes
 refresh_cadence,Weekly automated rebuild,Notes

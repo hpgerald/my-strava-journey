@@ -1995,3 +1995,7 @@ id,date,sport,lat,lon,iso3,country,region,city,has_gps,interior,source_page
 19847181754,2026-08-22,Run,-6.17396,35.74339,TZA,Tanzania,Dodoma,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 19869277801,2026-08-23,Walk,-6.18556,35.75348,TZA,Tanzania,Dodoma,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 19881673202,2026-08-24,PhysicalTherapy,,,,,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+19897755758,2026-08-25,PhysicalTherapy,,,,,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+19903227440,2026-08-26,Run,-6.658022,39.208188,TZA,Tanzania,Dar es Salaam,Magomeni,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+19918298839,2026-08-27,Walk,-6.658025,39.208177,TZA,Tanzania,Dar es Salaam,Magomeni,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+19937773082,2026-08-28,Walk,-6.658029,39.208162,TZA,Tanzania,Dar es Salaam,Magomeni,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
