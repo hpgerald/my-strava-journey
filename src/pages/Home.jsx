@@ -218,7 +218,7 @@ export default function Home() {
           <div>
             <Figure
               title="Every activity, one dot"
-              note="One dot for each of the 1,996 activities, in order from the first upload to the latest. The colour deepens with the year, so the thin pale start and the dense recent seasons show at a glance. Hover any dot."
+              note={`One dot for each of the ${fmtInt(activityLog.length)} activities, in order from the first upload to the latest. The colour deepens with the year, so the thin pale start and the dense recent seasons show at a glance. Hover any dot.`}
               source="Activity Log"
               tableCaption="Activities by year"
               columns={['Year', 'Activities']}
@@ -301,7 +301,7 @@ export default function Home() {
 
           <Figure
             title="The year has a season"
-            note="Activities by month of the year, all seven years stacked. Training peaks in the cool dry season — July is the busiest month; the short rains around September are the quietest."
+            note="Activities by month of the year, all seven years stacked. Training peaks in the cool dry season; July is the busiest month, and the short rains around September are the quietest."
             source="Activity Log"
             tableCaption="Activities by calendar month"
             columns={['Month', 'Activities']}

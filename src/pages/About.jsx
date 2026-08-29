@@ -25,7 +25,7 @@ export default function About() {
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
             <p>
-              It covers {meta.total_activities || '1,996'} activities from {meta.coverage_start || '2019'}{' '}
+              It covers {meta.total_activities || '2,000'} activities from {meta.coverage_start || '2019'}{' '}
               to {meta.coverage_end || '2026'}: running, walking, trail running, cycling, hiking and a
               few odd others, mostly in Tanzania with the occasional trip abroad. It refreshes each week
               as new activities come in.
@@ -63,7 +63,7 @@ export default function About() {
           <aside className="factsheet" aria-label="Fact sheet">
             <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>The record, in brief</p>
             <dl className="factsheet__list">
-              <Fact label="Activities">{meta.total_activities || '1,996'}</Fact>
+              <Fact label="Activities">{meta.total_activities || '2,000'}</Fact>
               <Fact label="Coverage">
                 {(meta.coverage_start || '2019-08-17')} to {(meta.coverage_end || '2026-08-24')}
               </Fact>

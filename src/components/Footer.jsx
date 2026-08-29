@@ -40,7 +40,7 @@ export default function Footer() {
             <p className="mono text-muted" style={{ margin: 0, fontSize: 'var(--fs-sm)' }}>
               {meta.coverage_start || '2019'} &ndash; {meta.coverage_end || 'now'}
               <br />
-              {meta.total_activities || '1,996'} activities
+              {meta.total_activities || '2,000'} activities
               <br />
               Refreshed {meta.last_refreshed || 'recently'}
             </p>
