@@ -14,8 +14,6 @@ import Timeline from './pages/Timeline.jsx'
 import WhatItMeans from './pages/WhatItMeans.jsx'
 import Data from './pages/Data.jsx'
 import About from './pages/About.jsx'
-import Debug from './pages/Debug.jsx'
-import Design from './pages/Design.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 export default function App() {
@@ -45,10 +43,6 @@ export default function App() {
         {/* Data + About (Phase 8) */}
         <Route path="/data" element={<Data />} />
         <Route path="/about" element={<About />} />
-
-        {/* Dev / design */}
-        <Route path="/design" element={<Design />} />
-        <Route path="/debug" element={<Debug />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

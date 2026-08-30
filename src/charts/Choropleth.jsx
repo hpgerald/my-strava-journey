@@ -122,6 +122,14 @@ export default function Choropleth({ src, nameKey, valueKey, unit = 'activities'
               stroke={on ? 'var(--ink)' : 'var(--paper)'}
               strokeWidth={on ? 1.2 : 0.5}
               onMouseEnter={() => setHover(i)}
+              onFocus={() => {
+                setHover(i)
+                setPos({ x: width / 2, y: height / 2 })
+              }}
+              onBlur={() => setHover(null)}
+              tabIndex={0}
+              role="img"
+              aria-label={`${f.properties[nameKey]}: ${v.toLocaleString()} ${unit}`}
             />
           )
         })}

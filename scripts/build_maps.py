@@ -4,10 +4,12 @@
   tz_regions.geojson - Tanzania's real regions (Natural Earth admin-1), tagged
 """
 import json, csv, os, re
+from pathlib import Path
 import geopandas as gpd
 from shapely.geometry import mapping
 
-OUT = "/home/claude/my-strava-journey/public/data"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = os.environ.get("STRAVA_OUTPUT", str(ROOT / "public" / "data"))
 # slim Tanzania admin-1 boundaries (Natural Earth 10m), shipped in scripts/ so the
 # maps regenerate offline on each weekly refresh
 NE_ADMIN1 = os.path.join(os.path.dirname(__file__), "ne_tz_admin1.geojson")

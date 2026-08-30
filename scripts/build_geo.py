@@ -6,6 +6,7 @@ Fallback to nearest-city country only for points outside every country polygon.
 Metrics come from the workbook (source of truth), joined by activity id.
 """
 import json, glob, csv, os
+from pathlib import Path
 import numpy as np
 import polyline
 from scipy.spatial import cKDTree
@@ -14,9 +15,12 @@ import geopandas as gpd
 from shapely.geometry import Point
 from shapely.prepared import prep
 
-GEO="/home/claude/my-strava-journey/scripts/geo_raw"
-OUT="/home/claude/my-strava-journey/public/data"
-CITIES="/tmp/rgpkg/reverse_geocoder-1.5.1/reverse_geocoder/rg_cities1000.csv"
+ROOT = Path(__file__).resolve().parents[1]
+GEO = os.environ.get("STRAVA_GEO_RAW", str(ROOT / "scripts" / "geo_raw"))
+OUT = os.environ.get("STRAVA_OUTPUT", str(ROOT / "public" / "data"))
+CITIES = os.environ.get("STRAVA_CITIES")
+if not CITIES:
+    raise SystemExit("Set STRAVA_CITIES to reverse_geocoder's rg_cities1000.csv before running this script.")
 
 # ---- country polygons (Natural Earth 110m admin-0) ----
 world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))

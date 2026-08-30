@@ -1,5 +1,6 @@
 import DetailFrame from '../components/DetailFrame.jsx'
-import { useData } from '../context/DataContext.jsx'
+import { useData, useTables } from '../context/DataContext.jsx'
+import { CSV_FILES } from '../data/registry.js'
 
 const GROUPS = [
   {
@@ -70,6 +71,7 @@ const GROUPS = [
 
 export default function Data() {
   const { data } = useData()
+  useTables(CSV_FILES)
   const rowCount = (name) => (data && data[name] ? data[name].length : '—')
 
   return (

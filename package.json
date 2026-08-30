@@ -8,7 +8,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "test": "node --test",
+    "check:data": "python scripts/validate.py",
+    "check:encoding": "node scripts/check-encoding.mjs",
+    "sanitize:data": "python scripts/sanitize_public_data.py",
+    "check": "npm run check:encoding && npm run check:data && npm test && npm run build"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

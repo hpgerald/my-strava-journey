@@ -101,7 +101,6 @@ export default function SportDetail() {
             caption={`Longest ${name} activities`}
             columns={[
               { key: 'date', label: 'Date', mono: true, render: (r) => (r.date || '').slice(0, 10) },
-              { key: 'name', label: 'Activity', wrap: true },
               ...(hasDistance ? [{ key: 'distance_km', label: 'km', align: 'right', mono: true, render: (r) => fmtNum(r.distance_km) }] : []),
               { key: 'elevation_gain_m', label: 'Elev m', align: 'right', mono: true, render: (r) => fmtInt(r.elevation_gain_m) },
               { key: 'kudos', label: 'Kudos', align: 'right', mono: true, render: (r) => fmtInt(r.kudos) },

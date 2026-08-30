@@ -24,18 +24,6 @@ const fmtMon = (s) => {
 }
 const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 86400000)
 
-// Tidy a Strava activity title for display: drop hashtags, turn "|" and stray
-// "x" separators into middots, strip any separator left dangling at the end.
-const clean = (s = '') =>
-  s
-    .replace(/#\S+/g, '')
-    .replace(/\s*[|]\s*/g, ' · ')
-    .replace(/\s+[xX]\s+/g, ' · ')
-    .replace(/\s*[·|xX]\s*$/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim()
-const short = (s, n = 30) => (s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, '') + '…')
-
 export default function Records() {
   const activities = useTable('activities')
   const { prev, next } = useSectionPaging('/records')
@@ -86,7 +74,7 @@ export default function Records() {
       value: fmtInt(biggestClimb?.elevation_gain_m),
       unit: 'm up',
       title: 'Biggest climb',
-      detail: short(clean(biggestClimb?.name), 30),
+      detail: 'Highest elevation gain in a single activity',
       date: fmtFull(biggestClimb?.date),
     },
     {
@@ -114,7 +102,7 @@ export default function Records() {
       value: fmtInt(mostKudos?.kudos),
       unit: 'kudos',
       title: 'Most-cheered activity',
-      detail: short(clean(mostKudos?.name), 30),
+      detail: 'Most kudos received on a single activity',
       date: fmtFull(mostKudos?.date),
     },
   ]
@@ -142,17 +130,6 @@ export default function Records() {
       tFrac: daysBetween(days[0], hit[m]) / spanDays,
     }))
 
-  // ---- Kili Half Marathon, the annual return ----
-  const kili = activities
-    .filter((a) => /kili/i.test(a.name || '') && /half/i.test(a.name || ''))
-    .sort((a, b) => (a.date < b.date ? -1 : 1))
-  const kiliBars = kili.map((a) => ({
-    label: parseDay(a.date).getUTCFullYear().toString(),
-    value: toNum(a.moving_time_min),
-    display: `${Math.floor(toNum(a.moving_time_min) / 60)}h ${Math.round(toNum(a.moving_time_min) % 60)}m`,
-    sub: `· ${fmtInt(a.kudos)} kudos`,
-  }))
-
   // ---- furthest in each discipline ----
   const furthest = ['Run', 'TrailRun', 'Walk', 'Hike']
     .map((sp) => {
@@ -165,13 +142,13 @@ export default function Records() {
     .filter(Boolean)
     .sort((a, b) => b.value - a.value)
 
-  // ---- most-loved activities ----
+  // ---- most-loved activities, identified only by sport and month ----
   const loved = [...activities]
     .filter((a) => toNum(a.kudos) > 0)
     .sort((a, b) => toNum(b.kudos) - toNum(a.kudos))
     .slice(0, 6)
     .map((a) => ({
-      label: short(clean(a.name), 30),
+      label: `${a.sport_type} · ${fmtMon(a.date)}`,
       value: toNum(a.kudos),
       display: fmtInt(a.kudos),
       unit: 'kudos',
@@ -236,26 +213,6 @@ export default function Records() {
           <MilestoneLadder data={ladder} axisNote={`${fmtMon(days[0])} to ${fmtMon(days[days.length - 1])}`} />
         </Figure>
       </section>
-
-      {/* Kili Half Marathon */}
-      {kiliBars.length > 1 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            title="The Kilimanjaro Half, every year"
-            note="The same half marathon at the foot of Kilimanjaro, run four years running. Each bar is a finishing time; shorter is faster, and the trend is downward. The crowd shows up too, with the 2023 edition the single most-cheered activity of all."
-            source="Activity Log"
-            tableCaption="Kilimanjaro Half Marathon finishing time and kudos by year"
-            columns={['Year', 'Time', 'Kudos']}
-            rows={kili.map((a) => [
-              parseDay(a.date).getUTCFullYear().toString(),
-              `${Math.floor(toNum(a.moving_time_min) / 60)}h ${Math.round(toNum(a.moving_time_min) % 60)}m`,
-              fmtInt(a.kudos),
-            ])}
-          >
-            <BarChart data={kiliBars} showRank={false} />
-          </Figure>
-        </section>
-      )}
 
       {/* Furthest + most loved */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>

@@ -156,7 +156,6 @@ export default function Home() {
       year: Number((a.date || '').slice(0, 4)),
       date: a.date,
       sport: a.sport_type,
-      name: a.name,
     }))
     .filter((d) => Number.isFinite(d.t) && d.year)
     .sort((a, b) => a.t - b.t)

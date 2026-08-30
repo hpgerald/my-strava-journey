@@ -4,7 +4,9 @@ Numeric rows trace to a workbook sheet or the geo pass. Glossary/nav are authore
 (source_page blank / 'authored') and are logged as such in DATA_NOTES.md.
 """
 import csv, os
-OUT="/home/claude/my-strava-journey/public/data"
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+OUT = os.environ.get("STRAVA_OUTPUT", str(ROOT / "public" / "data"))
 def load(name):
     return list(csv.DictReader(open(os.path.join(OUT,name))))
 def fnum(x):

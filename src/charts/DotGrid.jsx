@@ -5,7 +5,7 @@ import { prettySport } from '../lib/slug.js'
 // A unit chart: one dot per activity, laid out in reading order (left to right,
 // top to bottom) from the very first upload to the latest. Colour deepens with
 // the year, so the thin pale start and the dense recent seasons read at a glance.
-// items: [{ year:number, date:string, sport:string, name:string }] (chronological)
+// items: [{ year:number, date:string, sport:string }] (chronological)
 // years: sorted unique years present.
 const STOPS = [
   [255, 178, 140], // earliest year (light warm)

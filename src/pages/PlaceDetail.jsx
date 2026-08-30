@@ -45,10 +45,10 @@ export default function PlaceDetail() {
       : null
 
   // notable activities in this place, from the geo join
-  const actById = new Map(activities.map((a) => [a.id, a]))
+  const actById = new Map(activities.map((a) => [a.activity_key, a]))
   const here = geo
     .filter((g) => g.has_gps === '1' && (isCountry ? g.country === name : g.region === name && g.country === 'Tanzania'))
-    .map((g) => ({ ...g, act: actById.get(g.id) || {} }))
+    .map((g) => ({ ...g, act: actById.get(g.activity_key) || {} }))
   const notable = [...here].sort((a, b) => toNum(b.act.distance_km) - toNum(a.act.distance_km)).slice(0, 6)
 
   // activities per year in this place
@@ -102,7 +102,6 @@ export default function PlaceDetail() {
             caption={`Longest activities in ${name}`}
             columns={[
               { key: 'date', label: 'Date', mono: true, render: (r) => (r.date || '').slice(0, 10) },
-              { key: 'name', label: 'Activity', wrap: true, render: (r) => r.act.name || '—' },
               { key: 'sport', label: 'Sport', render: (r) => prettySport(r.sport) },
               { key: 'km', label: 'km', align: 'right', mono: true, render: (r) => fmtNum(r.act.distance_km) },
             ]}

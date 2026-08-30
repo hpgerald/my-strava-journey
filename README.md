@@ -153,7 +153,9 @@ The project is already configured for Pages: Vite uses `base: './'` for relative
 Because the site is data-driven, a refresh is mostly a data swap:
 
 1. Regenerate the CSVs in `public/data/` from a new Strava export using the scripts in `scripts/`.
-2. Commit and push. The Action rebuilds and redeploys.
+2. Set `STRAVA_SOURCE` to the private workbook path before running `python scripts/extract_workbook.py`. The geo pass additionally reads `STRAVA_GEO_RAW` and `STRAVA_CITIES`; all scripts default their output to `public/data/` and can be redirected with `STRAVA_OUTPUT`.
+3. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
+4. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
 
@@ -168,7 +170,7 @@ The pipeline is incremental where it matters, so existing figures stay stable an
 - Figures are shown as logged on Strava. Distances, times and elevation come straight from the activities.
 - Country and region breakdowns are derived from each activity's GPS start point, using point-in-polygon against Natural Earth boundaries for the country and the nearest Tanzanian city for the region. These are approximate within a couple of kilometres of an international border, and indoor or trainer sessions carry no GPS and are counted separately.
 - Gear odometers are Strava's own lifetime totals and may include distance from before this record's earliest pulled activity.
-- Full method notes, confidence levels and known gaps are documented on the in-site **Data** page.
+- Full method notes, confidence levels and known gaps are documented on the in-site **Data** page. Public data is deliberately minimised: it contains daily-level activity metrics and country/region assignments, never titles, Strava IDs, city names or coordinates.
 
 ## Contact
 

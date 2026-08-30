@@ -4,9 +4,13 @@ Every numeric row carries source_page (= workbook sheet name).
 No figure is invented; missing cells are left blank and logged in DATA_NOTES.md.
 """
 import openpyxl, csv, os, re
+from pathlib import Path
 
-SRC = "/root/.claude/uploads/b3a043bd-b3a9-5768-937e-095a6ffd4e38/157114a7-strava_deep_dive.xlsx"
-OUT = "/home/claude/my-strava-journey/public/data"
+ROOT = Path(__file__).resolve().parents[1]
+SRC = os.environ.get("STRAVA_SOURCE")
+if not SRC:
+    raise SystemExit("Set STRAVA_SOURCE to the private Strava workbook before running this script.")
+OUT = os.environ.get("STRAVA_OUTPUT", str(ROOT / "public" / "data"))
 os.makedirs(OUT, exist_ok=True)
 wb = openpyxl.load_workbook(SRC, data_only=True)
 

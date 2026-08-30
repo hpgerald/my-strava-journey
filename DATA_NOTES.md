@@ -28,7 +28,7 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 
 | File | Source | Confidence | Notes |
 |---|---|---|---|
-| activities.csv | Activity Log | High | Full 1,996-row log, verbatim. `None` cells blanked. |
+| activities.csv | Activity Log | High | Public-safe activity log: daily metrics only; titles, IDs and exact timestamps removed. |
 | lifetime_totals.csv | Overview | High | 10 headline figures. |
 | sport_breakdown.csv | Overview | High | 15 sports; sums to 1,996 activities. |
 | yearly_totals.csv | Yearly Trends | High | 2019 & 2026 are partial years (see §4). |
@@ -43,7 +43,7 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 | meta.csv | Notes | High | Coverage, units, refresh cadence. |
 | comparisons.csv | Yearly Trends, Zones & Effort | High (derived) | 2019→2026 then/now; every value traces to a sheet. |
 | timeline.csv | Activity Log, Personal Records, Fun Stats, Strava GPS | Mixed | Milestone dates computed from the ordered log; travel dates from GPS (see §5). |
-| activity_geo.csv | Strava GPS + geocoding | Medium–High | Per-activity country/region; 880 have no GPS (see §5). |
+| activity_geo.csv | Strava GPS + geocoding | Medium–High | Per-activity country/region only; coordinates, city names and IDs removed. |
 | countries.csv | Strava GPS + point-in-polygon | Medium–High | 7 countries; border caveats in §5. |
 | tanzania_regions.csv | Strava GPS + nearest TZ city | Medium–High | 17 regions; see §5. |
 | nav_index.csv | authored | n/a | Site structure, no figures. |
