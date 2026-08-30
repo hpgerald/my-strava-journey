@@ -818,6 +818,17 @@ text.chart-panel-title {
 .factsheet__val { margin: 0; font-size: var(--fs-sm); text-align: right; }
 @media (max-width: 40rem) { .factsheet { position: static; } }
 
+/* Inline underlined link (contact list, inline references) */
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color var(--dur) var(--ease);
+}
+.link:hover,
+.link:focus-visible { color: var(--accent-ink); }
+
 /* ---- Radial hours clock (Home) ----------------------------------------- */
 .radial__center {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);

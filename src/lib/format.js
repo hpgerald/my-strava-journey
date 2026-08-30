@@ -7,7 +7,7 @@ export function toNum(v) {
   return Number.isFinite(n) ? n : null
 }
 
-// 1996 -> "1,996"
+// 2000 -> "2,000"
 export function fmtInt(v) {
   const n = toNum(v)
   if (n === null) return '—'

@@ -11,6 +11,23 @@ function Fact({ label, children }) {
   )
 }
 
+function Contact({ label, href, children, external }) {
+  return (
+    <div className="factsheet__row">
+      <dt className="factsheet__key">{label}</dt>
+      <dd className="factsheet__val mono">
+        <a
+          className="link"
+          href={href}
+          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {children}
+        </a>
+      </dd>
+    </div>
+  )
+}
+
 export default function About() {
   const meta = useKeyed('meta', 'key', 'value')
 
@@ -70,6 +87,44 @@ export default function About() {
               <Fact label="Units">{meta.units || 'metric'}</Fact>
               <Fact label="Data source">{meta.data_source || 'Strava API'}</Fact>
               <Fact label="Last refreshed">{meta.last_refreshed || 'recently'}</Fact>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <hr className="rule" />
+        <div
+          className="grid grid--2"
+          style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)', paddingTop: 'var(--sp-6)' }}
+        >
+          <div>
+            <h2 className="display" style={{ fontSize: 'var(--fs-lg)' }}>
+              Get in touch
+            </h2>
+            <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-3)', maxWidth: '28rem' }}>
+              Built by Gerald. Follow the training on Strava, or reach out any time.
+            </p>
+          </div>
+
+          <aside className="factsheet" aria-label="Contact details">
+            <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>Contact</p>
+            <dl className="factsheet__list">
+              <Contact label="Strava" href="https://www.strava.com/athletes/gtesha" external>
+                /athletes/gtesha
+              </Contact>
+              <Contact label="Email" href="mailto:hpgerald@gmail.com">
+                hpgerald@gmail.com
+              </Contact>
+              <Contact label="Phone" href="tel:+255763453400">
+                +255 763 453 400
+              </Contact>
+              <Contact label="LinkedIn" href="https://www.linkedin.com/in/gtesha/" external>
+                /in/gtesha
+              </Contact>
+              <Contact label="GitHub" href="https://github.com/hpgerald" external>
+                /hpgerald
+              </Contact>
             </dl>
           </aside>
         </div>
