@@ -100,6 +100,14 @@ a { color: inherit; text-decoration: none; }
   display: grid;
   gap: var(--sp-5);
 }
+/* let grid items shrink below their content's min-content, so wide tables and
+   charts scroll or reflow inside their box instead of widening the column */
+.grid > * { min-width: 0; }
+
+/* tighten data-table padding on phones so more columns fit before scrolling */
+@media (max-width: 40rem) {
+  .dtable th, .dtable td { padding-left: 7px !important; padding-right: 7px !important; }
+}
 @media (min-width: 40rem) {
   .grid--2 { grid-template-columns: repeat(2, 1fr); }
   .grid--3 { grid-template-columns: repeat(3, 1fr); }
@@ -797,8 +805,34 @@ text.chart-panel-title {
   line-height: 1.1; letter-spacing: var(--tr-snug); margin: var(--sp-2) 0;
 }
 .htl__note { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.45; }
-@media (max-width: 34rem) {
-  .htl { padding-right: 0; }
+
+/* Below 48rem the wrapping grid reads poorly, so switch to a single connected
+   vertical timeline: a rail down the left, a dot per entry, content to the right. */
+@media (max-width: 47.999rem) {
+  .htimeline {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+  }
+  .htimeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 10px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .htl {
+    position: relative;
+    border-top: 0;
+    padding: 0 0 var(--sp-6) 0;
+  }
+  .htl:last-child { padding-bottom: 0; }
+  .htl__dot {
+    left: -28px;
+    top: 4px;
+  }
 }
 
 /* ---- Fact sheet panel (About) ------------------------------------------ */

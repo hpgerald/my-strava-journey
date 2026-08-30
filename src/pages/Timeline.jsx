@@ -51,7 +51,7 @@ export default function Timeline() {
       <section aria-label="Timeline" style={{ paddingTop: 'var(--sp-7)' }}>
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Milestones, in order</p>
         <p className="text-muted" style={{ marginTop: 0, marginBottom: 'var(--sp-5)', fontSize: 'var(--fs-sm)' }}>
-          Read left to right, top to bottom. Each dot is a marker on the way from the first upload to now.
+          In order, from the first upload to now. Each dot marks a moment along the way.
         </p>
         <ol className="htimeline">
           {items.map((it, i) => (
