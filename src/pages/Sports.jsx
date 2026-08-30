@@ -280,7 +280,7 @@ export default function Sports() {
           </h2>
           <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
             Running, walking, trail running and hiking make up the bulk of the log. Six cuts through the foot data:
-            how fast, how far, how steep, when, and how the treadmill years give way to the road.
+            how fast, how far, how steep, when, and how the running moves from the treadmill to the road.
           </p>
         </div>
 

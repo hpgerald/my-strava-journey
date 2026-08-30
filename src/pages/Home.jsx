@@ -10,6 +10,7 @@ import BarChart from '../charts/BarChart.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import HeatStrip from '../charts/HeatStrip.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
+import { useEffect } from 'react'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
@@ -42,6 +43,9 @@ function pctsTo100(counts) {
 }
 
 export default function Home() {
+  useEffect(() => {
+    document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
+  }, [])
   const lifetime = useTable('lifetime_totals')
   const meta = useKeyed('meta', 'key', 'value')
   const countries = useTable('countries')
@@ -205,7 +209,7 @@ export default function Home() {
           </div>
           <div className="hero__cards" aria-label="Headline figures">
             <StatCard value={fmtInt(km)} unit="km" label="Distance moved" note="Roughly a third of the way around the planet." />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Climbing grew from incidental to a core part of the training." />
+            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Climbing makes up far more of the training now than in the early years." />
             <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Consecutive active days, and still counting." />
           </div>
         </section>
@@ -268,7 +272,7 @@ export default function Home() {
 
           <Figure
             title="A week with no day off"
-            note="Activities by weekday. The load spreads remarkably evenly; Saturday only just edges the rest. Consistency, not weekend heroics."
+            note="Activities by weekday. The load spreads evenly across the week, with Saturday only just ahead of the rest."
             source="Activity Log"
             tableCaption="Activities by weekday"
             columns={['Weekday', 'Activities']}

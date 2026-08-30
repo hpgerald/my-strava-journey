@@ -18,8 +18,8 @@ export default function About() {
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       title="About"
-      subtitle="What this is, and what it isn't"
-      lede="My Strava history, put together so anyone can make sense of it, not just me."
+      subtitle="What this is, and how to read it"
+      lede="My Strava history, put together so anyone can make sense of it."
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
@@ -32,12 +32,11 @@ export default function About() {
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
-              These are aspirations, not achievements
+              A habit, measured over time
             </h2>
             <p>
-              The numbers here are about a habit, not a finish line. A streak counts until the day it
-              doesn't; a yearly total is just a year still in progress. Take them as a record of effort
-              over time, not a trophy cabinet.
+              The numbers here track a habit as it builds. A streak counts until the day it breaks; a
+              yearly total is just a year still in progress. Read them as a record of effort over time.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>

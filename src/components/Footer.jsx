@@ -13,8 +13,8 @@ export default function Footer() {
               My Strava Journey
             </p>
             <p className="measure text-muted" style={{ margin: 0 }}>
-              Seven years of my Strava activity, laid out so anyone can read it. It's a record of
-              showing up, not a finish line.
+              Seven years of my Strava activity, laid out so anyone can read it. A record of
+              showing up, week after week.
             </p>
           </div>
           <div>

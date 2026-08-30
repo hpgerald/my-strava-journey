@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
@@ -5,6 +6,12 @@ import Container from './Container.jsx'
 // One frame for every detail page: breadcrumb, big header, content, prev/next paging.
 // `number` shows the 01..09 index for top-level sections; omit it for sub-item pages.
 export default function DetailFrame({ crumbs = [], number, title, subtitle, lede, children, prev, next }) {
+  useEffect(() => {
+    document.title = title ? `${title} · My Strava Journey` : 'My Strava Journey'
+    return () => {
+      document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
+    }
+  }, [title])
   return (
     <Layout>
       <Container>

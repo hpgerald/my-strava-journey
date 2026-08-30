@@ -58,8 +58,8 @@ export default function WhatItMeans() {
             <p className="measure">
               The first five months of this history, back in 2019, held just 27 activities. Seven
               years on it is {fmtInt(activities)}. Nothing here happened in a single heroic block;
-              it accumulated. The lesson the data keeps repeating is that showing up beats showing
-              off, and that a modest start is not a small thing.
+              it accumulated. The pattern the data keeps repeating is that consistency matters more
+              than intensity, and a modest start still adds up to a lot.
             </p>
           </div>
           <MiniTrend values={cumActs} startLabel={startY} endLabel={endY} caption="Activities, running total" />
@@ -70,8 +70,8 @@ export default function WhatItMeans() {
             <h2 className="persona__who">If you're chasing consistency</h2>
             <p className="measure">
               The longest unbroken run of active days here is {fmtInt(streak)} days, and it is still
-              going. A streak like that is not about any one big session; it is about refusing zero.
-              Even a short walk keeps the chain alive, which is exactly why{' '}
+              going. A streak like that is built on the ordinary days, the ones it would be easy to
+              skip. Even a short walk keeps the chain alive, which is exactly why{' '}
               <Term name="Moving time">moving time</Term> and activity counts matter more than any
               single personal best.
             </p>
@@ -83,7 +83,7 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you're a runner working on pace</h2>
             <p className="measure">
-              Two numbers tell the fitness story. Average{' '}
+              Two numbers capture the change in fitness. Average{' '}
               <Term name="Cadence">cadence</Term> rose from {fmtNum(re('2019').avg_cadence)} to{' '}
               {fmtNum(re('2026').avg_cadence)} steps per minute, a more efficient turnover. Meanwhile
               average <Term name="Relative Effort">relative effort</Term> per session fell from{' '}
@@ -101,9 +101,9 @@ export default function WhatItMeans() {
             <p className="measure">
               Total <Term name="Elevation gain">elevation gain</Term> across the history is{' '}
               {fmtInt(elevation)} metres, roughly {fmtNum(everests)} times the height of Everest or{' '}
-              {fmtNum(kilis)} times Kilimanjaro. Trail running went from zero in 2019 to a core part
-              of the mix. If climbing is your thing, the pattern here is clear: the vertical follows
-              the habit, not the other way round.
+              {fmtNum(kilis)} times Kilimanjaro. Trail running was absent in 2019 and is now a
+              regular part of the mix. If climbing is your thing, the pattern here is clear: the
+              vertical adds up as the miles do.
             </p>
           </div>
           <MiniTrend values={elevByYear} startLabel={startY} endLabel={endY} caption="Elevation per year (m)" />
