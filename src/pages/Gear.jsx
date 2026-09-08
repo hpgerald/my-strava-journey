@@ -132,8 +132,8 @@ export default function Gear() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Gear' }]}
       number="07"
       title="Gear"
-      subtitle="Eleven pairs of shoes, and the miles in each"
-      lede="Every pair Strava has on record, from the first one it tracked in late 2021. Each shows how far it carried, when it was in rotation, whether it lived on road or trail, and how much of its life happened before this log even starts."
+      subtitle="Eleven pairs. The miles in each."
+      lede="Eleven pairs on record since late 2021, and they give themselves away. The Lunarglide 7 is the workhorse at 1,778 km. The Lunarglide 6 reads 2,495 km on Strava but only 25 here: it did its living before this log began. And the Zegama Trail, for all its name, spent 618 of its 697 km on the road."
       prev={prev}
       next={next}
     >

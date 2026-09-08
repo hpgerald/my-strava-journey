@@ -36,8 +36,8 @@ export default function Where() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Where' }]}
       number="05"
       title="Where"
-      subtitle="Seven countries and seventeen regions"
-      lede={`Home base is ${homeRegion.region || 'Dodoma'}, but the map runs wider than that: ${realCountries.length} countries and ${regions.length} Tanzanian regions in all. Each place is worked out from where the activity's GPS track starts.`}
+      subtitle="Seven countries. Seventeen regions."
+      lede={`Home is ${homeRegion.region || 'Dodoma'}, and it is flat: hundreds of activities, little vertical. The climbing lives elsewhere. ${realCountries.length} countries and ${regions.length} Tanzanian regions in all, each placed by where its GPS track begins.`}
       prev={prev}
       next={next}
     >
@@ -59,7 +59,7 @@ export default function Where() {
         <div className="grid grid--2">
           <Figure
             title="Across Africa"
-            note="African countries shaded by how many activities started there. Tanzania is home; Kenya, Malawi, South Africa and Rwanda mark trips. The scale is logarithmic so smaller counts still show."
+            note="African countries shaded by how many activities started there. Tanzania is home; Kenya, Malawi, South Africa and Rwanda are trips. The scale is logarithmic, so a single visit still shows."
             source="Strava GPS + Natural Earth"
             tableCaption="Activities by African country"
             columns={['Country', 'Activities', 'Distance km']}
@@ -71,7 +71,7 @@ export default function Where() {
           </Figure>
           <Figure
             title="Tanzania, by region"
-            note="The real regions of Tanzania, each shaded by activity count. Dodoma, Kilimanjaro and Dar es Salaam carry the most; the pale regions are ones not yet logged."
+            note="Regions shaded by activity count. Dodoma and Dar es Salaam log the most days, but the vertical is a different map: Kilimanjaro region alone holds barely a tenth of the activities and more than a third of all the metres climbed. Flat at home, steep away."
             source="Strava GPS + Natural Earth admin-1"
             tableCaption="Activities by Tanzanian region"
             columns={['Region', 'Activities', 'Distance km']}

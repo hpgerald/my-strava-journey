@@ -28,8 +28,8 @@ export default function Timeline() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Timeline' }]}
       number="08"
       title="Timeline"
-      subtitle="The story in order"
-      lede="The story in order: the first upload, the round-number milestones, a few standout days, the trips abroad, and the streak that's still going. Every entry is dated and sourced."
+      subtitle="In order. First upload to now."
+      lede="Seven years in order, from a single noon bike ride to a 253-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced."
       prev={prev}
       next={next}
     >

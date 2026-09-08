@@ -35,35 +35,38 @@ export default function About() {
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       title="About"
-      subtitle="What this is, and how to read it"
-      lede="My Strava history, put together so anyone can make sense of it."
+      subtitle="What this is. How to read it."
+      lede="My Strava history, laid out so anyone can read it."
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
             <p>
               It covers {meta.total_activities || '2,000'} activities from {meta.coverage_start || '2019'}{' '}
-              to {meta.coverage_end || '2026'}: running, walking, trail running, cycling, hiking and a
-              few odd others, mostly in Tanzania with the occasional trip abroad. It refreshes each week
-              as new activities come in.
+              to {meta.coverage_end || '2026'}. Running, walking, trail running, cycling, hiking, and a
+              few odd others. Mostly Tanzania, with the occasional trip abroad. It refreshes each week
+              as new activities land.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
               A habit, measured over time
             </h2>
             <p>
-              The numbers here track a habit as it builds. A streak counts until the day it breaks; a
-              yearly total is just a year still in progress. Read them as a record of effort over time.
+              The numbers track a habit as it builds. A streak counts until the day it breaks. A
+              yearly total is a year still in progress. Read them as a record of effort over time.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
               Accuracy and limits
             </h2>
             <p>
-              Figures are shown as logged on Strava. Distances, times and elevation come straight from
-              the activities; the country and region breakdowns are derived from each activity's GPS
-              start point and are approximate near international borders. The full method, confidence
-              levels and known gaps are documented on the{' '}
+              Figures are shown as logged on Strava. One deliberate choice runs through the whole site:
+              distance and elevation count foot sports only, running, walking, trail running and hiking.
+              Rides and everything else still count as activities and appear in every other metric, but
+              their kilometres and vertical are left out of the distance and climb totals, which keeps
+              the focus on training on foot. The country and region breakdowns are derived from each
+              activity's GPS start point and are approximate near international borders. The full method,
+              confidence levels and known gaps are documented on the{' '}
               <Link to="/data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
                 data page
               </Link>

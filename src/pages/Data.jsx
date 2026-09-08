@@ -72,7 +72,7 @@ const GROUPS = [
 export default function Data() {
   const { data } = useData()
   useTables(CSV_FILES)
-  const rowCount = (name) => (data && data[name] ? data[name].length : '—')
+  const rowCount = (name) => (data && data[name] ? data[name].length : '–')
 
   return (
     <DetailFrame

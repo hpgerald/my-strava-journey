@@ -68,7 +68,7 @@ export default function Records() {
       value: fmtNum(furthestRun?.distance_km, 1),
       unit: 'km',
       title: 'Furthest run',
-      detail: 'A marathon distance, in one run on the treadmill',
+      detail: 'A full marathon distance, run without leaving the treadmill',
       date: fmtFull(furthestRun?.date),
     },
     {
@@ -160,8 +160,8 @@ export default function Records() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Records' }]}
       number="04"
       title="Records"
-      subtitle="The far edges of seven years"
-      lede="Not the averages this time, but the outliers: the single longest day, the steepest climb, the streak that would not break, and the metres that stack up to something the size of mountains."
+      subtitle="The far edges. Longest, highest, hardest."
+      lede="Not averages this time. The far edges. A marathon run without leaving the room, a single day that climbed nearly two kilometres, a streak that has held for eight months, and a pile of vertical the size of nine Everests."
       prev={prev}
       next={next}
     >
@@ -180,9 +180,9 @@ export default function Records() {
             {fmtInt(totalElev)} metres, straight up.
           </h2>
           <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
-            Add up every hill, every trail and every set of stairs across all the walking, running and hiking, and
-            the climbing alone comes to {fmtInt(totalElev)} metres. That is Everest, from the beach to the summit,
-            more than nine times over.
+            Add up every hill, every trail, every set of stairs on foot and the climbing alone reaches{' '}
+            {fmtInt(totalElev)} metres. That is Everest, sea to summit, more than nine times over, or Kilimanjaro
+            fourteen times. Almost none of it came from running.
           </p>
         </div>
         <Figure
@@ -206,7 +206,7 @@ export default function Records() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="The road to ten thousand kilometres"
-          note="Each rung is the day a running total of foot distance was crossed, placed along the full seven-year span. The first thousand took two years; the fifteen hundred after it took three months."
+          note="Each rung is the day a running foot-distance total was crossed. The first thousand kilometres took two years of dabbling. The next fifteen hundred took three months, once July 2021 lit the fuse."
           source="Activity Log"
           tableCaption="Date each cumulative foot-distance milestone was crossed"
           columns={['Milestone', 'Crossed']}
@@ -230,7 +230,7 @@ export default function Records() {
           </Figure>
           <Figure
             title="The most-loved activities"
-            note="The six that pulled in the most kudos. The Kilimanjaro races and a trail marathon top the list."
+            note="The six that pulled in the most kudos. Runs lead, a trail run among them."
             source="Activity Log"
             columns={['Activity', 'Kudos']}
             rows={loved.map((d) => [d.label, d.display])}

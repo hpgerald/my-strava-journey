@@ -78,8 +78,8 @@ export default function Numbers() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'By the Numbers' }]}
       number="02"
       title="By the Numbers"
-      subtitle="Then versus now, side by side"
-      lede="Each headline figure, then against now: my first five months in 2019 next to 2026 so far. The two bars share a scale, and the real numbers sit underneath. Filter by category or by what's being measured."
+      subtitle="Then against now"
+      lede="Every headline figure, the first five months of 2019 against 2026 so far. The change is not incremental, it is categorical: a 27-activity dabble turned into a way of life. The bars share a scale; the real numbers sit underneath. Filter by category or measure."
       prev={prev}
       next={next}
     >

@@ -10,21 +10,21 @@ export function toNum(v) {
 // 2000 -> "2,000"
 export function fmtInt(v) {
   const n = toNum(v)
-  if (n === null) return '—'
+  if (n === null) return '–'
   return Math.round(n).toLocaleString('en-US')
 }
 
 // 2046.7 -> "2,046.7" (keep up to `dp` decimals, trimming trailing zeros)
 export function fmtNum(v, dp = 1) {
   const n = toNum(v)
-  if (n === null) return '—'
+  if (n === null) return '–'
   return n.toLocaleString('en-US', { maximumFractionDigits: dp })
 }
 
 // Big numbers to a compact editorial form: 1639179 -> "1.64M"
 export function fmtCompact(v, dp = 1) {
   const n = toNum(v)
-  if (n === null) return '—'
+  if (n === null) return '–'
   const abs = Math.abs(n)
   if (abs >= 1e6) return trim(n / 1e6, dp) + 'M'
   if (abs >= 1e3) return trim(n / 1e3, dp) + 'k'
@@ -39,6 +39,6 @@ function trim(n, dp) {
 export function fmtFactor(a, b) {
   const na = toNum(a)
   const nb = toNum(b)
-  if (!na || !nb) return '—'
+  if (!na || !nb) return '–'
   return `${trim(nb / na, 1)}x`
 }

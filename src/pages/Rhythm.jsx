@@ -137,8 +137,8 @@ export default function Rhythm() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Rhythm' }]}
       number="06"
       title="Rhythm"
-      subtitle="When, and how hard"
-      lede="When the training actually happens: which days fill up the calendar, what time of day I head out, indoors versus outside, and how the effort has settled year on year."
+      subtitle="When. And how hard."
+      lede="The training runs like a metronome. More than half of all calendar days carry an activity, and when one day is active the next usually is too. This is when the work happens, how hard it has settled, and the two streaks, 253 days and 156 weeks, both still alive."
       prev={prev}
       next={next}
     >
@@ -196,7 +196,7 @@ export default function Rhythm() {
       <section aria-label="Indoor versus outdoor" style={{ paddingTop: 'var(--sp-7)' }}>
         <div className="grid grid--2">
           <StatCard value={fmtInt(outdoor.activities)} label="Outdoor activities" note={`${fmtNum(outdoor.distance_km, 0)} km in the open.`} source="Fun Stats" />
-          <StatCard value={fmtInt(indoor.activities)} label="Indoor / trainer" note={`${fmtNum(indoor.distance_km, 0)} km on treadmill or trainer.`} source="Fun Stats" />
+          <StatCard value={fmtInt(indoor.activities)} label="Indoor / trainer" note={`${fmtNum(indoor.distance_km, 0)} km on the treadmill, more than the open-air total.`} source="Fun Stats" />
         </div>
       </section>
 
@@ -239,7 +239,7 @@ export default function Rhythm() {
           </Figure>
           <Figure
             title="Total relative effort by year"
-            note="The season's overall cardiovascular load. It climbed as the training grew, then eased as fitness caught up, and 2026 is on the up again."
+            note="The season's total cardiovascular load. 2021 was the hardest year by a distance; then it eased as fitness caught up and each session cost less, before 2026 started climbing again."
             source="Zones & Effort"
             tableCaption="Total relative effort by year"
             columns={['Year', 'Total relative effort']}

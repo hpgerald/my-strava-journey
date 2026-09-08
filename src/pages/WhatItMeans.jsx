@@ -46,8 +46,8 @@ export default function WhatItMeans() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'What It Means' }]}
       number="09"
       title="What It Means"
-      subtitle="Reading these numbers as an athlete"
-      lede="Numbers only matter if they mean something to you. So here is what this record might say, depending on where you are in your own training. The dotted words have plain definitions: hover, tap or tab to see them."
+      subtitle="What the numbers say to you."
+      lede="Numbers only matter if they mean something to you. Here is what this record says, depending on where you are in your training. Dotted words have plain definitions. Hover, tap or tab."
       prev={prev}
       next={next}
     >
@@ -56,10 +56,10 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you're just starting out</h2>
             <p className="measure">
-              The first five months of this history, back in 2019, held just 27 activities. Seven
-              years on it is {fmtInt(activities)}. Nothing here happened in a single heroic block;
-              it accumulated. The pattern the data keeps repeating is that consistency matters more
-              than intensity, and a modest start still adds up to a lot.
+              In 2019 this was 27 activities and not much intent. It did not reach {fmtInt(activities)}{' '}
+              through heroics. It got there because, in July 2021, a hobby became a default and the
+              default held. That is the pattern the data keeps repeating: a modest start compounds.
+              Show up long enough and the totals look after themselves.
             </p>
           </div>
           <MiniTrend values={cumActs} startLabel={startY} endLabel={endY} caption="Activities, running total" />
@@ -69,11 +69,10 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you're chasing consistency</h2>
             <p className="measure">
-              The longest unbroken run of active days here is {fmtInt(streak)} days, and it is still
-              going. A streak like that is built on the ordinary days, the ones it would be easy to
-              skip. Even a short walk keeps the chain alive, which is exactly why{' '}
-              <Term name="Moving time">moving time</Term> and activity counts matter more than any
-              single personal best.
+              The longest unbroken run here is {fmtInt(streak)} days, and it sits inside a 156-week
+              streak stretching back three years. Neither was built on big days. They were built on the
+              small ones, the short evening walk that keeps the chain intact. This is why{' '}
+              <Term name="Moving time">moving time</Term> and turning up beat any single personal best.
             </p>
           </div>
           <MiniTrend values={actsByYear} startLabel={startY} endLabel={endY} caption="Activities per year" />
@@ -83,13 +82,13 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you're a runner working on pace</h2>
             <p className="measure">
-              Two numbers capture the change in fitness. Average{' '}
-              <Term name="Cadence">cadence</Term> rose from {fmtNum(re('2019').avg_cadence)} to{' '}
-              {fmtNum(re('2026').avg_cadence)} steps per minute, a more efficient turnover. Meanwhile
-              average <Term name="Relative Effort">relative effort</Term> per session fell from{' '}
-              {fmtInt(re('2019').avg_relative_effort)} to {fmtInt(re('2026').avg_relative_effort)}:
-              the same work simply costs the body less now. If you are targeting speed, your{' '}
-              <Term name="Pace zones">pace zones</Term> are where to spend attention.
+              Two numbers show the fitness turning. Average <Term name="Cadence">cadence</Term> rose
+              from {fmtNum(re('2019').avg_cadence)} to {fmtNum(re('2026').avg_cadence)} steps per
+              minute. And average <Term name="Relative Effort">relative effort</Term> per session fell
+              from {fmtInt(re('2019').avg_relative_effort)} in 2019 to{' '}
+              {fmtInt(re('2026').avg_relative_effort)} now: the same work costs the body far less than
+              it used to. Chasing speed? The <Term name="Pace zones">pace zones</Term> are where the
+              attention pays off.
             </p>
           </div>
           <MiniTrend values={cadByYear} startLabel={startY} endLabel={endY} caption="Average cadence (spm)" fmt={(v) => v.toFixed(0)} />
@@ -99,11 +98,10 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you live for vertical</h2>
             <p className="measure">
-              Total <Term name="Elevation gain">elevation gain</Term> across the history is{' '}
-              {fmtInt(elevation)} metres, roughly {fmtNum(everests)} times the height of Everest or{' '}
-              {fmtNum(kilis)} times Kilimanjaro. Trail running was absent in 2019 and is now a
-              regular part of the mix. If climbing is your thing, the pattern here is clear: the
-              vertical adds up as the miles do.
+              Total <Term name="Elevation gain">elevation gain</Term> on foot is {fmtInt(elevation)}{' '}
+              metres, {fmtNum(everests)} Everests. Almost none of it came from running, which stays flat
+              and indoors. It came from walking, which carries three-quarters of the climb, and from the
+              trails, where a single outing can gain 350 metres. Want vertical? Walk uphill, and often.
             </p>
           </div>
           <MiniTrend values={elevByYear} startLabel={startY} endLabel={endY} caption="Elevation per year (m)" />
@@ -113,10 +111,9 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you train through travel</h2>
             <p className="measure">
-              Activities in this record start in {realCountries} different countries, placed by each
-              one's GPS point. A trip does not have to mean a training gap. The data suggests the
-              opposite: some of the standout days, from gravel rides abroad to morning walks in a new
-              city, happened precisely because the habit travelled too.
+              The activities here begin in {realCountries} countries. Travel never broke the habit; if
+              anything it fed it. A gravel ride in a new country, a dawn walk in an unfamiliar city, the
+              standout days often happened precisely because the routine came along for the trip.
             </p>
           </div>
           <div className="reach">

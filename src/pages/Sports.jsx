@@ -201,10 +201,10 @@ export default function Sports() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Sports' }]}
       number="03"
       title="Sports"
-      subtitle="What the training is actually made of"
-      lede={`${sports.length} sport types in all, but it leans heavily on foot: ${prettySport(
+      subtitle="What the work is made of"
+      lede={`${sports.length} sports in the log, but two carry it. By activity count ${prettySport(
         topSport.sport
-      ).toLowerCase()} is the single biggest chunk. Pick any sport for its own totals, trend and best days.`}
+      ).toLowerCase()} leads; by distance running does. Look closer and they specialise: running is fast, flat and mostly indoors, while walking piles up the outdoor kilometres and, quietly, three-quarters of the climbing. Pick any sport for its totals, trend and best days.`}
       prev={prev}
       next={next}
     >
@@ -213,7 +213,7 @@ export default function Sports() {
         <div className="grid grid--2">
           <Figure
             title="Share of distance"
-            note="Where the kilometres come from. Walking and running dominate the ground covered."
+            note="Where the kilometres come from. Running and walking own the ground; the rides sit on the edge."
             source="Overview"
             columns={['Sport', 'km']}
             rows={distMix.map((s) => [s.label, s.display])}
@@ -236,7 +236,7 @@ export default function Sports() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Distance by year, on foot"
-          note="Six ways of covering ground on foot, every panel on the same scale. Running is logged mostly on the treadmill; walking is almost all outdoors."
+          note="Six ways of covering ground on foot, every panel on the same scale. Running is logged mostly on the treadmill; walking is almost all outdoors, and it is the walking that climbs."
           source="Activity Log"
           tableCaption="Distance in km by category and year"
           columns={['Category', ...years]}
@@ -279,8 +279,9 @@ export default function Sports() {
             On foot, up close.
           </h2>
           <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
-            Running, walking, trail running and hiking make up the bulk of the log. Six cuts through the foot data:
-            how fast, how far, how steep, when, and how the running moves from the treadmill to the road.
+            Running, walking, trail running and hiking are the spine of the log, and each has a job. Running is
+            for speed and stays on the treadmill. Walking is for volume and hills. Trail running and hiking are for
+            raw vertical: a trail run climbs 350 metres on average, a hike over 700. Six cuts through the foot data.
           </p>
         </div>
 
@@ -322,7 +323,7 @@ export default function Sports() {
 
           <Figure
             title="How steep it gets"
-            note="The slope of each hill is the median gradient of that sport, with the typical climb read alongside. Flat running gives way to real vertical on the trails and hikes."
+            note="The slope of each row is a sport's median gradient, the typical climb beside it. Running is nearly flat. The ground only tilts up on the trails and the hikes."
             source="Activity Log"
             tableCaption="Median gradient and median elevation gain"
             columns={['Category', 'Median grade', 'Median climb']}

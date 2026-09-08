@@ -3,10 +3,11 @@ import Container from '../components/Container.jsx'
 import StatCard from '../components/StatCard.jsx'
 import IndexHub from '../components/IndexHub.jsx'
 import Figure from '../charts/Figure.jsx'
-import AreaLine from '../charts/AreaLine.jsx'
 import DotGrid from '../charts/DotGrid.jsx'
-import Columns from '../charts/Columns.jsx'
 import BarChart from '../charts/BarChart.jsx'
+import UnitColumns from '../charts/UnitColumns.jsx'
+import DistCurve from '../charts/DistCurve.jsx'
+import CrowdStems from '../charts/CrowdStems.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import HeatStrip from '../charts/HeatStrip.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
@@ -24,6 +25,8 @@ function yearsBetween(a, b) {
 }
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+// distance and elevation are foot-only across the site
+const FOOT_HOME = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
 const DIST_EDGES = [0, 2, 4, 6, 8, 10, 12, 15, 20, 30, Infinity]
 const DIST_LABELS = ['0–2', '2–4', '4–6', '6–8', '8–10', '10–12', '12–15', '15–20', '20–30', '30+']
 const MONTHS_SHORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
@@ -67,10 +70,10 @@ export default function Home() {
   const kudos = life('kudos').value
   const hoursMoving = life('hours moving').value
 
-  // the rotating headline metrics — every number worth leading with
+  // the rotating headline metrics: every number worth leading with
   const heroMetrics = [
     { value: toNum(activities), word: 'activities' },
-    { value: toNum(km), word: 'km moved' },
+    { value: toNum(km), word: 'km on foot' },
     { value: toNum(elevation), word: 'm climbed' },
     { value: toNum(streak), word: 'days unbroken' },
     { value: countryCount, word: 'countries' },
@@ -99,7 +102,7 @@ export default function Home() {
     if (Number.isFinite(h) && h >= 0 && h < 24) hours[h] += 1
     if (a.weekday in weekday) weekday[a.weekday] += 1
     const d = toNum(a.distance_km)
-    if (d > 0) {
+    if (d > 0 && FOOT_HOME.has(a.sport_type)) {
       for (let i = 0; i < DIST_LABELS.length; i++) {
         if (d > DIST_EDGES[i] && d <= DIST_EDGES[i + 1]) { distCounts[i] += 1; break }
       }
@@ -122,9 +125,22 @@ export default function Home() {
     display: fmtInt(weekday[w]),
   }))
   const distData = DIST_LABELS.map((l, i) => ({ label: l, value: distCounts[i] }))
-  const kudosPts = Object.keys(kudosYear)
+  // median + max distance, and the median's position along the band axis
+  const distancesSorted = activityLog
+    .filter((a) => FOOT_HOME.has(a.sport_type))
+    .map((a) => toNum(a.distance_km))
+    .filter((d) => d > 0)
+    .sort((a, b) => a - b)
+  const medianKm = distancesSorted.length ? distancesSorted[Math.floor(distancesSorted.length / 2)] : 0
+  const maxKm = distancesSorted.length ? distancesSorted[distancesSorted.length - 1] : 0
+  const eIdx = DIST_EDGES.findIndex((e, i) => i < DIST_EDGES.length - 1 && medianKm > DIST_EDGES[i] && medianKm <= DIST_EDGES[i + 1])
+  const medianAt = eIdx >= 0
+    ? eIdx + (medianKm - DIST_EDGES[eIdx]) / ((DIST_EDGES[eIdx + 1] === Infinity ? DIST_EDGES[eIdx] + 5 : DIST_EDGES[eIdx + 1]) - DIST_EDGES[eIdx])
+    : 0
+  // kudos per year as lollipop points, with the activity count for dot size
+  const kudosStems = Object.keys(kudosYear)
     .sort()
-    .map((y) => ({ x: Date.UTC(Number(y), 6, 1), y: kudosYear[y].s / Math.max(1, kudosYear[y].n), label: y }))
+    .map((y) => ({ label: y, value: Math.round((kudosYear[y].s / Math.max(1, kudosYear[y].n)) * 10) / 10, n: kudosYear[y].n }))
 
   // seasonality: activities per calendar month
   const monthCells = MONTHS_FULL.map((m, i) => ({ short: MONTHS_SHORT[i], label: m, value: months[i] }))
@@ -196,9 +212,10 @@ export default function Home() {
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              Seven years of my Strava history, in one place. It began with a single lunch ride in
-              2019 and turned into a near-daily habit: running, walking, hiking and riding, mostly
-              around Tanzania and, over time, in {countryCount || 'seven'} countries.
+              It started at noon on 17 August 2019 with a 31 km bike ride, then went quiet for two
+              years. In July 2021 the habit switched on and never switched off. Seven years of it,
+              mostly on foot, mostly around Tanzania, reaching {countryCount || 'seven'} countries and
+              logged on more than half of every day since.
             </p>
             <div className="hero__extra">
               <p className="eyebrow">Put another way, that is</p>
@@ -216,9 +233,9 @@ export default function Home() {
             </div>
           </div>
           <div className="hero__cards" aria-label="Headline figures">
-            <StatCard value={fmtInt(km)} unit="km" label="Distance moved" note="Roughly a third of the way around the planet." />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Climbing makes up far more of the training now than in the early years." />
-            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Consecutive active days, and still counting." />
+            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Running, walking and hiking only. Nearly a third of the way around the equator." />
+            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Nine and a half times the height of Everest. Most of it walked, not run." />
+            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="The longest gap-free run yet, and still counting." />
           </div>
         </section>
       </Container>
@@ -230,7 +247,7 @@ export default function Home() {
           <div>
             <Figure
               title="Every activity, one dot"
-              note={`One dot for each of the ${fmtInt(activityLog.length)} activities, in order from the first upload to the latest. The colour deepens with the year, so the thin pale start and the dense recent seasons show at a glance. Hover any dot.`}
+              note={`One dot per activity, ${fmtInt(activityLog.length)} of them, oldest to newest, colour deepening with the year. The two thin pale years at the top are 2019 and 2020. Then July 2021 lands as a wall of colour and the page never breathes again. Hover any dot.`}
               source="Activity Log"
               tableCaption="Activities by year"
               columns={['Year', 'Activities']}
@@ -241,9 +258,9 @@ export default function Home() {
             <div style={{ borderTop: '1px solid var(--rule-faint)', marginTop: 'var(--sp-5)', paddingTop: 'var(--sp-4)' }}>
               <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Reading the dots</p>
               <p className="measure" style={{ margin: 0, color: 'var(--fg-muted)' }}>
-                The first two years are a thin, pale band, just a couple of dozen activities each.
-                Then July 2021 arrives as a wall of colour and never lets up: around three hundred
-                activities a year, every year since. The darkest dots are the most recent.
+                For two years this was a hobby: 27 activities in 2019, 35 in 2020. Then July 2021
+                flipped a switch. Two activities that June became fifty-eight in July, and every year
+                since has cleared 270. The darkest dots, the most recent, are packed solid.
               </p>
             </div>
           </div>
@@ -269,7 +286,7 @@ export default function Home() {
         <div className="grid grid--2" style={{ gap: 'var(--sp-8) var(--sp-7)', paddingBottom: 'var(--sp-7)' }}>
           <Figure
             title="When the day gets moving"
-            note="Every activity by the hour it started. Two windows stand out: a dawn crowd around 6–7am and a bigger one at dusk, 5–7pm."
+            note="Every activity by the hour it started. Two rushes: a small dawn crowd near 6am and a much larger one after work. Evening, 5 to 8pm, is the busiest window by far, and 6pm the single busiest hour."
             source="Activity Log"
             tableCaption="Activities by hour of day"
             columns={['Hour', 'Activities']}
@@ -280,40 +297,45 @@ export default function Home() {
 
           <Figure
             title="A week with no day off"
-            note="Activities by weekday. The load spreads evenly across the week, with Saturday only just ahead of the rest."
+            note="Every activity stacked by weekday, one block per twenty-five. The striking part is how level the towers are: Tuesday 254, Saturday 329, nothing in between standing out. No rest day, just a slight weekend lean."
             source="Activity Log"
             tableCaption="Activities by weekday"
             columns={['Weekday', 'Activities']}
             rows={WEEKDAYS.map((w) => [w, fmtInt(weekday[w])])}
           >
-            <BarChart data={weekdayData} accent />
+            <UnitColumns data={weekdayData} unit={25} />
           </Figure>
 
           <Figure
             title="The shape of a typical outing"
-            note="How far each activity went, grouped by distance. The typical outing is about 6 km, but the tail runs all the way past 100."
+            note={`Every foot outing by distance, drawn as a silhouette. Two peaks, not one: a tall stack of short 4 to 6 km sessions, the daily bread, then a second wave of 10 to 12 km runs. The median is ${fmtNum(medianKm, 1)} km; nothing on foot passes ${fmtInt(maxKm)} km. Rides are left out entirely.`}
             source="Activity Log"
-            tableCaption="Activities by distance band (km)"
+            tableCaption="Foot activities by distance band (km)"
             columns={['Distance (km)', 'Activities']}
             rows={distData.map((d) => [d.label, fmtInt(d.value)])}
           >
-            <Columns data={distData} height={260} unit="activities" formatY={(v) => fmtInt(v)} />
+            <DistCurve
+              data={distData}
+              medianLabel={`median ${fmtNum(medianKm, 1)} km`}
+              medianAt={medianAt}
+              tailNote={`longest: ${fmtInt(maxKm)} km`}
+            />
           </Figure>
 
           <Figure
             title="When the crowd arrived"
-            note="Average kudos per activity, year by year. Near silence for the first two seasons, then a following took off in 2021 and stuck."
+            note="Average kudos per activity, year by year. For two years almost nobody watched, barely one kudos a session. Then in 2021, the same month the training took off, an audience arrived and peaked near 42 in 2023. The crowd followed the consistency, not the reverse."
             source="Activity Log"
             tableCaption="Average kudos per activity by year"
             columns={['Year', 'Avg kudos']}
-            rows={kudosPts.map((p) => [p.label, fmtInt(p.y)])}
+            rows={kudosStems.map((p) => [p.label, fmtInt(p.value)])}
           >
-            <AreaLine points={kudosPts} height={260} yUnit="avg kudos" formatX={(p) => p.label} formatY={(v) => fmtInt(v)} />
+            <CrowdStems points={kudosStems} inflection="2021" />
           </Figure>
 
           <Figure
             title="The year has a season"
-            note="Activities by month of the year, all seven years stacked. Training peaks in the cool dry season; July is the busiest month, and the short rains around September are the quietest."
+            note="Activities by calendar month, all seven years stacked. July, deep in the cool dry season, is the busiest by a clear margin; February is the thinnest. The training has a season, and it tracks the weather."
             source="Activity Log"
             tableCaption="Activities by calendar month"
             columns={['Month', 'Activities']}
@@ -324,7 +346,7 @@ export default function Home() {
 
           <Figure
             title="Rarely a day off"
-            note={`Once a day has an activity, how soon is the next active day? Four times in five it is the very next day. Across seven years, ${pctActiveDays}% of all calendar days had at least one activity.`}
+            note={`Once a day has an activity, the next usually comes fast: four times in five, it is the very next day. Across seven years, ${pctActiveDays}% of all calendar days carry at least one activity, and gaps of three days or more happen less than once in ten.`}
             source="Activity Log"
             tableCaption="Days until the next active day"
             columns={['Gap to next active day', 'Share']}
