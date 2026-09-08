@@ -39,7 +39,7 @@ comp=[]
 # --- Volume / terrain (from Yearly Trends) ---
 comp.append(cmp_row("Activities logged in the year","Volume","count","activities",
     yearly[y0]['activities'],yearly[y1]['activities'],
-    "From a 27-activity debut half-year to 258 in eight months of 2026.","Yearly Trends"))
+    "From a 27-activity debut half-year to a far bigger tally within 2026 alone.","Yearly Trends"))
 comp.append(cmp_row("Distance in the year","Volume","distance","km",
     yearly[y0]['distance_km'],yearly[y1]['distance_km'],
     "Yearly distance is roughly seven times the debut year.","Yearly Trends"))
@@ -51,7 +51,7 @@ comp.append(cmp_row("Calories burned in the year","Volume","energy","kcal",
     "A far larger training load, measured in energy spent.","Yearly Trends"))
 comp.append(cmp_row("Elevation gained in the year","Terrain","elevation","m",
     yearly[y0]['elevation_m'],yearly[y1]['elevation_m'],
-    "Climbing has gone from incidental to a defining feature of the training.","Yearly Trends"))
+    "Climbing makes up far more of the training now than in the early years.","Yearly Trends"))
 # --- Effort (from Zones & Effort) ---
 comp.append(cmp_row("Total relative effort in the year","Effort","effort","score",
     re_year[y0]['total_relative_effort'],re_year[y1]['total_relative_effort'],
@@ -82,7 +82,7 @@ sport_plain={
  "Run":"Running distance kept climbing across the years.",
  "TrailRun":"Trail running did not exist in 2019; now it is a staple.",
  "GravelRide":"Gravel riding spiked mid-journey and has since eased off.",
- "Ride":"Road riding was an early focus that later gave way to feet.",
+ "Ride":"Road riding was an early focus and has since faded as the training shifted to feet.",
 }
 sport_pretty={"Walk":"Walk","Run":"Run","TrailRun":"Trail Run","GravelRide":"Gravel Ride","Ride":"Ride"}
 for sp in ["Walk","Run","TrailRun","GravelRide","Ride"]:
@@ -111,6 +111,7 @@ t("2019-08-17","First Strava activity","Milestone","Where it all began: the very
 t(nth_date(500),"500th activity","Milestone","Five hundred activities logged.","Activity Log")
 t(nth_date(1000),"1,000th activity","Milestone","Into four figures.","Activity Log")
 t(nth_date(1500),"1,500th activity","Milestone","Fifteen hundred and still building.","Activity Log")
+t(nth_date(2000),"2,000th activity","Milestone","Two thousand activities logged, on home ground in Dar es Salaam.","Activity Log")
 t("2023-02-26","Most-kudoed activity","Record","Kili Half Marathon 2023 drew 125 kudos, an all-time high.","Fun Stats")
 t("2025-03-29","Highest climb: 1,979 m","Record","Bondwa x Nakie hike, the biggest single-activity ascent.","Personal Records")
 # international debuts
@@ -122,7 +123,11 @@ for c,d in sorted(first_country.items(),key=lambda kv:kv[1]):
     if c in SKIP_TRAVEL: continue
     t(d,names.get(c,f"First activity in {c}"),"Travel",f"Training crossed into {c}.","Strava GPS")
 t("2025-12-29","Current streak begins","Streak","Start of a run of consecutive active days that is still going.","Fun Stats")
-t("2026-08-24","1,996 activities and counting","Milestone","Latest refresh: nearly at the 2,000 milestone.","Activity Log")
+_total = len(acts)
+_streak = next((r['value'] for r in load('streaks.csv') if 'Current' in r['metric']), '')
+_streak_days = (_streak or '').split()[0] if _streak else ''
+t(nth_date(_total), f"{_total:,} activities and counting", "Milestone",
+  f"Latest refresh: {_total:,} activities logged, on an active streak of {_streak_days} days and still going.", "Activity Log")
 tl=sorted(tl,key=lambda r:r[0])
 write("timeline.csv",["date","label","category","note","source_page"],tl)
 

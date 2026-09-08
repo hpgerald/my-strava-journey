@@ -1202,3 +1202,258 @@ text.chart-panel-title {
 .terrain__seg--road { background: var(--grey-45); }
 .terrain__seg--trail { background: var(--accent); }
 .terrain__row.is-hi .terrain__seg { filter: brightness(0.9); }
+
+/* ========================================================================
+   Design elevation · atlas opening, chapter transitions, and the three
+   page metaphors (elevation / streak / tread). Same palette and rules as
+   the rest of the system: ink on paper, one accent, thin strokes.
+   ======================================================================== */
+
+/* ---- Atlas opening: topographic backdrop + map-plate framing (Home) ---- */
+.hero { position: relative; }
+.hero__atlas {
+  position: absolute;
+  inset: -1.5rem -2vw;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero > .container, /* safety if wrapped */
+.hero__main,
+.hero__cards { position: relative; z-index: 1; }
+.contour { width: 100%; height: 100%; display: block; }
+.contour__line {
+  fill: none;
+  stroke: var(--grey-10);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+.contour__line--in { stroke: var(--grey-15); }
+.contour__mark line,
+.contour__mark circle { stroke: var(--accent); stroke-width: 1.6; fill: none; opacity: 0.85; }
+.contour__mark circle { fill: var(--accent-mute); }
+
+@media (min-width: 60rem) {
+  .contour__line { stroke-width: 1.2; }
+}
+/* draw-on: each ring traces itself once, lightly staggered */
+@media (prefers-reduced-motion: no-preference) {
+  .contour__line {
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+    animation: contourDraw 2.4s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 0.12s);
+  }
+  .contour__mark { opacity: 0; animation: contourMark 0.6s var(--ease) 1.4s forwards; }
+}
+@keyframes contourDraw { to { stroke-dashoffset: 0; } }
+@keyframes contourMark { to { opacity: 1; } }
+
+/* map-plate caption row above the headline */
+.atlas-cap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-caps);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin: 0 0 var(--sp-2);
+}
+.atlas-cap__rule { flex: 1 1 2rem; height: 1px; background: var(--rule-faint); min-width: 1.5rem; }
+.atlas-cap__mark { color: var(--accent-ink); font-weight: 600; }
+
+/* corner registration ticks: the hero reads as a plate cropped from an atlas */
+.hero__plate { position: absolute; inset: -0.4rem -0.6rem; z-index: 0; pointer-events: none; }
+.hero__plate::before,
+.hero__plate::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border-color: var(--grey-25);
+  border-style: solid;
+}
+.hero__plate::before { left: 0; top: 0; border-width: 1px 0 0 1px; }
+.hero__plate::after { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+@media (max-width: 59.999rem) { .hero__plate { display: none; } }
+
+/* ---- Chapter frontispiece + chapter turn (section pages) --------------- */
+.chapter { position: relative; }
+.chapter__kicker {
+  display: inline-flex; align-items: baseline; gap: 0.5ch;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-caps);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: var(--sp-3);
+}
+.chapter__kicker b { color: var(--accent-ink); font-weight: 700; }
+.chapter__ghost {
+  position: absolute;
+  top: -1.6rem; right: -0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(6rem, 18vw, 13rem);
+  line-height: 0.8;
+  letter-spacing: var(--tr-mega);
+  color: var(--grey-06);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.chapter__ghost::before { content: attr(data-num); }
+.chapter > * { position: relative; z-index: 1; }
+@media (max-width: 59.999rem) {
+  .chapter__ghost { top: -0.8rem; font-size: clamp(4.5rem, 26vw, 8rem); opacity: 0.9; }
+}
+
+/* the prev/next as a turning-of-the-page chapter hand-off */
+.chapterturn { display: block; padding: var(--sp-6) var(--sp-4); }
+.chapterturn__eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-caps);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.chapterturn__row { display: flex; align-items: baseline; gap: var(--sp-3); margin-top: var(--sp-2); }
+.chapterturn--next .chapterturn__row { justify-content: flex-end; }
+.chapterturn__num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  opacity: 0.75;
+}
+.chapterturn__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); letter-spacing: var(--tr-snug); line-height: 1.05; }
+.chapterturn__sub { display: block; margin-top: 4px; font-size: var(--fs-sm); opacity: 0.7; }
+
+/* ---- Records: AscentProfile (elevation metaphor) ----------------------- */
+.ascent { position: relative; }
+.ascent__ref { stroke: var(--grey-25); stroke-width: 1; stroke-dasharray: 2 5; }
+.ascent__ground { stroke: var(--ink); stroke-width: 1.5; }
+.ascent__range { fill: var(--grey-95); }
+.ascent__back { fill: var(--grey-15); }
+@media (prefers-reduced-motion: no-preference) {
+  .ascent__range, .ascent__back { animation: ascentRise 1s var(--ease) both; transform-origin: 50% 100%; }
+  .ascent__back { animation-delay: 0.08s; }
+}
+@keyframes ascentRise { from { transform: scaleY(0.02); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+.ascent__labels { position: absolute; inset: 0; pointer-events: none; }
+.ascent__ref-lbl {
+  position: absolute; right: 10px;
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); color: var(--fg-faint);
+  background: var(--paper); padding: 0 4px;
+}
+.ascent__ref-lbl--summit { top: 16px; }
+.ascent__ref-lbl--sea { bottom: 8px; color: var(--grey-25); background: none; }
+
+/* ---- Rhythm: StreakRibbon (streak metaphor) ---------------------------- */
+.ribbon { position: relative; }
+.ribbon__band { fill: var(--accent); }
+.ribbon__core { stroke: var(--accent-strong); stroke-width: 1.5; opacity: 0.55; }
+.ribbon__cursor { stroke: var(--ink); stroke-width: 2; }
+.ribbon__end { fill: var(--paper); stroke: var(--ink); stroke-width: 2.5; }
+.ribbon__ends {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: var(--sp-2);
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); color: var(--fg-faint);
+}
+.ribbon__still { color: var(--accent-ink); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) {
+  .ribbon svg { animation: ribbonIn 0.9s var(--ease) both; }
+}
+@keyframes ribbonIn { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* ---- Gear: TreadWear (gear metaphor) ----------------------------------- */
+.tread__list { list-style: none; margin: 0; padding: 0; }
+.tread__row { padding: var(--sp-3) 0 var(--sp-4); border-top: 1px solid var(--rule-faint); }
+.tread__list > li:first-child { border-top: 0; }
+.tread__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: var(--sp-3); margin-bottom: 7px;
+}
+.tread__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-base); letter-spacing: var(--tr-snug); }
+.tread__badge {
+  font-family: var(--font-mono); font-style: normal; font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--accent-ink);
+  margin-left: 0.6ch;
+}
+.tread__val { font-size: var(--fs-sm); white-space: nowrap; display: inline-flex; align-items: center; gap: 0.5ch; }
+.tread__now { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); display: inline-block; }
+.tread__base { stroke: var(--grey-10); stroke-width: 1; }
+.tread__edge { stroke: var(--ink); stroke-width: 1.5; }
+.tread__row.is-hi .tread__base { stroke: var(--grey-15); }
+
+/* ---- Rhythm: WeekStreakGrid (weekly-streak feature) -------------------- */
+.wstreak { position: relative; }
+.wstreak__head { display: flex; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-5); flex-wrap: wrap; }
+.wstreak__big {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(3rem, 1.8rem + 5vw, 5.4rem); line-height: 0.85;
+  letter-spacing: var(--tr-mega); color: var(--accent); font-feature-settings: 'tnum' 1;
+}
+.wstreak__headtext { display: flex; flex-direction: column; gap: 2px; }
+.wstreak__unit {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg);
+  line-height: 1; letter-spacing: var(--tr-tight);
+}
+.wstreak__sub { font-size: var(--fs-sm); color: var(--fg-muted); max-width: 30rem; line-height: 1.35; }
+.wstreak__grid { display: grid; gap: 6px; }
+.wstreak__rowline { display: grid; grid-template-columns: 3.6rem 1fr; align-items: center; gap: var(--sp-3); }
+.wstreak__rowlbl { font-size: var(--fs-2xs); color: var(--fg-faint); letter-spacing: var(--tr-wide); white-space: nowrap; }
+.wstreak__row { display: grid; gap: 2px; min-width: 0; }
+.wstreak__cell { aspect-ratio: 1 / 1; border-radius: 1.5px; min-width: 0; }
+.wstreak__cell.is-now { outline: 1.5px solid var(--ink); outline-offset: 1px; }
+@media (max-width: 32rem) {
+  .wstreak__rowline { grid-template-columns: 2.9rem 1fr; gap: var(--sp-2); }
+  .wstreak__row { gap: 1.5px; }
+  .wstreak__rowlbl { font-size: 0.62rem; }
+}
+.wstreak__foot {
+  display: flex; justify-content: space-between; margin-top: var(--sp-3);
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); color: var(--fg-faint);
+}
+.wstreak__now { color: var(--accent-ink); font-weight: 600; }
+.wstreak__readout { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); min-height: 1.4em; }
+@media (min-width: 40rem) { .wstreak svg { } }
+@media (prefers-reduced-motion: no-preference) {
+  /* animate the cells only, never the faint row labels (keeps text at full
+     contrast throughout the fade) */
+  .wstreak__row { animation: wstreakIn 0.7s var(--ease) both; }
+}
+@keyframes wstreakIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---- Rhythm: SeasonWheel (radial seasonality) ------------------------- */
+.season-wheel { display: flex; flex-direction: column; align-items: center; gap: var(--sp-4); }
+.season-wheel__controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.season-wheel__button {
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); text-transform: uppercase;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid var(--rule-faint);
+  padding: 0.5rem 0.7rem; cursor: pointer; line-height: 1;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.season-wheel__button:hover,
+.season-wheel__button:focus-visible { background: var(--grey-06); border-color: var(--grey-25); }
+.season-wheel__button[aria-pressed='true'] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.season-wheel svg { width: 100%; max-width: 340px; height: auto; display: block; overflow: visible; }
+.season-wheel__guide { fill: none; stroke: var(--rule-faint); stroke-width: 1; }
+.season-wheel__guide--in { stroke: var(--grey-10); }
+.season-wheel__shape { fill: var(--accent-mute); stroke: var(--accent-strong); stroke-width: 1.5; stroke-linejoin: round; }
+.season-wheel__spoke { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+.season-wheel__tip { fill: var(--accent-strong); }
+.season-wheel__month { font-family: var(--font-mono); font-size: 12px; fill: var(--fg-muted); font-weight: 600; }
+.season-wheel__value { font-family: var(--font-display); font-weight: 700; font-size: 30px; fill: var(--ink); font-feature-settings: 'tnum' 1; }
+.season-wheel__label { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); letter-spacing: 0.08em; text-transform: uppercase; }
+@media (prefers-reduced-motion: no-preference) {
+  .season-wheel__shape { animation: wheelIn 0.7s var(--ease) both; transform-origin: center; }
+}
+@keyframes wheelIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }

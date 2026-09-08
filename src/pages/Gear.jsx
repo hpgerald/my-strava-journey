@@ -6,6 +6,7 @@ import BarChart from '../charts/BarChart.jsx'
 import Dumbbell from '../charts/Dumbbell.jsx'
 import GearTimeline from '../charts/GearTimeline.jsx'
 import TerrainMix from '../charts/TerrainMix.jsx'
+import TreadWear from '../charts/TreadWear.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -109,6 +110,21 @@ export default function Gear() {
       bDisplay: fmtNum(g.strava_total_km, 0),
     }))
 
+  // tread-wear rows: every pair with logged distance, longest-worn first
+  const treadRows = [...gear]
+    .filter((g) => toNum(g.distance_in_log_km) > 0)
+    .sort((a, b) => toNum(b.distance_in_log_km) - toNum(a.distance_in_log_km))
+    .map((g) => {
+      const rec = byGear[g.gear_id] || { road: 0, trail: 0 }
+      return {
+        label: `${g.brand} ${g.model}`,
+        km: toNum(g.distance_in_log_km),
+        display: fmtNum(g.distance_in_log_km, 0),
+        trail: rec.trail > rec.road,
+        current: /no/i.test(g.retired),
+      }
+    })
+
   const sorted = [...gear].sort((a, b) => toNum(b.strava_total_km) - toNum(a.strava_total_km))
 
   return (
@@ -127,6 +143,20 @@ export default function Gear() {
           <StatCard value={fmtNum(logged, 0)} unit=" km" label="Logged in these shoes" source="Gear" />
           <StatCard value={String(active.length)} label="Still in rotation" source="Gear" />
         </div>
+      </section>
+
+      {/* Tread wear: the signature gear metaphor */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          title="The tread, worn in by the miles"
+          note="Each pair as a strip of outsole tread, its length the distance logged in it. The Lunarglide 7 is the long, worn workhorse; trail shoes carry the accent, and a filled dot marks the pairs still in rotation. On the most-used soles the heel lugs fade, the way real tread wears smooth."
+          source="Activity Log + Gear"
+          tableCaption="Distance logged in each pair"
+          columns={['Pair', 'km', 'Terrain']}
+          rows={treadRows.map((r) => [r.label, r.display, r.trail ? 'Trail' : 'Road'])}
+        >
+          <TreadWear rows={treadRows} />
+        </Figure>
       </section>
 
       {/* The rotation timeline */}

@@ -10,6 +10,7 @@ import BarChart from '../charts/BarChart.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import HeatStrip from '../charts/HeatStrip.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
+import ContourField from '../charts/ContourField.jsx'
 import { useEffect } from 'react'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -171,10 +172,18 @@ export default function Home() {
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
         <section className="hero">
+          <div className="hero__atlas" aria-hidden="true">
+            <ContourField />
+          </div>
+          <div className="hero__plate" aria-hidden="true" />
           <div className="hero__main">
-            <p className="eyebrow">
-              {years ? `${years} years` : 'Seven years'} · {meta.coverage_start?.slice(0, 4) || '2019'}
-              &ndash;{meta.coverage_end?.slice(0, 4) || '2026'} · Strava
+            <p className="atlas-cap">
+              <span className="atlas-cap__mark">Plate 01</span>
+              <span className="atlas-cap__rule" aria-hidden="true" />
+              <span>
+                {years ? `${years} years` : 'Seven years'} · {meta.coverage_start?.slice(0, 4) || '2019'}
+                &ndash;{meta.coverage_end?.slice(0, 4) || '2026'} · Strava
+              </span>
             </p>
             <h1
               className="display hero__head"

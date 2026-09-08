@@ -49,16 +49,28 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
         <header className="section-head detail-head" style={{ paddingTop: 'var(--sp-4)' }}>
           <div className="detail-head__main">
             {number ? (
-              <div className="mono" style={{ fontSize: 'var(--fs-lg)', color: 'var(--fg-muted)' }}>
-                {number}
+              <div className="chapter">
+                <span className="chapter__ghost" aria-hidden="true" data-num={number} />
+                <p className="chapter__kicker">
+                  Chapter&nbsp;<b>{number}</b>
+                </p>
+                <h1 className="section-head__title">{title}</h1>
+                {subtitle ? (
+                  <p className="text-muted" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-2)' }}>
+                    {subtitle}
+                  </p>
+                ) : null}
               </div>
-            ) : null}
-            <h1 className="section-head__title">{title}</h1>
-            {subtitle ? (
-              <p className="text-muted" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-2)' }}>
-                {subtitle}
-              </p>
-            ) : null}
+            ) : (
+              <>
+                <h1 className="section-head__title">{title}</h1>
+                {subtitle ? (
+                  <p className="text-muted" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-2)' }}>
+                    {subtitle}
+                  </p>
+                ) : null}
+              </>
+            )}
           </div>
           {lede ? (
             <p className="detail-head__lede" style={{ fontSize: 'var(--fs-md)' }}>
@@ -86,28 +98,25 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 }
 
 function PagingLink({ item, dir }) {
-  const align = dir === 'next' ? 'right' : 'left'
   if (!item) return <span />
+  const isNext = dir === 'next'
   return (
     <Link
       to={item.to}
-      className="u-invert"
+      className={`u-invert chapterturn chapterturn--${dir}`}
       style={{
-        display: 'block',
-        padding: 'var(--sp-5) var(--sp-4)',
-        textAlign: align,
-        borderRight: dir === 'prev' ? '1px solid var(--rule)' : 'none',
+        textAlign: isNext ? 'right' : 'left',
+        borderRight: isNext ? 'none' : '1px solid var(--rule)',
       }}
     >
-      <span className="eyebrow" style={{ display: 'block', color: 'inherit', opacity: 0.7 }}>
-        {dir === 'prev' ? '← Previous' : 'Next →'}
+      <span className="chapterturn__eyebrow">
+        {isNext ? 'Next chapter →' : '← Previous chapter'}
       </span>
-      <span
-        className="display"
-        style={{ display: 'block', fontSize: 'var(--fs-lg)', marginTop: 4 }}
-      >
-        {item.label}
+      <span className="chapterturn__row">
+        {item.number ? <span className="chapterturn__num">{item.number}</span> : null}
+        <span className="chapterturn__title">{item.label}</span>
       </span>
+      {item.subtitle ? <span className="chapterturn__sub">{item.subtitle}</span> : null}
     </Link>
   )
 }

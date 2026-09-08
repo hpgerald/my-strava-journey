@@ -3,6 +3,9 @@ import StatCard from '../components/StatCard.jsx'
 import DataTable from '../components/DataTable.jsx'
 import Figure from '../charts/Figure.jsx'
 import CalendarHeatmap from '../charts/CalendarHeatmap.jsx'
+import StreakRibbon from '../charts/StreakRibbon.jsx'
+import WeekStreakGrid from '../charts/WeekStreakGrid.jsx'
+import SeasonWheel from '../charts/SeasonWheel.jsx'
 import Matrix from '../charts/Matrix.jsx'
 import Columns from '../charts/Columns.jsx'
 import MiniTrend from '../charts/MiniTrend.jsx'
@@ -20,8 +23,22 @@ const BUCKETS = [
   ['Night (20-4)', '20–4'],
 ]
 
+const MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const fmtMonYr = (iso) => {
+  const d = new Date(`${iso}T00:00:00Z`)
+  return `${MON3[d.getUTCMonth()]} ${d.getUTCFullYear()}`
+}
+// Monday (ISO) of the week a given YYYY-MM-DD falls in
+const weekMondayOf = (iso) => {
+  const d = new Date(`${iso}T00:00:00Z`)
+  const back = (d.getUTCDay() + 6) % 7 // 0 = Monday
+  d.setUTCDate(d.getUTCDate() - back)
+  return d.toISOString().slice(0, 10)
+}
+
 export default function Rhythm() {
   const activities = useTable('activities')
+  const monthly = useTable('monthly_totals')
   const io = useTable('indoor_outdoor')
   const effort = useTable('relative_effort_by_year')
   const pace = useTable('pace_zones')
@@ -46,6 +63,40 @@ export default function Rhythm() {
   const streakStart = mDates ? mDates[1] : null
   const streakEnd = mDates ? mDates[2] : null
   const streakLen = streaks['Longest consecutive-day streak'] || streaks['Current streak (as of last activity)'] || ''
+
+  // weekly streak: consecutive Mon-Sun weeks with at least one activity, ending
+  // at the most recent activity's week (this is Strava's "week streak")
+  const weekCounts = {}
+  for (const a of activities) {
+    const d = (a.date || '').slice(0, 10)
+    if (!d) continue
+    const wk = weekMondayOf(d)
+    weekCounts[wk] = (weekCounts[wk] || 0) + 1
+  }
+  const activeWeeks = Object.keys(weekCounts).sort()
+  const weekRun = []
+  if (activeWeeks.length) {
+    let cursor = activeWeeks[activeWeeks.length - 1]
+    while (weekCounts[cursor] != null) {
+      weekRun.push({ key: cursor, n: weekCounts[cursor] })
+      const prev = new Date(`${cursor}T00:00:00Z`)
+      prev.setUTCDate(prev.getUTCDate() - 7)
+      cursor = prev.toISOString().slice(0, 10)
+    }
+    weekRun.reverse() // chronological, oldest first
+  }
+  const weekStreakLen = weekRun.length
+  const weekStreakStart = weekRun.length ? weekRun[0].key : null
+  // per-52-week-block summary for the readable table
+  const weekBlocks = []
+  for (let i = 0; i < weekRun.length; i += 52) {
+    const block = weekRun.slice(i, i + 52)
+    weekBlocks.push([
+      `${fmtMonYr(block[0].key)} onward`,
+      String(block.length),
+      String(block.reduce((s, w) => s + w.n, 0)),
+    ])
+  }
 
   // weekday x time-of-day matrix
   const matrix = WEEKDAYS.map(() => BUCKETS.map(() => 0))
@@ -91,8 +142,38 @@ export default function Rhythm() {
       prev={prev}
       next={next}
     >
+      {/* Weekly streak: the three-year milestone */}
+      {weekStreakLen >= 8 && (
+        <section style={{ paddingTop: 'var(--sp-6)' }}>
+          <Figure
+            title="Three years, every single week"
+            note={`Strava counts a week streak as consecutive weeks with at least one activity. This run reached ${weekStreakLen} weeks, ${(weekStreakLen / 52).toFixed(weekStreakLen % 52 ? 1 : 0)} years without a gap, starting the week of ${fmtMonYr(weekStreakStart)}, and it is still going. Each cell is a week, one row per year, shaded by how busy that week was.`}
+            source="Activity Log"
+            tableCaption="Weekly activity across the streak, by year of the run"
+            columns={['Stretch', 'Weeks', 'Activities']}
+            rows={weekBlocks}
+          >
+            <WeekStreakGrid weeks={weekRun} />
+          </Figure>
+        </section>
+      )}
+
+      {/* The streak, as one unbroken thread */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          title="The streak, unbroken"
+          note={`The current run of ${streakLen || 'consecutive active days'}, drawn as one continuous thread. Every day is a stitch, taller where more was logged, and the thread has not broken once. The open end is today: it is still going.`}
+          source="Activity Log + Fun Stats"
+          tableCaption="Current active-day streak"
+          columns={['Streak', 'Span']}
+          rows={[[streakLen || '', `${streakStart || ''} to ${streakEnd || ''}`]]}
+        >
+          <StreakRibbon counts={counts} start={streakStart} end={streakEnd} />
+        </Figure>
+      </section>
+
       {/* Consistency calendar */}
-      <section style={{ paddingTop: 'var(--sp-6)' }}>
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every active day"
           note={`Each square is a day, and darker means more activities. The orange stretch is the current run of ${streakLen || 'the streak'}, the longest I've gone without a gap, and it's still alive.`}
@@ -117,6 +198,24 @@ export default function Rhythm() {
           <StatCard value={fmtInt(outdoor.activities)} label="Outdoor activities" note={`${fmtNum(outdoor.distance_km, 0)} km in the open.`} source="Fun Stats" />
           <StatCard value={fmtInt(indoor.activities)} label="Indoor / trainer" note={`${fmtNum(indoor.distance_km, 0)} km on treadmill or trainer.`} source="Fun Stats" />
         </div>
+      </section>
+
+      {/* Seasonality wheel: the shape of the training year */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          title="The shape of the year"
+          note="Every activity placed on a twelve-month wheel, so the training year reads as a silhouette rather than a row of bars. The cool dry months around midyear bulge out; the short rains pull it in. Pick a single year to see how its rhythm compares."
+          source="Monthly Trends"
+          tableCaption="Activities by calendar month, all years combined"
+          columns={['Month', 'Activities']}
+          rows={monthly.reduce((acc, m) => {
+            const mi = Number((m.month || '').slice(5, 7))
+            if (mi >= 1 && mi <= 12) acc[mi - 1][1] += toNum(m.activities) || 0
+            return acc
+          }, MON3.map((mn) => [mn, 0])).map((r) => [r[0], fmtInt(r[1])])}
+        >
+          <SeasonWheel rows={monthly} />
+        </Figure>
       </section>
 
       {/* Weekday x time heatmap  +  total relative effort, side by side */}

@@ -3,7 +3,7 @@ import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
 import BarChart from '../charts/BarChart.jsx'
 import RecordWall from '../charts/RecordWall.jsx'
-import EverestLedger from '../charts/EverestLedger.jsx'
+import AscentProfile from '../charts/AscentProfile.jsx'
 import MilestoneLadder from '../charts/MilestoneLadder.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -11,6 +11,7 @@ import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
 const EVEREST = 8849 // metres, sea level to summit
+const KILI = 5895 // Kilimanjaro summit, metres
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const parseDay = (s) => new Date(`${(s || '').slice(0, 10)}T00:00:00Z`)
@@ -185,18 +186,19 @@ export default function Records() {
           </p>
         </div>
         <Figure
-          title="Total climb, on foot, measured in Everests"
-          note="Each triangle is one ascent of Everest from sea level, 8,849 metres. The last one fills only as far as the leftover metres reach."
+          title="Total climb, on foot, as a range of Everests"
+          note="Every hill, trail and staircase across the walking, running and hiking, drawn as the mountain range it adds up to: one Everest-height summit for each Everest climbed, with Kilimanjaro marked for scale. The final summit is only the leftover metres."
           source="Activity Log"
-          tableCaption="Total foot elevation gain against Everest"
+          tableCaption="Total foot elevation gain against Everest and Kilimanjaro"
           columns={['Measure', 'Value']}
           rows={[
             ['Total climb on foot', `${fmtInt(totalElev)} m`],
             ['Height of Everest', `${fmtInt(EVEREST)} m`],
             ['Everests climbed', fmtNum(totalElev / EVEREST, 1)],
+            ['Kilimanjaros climbed', fmtNum(totalElev / KILI, 1)],
           ]}
         >
-          <EverestLedger meters={totalElev} everest={EVEREST} />
+          <AscentProfile meters={totalElev} everest={EVEREST} kili={KILI} />
         </Figure>
       </section>
 
