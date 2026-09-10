@@ -4,6 +4,7 @@ import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
 import Choropleth from '../charts/Choropleth.jsx'
 import ProportionBar from '../charts/ProportionBar.jsx'
+import EquatorArc from '../charts/EquatorArc.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
@@ -12,7 +13,12 @@ import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 export default function Where() {
   const countries = useTable('countries')
   const regions = useTable('tanzania_regions')
+  const activities = useTable('activities')
   const { prev, next } = useSectionPaging('/where')
+
+  // total distance covered on foot, for the equator arc
+  const FOOT_W = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+  const footKm = activities.reduce((s, a) => (FOOT_W.has(a.sport_type) ? s + (toNum(a.distance_km) || 0) : s), 0)
 
   const realCountries = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS')
   const indoor = countries.find((c) => c.country === 'Indoor / no GPS') || {}
@@ -53,6 +59,28 @@ export default function Where() {
           />
         </div>
       </section>
+
+      {/* Distance against the planet */}
+      {footKm > 0 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="01"
+            title="A third of the way around the Earth"
+            note="All the ground covered on foot, laid against the length of the equator. Twelve thousand nine hundred kilometres of running, walking and hiking is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, most of it looped through a handful of home regions."
+            source="Activity Log"
+            tableCaption="Foot distance against the equator and Tanzania's border"
+            columns={['Measure', 'Value']}
+            rows={[
+              ['Distance on foot', `${fmtInt(footKm)} km`],
+              ['Length of the equator', '40,075 km'],
+              ['Share of the equator', `${((footKm / 40075) * 100).toFixed(0)}%`],
+              ['Times around Tanzania border', fmtNum(footKm / 3861, 1)],
+            ]}
+          >
+            <EquatorArc km={footKm} equatorKm={40075} borderKm={3861} />
+          </Figure>
+        </section>
+      )}
 
       {/* Two maps, side by side */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>

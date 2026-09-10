@@ -3,6 +3,9 @@ import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
 import DistanceStartLine from '../charts/DistanceStartLine.jsx'
 import KudosStarburst from '../charts/KudosStarburst.jsx'
+import MotionClock from '../charts/MotionClock.jsx'
+import CaloriePlates from '../charts/CaloriePlates.jsx'
+import PRPulse from '../charts/PRPulse.jsx'
 import RecordWall from '../charts/RecordWall.jsx'
 import AscentProfile from '../charts/AscentProfile.jsx'
 import MilestoneLadder from '../charts/MilestoneLadder.jsx'
@@ -115,6 +118,23 @@ export default function Records() {
   const totalElev = foot.reduce((s, a) => s + (toNum(a.elevation_gain_m) || 0), 0)
   const totalHours = foot.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
 
+  // ---- time in motion (all sports): moving vs elapsed ----
+  const movingHours = activities.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
+  const elapsedHours = activities.reduce((s, a) => s + (toNum(a.elapsed_time_min) || 0), 0) / 60
+
+  // ---- total energy burned ----
+  const totalKcal = activities.reduce((s, a) => s + (toNum(a.calories) || 0), 0)
+
+  // ---- PRs per outing, by year (records come in bursts) ----
+  const prAgg = {}
+  for (const a of activities) {
+    if (!a.year) continue
+    const p = (prAgg[a.year] = prAgg[a.year] || { pr: 0, n: 0 })
+    p.pr += toNum(a.prs) || 0
+    p.n += 1
+  }
+  const prByYear = Object.keys(prAgg).sort().map((y) => ({ year: y, rate: prAgg[y].pr / prAgg[y].n, total: Math.round(prAgg[y].pr) }))
+
   // ---- cumulative distance milestones ----
   const chron = [...foot].sort((a, b) => (a.date < b.date ? -1 : 1))
   const marks = [1000, 2500, 5000, 7500, 10000]
@@ -173,6 +193,25 @@ export default function Records() {
         <p className="source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log</p>
       </section>
 
+      {/* Time in motion */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="01"
+          title="Ninety-six days in motion"
+          note="Add up the moving time on every activity ever logged and it comes to more than three months of continuous movement, day and night without pause. Alongside it runs the dead time: the fraction of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
+          source="Activity Log"
+          tableCaption="Total moving time against elapsed time"
+          columns={['Measure', 'Hours']}
+          rows={[
+            ['Moving time', fmtInt(movingHours)],
+            ['Elapsed (clock) time', fmtInt(elapsedHours)],
+            ['Paused / dead time', fmtInt(elapsedHours - movingHours)],
+          ]}
+        >
+          <MotionClock movingHours={movingHours} elapsedHours={elapsedHours} />
+        </Figure>
+      </section>
+
       {/* The climb ledger */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <hr className="rule" />
@@ -184,10 +223,12 @@ export default function Records() {
           <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
             Add up every hill, every trail, every set of stairs on foot and the climbing alone reaches{' '}
             {fmtInt(totalElev)} metres. That is Everest, sea to summit, more than nine times over, or Kilimanjaro
-            fourteen times. Almost none of it came from running.
+            fourteen times. The biggest single day put {fmtInt(biggestClimb?.elevation_gain_m)} metres underfoot at
+            once, nearly two vertical kilometres in one hike. Almost none of it came from running.
           </p>
         </div>
         <Figure
+          n="02"
           title="Total climb, on foot, as a range of Everests"
           note="Every hill, trail and staircase across the walking, running and hiking, drawn as the mountain range it adds up to: one Everest-height summit for each Everest climbed, with Kilimanjaro marked for scale. The final summit is only the leftover metres."
           source="Activity Log"
@@ -204,9 +245,29 @@ export default function Records() {
         </Figure>
       </section>
 
+      {/* Energy burned, as food */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="03"
+          title="Fuel: the burn, in plates of ugali"
+          note="Strava totals the calories each activity burns. Across seven years that comes to over a million and a half, roughly two thousand seven hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead."
+          source="Activity Log"
+          tableCaption="Total calories burned and food equivalent"
+          columns={['Measure', 'Value']}
+          rows={[
+            ['Total calories', `${fmtInt(totalKcal)} kcal`],
+            ['Plates of ugali (~600 kcal)', fmtInt(totalKcal / 600)],
+            ['Days of resting energy (~2000 kcal)', fmtInt(totalKcal / 2000)],
+          ]}
+        >
+          <CaloriePlates kcal={totalKcal} kcalPerPlate={600} />
+        </Figure>
+      </section>
+
       {/* Milestone ladder */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
+          n="04"
           title="The road to ten thousand kilometres"
           note="Each rung is the day a running foot-distance total was crossed. The first thousand kilometres took two years of dabbling. The next fifteen hundred took three months, once July 2021 lit the fuse."
           source="Activity Log"
@@ -221,7 +282,7 @@ export default function Records() {
       {/* Furthest, off a start line */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
-          n="03"
+          n="05"
           title="Furthest in each discipline"
           note="Every way of travelling on foot leaves the same start line and runs its own lane to its single longest outing. On one shared distance axis the order is plain: a full marathon on the run out front, a long trail and a long walk in the thirties, the biggest hike barely past halfway."
           source="Activity Log"
@@ -236,7 +297,7 @@ export default function Records() {
       {/* Most loved, a burst of applause */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
-          n="04"
+          n="06"
           title="A burst of applause"
           note="The six activities that drew the most kudos, each a ray leaving the centre as long as the cheers it earned. Running fills the burst; a single trail run breaks in among them."
           source="Activity Log"
@@ -245,6 +306,21 @@ export default function Records() {
           rows={loved.map((d) => [d.label, d.display])}
         >
           <KudosStarburst data={loved} />
+        </Figure>
+      </section>
+
+      {/* PRs come in bursts */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="07"
+          title="Records come in bursts"
+          note="A personal record is Strava's flag for a best-ever split. Plotted as a rate per outing by year, they do not fade with age, they pulse: a spike in 2023, then the hungriest year on record in 2026, catching more bests per outing than ever. The dot grows with the number of records that year."
+          source="Activity Log"
+          tableCaption="Personal records per outing, and total, by year"
+          columns={['Year', 'PRs / outing', 'Total PRs']}
+          rows={prByYear.map((d) => [d.year, d.rate.toFixed(2), String(d.total)])}
+        >
+          <PRPulse data={prByYear} />
         </Figure>
       </section>
 

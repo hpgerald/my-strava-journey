@@ -13,6 +13,7 @@ import HeatStrip from '../charts/HeatStrip.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
 import ContourField from '../charts/ContourField.jsx'
 import IgnitionStream from '../charts/IgnitionStream.jsx'
+import SwitchStep from '../charts/SwitchStep.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
 import { useEffect } from 'react'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
@@ -136,6 +137,25 @@ export default function Home() {
     if (footAgg[a.sport_type]) { footAgg[a.sport_type].dist += toNum(a.distance_km) || 0; footAgg[a.sport_type].elev += toNum(a.elevation_gain_m) || 0 }
   }
   const footFlipData = FOOT_ORDER.map((k) => ({ key: k, label: FOOT_NAME[k], dist: footAgg[k].dist, elev: footAgg[k].elev }))
+
+  // the switch as a rate: activities per calendar month before vs from July 2021
+  const switchRate = (() => {
+    const SW = '2021-07'
+    const ym = (s) => Number(s.slice(0, 4)) * 12 + Number(s.slice(5, 7))
+    const months = monthlyTotals.map((mm) => mm.month).filter(Boolean).sort()
+    if (!months.length) return null
+    let before = 0
+    let after = 0
+    for (const mm of monthlyTotals) {
+      const n = toNum(mm.activities) || 0
+      if (mm.month < SW) before += n
+      else after += n
+    }
+    const bSpan = ym('2021-06') - ym(months[0]) + 1
+    const aSpan = ym(months[months.length - 1]) - ym(SW) + 1
+    return { before: before / bSpan, after: after / aSpan }
+  })()
+
   // median + max distance, and the median's position along the band axis
   const distancesSorted = activityLog
     .filter((a) => FOOT_HOME.has(a.sport_type))
@@ -299,6 +319,30 @@ export default function Home() {
           >
             <IgnitionStream rows={monthlyTotals} switchMonth="2021-07" />
           </Figure>
+          {switchRate && (
+            <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingTop: 'var(--sp-6)' }}>
+              <Figure
+                n="01"
+                title="A hobby, then a habit"
+                note="The same story as one number: activities per calendar month before the switch against every month since. The rate multiplied elevenfold and has held for five years."
+                source="Monthly Trends"
+                tableCaption="Activities per month, before July 2021 versus since"
+                columns={['Era', 'Activities / month']}
+                rows={[['Before Jul 2021', switchRate.before.toFixed(1)], ['Since', switchRate.after.toFixed(1)]]}
+              >
+                <SwitchStep before={switchRate.before} after={switchRate.after} />
+              </Figure>
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>The multiplier</p>
+                <p style={{ fontSize: 'var(--fs-lg)', fontWeight: 700, lineHeight: 1.3, margin: 0 }}>
+                  Two-point-eight a month became thirty-one.
+                </p>
+                <p className="text-muted" style={{ marginTop: 'var(--sp-3)', fontSize: 'var(--fs-sm)' }}>
+                  Nothing about the effort in any single week looks dramatic. Stacked into a rate, the change is categorical: an eleven-fold jump that never came back down.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </Container>
 

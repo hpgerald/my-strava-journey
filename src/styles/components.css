@@ -1595,3 +1595,100 @@ text.chart-panel-title {
 .pulse__yr { stroke: var(--rule-faint); stroke-width: 1; }
 .pulse__switch { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
 .pulse__switchlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--accent-ink); font-weight: 600; }
+
+/* ---- Home: SwitchStep (x11 step up) --------------------------------- */
+.switchstep { position: relative; }
+.switchstep__before { fill: var(--grey-15); }
+.switchstep__after { fill: var(--accent-mute); }
+.switchstep__cap { stroke-width: 3; }
+.switchstep__cap--before { stroke: var(--grey-55); }
+.switchstep__cap--after { stroke: var(--accent); }
+.switchstep__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); }
+.switchstep__num--before { fill: var(--grey-55); }
+.switchstep__num--after { fill: var(--accent-ink); }
+.switchstep__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-caps); fill: var(--ink); font-weight: 600; }
+.switchstep__sub { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.switchstep__riser { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.switchstep__mult { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); fill: var(--accent); }
+
+/* ---- Timeline/Home: LostYearThread ---------------------------------- */
+.lyt { position: relative; }
+.lyt__base { stroke: var(--ink); stroke-width: 1; opacity: 0.4; }
+.lyt__gapband { fill: var(--grey-06); }
+.lyt__gaptitle { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); fill: var(--ink); }
+.lyt__gapsub { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-caps); }
+.lyt__mark { stroke-width: 1.5; }
+.lyt__mark--spike { stroke: var(--ink); }
+.lyt__mark--ignite { stroke: var(--accent); stroke-dasharray: 3 3; }
+.lyt__spikelbl { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-2xs); fill: var(--ink); }
+.lyt__foot { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.lyt__foot--ignite { fill: var(--accent-ink); font-weight: 600; }
+
+/* ---- Rhythm: EffortPerKm -------------------------------------------- */
+.epk { position: relative; }
+.epk__line { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.epk__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); }
+.epk__val { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-xs); fill: var(--accent-ink); }
+
+/* ---- Rhythm: DoublesBar --------------------------------------------- */
+.dbl { position: relative; }
+.dbl__bar { position: relative; height: 40px; width: 100%; border-radius: 3px; overflow: hidden; }
+.dbl__seg { position: absolute; top: 0; height: 100%; display: flex; align-items: center; justify-content: center; transition: opacity var(--dur) var(--ease); }
+.dbl__key { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); }
+.dbl__key li { display: flex; align-items: center; gap: var(--sp-2); }
+.dbl__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.dbl__klbl { font-size: var(--fs-sm); }
+.dbl__kval { font-size: var(--fs-2xs); color: var(--fg-muted); }
+
+/* ---- Records: MotionClock ------------------------------------------- */
+.mclock { position: relative; }
+.mclock__hero { display: flex; align-items: baseline; gap: var(--sp-3); }
+.mclock__big { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 2rem + 6vw, 5rem); line-height: 1; color: var(--accent); }
+.mclock__unit { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl); }
+.mclock__sub { margin: var(--sp-2) 0 var(--sp-4); color: var(--fg-muted); font-size: var(--fs-sm); }
+.mclock__bar { display: flex; height: 34px; border-radius: 3px; overflow: hidden; }
+.mclock__move { background: var(--accent); }
+.mclock__key { display: flex; gap: var(--sp-4); margin-top: var(--sp-3); }
+.mclock__key span { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); }
+.mclock__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.mclock__sw--move { background: var(--accent); }
+.mclock__sw--pause { background: var(--grey-25); }
+.mclock__pause { background: var(--grey-25); }
+.mclock__foot { margin: var(--sp-3) 0 0; color: var(--fg-muted); font-size: var(--fs-xs); }
+
+/* ---- Records: CaloriePlates ----------------------------------------- */
+.plates { position: relative; }
+.plates__cap { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
+.plates__big { font-weight: 700; color: var(--accent-ink); font-size: var(--fs-md); }
+
+/* ---- Records: PRPulse ----------------------------------------------- */
+.prp { position: relative; }
+.prp__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); }
+.prp__val { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-xs); fill: var(--accent-ink); }
+
+/* ---- Sports: DistanceHistogram -------------------------------------- */
+.dhist { position: relative; }
+.dhist__peak { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-2xs); fill: var(--accent-ink); }
+.dhist__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); }
+
+/* ---- Sports: WeekendDirt -------------------------------------------- */
+.wknd { position: relative; }
+.wknd__row { display: grid; grid-template-columns: 5.5rem 1fr 3rem; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.wknd__lbl { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-sm); }
+.wknd__track { height: 16px; background: var(--grey-10); border-radius: 3px; overflow: hidden; }
+.wknd__fill { height: 100%; border-radius: 3px; }
+.wknd__fill--wd { background: var(--grey-45); }
+.wknd__fill--we { background: var(--accent); }
+.wknd__pct { font-size: var(--fs-sm); text-align: right; color: var(--fg-muted); }
+.wknd__note { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); }
+.wknd__note strong { color: var(--accent-ink); font-family: var(--font-display); }
+
+/* ---- Where: EquatorArc ---------------------------------------------- */
+.eqarc { position: relative; }
+.eqarc__globe { fill: none; stroke: var(--rule-faint); stroke-width: 1.5; }
+.eqarc__meridian { fill: none; stroke: var(--rule-faint); stroke-width: 1; opacity: 0.7; }
+.eqarc__sweep { stroke: var(--accent); stroke-width: 5; stroke-linecap: round; }
+.eqarc__pct { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); fill: var(--accent); }
+.eqarc__of { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-caps); }
+.eqarc__cap { margin: var(--sp-2) 0 0; text-align: center; font-size: var(--fs-sm); color: var(--fg-muted); }
+.eqarc__big { font-weight: 700; color: var(--accent-ink); font-size: var(--fs-md); }

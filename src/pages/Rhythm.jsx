@@ -8,6 +8,8 @@ import WeekStreakGrid from '../charts/WeekStreakGrid.jsx'
 import SeasonWheel from '../charts/SeasonWheel.jsx'
 import Matrix from '../charts/Matrix.jsx'
 import EffortTide from '../charts/EffortTide.jsx'
+import EffortPerKm from '../charts/EffortPerKm.jsx'
+import DoublesBar from '../charts/DoublesBar.jsx'
 import MiniTrend from '../charts/MiniTrend.jsx'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -132,6 +134,35 @@ export default function Rhythm() {
   const cadenceSeries = effortSorted.map((r) => toNum(r.avg_cadence) || 0).filter((v) => v > 0)
   const avgEffortSeries = effortSorted.map((r) => toNum(r.avg_relative_effort) || 0)
 
+  // effort spent per km on foot, by year (fitness made visible)
+  const FOOT_R = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+  const epkAgg = {}
+  for (const a of activities) {
+    if (!FOOT_R.has(a.sport_type)) continue
+    const re = toNum(a.relative_effort)
+    const km = toNum(a.distance_km)
+    if (re > 0 && km > 0.3 && a.year) {
+      const e = (epkAgg[a.year] = epkAgg[a.year] || { e: 0, k: 0 })
+      e.e += re
+      e.k += km
+    }
+  }
+  const effortPerKm = Object.keys(epkAgg).sort().map((y) => ({ year: y, value: epkAgg[y].e / epkAgg[y].k, thin: epkAgg[y].k < 400 }))
+
+  // active days by activities-per-day: singles, doubles, three-plus
+  const perDay = {}
+  for (const a of activities) {
+    const d = (a.date || '').slice(0, 10)
+    if (d) perDay[d] = (perDay[d] || 0) + 1
+  }
+  const dayVals = Object.values(perDay)
+  const doublesSegs = [
+    { label: 'One a day', days: dayVals.filter((v) => v === 1).length },
+    { label: 'Two a day', days: dayVals.filter((v) => v === 2).length },
+    { label: 'Three or more', days: dayVals.filter((v) => v >= 3).length },
+  ]
+  const multiPct = Math.round((100 * dayVals.filter((v) => v >= 2).length) / dayVals.length)
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Rhythm' }]}
@@ -189,6 +220,21 @@ export default function Rhythm() {
             <span><i className="chart-swatch" style={{ background: 'var(--ink)' }} /> most</span>
             <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> current streak</span>
           </div>
+        </Figure>
+      </section>
+
+      {/* Doubles: more than once a day */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="03"
+          title="Twice in a day, a third of the time"
+          note={`Every active day, sorted by how many activities it held. On ${multiPct}% of them there was more than one outing, and a handful of days packed in five. Once the habit took hold, one session a day often was not the whole day.`}
+          source="Activity Log"
+          tableCaption="Active days by number of activities that day"
+          columns={['Activities that day', 'Days']}
+          rows={doublesSegs.map((s) => [s.label, String(s.days)])}
+        >
+          <DoublesBar segs={doublesSegs} />
         </Figure>
       </section>
 
@@ -254,6 +300,23 @@ export default function Rhythm() {
           </Figure>
         </div>
       </section>
+
+      {/* Effort per km: fitness made visible */}
+      {effortPerKm.length > 2 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="04"
+            title="The falling price of a kilometre"
+            note="Relative effort divides how hard a session felt by how far it went. Read by year, the cost of a single kilometre on foot falls from about fourteen points in 2019 to under four: the same ground, a fraction of the toll, as fitness rose. The earliest two years rest on light samples and are drawn faint."
+            source="Activity Log + Zones & Effort"
+            tableCaption="Relative effort spent per km on foot, by year"
+            columns={['Year', 'Effort per km']}
+            rows={effortPerKm.map((d) => [d.year, d.value.toFixed(1)])}
+          >
+            <EffortPerKm data={effortPerKm} />
+          </Figure>
+        </section>
+      )}
 
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>

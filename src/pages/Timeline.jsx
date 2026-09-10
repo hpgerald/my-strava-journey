@@ -2,6 +2,7 @@ import DetailFrame from '../components/DetailFrame.jsx'
 import Tag from '../components/Tag.jsx'
 import Figure from '../charts/Figure.jsx'
 import PulseYears from '../charts/PulseYears.jsx'
+import LostYearThread from '../charts/LostYearThread.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 
@@ -34,6 +35,22 @@ export default function Timeline() {
             rows={monthly.map((m) => [m.month, m.activities])}
           >
             <PulseYears rows={monthly} switchMonth="2021-07" />
+          </Figure>
+        </section>
+      )}
+
+      {monthly.length > 3 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="02"
+            title="The lost year, in three beats"
+            note="Zoom in on the two years around the switch and the whole arc is there. The biggest single day ever recorded, a 240 km ride across the border into Kenya, then 353 days with nothing logged, then July 2021 and a return that never stopped. The largest effort on record sits right before the longest silence."
+            source="Activity Log + Monthly Trends"
+            tableCaption="Activities per month through the lost year"
+            columns={['Month', 'Activities']}
+            rows={monthly.filter((m) => m.month >= '2020-01' && m.month <= '2021-12').map((m) => [m.month, m.activities])}
+          >
+            <LostYearThread rows={monthly} spikeMonth="2020-07" igniteMonth="2021-07" from="2020-01" to="2021-12" />
           </Figure>
         </section>
       )}

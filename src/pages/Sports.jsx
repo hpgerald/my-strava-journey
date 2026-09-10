@@ -3,6 +3,8 @@ import Figure from '../charts/Figure.jsx'
 import SmallMultiples from '../charts/SmallMultiples.jsx'
 import SportSplit from '../charts/SportSplit.jsx'
 import SportScatter from '../charts/SportScatter.jsx'
+import DistanceHistogram from '../charts/DistanceHistogram.jsx'
+import WeekendDirt from '../charts/WeekendDirt.jsx'
 import RangeBars from '../charts/RangeBars.jsx'
 import StackedColumns from '../charts/StackedColumns.jsx'
 import Slopes from '../charts/Slopes.jsx'
@@ -100,6 +102,28 @@ export default function Sports() {
       ? { key: sp, label: prettyFoot[sp], x: Math.round(md.med * 10) / 10, y: Math.round(me.med), n: acts.length }
       : null
   }).filter(Boolean)
+
+  // distance histogram: foot outings in 1 km bins, long tail folded at the cap
+  const HIST_CAP = 25
+  const histCount = {}
+  for (const a of footActs) {
+    const km = toNum(a.distance_km)
+    if (km > 0) {
+      const b = Math.min(Math.round(km), HIST_CAP)
+      histCount[b] = (histCount[b] || 0) + 1
+    }
+  }
+  const distHistBins = []
+  for (let km = 1; km <= HIST_CAP; km++) distHistBins.push({ km, count: histCount[km] || 0, cap: km === HIST_CAP })
+  const favKm = distHistBins.reduce((b, d) => (d.count > b.count ? d : b), distHistBins[0])
+
+  // weekend vs weekday: trail + hike share of activity
+  const isTrail = (a) => a.sport_type === 'TrailRun' || a.sport_type === 'Hike'
+  const isWeekend = (a) => a.weekday === 'Saturday' || a.weekday === 'Sunday'
+  const wdAll = activities.filter((a) => !isWeekend(a))
+  const weAll = activities.filter((a) => isWeekend(a))
+  const trailWeekdayPct = wdAll.length ? (100 * wdAll.filter(isTrail).length) / wdAll.length : 0
+  const trailWeekendPct = weAll.length ? (100 * weAll.filter(isTrail).length) / weAll.length : 0
 
   // 1. pace spread (min/km), fastest first
   const paceRows = FOOT.map((sp) => {
@@ -232,6 +256,36 @@ export default function Sports() {
           rows={scatterData.map((p) => [p.label, fmtNum(p.x, 1), `${fmtInt(p.y)} m`, fmtInt(p.n)])}
         >
           <SportScatter points={scatterData} />
+        </Figure>
+      </section>
+
+      {/* Favourite distance */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="03"
+          title="The body has a favourite number"
+          note={`Every foot outing sorted into one-kilometre bins. The distribution is not smooth: it spikes hard at a clean ${favKm.km} km, logged ${favKm.count} times, with a second tower at 10 km. The pull of a round number, the instinct to finish on a tidy figure rather than stop at 4.7 or 9.3.`}
+          source="Activity Log"
+          tableCaption="Foot outings by distance, one-kilometre bins"
+          columns={['Distance km', 'Outings']}
+          rows={distHistBins.filter((b) => b.count > 0).map((b) => [`${b.km}${b.cap ? '+' : ''}`, String(b.count)])}
+        >
+          <DistanceHistogram bins={distHistBins} peaks={[5, 10]} />
+        </Figure>
+      </section>
+
+      {/* Weekends are for dirt */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="04"
+          title="Weekends are for dirt"
+          note="Trail runs and hikes as a share of everything logged, split by when they happen. Midweek the ground is almost all roads and treadmills; come the weekend the off-road share more than quadruples. The trails wait for Saturday."
+          source="Activity Log"
+          tableCaption="Trail and hike share of activity, weekday versus weekend"
+          columns={['When', 'Trail + hike share']}
+          rows={[['Weekday', `${trailWeekdayPct.toFixed(1)}%`], ['Weekend', `${trailWeekendPct.toFixed(1)}%`]]}
+        >
+          <WeekendDirt weekday={trailWeekdayPct} weekend={trailWeekendPct} />
         </Figure>
       </section>
 
