@@ -7,7 +7,7 @@ import StreakRibbon from '../charts/StreakRibbon.jsx'
 import WeekStreakGrid from '../charts/WeekStreakGrid.jsx'
 import SeasonWheel from '../charts/SeasonWheel.jsx'
 import Matrix from '../charts/Matrix.jsx'
-import Columns from '../charts/Columns.jsx'
+import EffortTide from '../charts/EffortTide.jsx'
 import MiniTrend from '../charts/MiniTrend.jsx'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -238,18 +238,18 @@ export default function Rhythm() {
             />
           </Figure>
           <Figure
-            title="Total relative effort by year"
-            note="The season's total cardiovascular load. 2021 was the hardest year by a distance; then it eased as fitness caught up and each session cost less, before 2026 started climbing again."
+            title="The effort tide"
+            note="The season's total cardiovascular load, rising and ebbing like a tide off a shore line. 2021 was high tide by a distance; then it drew back as fitness caught up and each session cost less, before 2026 began flooding back in."
             source="Zones & Effort"
             tableCaption="Total relative effort by year"
             columns={['Year', 'Total relative effort']}
             rows={effort.map((r) => [r.year, r.total_relative_effort])}
           >
-            <Columns
-              data={effort.map((r) => ({ label: r.year, value: toNum(r.total_relative_effort) }))}
-              unit="effort"
-              height={393}
-              formatY={(v) => fmtInt(v)}
+            <EffortTide
+              data={[...effort]
+                .sort((a, b) => Number(a.year) - Number(b.year))
+                .map((r) => ({ label: r.year, value: toNum(r.total_relative_effort) }))}
+              fmt={(v) => fmtInt(v)}
             />
           </Figure>
         </div>

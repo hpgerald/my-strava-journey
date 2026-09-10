@@ -1482,3 +1482,116 @@ text.chart-panel-title {
   fill: var(--accent-ink); letter-spacing: var(--tr-snug);
 }
 .stems__noteline { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3; }
+
+/* ========================================================================
+   Alignment system: consistent figure masthead + rhythm (Phase 1)
+   ======================================================================== */
+.fig { margin: 0; }
+.fig__head {
+  display: flex; align-items: baseline; gap: var(--sp-3);
+  border-bottom: 1px solid var(--rule-faint);
+  padding-bottom: var(--sp-2); margin-bottom: var(--sp-3);
+}
+.fig__title {
+  display: flex; align-items: baseline; gap: 0.7ch;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--fs-md); letter-spacing: var(--tr-snug); line-height: 1.12;
+}
+.fig__num {
+  flex: 0 0 auto; font-size: var(--fs-2xs); font-weight: 700;
+  color: var(--accent-ink); letter-spacing: var(--tr-wide);
+  transform: translateY(-0.12em);
+}
+.fig__note { margin: 0 0 var(--sp-4); font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; max-width: var(--measure); }
+.fig__source { margin-top: var(--sp-3); }
+
+/* figures in a shared grid row line up: same header/note block height so the
+   plots start on the same line */
+@media (min-width: 40rem) {
+  .grid--2 > figure.fig,
+  .grid--3 > figure.fig { display: flex; flex-direction: column; height: 100%; }
+  .grid--2 > figure.fig > .chart,
+  .grid--3 > figure.fig > .chart { flex: 1 1 auto; }
+}
+
+/* ---- Home: IgnitionStream ("The Switch") ------------------------------ */
+.ignition { position: relative; }
+.ignition__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.ignition__before { fill: var(--grey-10); }
+.ignition__after { fill: var(--accent-mute); }
+.ignition__line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.ignition__switch { stroke: var(--accent-strong); stroke-width: 1; stroke-dasharray: 2 3; }
+.ignition__switchlbl { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); fill: var(--accent-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .ignition__after, .ignition__line { animation: igniteIn 1s var(--ease) both; }
+}
+@keyframes igniteIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- Home: FootFlip (distance-vs-climb alluvial) ---------------------- */
+.flip { position: relative; }
+.flip__col { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--fg-muted); font-weight: 600; }
+.flip__lbl { font-family: var(--font-sans); font-size: var(--fs-xs); fill: var(--ink); font-weight: 500; }
+.flip__pct { font-family: var(--font-mono); fill: var(--fg-muted); font-weight: 400; }
+
+/* ---- Numbers: Slopegraph (then vs now, indexed) ---------------------- */
+.slope { position: relative; overflow-x: auto; }
+.slope__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.slope__ref { stroke: var(--ink); stroke-width: 1; }
+.slope__axislbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; font-weight: 600; }
+.slope__lead { stroke: var(--grey-25); stroke-width: 1; }
+.slope__lbl { font-family: var(--font-sans); font-size: var(--fs-xs); fill: var(--ink); font-weight: 500; }
+.slope__vals { font-family: var(--font-mono); fill: var(--fg-muted); font-weight: 400; }
+
+/* ---- Sports: SportSplit (mirrored distance vs activities) ------------- */
+.ssplit__head { display: grid; grid-template-columns: 1fr 6.5rem 1fr; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; color: var(--fg-muted); font-weight: 600; margin-bottom: var(--sp-3); }
+.ssplit__head span:first-child { grid-column: 1; text-align: right; }
+.ssplit__head span:last-child { grid-column: 3; text-align: left; }
+.ssplit__rows { list-style: none; margin: 0; padding: 0; }
+.ssplit__row { display: grid; grid-template-columns: 1fr 6.5rem 1fr; align-items: center; gap: var(--sp-2); padding: 7px 0; border-top: 1px solid var(--rule-faint); transition: opacity var(--dur) var(--ease); }
+.ssplit__rows > li:first-child { border-top: 0; }
+.ssplit__side { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.ssplit__side--l { justify-content: flex-end; }
+.ssplit__side--r { justify-content: flex-start; }
+.ssplit__bar { height: 12px; border-radius: 3px; display: block; }
+.ssplit__bar--l { background: var(--ink); }
+.ssplit__bar--r { background: var(--accent); }
+.ssplit__pct { font-size: var(--fs-2xs); color: var(--fg-muted); white-space: nowrap; }
+.ssplit__name { text-align: center; font-family: var(--font-display); font-weight: 600; font-size: var(--fs-sm); }
+
+/* ---- Sports: SportScatter (personality plot) ------------------------- */
+.scat { position: relative; }
+.scat__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); letter-spacing: 0.02em; }
+.scat__lbl { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xs); fill: var(--ink); }
+
+/* ---- Records: DistanceStartLine (lanes from a start line) ------------ */
+.startline { position: relative; }
+.startline__start { stroke: var(--ink); stroke-width: 2.5; }
+.startline__startlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--fg-muted); font-weight: 600; }
+.startline__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); letter-spacing: 0.02em; }
+.startline__lane { stroke: var(--rule-faint); stroke-width: 1; stroke-dasharray: 2 4; }
+.startline__run { stroke: var(--accent); stroke-linecap: round; }
+.startline__finish { stroke: var(--ink); stroke-width: 1.5; }
+.startline__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-sm); fill: var(--ink); }
+.startline__rank { font-family: var(--font-mono); font-weight: 700; fill: var(--accent-ink); }
+.startline__val { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 600; fill: var(--ink); }
+
+/* ---- Records: KudosStarburst (rays of applause) --------------------- */
+.burst { position: relative; }
+.burst__ring { stroke: var(--rule-faint); stroke-width: 1; }
+.burst__lbl { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-2xs); fill: var(--ink); }
+.burst__val { font-family: var(--font-mono); font-weight: 700; fill: var(--accent-ink); }
+
+/* ---- Rhythm: EffortTide (load as a tide) ---------------------------- */
+.tide { position: relative; }
+.tide__fill { fill: var(--accent-mute); stroke: none; }
+.tide__line { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.tide__mean { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.4; }
+.tide__meanlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.tide__peak { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--accent-ink); font-weight: 600; }
+
+/* ---- Timeline: PulseYears (seven-year heartbeat) -------------------- */
+.pulse { position: relative; }
+.pulse__spine { stroke: var(--ink); stroke-width: 1; opacity: 0.35; }
+.pulse__yr { stroke: var(--rule-faint); stroke-width: 1; }
+.pulse__switch { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
+.pulse__switchlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--accent-ink); font-weight: 600; }

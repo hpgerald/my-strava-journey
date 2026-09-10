@@ -1,10 +1,9 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import Tag from '../components/Tag.jsx'
 import Figure from '../charts/Figure.jsx'
-import AreaLine from '../charts/AreaLine.jsx'
+import PulseYears from '../charts/PulseYears.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { fmtInt, toNum } from '../lib/format.js'
 
 export default function Timeline() {
   const rows = useTable('timeline')
@@ -13,15 +12,6 @@ export default function Timeline() {
 
   // chronological, earliest first
   const items = [...rows].sort((a, b) => (a.date || '').localeCompare(b.date || ''))
-
-  // monthly activity rhythm as context
-  const monthPts = monthly
-    .map((m) => {
-      const t = Date.parse(`${m.month}-01T00:00:00`)
-      return { x: t, y: toNum(m.activities) || 0, label: m.month }
-    })
-    .filter((p) => Number.isFinite(p.x))
-    .sort((a, b) => a.x - b.x)
 
   return (
     <DetailFrame
@@ -33,17 +23,17 @@ export default function Timeline() {
       prev={prev}
       next={next}
     >
-      {monthPts.length > 3 && (
+      {monthly.length > 3 && (
         <section style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
-            title="Activities per month"
-            note="How many activities I logged each month, the rhythm those milestones below sit on top of."
+            title="Seven years, one pulse"
+            note="Every month is a beat mirrored off the centre line, as tall as the activities it held. For two years the pulse barely registers. The month the switch is thrown, July 2021, it quickens all at once and it has not settled back since."
             source="Monthly Trends"
             tableCaption="Activities logged per month"
             columns={['Month', 'Activities']}
             rows={monthly.map((m) => [m.month, m.activities])}
           >
-            <AreaLine points={monthPts} height={200} yUnit="activities" formatX={(p) => p.label} formatY={(v) => fmtInt(v)} />
+            <PulseYears rows={monthly} switchMonth="2021-07" />
           </Figure>
         </section>
       )}

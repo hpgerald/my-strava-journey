@@ -12,6 +12,8 @@ import RadialHours from '../charts/RadialHours.jsx'
 import HeatStrip from '../charts/HeatStrip.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
 import ContourField from '../charts/ContourField.jsx'
+import IgnitionStream from '../charts/IgnitionStream.jsx'
+import FootFlip from '../charts/FootFlip.jsx'
 import { useEffect } from 'react'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -55,6 +57,7 @@ export default function Home() {
   const countries = useTable('countries')
   const fun = useTable('fun_journey')
   const activityLog = useTable('activities')
+  const monthlyTotals = useTable('monthly_totals')
   const nav = useTable('nav_index')
 
   const life = (needle) => lifetime.find((r) => (r.metric || '').toLowerCase().includes(needle)) || {}
@@ -125,6 +128,14 @@ export default function Home() {
     display: fmtInt(weekday[w]),
   }))
   const distData = DIST_LABELS.map((l, i) => ({ label: l, value: distCounts[i] }))
+  // distance vs climb by foot sport, for the flip
+  const FOOT_ORDER = ['Run', 'Walk', 'TrailRun', 'Hike']
+  const FOOT_NAME = { Run: 'Run', Walk: 'Walk', TrailRun: 'Trail', Hike: 'Hike' }
+  const footAgg = Object.fromEntries(FOOT_ORDER.map((k) => [k, { dist: 0, elev: 0 }]))
+  for (const a of activityLog) {
+    if (footAgg[a.sport_type]) { footAgg[a.sport_type].dist += toNum(a.distance_km) || 0; footAgg[a.sport_type].elev += toNum(a.elevation_gain_m) || 0 }
+  }
+  const footFlipData = FOOT_ORDER.map((k) => ({ key: k, label: FOOT_NAME[k], dist: footAgg[k].dist, elev: footAgg[k].elev }))
   // median + max distance, and the median's position along the band axis
   const distancesSorted = activityLog
     .filter((a) => FOOT_HOME.has(a.sport_type))
@@ -270,6 +281,51 @@ export default function Home() {
               Eight ways in.
             </h2>
             <IndexHub items={menuItems} compact />
+          </div>
+        </div>
+      </Container>
+
+      {/* ---- The Switch: the narrative centerpiece --------------------- */}
+      <Container>
+        <hr className="rule" />
+        <div style={{ paddingBlock: 'var(--sp-7)' }}>
+          <Figure
+            title="The switch"
+            note="Activities per month across seven years, gaps and all. For two years it barely registered. Then in July 2021 it turned on, and it has not turned off since. This single month is the whole story of the site."
+            source="Monthly Trends"
+            tableCaption="Activities per month"
+            columns={['Month', 'Activities']}
+            rows={monthlyTotals.map((mm) => [mm.month, mm.activities])}
+          >
+            <IgnitionStream rows={monthlyTotals} switchMonth="2021-07" />
+          </Figure>
+        </div>
+      </Container>
+
+      {/* ---- The flip: distance vs climb by sport ---------------------- */}
+      <Container>
+        <hr className="rule" />
+        <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
+          <Figure
+            title="Walking climbs, running runs"
+            note="Each sport's share of the total on the left as distance, on the right as climb. Follow a ribbon across and it flips."
+            source="Activity Log"
+            tableCaption="Share of distance and share of elevation by foot sport"
+            columns={['Sport', 'Distance km', 'Climb m']}
+            rows={footFlipData.map((d) => [d.label, fmtInt(d.dist), fmtInt(d.elev)])}
+          >
+            <FootFlip items={footFlipData} />
+          </Figure>
+          <div>
+            <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The surprise</p>
+            <h2 className="display" style={{ fontSize: 'var(--fs-xl)', margin: '0 0 var(--sp-3)', lineHeight: 1.08 }}>
+              Running owns the distance. Walking owns the vertical.
+            </h2>
+            <p className="measure text-muted" style={{ margin: 0 }}>
+              Running is 63% of the kilometres and only 13% of the climb. Flip to elevation and the balance
+              inverts: walking and the trails carry three-quarters of it. A single trail run is a fraction of the
+              distance and a third of all the vertical. Home is flat; the metres are earned uphill, on foot.
+            </p>
           </div>
         </div>
       </Container>

@@ -1,12 +1,14 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
-import BarChart from '../charts/BarChart.jsx'
+import DistanceStartLine from '../charts/DistanceStartLine.jsx'
+import KudosStarburst from '../charts/KudosStarburst.jsx'
 import RecordWall from '../charts/RecordWall.jsx'
 import AscentProfile from '../charts/AscentProfile.jsx'
 import MilestoneLadder from '../charts/MilestoneLadder.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
+import { prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
@@ -149,7 +151,7 @@ export default function Records() {
     .sort((a, b) => toNum(b.kudos) - toNum(a.kudos))
     .slice(0, 6)
     .map((a) => ({
-      label: `${a.sport_type} · ${fmtMon(a.date)}`,
+      label: `${prettySport(a.sport_type)} · ${fmtMon(a.date)}`,
       value: toNum(a.kudos),
       display: fmtInt(a.kudos),
       unit: 'kudos',
@@ -216,28 +218,34 @@ export default function Records() {
         </Figure>
       </section>
 
-      {/* Furthest + most loved */}
+      {/* Furthest, off a start line */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <div className="grid grid--2">
-          <Figure
-            title="Furthest in each discipline"
-            note="The single longest outing for each way of travelling on foot."
-            source="Activity Log"
-            columns={['Discipline', 'km']}
-            rows={furthest.map((d) => [d.label, d.display])}
-          >
-            <BarChart data={furthest} showRank />
-          </Figure>
-          <Figure
-            title="The most-loved activities"
-            note="The six that pulled in the most kudos. Runs lead, a trail run among them."
-            source="Activity Log"
-            columns={['Activity', 'Kudos']}
-            rows={loved.map((d) => [d.label, d.display])}
-          >
-            <BarChart data={loved} showRank />
-          </Figure>
-        </div>
+        <Figure
+          n="03"
+          title="Furthest in each discipline"
+          note="Every way of travelling on foot leaves the same start line and runs its own lane to its single longest outing. On one shared distance axis the order is plain: a full marathon on the run out front, a long trail and a long walk in the thirties, the biggest hike barely past halfway."
+          source="Activity Log"
+          tableCaption="Longest single outing by discipline"
+          columns={['Discipline', 'km', 'When']}
+          rows={furthest.map((d) => [d.label, d.display, (d.sub || '').replace(/^·\s*/, '')])}
+        >
+          <DistanceStartLine data={furthest} />
+        </Figure>
+      </section>
+
+      {/* Most loved, a burst of applause */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="04"
+          title="A burst of applause"
+          note="The six activities that drew the most kudos, each a ray leaving the centre as long as the cheers it earned. Running fills the burst; a single trail run breaks in among them."
+          source="Activity Log"
+          tableCaption="The six most-cheered activities by kudos"
+          columns={['Activity', 'Kudos']}
+          rows={loved.map((d) => [d.label, d.display])}
+        >
+          <KudosStarburst data={loved} />
+        </Figure>
       </section>
 
       {/* Tape measure footer stats */}

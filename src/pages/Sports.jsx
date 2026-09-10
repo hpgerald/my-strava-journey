@@ -1,8 +1,8 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import Figure from '../charts/Figure.jsx'
 import SmallMultiples from '../charts/SmallMultiples.jsx'
-import ProportionBar from '../charts/ProportionBar.jsx'
-import BarChart from '../charts/BarChart.jsx'
+import SportSplit from '../charts/SportSplit.jsx'
+import SportScatter from '../charts/SportScatter.jsx'
 import RangeBars from '../charts/RangeBars.jsx'
 import StackedColumns from '../charts/StackedColumns.jsx'
 import Slopes from '../charts/Slopes.jsx'
@@ -10,19 +10,8 @@ import Diverging from '../charts/Diverging.jsx'
 import Columns from '../charts/Columns.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { slugify, prettySport } from '../lib/slug.js'
+import { prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
-
-// Fold a sorted list to top-N named slices plus a single "Other" remainder.
-function topWithOther(rows, valueOf, labelOf, n = 5) {
-  const top = rows.slice(0, n)
-  const rest = rows.slice(n)
-  const segs = top.map((r) => ({ label: labelOf(r), value: valueOf(r) }))
-  if (rest.length) {
-    segs.push({ label: `Other (${rest.length} sports)`, value: rest.reduce((a, r) => a + valueOf(r), 0) })
-  }
-  return segs
-}
 
 export default function Sports() {
   const sports = useTable('sport_breakdown')
@@ -60,43 +49,22 @@ export default function Sports() {
   const distSorted = [...sports]
     .filter((s) => toNum(s.distance_km) > 0)
     .sort((a, b) => toNum(b.distance_km) - toNum(a.distance_km))
-  const actSorted = [...sports].sort((a, b) => toNum(b.activities) - toNum(a.activities))
 
-  // composition (mix) segments
-  const distMix = topWithOther(distSorted, (s) => toNum(s.distance_km), (s) => prettySport(s.sport))
-    .map((s) => ({ ...s, display: fmtNum(s.value, 0) }))
-  const actMix = topWithOther(actSorted, (s) => toNum(s.activities), (s) => prettySport(s.sport))
-    .map((s) => ({ ...s, display: fmtInt(s.value) }))
-
-  // ranked detail: top 3 each, with the related categories combined
-  const distCats = [
-    { label: 'Run', names: ['Run'], to: `/sports/${slugify('Run')}` },
-    { label: 'Walk', names: ['Walk'], to: `/sports/${slugify('Walk')}` },
-    { label: 'Trail Run + Hike', names: ['TrailRun', 'Hike'] },
-  ]
-    .map((c) => {
-      const v = sumDist((a) => c.names.includes(a.sport_type))
-      return {
-        label: c.label,
-        value: v,
-        display: fmtNum(v, 0),
-        unit: 'km',
-        sub: `· ${fmtInt(countOf((a) => c.names.includes(a.sport_type)))} acts`,
-        to: c.to,
-      }
-    })
-    .sort((a, b) => b.value - a.value)
-
-  const actCats = [
-    { label: 'Walk', names: ['Walk'], to: `/sports/${slugify('Walk')}` },
-    { label: 'Run', names: ['Run'], to: `/sports/${slugify('Run')}` },
-    { label: 'Workout + Therapy', names: ['Workout', 'PhysicalTherapy'] },
-  ]
-    .map((c) => {
-      const v = countOf((a) => c.names.includes(a.sport_type))
-      return { label: c.label, value: v, display: fmtInt(v), to: c.to }
-    })
-    .sort((a, b) => b.value - a.value)
+  // mirrored split: top sports by distance, each with its distance and its
+  // activity count, so the inversion (running long, walking frequent) shows.
+  const splitData = (() => {
+    const top = distSorted.slice(0, 6)
+    const rest = distSorted.slice(6)
+    const rows = top.map((s) => ({ label: prettySport(s.sport), dist: toNum(s.distance_km), acts: toNum(s.activities) }))
+    if (rest.length) {
+      rows.push({
+        label: `Other (${rest.length})`,
+        dist: rest.reduce((a, s) => a + toNum(s.distance_km), 0),
+        acts: rest.reduce((a, s) => a + toNum(s.activities), 0),
+      })
+    }
+    return rows
+  })()
 
   // ---- foot deep dive ----
   const FOOT = ['Run', 'Walk', 'TrailRun', 'Hike']
@@ -121,6 +89,17 @@ export default function Sports() {
     return `${mm}:${String(ss).padStart(2, '0')}`
   }
   const bySport = (sp) => footActs.filter((a) => a.sport_type === sp)
+
+  // personality plot: each foot sport by typical distance (x) against typical
+  // climb (y), bubble sized by how often it is logged.
+  const scatterData = FOOT.map((sp) => {
+    const acts = bySport(sp)
+    const md = quantiles(acts.map((a) => toNum(a.distance_km)).filter((v) => v > 0))
+    const me = quantiles(acts.map((a) => toNum(a.elevation_gain_m) || 0))
+    return md && me
+      ? { key: sp, label: prettyFoot[sp], x: Math.round(md.med * 10) / 10, y: Math.round(me.med), n: acts.length }
+      : null
+  }).filter(Boolean)
 
   // 1. pace spread (min/km), fastest first
   const paceRows = FOOT.map((sp) => {
@@ -210,26 +189,21 @@ export default function Sports() {
     >
       {/* The mix, in one glance */}
       <section style={{ paddingTop: 'var(--sp-6)' }}>
-        <div className="grid grid--2">
-          <Figure
-            title="Share of distance"
-            note="Where the kilometres come from. Running and walking own the ground; the rides sit on the edge."
-            source="Overview"
-            columns={['Sport', 'km']}
-            rows={distMix.map((s) => [s.label, s.display])}
-          >
-            <ProportionBar segments={distMix} unit="km" />
-          </Figure>
-          <Figure
-            title="Share of activities"
-            note="Where the sessions go. By count the order shifts: short walks and workouts add up."
-            source="Overview"
-            columns={['Sport', 'activities']}
-            rows={actMix.map((s) => [s.label, s.display])}
-          >
-            <ProportionBar segments={actMix} unit="acts" />
-          </Figure>
-        </div>
+        <Figure
+          n="01"
+          title="Distance against days"
+          note="Each sport off a shared centre: its share of every kilometre on the left, its share of every session on the right. The bars cross over. Running is a long left bar and a stub on the right; walking is the exact inverse, a fraction of the ground but the bulk of the days out."
+          source="Overview"
+          tableCaption="Share of total distance and total activities by sport"
+          columns={['Sport', 'Distance', 'Activities']}
+          rows={splitData.map((s) => [
+            s.label,
+            fmtNum(s.dist, 0) + ' km',
+            fmtInt(s.acts),
+          ])}
+        >
+          <SportSplit items={splitData} />
+        </Figure>
       </section>
 
       {/* Trend per sport */}
@@ -246,28 +220,19 @@ export default function Sports() {
         </Figure>
       </section>
 
-      {/* Ranked detail, side by side */}
+      {/* Sport personalities */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <div className="grid grid--2">
-          <Figure
-            title="Most distance, on foot"
-            note="Running, walking, and the trails, with trail runs and hikes counted together."
-            source="Activity Log"
-            columns={['Category', 'km']}
-            rows={distCats.map((d) => [d.label, d.display])}
-          >
-            <BarChart data={distCats} showRank />
-          </Figure>
-          <Figure
-            title="Most activities"
-            note="The three most-logged, with gym workouts and physical therapy combined."
-            source="Activity Log"
-            columns={['Category', 'Activities']}
-            rows={actCats.map((d) => [d.label, d.display])}
-          >
-            <BarChart data={actCats} showRank />
-          </Figure>
-        </div>
+        <Figure
+          n="02"
+          title="How each sport behaves"
+          note="Every foot sport placed by its typical outing: how far it goes across the bottom, how much it climbs up the side, the bubble sized by how often it is logged. Running lands far out and flat on the floor. The trails and the hike float high on almost no distance. Walking is the busy dot in between."
+          source="Activity Log"
+          tableCaption="Median distance, median climb and count by foot sport"
+          columns={['Sport', 'Median km', 'Median climb', 'Logged']}
+          rows={scatterData.map((p) => [p.label, fmtNum(p.x, 1), `${fmtInt(p.y)} m`, fmtInt(p.n)])}
+        >
+          <SportScatter points={scatterData} />
+        </Figure>
       </section>
 
       {/* Foot deep dive */}

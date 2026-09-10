@@ -1,19 +1,19 @@
-// A chart frame: eyebrow title, optional note, the plot, a source line, and a
+// A chart frame with a consistent editorial masthead: an optional figure number,
+// a title, a hairline rule, an optional note, the plot, a source line, and a
 // visually-hidden data table so every chart is fully readable as text and to a
 // screen reader (a brief non-negotiable).
-export default function Figure({ title, note, source, tableCaption, columns, rows, children }) {
+export default function Figure({ n, title, note, source, tableCaption, columns, rows, children }) {
   return (
-    <figure style={{ margin: 0 }}>
+    <figure className="fig">
       {title ? (
-        <figcaption className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>
-          {title}
-        </figcaption>
+        <div className="fig__head">
+          <figcaption className="fig__title">
+            {n ? <span className="fig__num mono" aria-hidden="true">{n}</span> : null}
+            <span>{title}</span>
+          </figcaption>
+        </div>
       ) : null}
-      {note ? (
-        <p className="text-muted" style={{ marginTop: 0, marginBottom: 'var(--sp-4)', fontSize: 'var(--fs-sm)' }}>
-          {note}
-        </p>
-      ) : null}
+      {note ? <p className="fig__note">{note}</p> : null}
 
       <div className="chart">{children}</div>
 
@@ -43,11 +43,7 @@ export default function Figure({ title, note, source, tableCaption, columns, row
         </div>
       ) : null}
 
-      {source ? (
-        <div className="source" style={{ marginTop: 'var(--sp-3)' }}>
-          Source: {source}
-        </div>
-      ) : null}
+      {source ? <div className="source fig__source">Source: {source}</div> : null}
     </figure>
   )
 }

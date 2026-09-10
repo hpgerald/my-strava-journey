@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import DetailFrame from '../components/DetailFrame.jsx'
-import CompareBar from '../components/CompareBar.jsx'
+import Figure from '../charts/Figure.jsx'
+import Slopegraph from '../charts/Slopegraph.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 
@@ -91,42 +92,20 @@ export default function Numbers() {
         </p>
       </section>
 
-      <section aria-label="Comparisons" style={{ paddingTop: 'var(--sp-4)' }}>
+      <section aria-label="Comparisons" style={{ paddingTop: 'var(--sp-5)' }}>
         {filtered.length === 0 ? (
           <p className="text-muted">No figures match this combination.</p>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gap: 0,
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 22rem), 1fr))',
-              borderTop: '1px solid var(--rule)',
-              borderLeft: '1px solid var(--rule)',
-            }}
+          <Figure
+            title="Then against now, indexed"
+            note="Every metric starts from its 2019 baseline on the left and fans to its 2026 multiple on the right, on a log scale. Orange rises, grey falls. Almost everything multiplied many times over; only ride distance and the effort each session costs went the other way."
+            source="Yearly Trends + Activity Log"
+            tableCaption="2019 baseline versus 2026 for each metric"
+            columns={['Metric', '2019', '2026', 'Change']}
+            rows={filtered.map((c) => [c.metric, c.baseline_value, c.target_value, c.direction])}
           >
-            {filtered.map((c, i) => (
-              <div
-                key={i}
-                style={{
-                  borderRight: '1px solid var(--rule)',
-                  borderBottom: '1px solid var(--rule)',
-                  padding: 'var(--sp-5)',
-                }}
-              >
-                <CompareBar
-                  label={c.metric}
-                  baselineLabel={c.baseline_label}
-                  baselineValue={c.baseline_value}
-                  targetLabel={c.target_label}
-                  targetValue={c.target_value}
-                  unit={c.unit}
-                  direction={c.direction}
-                  plain={c.plain_language}
-                  source={c.source_page}
-                />
-              </div>
-            ))}
-          </div>
+            <Slopegraph rows={filtered} />
+          </Figure>
         )}
       </section>
     </DetailFrame>
