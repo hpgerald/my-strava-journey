@@ -44,7 +44,7 @@ At the last refresh the record covered:
 
 ## What's on the site
 
-The site is organised as nine numbered sections plus supporting pages. Each section reads on its own and links to the next.
+The site is organised as ten numbered sections plus supporting pages. Each section reads on its own and links to the next.
 
 | # | Section | What it shows |
 | --- | --- | --- |
@@ -56,7 +56,8 @@ The site is organised as nine numbered sections plus supporting pages. Each sect
 | 06 | **Rhythm** | When the training happens: a three-year (156-week) streak, a consistency calendar, the day streak as one unbroken thread, a weekday-by-time-of-day heatmap, effort as a rising-and-ebbing tide by year, and training zones. |
 | 07 | **Gear** | Eleven pairs of shoes as a rotation timeline, how far each carried, road-versus-trail use, and lifetime odometer against logged distance. |
 | 08 | **Timeline** | The story in order over a seven-year activity pulse: milestones, records and international debuts. |
-| 09 | **What It Means** | The numbers read back as an athlete would read them, for different training goals. |
+| 09 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year as activity-style progress rings, with a pace notch on the year in progress. |
+| 10 | **What It Means** | The numbers read back as an athlete would read them, for different training goals. |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
 

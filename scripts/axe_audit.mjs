@@ -3,7 +3,7 @@ import fs from 'fs'
 
 const AXE = fs.readFileSync('node_modules/axe-core/axe.min.js', 'utf8')
 const BASE = 'http://localhost:4173/#'
-const ROUTES = ['/', '/numbers', '/sports', '/records', '/where', '/rhythm', '/gear', '/timeline', '/what-it-means']
+const ROUTES = ['/', '/numbers', '/sports', '/records', '/where', '/rhythm', '/gear', '/timeline', '/goals', '/what-it-means']
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' })
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
