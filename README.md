@@ -4,7 +4,7 @@ Seven years of Strava activity, turned into a website anyone can read.
 
 **Live site:** https://hpgerald.github.io/my-strava-journey/
 
-This is a static, data-driven explainer built from a personal Strava export: **2,010 activities** logged between August 2019 and September 2026, across running, walking, trail running, hiking, cycling and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); rides and other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
+This is a static, data-driven explainer built from a personal Strava export: **2,022 activities** logged between August 2019 and September 2026, across running, walking, trail running, hiking, cycling and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); rides and other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
 
 ---
 
@@ -31,16 +31,16 @@ At the last refresh the record covered:
 
 | Metric | Value |
 | --- | --- |
-| Activities | 2,010 |
-| Distance on foot | 12,929 km |
-| Moving time on foot | 2,045 hours |
-| Elevation gained on foot | 83,268 m (about 9.4 times Everest) |
-| Kudos received | 71,100 |
-| Longest active streak | 253 days, still going |
-| Longest week streak | 156 weeks (3 years), still going |
+| Activities | 2,022 |
+| Distance on foot | 13,008 km |
+| Moving time on foot | 2,064 hours |
+| Elevation gained on foot | 83,892 m (about 9.5 times Everest) |
+| Kudos received | 71,445 |
+| Longest active streak | 264 days, still going |
+| Longest week streak | 157 weeks (3 years), still going |
 | Countries | 7 |
 | Tanzanian regions | 17 |
-| Coverage | 2019-08-17 to 2026-09-07 |
+| Coverage | 2019-08-17 to 2026-09-18 |
 
 ## What's on the site
 
@@ -53,7 +53,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | 03 | **Sports** | What the training is made of, as a mirrored distance-versus-days split and a sport-personality scatter, plus a deep dive into the foot data: pace and distance spreads, the treadmill-to-road shift, steepness, time of day and weekend trails. |
 | 04 | **Records** | The far edges: furthest in each discipline off a shared start line, the most-cheered activities as a kudos starburst, the total climb drawn as a stack of Everests, and the road to 10,000 km. |
 | 05 | **Where** | Choropleth maps of the countries and Tanzanian regions the activities started in, worked out from each activity's GPS start point. |
-| 06 | **Rhythm** | When the training happens: a three-year (156-week) streak, a consistency calendar, the day streak as one unbroken thread, a weekday-by-time-of-day heatmap, effort as a rising-and-ebbing tide by year, and training zones. |
+| 06 | **Rhythm** | When the training happens: a three-year (157-week) streak, a consistency calendar, the day streak as one unbroken thread, a weekday-by-time-of-day heatmap, effort as a rising-and-ebbing tide by year, and training zones. |
 | 07 | **Gear** | Eleven pairs of shoes as a rotation timeline, how far each carried, road-versus-trail use, and lifetime odometer against logged distance. |
 | 08 | **Timeline** | The story in order over a seven-year activity pulse: milestones, records and international debuts. |
 | 09 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year as activity-style progress rings, with a pace notch on the year in progress. |

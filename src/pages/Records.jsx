@@ -183,7 +183,7 @@ export default function Records() {
       number="04"
       title="Records"
       subtitle="The far edges. Longest, highest, hardest."
-      lede="Not averages this time. The far edges. A marathon run without leaving the room, a single day that climbed nearly two kilometres, a streak that has held for eight months, and a pile of vertical the size of nine Everests."
+      lede="Not averages this time. The far edges. A marathon run without leaving the room, a single day that climbed nearly two kilometres, a streak that has held for nearly nine months, and a pile of vertical the size of nine Everests."
       prev={prev}
       next={next}
     >

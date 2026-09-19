@@ -11,11 +11,12 @@ export default function KudosStarburst({ data }) {
   if (!data || !data.length) return <div ref={ref} />
 
   const W = Math.max(320, width)
+  const narrow = W < 520
   const H = 400
   const cx = W / 2
   const cy = H / 2 + 6
   const rMin = 26
-  const rMax = Math.min(W, H) / 2 - 74
+  const rMax = Math.min(W, H) / 2 - (narrow ? 58 : 74)
   const maxK = Math.max(...data.map((d) => d.value)) || 1
   const rings = niceTicks(maxK, 3)
   const rOf = (v) => rMin + (v / rings.max) * (rMax - rMin)
@@ -55,7 +56,7 @@ export default function KudosStarburst({ data }) {
               <line x1={cx} y1={cy} x2={tx} y2={ty} stroke="var(--accent)" strokeWidth={hover === i ? 3.5 : 2.5} strokeLinecap="round" />
               <circle cx={tx} cy={ty} r={hover === i ? 6 : 5} fill="var(--accent)" />
               <text x={lx} y={ly} dy="0.32em" textAnchor={anchor} className="burst__lbl">
-                {d.label} <tspan className="burst__val">{d.display}</tspan>
+                {narrow ? d.label.split('·')[0].trim() : d.label} <tspan className="burst__val">{d.display}</tspan>
               </text>
             </g>
           )

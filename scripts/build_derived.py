@@ -141,7 +141,8 @@ nav=[
  ["06","Rhythm","When. And how hard.","/rhythm","section","authored"],
  ["07","Gear","The shoes that did the miles.","/gear","section","authored"],
  ["08","Timeline","In order. First upload to now.","/timeline","timeline","authored"],
- ["09","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
+ ["09","Goals","The targets, year by year.","/goals","dashboard","authored"],
+ ["10","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)
 

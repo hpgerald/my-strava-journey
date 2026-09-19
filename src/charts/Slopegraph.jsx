@@ -31,9 +31,10 @@ export default function Slopegraph({ rows }) {
     return { metric: shorten(r.metric.replace(/ in the year$/, '')), b, t, ratio: Math.max(ratio, 0.001), isNew, up: t >= b, unit: r.unit }
   })
 
-  const W = Math.max(width || 720, 620)
-  const labelW = 250
-  const m = { t: 28, b: 24, l: 44, r: labelW }
+  const W = Math.max(width || 720, 320)
+  const narrow = W < 560
+  const labelW = narrow ? 116 : 250
+  const m = { t: 28, b: 24, l: narrow ? 30 : 44, r: labelW }
   const H = Math.max(360, items.length * 26 + m.t + m.b)
   const ih = H - m.t - m.b
   const xL = m.l
@@ -67,12 +68,12 @@ export default function Slopegraph({ rows }) {
   return (
     <div ref={ref} className="slope">
       <svg
-        width={W}
+        width="100%"
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
         aria-label="Then-versus-now: each metric indexed to its 2019 baseline, fanning to its 2026 multiple."
-        style={{ display: 'block', maxWidth: 'none' }}
+        style={{ display: 'block', maxWidth: '100%' }}
         onMouseLeave={() => setHover(null)}
       >
         {/* gridlines at ratio levels */}
@@ -99,8 +100,8 @@ export default function Slopegraph({ rows }) {
               <circle cx={xR} cy={yEnd} r="3.5" fill={col} />
               {/* leader to the de-collided label */}
               <line x1={xR + 4} y1={yEnd} x2={xR + 14} y2={labelY[i]} className="slope__lead" />
-              <text x={xR + 18} y={labelY[i]} dy="0.32em" className="slope__lbl">
-                {d.metric} <tspan className="slope__vals">{fmtNum(d.b)} → {fmtNum(d.t)}</tspan>
+              <text x={xR + (narrow ? 12 : 18)} y={labelY[i]} dy="0.32em" className={`slope__lbl${narrow ? ' slope__lbl--sm' : ''}`}>
+                {d.metric}{narrow ? '' : ' '}<tspan className="slope__vals">{narrow ? '' : `${fmtNum(d.b)} → ${fmtNum(d.t)}`}</tspan>
               </text>
             </g>
           )

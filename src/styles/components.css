@@ -1540,6 +1540,7 @@ text.chart-panel-title {
 .slope__axislbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; font-weight: 600; }
 .slope__lead { stroke: var(--grey-25); stroke-width: 1; }
 .slope__lbl { font-family: var(--font-sans); font-size: var(--fs-xs); fill: var(--ink); font-weight: 500; }
+.slope__lbl--sm { font-size: 10px; }
 .slope__vals { font-family: var(--font-mono); fill: var(--fg-muted); font-weight: 400; }
 
 /* ---- Sports: SportSplit (mirrored distance vs activities) ------------- */
@@ -1729,3 +1730,44 @@ text.chart-panel-title {
   .goalhero { grid-template-columns: 1fr; justify-items: center; }
   .goalhero__list { width: 100%; }
 }
+
+/* ---- What It Means: Verdict (typographic hero stat) ----------------- */
+.verdict { position: relative; }
+.verdict__leap { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }
+.verdict__from { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 1.4rem + 3vw, 3rem); color: var(--grey-45); line-height: 1; }
+.verdict__arrow { font-size: clamp(1.5rem, 1rem + 2vw, 2.2rem); color: var(--grey-45); line-height: 1; }
+.verdict__to { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 1.8rem + 4vw, 4rem); color: var(--accent); line-height: 1; }
+.verdict__single { display: flex; align-items: baseline; gap: var(--sp-2); }
+.verdict__big { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 1.8rem + 5vw, 4.4rem); color: var(--accent); line-height: 1; }
+.verdict__unit { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); color: var(--ink); }
+.verdict__mult { font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 700; color: var(--accent-ink); margin-top: var(--sp-2); text-transform: uppercase; letter-spacing: var(--tr-caps); }
+.verdict__sub { margin: var(--sp-2) 0 0; color: var(--fg-muted); font-size: var(--fs-sm); }
+
+/* ---- What It Means: ClimbShare (stacked climb-by-sport bar) ---------- */
+.cshare { position: relative; }
+.cshare__bar { display: flex; height: 40px; border-radius: 4px; overflow: hidden; }
+.cshare__seg { transition: opacity var(--dur) var(--ease); }
+.cshare__seg--hi { outline: 2px solid var(--ink); outline-offset: -2px; }
+.cshare__key { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; gap: 5px; }
+.cshare__key li { display: grid; grid-template-columns: 12px 1fr auto; gap: var(--sp-2); align-items: center; }
+.cshare__sw { width: 12px; height: 12px; border-radius: 2px; }
+.cshare__lbl { font-size: var(--fs-sm); }
+.cshare__pct { font-size: var(--fs-sm); font-weight: 700; text-align: right; }
+
+/* ---- Gear: GhostMiles (iceberg of logged vs hidden miles) ----------- */
+.ghost { position: relative; }
+.ghost__tip { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); }
+.ghost__lbl { font-family: var(--font-body); font-size: var(--fs-2xs); fill: var(--ink); }
+.ghost__water { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.ghost__waterlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-caps); }
+.ghost__waterlbl--sub { fill: var(--grey-45); }
+.ghost__hidden { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--grey-45); }
+
+/* ---- Gear: TerrainAxis (road-to-trail spectrum) --------------------- */
+.taxis { position: relative; }
+.taxis__line { stroke: var(--ink); stroke-width: 2; }
+.taxis__end { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; fill: var(--fg-muted); letter-spacing: var(--tr-caps); }
+.taxis__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.taxis__stem { stroke: var(--grey-35); stroke-width: 1; }
+.taxis__lbl { font-family: var(--font-body); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.taxis__lbl--named { fill: var(--accent-ink); font-weight: 600; }

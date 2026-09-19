@@ -20,7 +20,7 @@ export default function Timeline() {
       number="08"
       title="Timeline"
       subtitle="In order. First upload to now."
-      lede="Seven years in order, from a single noon bike ride to a 253-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced."
+      lede="Seven years in order, from a single noon bike ride to a 264-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced."
       prev={prev}
       next={next}
     >

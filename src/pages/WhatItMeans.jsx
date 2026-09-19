@@ -1,45 +1,89 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import Term from '../components/Term.jsx'
-import MiniTrend from '../charts/MiniTrend.jsx'
+import Verdict from '../charts/Verdict.jsx'
+import ClimbShare from '../charts/ClimbShare.jsx'
+import EffortPerKm from '../charts/EffortPerKm.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
+const RUN_SET = new Set(['Run', 'TrailRun'])
+const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+const median = (arr) => {
+  const s = arr.filter((v) => v > 0).sort((a, b) => a - b)
+  if (!s.length) return 0
+  const m = Math.floor(s.length / 2)
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2
+}
+
 export default function WhatItMeans() {
+  const activities = useTable('activities')
   const lifetime = useTable('lifetime_totals')
   const fun = useTable('fun_journey')
-  const reYear = useTable('relative_effort_by_year')
-  const yearly = useTable('yearly_totals')
   const countries = useTable('countries')
   const regions = useTable('tanzania_regions')
   const glossary = useTable('glossary')
   const { prev, next } = useSectionPaging('/what-it-means')
 
-  const yrs = [...yearly].sort((a, b) => Number(a.year) - Number(b.year))
-  const years = yrs.map((r) => r.year)
-  const startY = years[0]
-  const endY = years[years.length - 1]
-
-  const actsByYear = yrs.map((r) => toNum(r.activities) || 0)
-  const elevByYear = yrs.map((r) => toNum(r.elevation_m) || 0)
-  // cadence: skip years with no cadence data (stored as 0) so the line doesn't dip to the floor
-  const cadByYear = [...reYear]
-    .sort((a, b) => Number(a.year) - Number(b.year))
-    .map((r) => toNum(r.avg_cadence) || 0)
-    .filter((v) => v > 0)
-  const cumActs = actsByYear.reduce((acc, v) => { acc.push((acc[acc.length - 1] || 0) + v); return acc }, [])
-
   const life = (n) => (lifetime.find((r) => (r.metric || '').toLowerCase().includes(n)) || {}).value
   const funv = (n) => (fun.find((f) => (f.comparison || '').includes(n)) || {}).value
-  const re = (y) => reYear.find((r) => r.year === y) || {}
 
-  const activities = life('activities')
-  const streak = life('longest streak')
-  const elevation = life('elevation')
+  const totalActs = activities.length || toNum(life('activities')) || 0
+  const acts2019 = activities.filter((a) => a.year === '2019').length
   const everests = funv('Everest')
-  const kilis = funv('Kilimanjaro')
+  const elevation = toNum(life('elevation'))
   const realCountries = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS').length
   const regionCount = regions.filter((r) => r.region).length
+
+  // effort spent per km on foot, by year (the honest fitness signal)
+  const epkAgg = {}
+  for (const a of activities) {
+    if (!FOOT.has(a.sport_type)) continue
+    const re = toNum(a.relative_effort)
+    const km = toNum(a.distance_km)
+    if (re > 0 && km > 0.3 && a.year) {
+      const e = (epkAgg[a.year] = epkAgg[a.year] || { e: 0, k: 0 })
+      e.e += re
+      e.k += km
+    }
+  }
+  const effortPerKm = Object.keys(epkAgg).sort().map((y) => ({ year: y, value: epkAgg[y].e / epkAgg[y].k, thin: epkAgg[y].k < 400 }))
+  const epkFirst = effortPerKm[0]
+  const epkLow = effortPerKm.reduce((lo, d) => (d.value < lo.value ? d : lo), effortPerKm[0] || { value: 0 })
+
+  // where the vertical comes from, by sport
+  const elevBy = {}
+  const distBy = {}
+  for (const a of activities) {
+    if (!FOOT.has(a.sport_type)) continue
+    elevBy[a.sport_type] = (elevBy[a.sport_type] || 0) + (toNum(a.elevation_gain_m) || 0)
+    distBy[a.sport_type] = (distBy[a.sport_type] || 0) + (toNum(a.distance_km) || 0)
+  }
+  const totalFootElev = Object.values(elevBy).reduce((s, v) => s + v, 0) || 1
+  const totalFootDist = Object.values(distBy).reduce((s, v) => s + v, 0) || 1
+  const climbShareData = [
+    { key: 'Walk', label: 'Walking', value: elevBy.Walk || 0, color: 'var(--grey-55)' },
+    { key: 'TrailRun', label: 'Trail running', value: elevBy.TrailRun || 0, color: 'var(--ink)' },
+    { key: 'Run', label: 'Running (road + treadmill)', value: elevBy.Run || 0, color: 'var(--accent)', highlight: true },
+    { key: 'Hike', label: 'Hiking', value: elevBy.Hike || 0, color: 'var(--grey-35)' },
+  ].sort((a, b) => b.value - a.value)
+  const runDistPct = Math.round((100 * (distBy.Run || 0)) / totalFootDist)
+  const runClimbPct = Math.round((100 * (elevBy.Run || 0)) / totalFootElev)
+
+  // typical outing + the doubling habit
+  const footKm = activities.filter((a) => FOOT.has(a.sport_type)).map((a) => toNum(a.distance_km) || 0)
+  const medKm = median(footKm)
+  const perDay = {}
+  for (const a of activities) { const d = (a.date || '').slice(0, 10); if (d) perDay[d] = (perDay[d] || 0) + 1 }
+  const dayVals = Object.values(perDay)
+  const doublePct = dayVals.length ? Math.round((100 * dayVals.filter((v) => v >= 2).length) / dayVals.length) : 0
+
+  // consistency
+  const activeDays = Object.keys(perDay).length
+  const dates = Object.keys(perDay).sort()
+  const spanDays = dates.length ? Math.round((Date.parse(dates[dates.length - 1]) - Date.parse(dates[0])) / 86400000) + 1 : 1
+  const activePct = Math.round((100 * activeDays) / spanDays)
+  const streak = toNum(life('longest streak'))
 
   return (
     <DetailFrame
@@ -47,73 +91,110 @@ export default function WhatItMeans() {
       number="10"
       title="What It Means"
       subtitle="What the numbers say to you."
-      lede="Numbers only matter if they mean something to you. Here is what this record says, depending on where you are in your training. Dotted words have plain definitions. Hover, tap or tab."
+      lede="A record is only worth keeping if it tells you something. Everything on this site converges on a handful of lessons, and which one matters depends on where you are in your own training. Here is what seven years of showing up has to say. Dotted words carry plain definitions; hover, tap or tab."
       prev={prev}
       next={next}
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you're just starting out</h2>
+            <h2 className="persona__who">If you are just starting out</h2>
             <p className="measure">
-              In 2019 this was 27 activities and not much intent. It did not reach {fmtInt(activities)}{' '}
-              through heroics. It got there because, in July 2021, a hobby became a default and the
-              default held. That is the pattern the data keeps repeating: a modest start compounds.
-              Show up long enough and the totals look after themselves.
+              Start small and stay in the game. This began in 2019 as {acts2019} activities and no
+              real intent, and it did not reach {fmtInt(totalActs)} through talent or heroics. It got
+              there because in July 2021 a hobby quietly became the default, and the default was never
+              switched off. That is the single loudest lesson in the data: almost nothing here came
+              from the first two years, and almost everything came from refusing to stop after them.
+              A modest habit, compounded over years, dwarfs any burst of motivation.
             </p>
           </div>
-          <MiniTrend values={cumActs} startLabel={startY} endLabel={endY} caption="Activities, running total" />
+          <Verdict from={acts2019} to={fmtInt(totalActs)} mult={`about ${Math.round(totalActs / (acts2019 || 1))}x more activities`} sub="27 activities in 2019, and the totals looked after themselves once the habit held." />
         </article>
 
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you're chasing consistency</h2>
+            <h2 className="persona__who">If you are chasing consistency</h2>
             <p className="measure">
-              The longest unbroken run here is {fmtInt(streak)} days, and it sits inside a 156-week
-              streak stretching back three years. Neither was built on big days. They were built on the
-              small ones, the short evening walk that keeps the chain intact. This is why{' '}
-              <Term name="Moving time">moving time</Term> and turning up beat any single personal best.
+              Consistency is not built from big days; it is built from small ones you refuse to skip.
+              The longest unbroken run here is {fmtInt(streak)} days, sitting inside a 157-week streak
+              that reaches back three full years, and {activePct}% of every calendar day across seven
+              years carries an activity. None of that was earned on the epic outings. It was earned on
+              the short evening walk logged only to keep the chain alive. That is why{' '}
+              <Term name="Moving time">moving time</Term> and turning up will always beat a single
+              personal best.
             </p>
           </div>
-          <MiniTrend values={actsByYear} startLabel={startY} endLabel={endY} caption="Activities per year" />
+          <Verdict value={fmtInt(streak)} unit="days" sub={`unbroken, inside a 157-week streak, with ${activePct}% of all days active.`} />
         </article>
 
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you're a runner working on pace</h2>
+            <h2 className="persona__who">If you are coming back from a break</h2>
             <p className="measure">
-              Two numbers show the fitness turning. Average <Term name="Cadence">cadence</Term> rose
-              from {fmtNum(re('2019').avg_cadence)} to {fmtNum(re('2026').avg_cadence)} steps per
-              minute. And average <Term name="Relative Effort">relative effort</Term> per session fell
-              from {fmtInt(re('2019').avg_relative_effort)} in 2019 to{' '}
-              {fmtInt(re('2026').avg_relative_effort)} now: the same work costs the body far less than
-              it used to. Chasing speed? The <Term name="Pace zones">pace zones</Term> are where the
-              attention pays off.
+              A gap is not the end of the story. The biggest silence in this whole record is 353 days,
+              nearly a full year, from July 2020 to June 2021, with nothing logged at all. What came
+              next was not a slow, guilty return but the most productive stretch of the entire seven
+              years. The lesson is not that rest is failure; it is that a long layoff and a lasting
+              comeback can sit right next to each other. The clock does not have to reset your ambition,
+              only your pace back in.
             </p>
           </div>
-          <MiniTrend values={cadByYear} startLabel={startY} endLabel={endY} caption="Average cadence (spm)" fmt={(v) => v.toFixed(0)} />
+          <Verdict value="353" unit="days away" sub="the longest gap on record, immediately before the most consistent stretch of all." />
+        </article>
+
+        <article className="persona persona--split">
+          <div>
+            <h2 className="persona__who">If you are a runner working on pace</h2>
+            <p className="measure">
+              Fitness is easiest to see not in speed, which the treadmill distorts, but in cost. Divide
+              how hard a session felt by how far it went and you get the price of a kilometre in{' '}
+              <Term name="Relative Effort">relative effort</Term>. In 2019 a kilometre on foot cost about{' '}
+              {fmtNum(epkFirst?.value, 1)} points; by {epkLow?.year} it cost {fmtNum(epkLow?.value, 1)}.
+              The same ground, for a fraction of the toll. That downward curve, not any one fast run, is
+              what getting fitter actually looks like. Chase it in the <Term name="Pace zones">pace zones</Term>.
+            </p>
+          </div>
+          <EffortPerKm data={effortPerKm} />
+        </article>
+
+        <article className="persona persona--split">
+          <div>
+            <h2 className="persona__who">If you are short on time</h2>
+            <p className="measure">
+              You do not need long days. The typical foot outing here is just {fmtNum(medKm, 1)} km, and
+              on {doublePct}% of active days there were two or more sessions rather than one long one.
+              The volume that stacked up to a third of the way around the Earth was assembled almost
+              entirely out of short, ordinary efforts squeezed into ordinary days. A brisk half hour,
+              repeated, is the engine. The long session is the exception, not the requirement.
+            </p>
+          </div>
+          <Verdict value={fmtNum(medKm, 1)} unit="km" sub={`the median outing, and ${doublePct}% of active days held more than one.`} />
         </article>
 
         <article className="persona persona--split">
           <div>
             <h2 className="persona__who">If you live for vertical</h2>
             <p className="measure">
-              Total <Term name="Elevation gain">elevation gain</Term> on foot is {fmtInt(elevation)}{' '}
-              metres, {fmtNum(everests)} Everests. Almost none of it came from running, which stays flat
-              and indoors. It came from walking, which carries three-quarters of the climb, and from the
-              trails, where a single outing can gain 350 metres. Want vertical? Walk uphill, and often.
+              Elevation does not come from where you would guess. Running is {runDistPct}% of the
+              distance on foot but only {runClimbPct}% of the climb, because it stays flat and mostly on
+              a treadmill. The vertical, all {fmtInt(elevation)} metres of it, {fmtNum(everests)} Everests,
+              is carried by walking uphill and by the trails, where a single trail run averages around
+              350 metres of gain and a hike climbs over 700. If you want <Term name="Elevation gain">elevation</Term>, the answer
+              is not to run harder. It is to walk uphill, and to get on the trails often.
             </p>
           </div>
-          <MiniTrend values={elevByYear} startLabel={startY} endLabel={endY} caption="Elevation per year (m)" />
+          <ClimbShare items={climbShareData} />
         </article>
 
         <article className="persona persona--split">
           <div>
             <h2 className="persona__who">If you train through travel</h2>
             <p className="measure">
-              The activities here begin in {realCountries} countries. Travel never broke the habit; if
-              anything it fed it. A gravel ride in a new country, a dawn walk in an unfamiliar city, the
-              standout days often happened precisely because the routine came along for the trip.
+              The routine does not have to stay home. These activities begin in {realCountries} countries
+              and {regionCount} regions of Tanzania, and travel never broke the streak, it fed it. Some
+              of the standout days, a gravel ride across a border, a dawn walk in an unfamiliar city,
+              happened precisely because the habit packed its shoes and came along for the trip. A new
+              place is not an excuse to stop; it is a fresh route to log.
             </p>
           </div>
           <div className="reach">
@@ -125,7 +206,7 @@ export default function WhatItMeans() {
               <span className="reach__num">{regionCount}</span>
               <span className="reach__lbl">Tanzania regions</span>
             </div>
-            <p className="source" style={{ marginTop: 'var(--sp-2)' }}>Source: Activity Log · GPS</p>
+            <p className="source" style={{ marginTop: 'var(--sp-2)' }}>Source: Activity Log &middot; GPS</p>
           </div>
         </article>
       </section>

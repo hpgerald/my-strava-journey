@@ -21,7 +21,8 @@ export default function TreadWear({ rows }) {
         {rows.map((r, ri) => {
           const frac = Math.max(0.02, r.km / maxKm)
           const fillW = Math.max(lugStep * 2, W * frac)
-          const lugColor = r.trail ? 'var(--accent)' : 'var(--grey-70)'
+          // accent the workhorse (longest strip) and any trail-majority pair
+          const lugColor = r.trail || r.km === maxKm ? 'var(--accent)' : 'var(--grey-70)'
           const nLugs = Math.floor((fillW - lugSkew) / lugStep)
           const lugs = []
           for (let i = 0; i < nLugs; i++) {
