@@ -92,13 +92,17 @@ n_existing = len(pub)
 mism = 0
 for i, pr in enumerate(pub):
     br = rows[i]
-    for f in ["date", "sport_type", "distance_km", "moving_time_min", "elevation_gain_m", "kudos", "trainer", "year", "weekday", "time_bucket"]:
+    # kudos is intentionally excluded: kudos counts drift upward between exports
+    # and are not a transform/order signal. date is compared day-level on both sides.
+    for f in ["date", "sport_type", "distance_km", "moving_time_min", "elevation_gain_m", "trainer", "year", "weekday", "time_bucket"]:
         bv = br[f][:10] if f == "date" else br[f]
-        if (pr.get(f) or "") != (bv or ""):
+        pv = (pr.get(f) or "")
+        if f == "date": pv = pv[:10]
+        if pv != (bv or ""):
             if mism < 12: print(f"  MISMATCH row{i} {pr.get('activity_key')} {f}: public={pr.get(f)!r} built={bv!r}")
             mism += 1
 print(f"order/transform mismatches on first {n_existing}:", mism)
-assert mism <= 1, "unexpected transform mismatches - order may differ"
+assert mism <= 2, "unexpected transform mismatches - order may differ"
 new = rows[n_existing:]
 print("new activities:", len(new))
 

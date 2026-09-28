@@ -250,7 +250,7 @@ export default function Records() {
         <Figure
           n="03"
           title="Fuel: the burn, in plates of ugali"
-          note="Strava totals the calories each activity burns. Across seven years that comes to over a million and a half, roughly two thousand seven hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead."
+          note="Strava totals the calories each activity burns. Across seven years that comes to over a million and a half, roughly two thousand eight hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead."
           source="Activity Log"
           tableCaption="Total calories burned and food equivalent"
           columns={['Measure', 'Value']}

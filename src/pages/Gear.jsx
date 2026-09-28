@@ -1,12 +1,20 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
-import TerrainAxis from '../charts/TerrainAxis.jsx'
-import GhostMiles from '../charts/GhostMiles.jsx'
-import TreadWear from '../charts/TreadWear.jsx'
+import FleetPrints from '../charts/FleetPrints.jsx'
+import ShoeRelay from '../charts/ShoeRelay.jsx'
+import ShoePersonality from '../charts/ShoePersonality.jsx'
+import BurnRate from '../charts/BurnRate.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
+
+const FOOT_TRAIL = new Set(['TrailRun', 'Hike'])
+const dayGap = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000)
+const median = (arr) => {
+  const s = [...arr].sort((x, y) => x - y)
+  return s.length ? s[Math.floor(s.length / 2)] : 0
+}
 
 export default function Gear() {
   const gear = useTable('gear')
@@ -17,66 +25,76 @@ export default function Gear() {
   const active = gear.filter((g) => /no/i.test(g.retired))
   const logged = gear.reduce((a, g) => a + (toNum(g.distance_in_log_km) || 0), 0)
 
-  // terrain split per pair, from the activity log
-  const byGear = {}
+  // ---- per-pair stats from the activity log ----
+  const stat = {}
   for (const a of activities) {
-    const id = a.gear_id
-    if (!id) continue
-    const rec = (byGear[id] ||= { road: 0, trail: 0 })
+    const gid = a.gear_id
+    if (!gid) continue
+    const s = (stat[gid] ||= { acts: 0, km: 0, elev: 0, first: null, last: null, trail: 0, road: 0, paces: [] })
     const km = toNum(a.distance_km) || 0
-    if (a.sport_type === 'TrailRun' || a.sport_type === 'Hike') rec.trail += km
-    else rec.road += km
+    const d = (a.date || '').slice(0, 10)
+    s.acts += 1; s.km += km; s.elev += toNum(a.elevation_gain_m) || 0
+    if (!s.first || d < s.first) s.first = d
+    if (!s.last || d > s.last) s.last = d
+    if (FOOT_TRAIL.has(a.sport_type)) s.trail += km
+    else s.road += km
+    if (km > 0.5) s.paces.push((toNum(a.moving_time_min) || 0) / km)
   }
-  const trailPctOf = (g) => {
-    const rec = byGear[g.gear_id] || { road: 0, trail: 0 }
-    return (100 * rec.trail) / ((rec.road + rec.trail) || 1)
+
+  const shoesData = gear.map((g) => {
+    const s = stat[g.gear_id]
+    if (!s || !s.first) return null
+    const life = dayGap(s.first, s.last) + 1
+    return {
+      gid: g.gear_id, model: g.model, brand: g.brand, retired: !/no/i.test(g.retired),
+      km: s.km, acts: s.acts, first: s.first, last: s.last, life,
+      kmMo: s.km / (life / 30.44), steep: s.elev / (s.km || 1), pace: median(s.paces),
+      trailPct: (100 * s.trail) / ((s.road + s.trail) || 1), elev: s.elev,
+    }
+  }).filter(Boolean)
+
+  // ---- the relay: greedy handoff. A pair is the next primary if it debuts at or
+  //      after the reigning pair's last day; otherwise it is an overlapping cameo.
+  const byFirst = [...shoesData].sort((a, b) => (a.first < b.first ? -1 : 1))
+  const primaries = []
+  const cameos = []
+  let tail = null
+  for (const sh of byFirst) {
+    if (!tail || sh.first >= tail.last) { primaries.push(sh); tail = sh }
+    else cameos.push(sh)
   }
+  const start = byFirst[0]?.first
+  const end = shoesData.reduce((mx, s) => (s.last > mx ? s.last : mx), byFirst[0]?.last || '')
+  primaries.forEach((p, i) => {
+    p.reignStart = p.first
+    p.reignEnd = i + 1 < primaries.length ? primaries[i + 1].first : end
+  })
+  const handoffs = primaries.slice(1).map((p, i) => dayGap(primaries[i].last, p.first))
+  const cleanHandoffs = handoffs.filter((g) => g >= 0 && g <= 3).length
 
-  // Curated, not exhaustive: each visual gets only the pairs that carry its story.
-
-  // 1. the workhorses: top pairs by distance logged, as worn tread strips
-  const byDist = [...gear]
-    .filter((g) => toNum(g.distance_in_log_km) > 0)
-    .sort((a, b) => toNum(b.distance_in_log_km) - toNum(a.distance_in_log_km))
-  const treadRows = byDist.slice(0, 6).map((g) => ({
-    label: `${g.brand} ${g.model}`,
-    km: toNum(g.distance_in_log_km),
-    display: fmtNum(g.distance_in_log_km, 0),
-    trail: trailPctOf(g) >= 50,
-    current: /no/i.test(g.retired),
+  // ---- personalities: pace x steepness, sized by distance ----
+  const personality = [...shoesData].filter((s) => s.pace > 0).map((s) => ({
+    model: s.model, pace: s.pace, steep: s.steep, km: s.km, trail: s.trailPct >= 50, trailPct: s.trailPct,
   }))
+  const goat = personality.reduce((b, s) => (s.steep > b.steep ? s : b), personality[0] || { steep: 0, model: '' })
 
-  // 2. the trail spectrum: the three "Trail"-named pairs, plus the two biggest
-  //    road pairs as anchors, so the impostor stands out among company it keeps
-  const isNamedTrail = (g) => /trail/i.test(`${g.model} ${g.type}`)
-  const trailNamed = gear.filter((g) => isNamedTrail(g) && toNum(g.distance_in_log_km) > 0)
-  const roadAnchors = byDist.filter((g) => !isNamedTrail(g)).slice(0, 2)
-  const terrainRows = [...trailNamed, ...roadAnchors].map((g) => ({
-    label: g.model,
-    trailPct: trailPctOf(g),
-    km: toNum(g.distance_in_log_km),
-    named: isNamedTrail(g),
+  // ---- burn rate: km per month of life, fastest first ----
+  const burn = [...shoesData].sort((a, b) => b.kmMo - a.kmMo)
+  const sprinter = burn[0] || { model: '', kmMo: 0 }
+  const slow = burn[burn.length - 1] || { model: '', kmMo: 0 }
+
+  // ---- tread strips: the fleet by distance, top six ----
+  const treadRows = [...shoesData].sort((a, b) => b.km - a.km).slice(0, 6).map((s) => ({
+    label: `${s.brand} ${s.model}`, km: s.km, display: fmtNum(s.km, 0), trail: s.trailPct >= 50, current: !s.retired,
   }))
-
-  // 3. ghost miles: only pairs that ran a real life before the log (hidden > 50 km)
-  const ghostRows = [...gear]
-    .map((g) => ({
-      label: g.model,
-      logged: toNum(g.distance_in_log_km),
-      hidden: Math.max(0, toNum(g.strava_total_km) - toNum(g.distance_in_log_km)),
-    }))
-    .filter((r) => r.hidden > 50)
-    .sort((a, b) => (b.logged + b.hidden) - (a.logged + a.hidden))
-  const totalHidden = gear.reduce((s, g) => s + Math.max(0, toNum(g.strava_total_km) - toNum(g.distance_in_log_km)), 0)
-  const topGhost = ghostRows.reduce((best, r) => (r.hidden > best.hidden ? r : best), ghostRows[0] || { hidden: 0, logged: 0, label: '' })
 
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Gear' }]}
       number="07"
       title="Gear"
-      subtitle="Eleven pairs. The miles in each."
-      lede="Eleven pairs on record since late 2021, and they give themselves away. The Lunarglide 7 is the workhorse at 1,778 km. The Lunarglide 6 reads 2,495 km on Strava but only 25 here: it did its living before this log began. And the Zegama Trail, for all its name, spent 618 of its 697 km on the road."
+      subtitle="Eleven pairs, and how they were worn."
+      lede={`Eleven pairs on record, and they were not worn at random. For five years there has almost always been exactly one main pair carrying the load, and the next clocks in within a day of the last retiring: ${cleanHandoffs} of ${handoffs.length} handoffs land inside three days. Some pairs were devoured in a season, others nursed for years, and each one has a job written in how fast and how steeply it runs.`}
       prev={prev}
       next={next}
     >
@@ -88,57 +106,65 @@ export default function Gear() {
         </div>
       </section>
 
-      {/* Tread wear: the signature gear metaphor */}
+      {/* The relay */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           n="01"
-          title="The six that did the miles"
-          note="The six most-worn pairs, each drawn as a strip of outsole tread the length of the distance run in it. The Lunarglide 7 is the long workhorse, past 1,700 km on its own and picked out in accent; a filled dot marks the pairs still in rotation. On the most-used soles the heel lugs fade toward the heel, the way real tread wears smooth. The other five pairs sit further down the log and are left off here."
+          title="The baton never drops"
+          note={`Every pair that ever led the rotation, laid end to end. One shoe reigns at a time, the number inside its bar the kilometres it carried, and a baton dot marks each handoff, almost always within a day of the last pair retiring. The Lunarglide 7 held the baton longest, over 500 days. The specialists below, a stray backup, the dedicated trail pairs, only ever came off the bench. Lately the single-driver relay has broken into a three-pair rotation running at once.`}
+          source="Activity Log + Gear"
+          tableCaption="Each primary pair's reign and the distance it carried"
+          columns={['Pair', 'Reign', 'km']}
+          rows={primaries.map((p) => [p.model, `${p.reignStart} to ${p.reignEnd}`, fmtNum(p.km, 0)])}
+        >
+          <ShoeRelay primaries={primaries} cameos={cameos} start={start} end={end} />
+        </Figure>
+      </section>
+
+      {/* Shoe personalities */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="02"
+          title="Every shoe has a character"
+          note={`Every pair stands on the pace line, quick on the left and a walker's amble on the right, then rises to how steeply it climbs, a metre of ascent for every kilometre. The road trainers keep low and level, the Lunarglide 5 and Pegasus 37 pure speed on the flat. The trail pairs spike up like mountains, and the ${goat.model.replace(/\s*\(.*\)$/, '')} towers over the whole fleet at over 40 metres of climb per kilometre. Notice the Pegasus Trail climbs as steeply as the far slower Zegama, five minutes a kilometre quicker up the same gradient. Head size is total distance.`}
+          source="Activity Log + Gear"
+          tableCaption="Median pace, steepness and distance by pair"
+          columns={['Pair', 'Pace /km', 'm per km', 'km']}
+          rows={[...personality].sort((a, b) => b.steep - a.steep).map((p) => [
+            p.model, `${Math.floor(p.pace)}:${String(Math.round((p.pace - Math.floor(p.pace)) * 60)).padStart(2, '0')}`, String(Math.round(p.steep)), fmtNum(p.km, 0)])}
+        >
+          <ShoePersonality points={personality} />
+        </Figure>
+      </section>
+
+      {/* Burn rate */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="03"
+          title="Sprinters and slow-burners"
+          note={`How fast each pair was used up, in kilometres run per month of its life. The spread is enormous. The ${sprinter.model.replace(/\s*\(.*\)$/, '')} was a sprinter, torn through at ${fmtInt(sprinter.kmMo)} km a month, essentially the only shoe worn for that stretch. The ${slow.model.replace(/\s*\(.*\)$/, '')} was the opposite, sipped at ${fmtInt(slow.kmMo)} km a month across its whole life. A hollow dot marks a pair still in rotation.`}
+          source="Activity Log + Gear"
+          tableCaption="Kilometres per month of life, by pair"
+          columns={['Pair', 'km / month', 'Total km']}
+          rows={burn.map((r) => [r.model, fmtInt(r.kmMo), fmtNum(r.km, 0)])}
+        >
+          <BurnRate rows={burn} />
+        </Figure>
+      </section>
+
+      {/* The fleet by distance */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="04"
+          title="The fleet, in footprints"
+          note="The six most-worn pairs, each laid out in footprints, one for every 200 kilometres run in it. The Lunarglide 7 leaves the longest trail by far, and carries the accent as the workhorse of the fleet; a ring marks the pairs still in rotation."
           source="Activity Log + Gear"
           tableCaption="Distance logged in the six most-worn pairs"
           columns={['Pair', 'km', 'Terrain']}
           rows={treadRows.map((r) => [r.label, r.display, r.trail ? 'Trail' : 'Road'])}
         >
-          <TreadWear rows={treadRows} />
+          <FleetPrints rows={treadRows} />
         </Figure>
-      </section>
-
-      {/* Road-to-trail spectrum */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="02"
-          title="Three shoes named Trail"
-          note="The three pairs with Trail in their name (orange), placed on a line from all-road to all-trail by the share of distance that actually went off-road, with the two biggest road trainers dropped in for scale. Two of the trail shoes sit where you would expect, out on the right. The Zegama Trail does not: it ran nearly nine-tenths of its life on tarmac, marooned among the road pairs. Bubble size is distance."
-          source="Activity Log + Gear"
-          tableCaption="Off-road share of the trail-named pairs and two road anchors"
-          columns={['Pair', 'Trail share', 'km']}
-          rows={[...terrainRows].sort((a, b) => b.trailPct - a.trailPct).map((d) => [d.label, `${Math.round(d.trailPct)}%`, fmtNum(d.km, 0)])}
-        >
-          <TerrainAxis rows={terrainRows} />
-        </Figure>
-      </section>
-
-      {/* Ghost miles: the hidden life before the log */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="03"
-          title="The miles you never see"
-          note={`Only the four pairs that lived a life before this log begins. Above the waterline is what the record actually watched them run; below it, submerged and faint, are the earlier miles, worked out from Strava's lifetime odometer. The ${topGhost.label} is almost all iceberg: ${fmtInt(topGhost.logged)} km on the surface, ${fmtInt(topGhost.hidden)} beneath. Across every pair, ${fmtInt(totalHidden)} km ran their course before this history could see them.`}
-          source="Gear"
-          tableCaption="Distance logged here versus earlier, hidden miles"
-          columns={['Pair', 'In this log km', 'Hidden km']}
-          rows={ghostRows.map((d) => [d.label, fmtNum(d.logged, 0), fmtNum(d.hidden, 0)])}
-        >
-          <GhostMiles rows={ghostRows} />
-          <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
-            <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> logged in this record</span>
-            <span><i className="chart-swatch" style={{ background: 'var(--grey-35)' }} /> hidden, before it</span>
-          </div>
-        </Figure>
-        <p className="source" style={{ marginTop: 'var(--sp-3)' }}>
-          Source: Gear. Strava&rsquo;s lifetime odometer may include activities from before this account&rsquo;s earliest
-          pulled activity; shoes are linked to activities from late 2021 on, so earlier miles sit below the line.
-        </p>
       </section>
     </DetailFrame>
   )

@@ -1771,3 +1771,36 @@ text.chart-panel-title {
 .taxis__stem { stroke: var(--grey-35); stroke-width: 1; }
 .taxis__lbl { font-family: var(--font-body); font-size: var(--fs-2xs); fill: var(--fg-muted); }
 .taxis__lbl--named { fill: var(--accent-ink); font-weight: 600; }
+
+/* ---- Gear: ShoeRelay (the baton timeline) --------------------------- */
+.relay { position: relative; }
+.relay__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.relay__lanelbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--fg-muted); font-weight: 600; }
+.relay__lanelbl--sub { fill: var(--grey-45); }
+.relay__km { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--paper); }
+.relay__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-2xs); fill: var(--ink); }
+.relay__cameo { font-family: var(--font-body); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+
+/* ---- Gear: ShoePersonality (pace x steepness scatter) --------------- */
+.shoep { position: relative; }
+.shoep__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); }
+.shoep__lbl { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.shoep__lbl--trail { fill: var(--accent); font-weight: 700; }
+
+/* ---- Gear: BurnRate ------------------------------------------------- */
+.burn { position: relative; }
+.burn__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-xs); fill: var(--ink); }
+.burn__name--sm { font-size: 10.5px; }
+.burn__track { stroke: var(--grey-10); stroke-width: 7; }
+.burn__bar { stroke: var(--accent); stroke-linecap: round; }
+.burn__val { font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); }
+.burn__unit { fill: var(--fg-muted); font-weight: 400; }
+.burn__axis { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+
+/* ---- Gear: FleetPrints (isotype footprints by distance) ------------- */
+.prints { position: relative; }
+.prints__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-sm); fill: var(--ink); }
+.prints__name--sm { font-size: 11px; }
+.prints__val { font-size: var(--fs-sm); font-weight: 700; fill: var(--ink); }
+.prints__unit { fill: var(--fg-muted); font-weight: 400; }
+.prints__key { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }

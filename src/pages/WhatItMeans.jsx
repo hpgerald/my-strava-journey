@@ -116,7 +116,7 @@ export default function WhatItMeans() {
             <h2 className="persona__who">If you are chasing consistency</h2>
             <p className="measure">
               Consistency is not built from big days; it is built from small ones you refuse to skip.
-              The longest unbroken run here is {fmtInt(streak)} days, sitting inside a 157-week streak
+              The longest unbroken run here is {fmtInt(streak)} days, sitting inside a 158-week streak
               that reaches back three full years, and {activePct}% of every calendar day across seven
               years carries an activity. None of that was earned on the epic outings. It was earned on
               the short evening walk logged only to keep the chain alive. That is why{' '}
@@ -124,7 +124,7 @@ export default function WhatItMeans() {
               personal best.
             </p>
           </div>
-          <Verdict value={fmtInt(streak)} unit="days" sub={`unbroken, inside a 157-week streak, with ${activePct}% of all days active.`} />
+          <Verdict value={fmtInt(streak)} unit="days" sub={`unbroken, inside a 158-week streak, with ${activePct}% of all days active.`} />
         </article>
 
         <article className="persona persona--split">
