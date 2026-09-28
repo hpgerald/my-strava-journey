@@ -1,9 +1,16 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import Figure from '../charts/Figure.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
+import RasKilomoni from '../charts/RasKilomoni.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { fmtInt, toNum } from '../lib/format.js'
+import { fmtInt, fmtNum, toNum } from '../lib/format.js'
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const longDate = (iso) => {
+  const d = new Date(iso + 'T00:00:00Z')
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`
+}
 
 // The same targets are held up against every year (the choice: one fixed bar,
 // so the years can be compared on equal terms). Edit these to change the goals.
@@ -19,7 +26,15 @@ const fmtVal = (v, unit) => `${fmtInt(v)} ${unit}`
 
 export default function Goals() {
   const activities = useTable('activities')
+  const rasKilomoni = useTable('ras_kilomoni')
   const { prev, next } = useSectionPaging('/goals')
+
+  // Ras Kilomoni: a 2026 challenge to reach one headland fifty times, numbered I..L.
+  const rk = [...rasKilomoni].sort((a, b) => Number(a.day) - Number(b.day))
+  const rkRuns = rk.filter((r) => r.sport === 'Run' || r.sport === 'TrailRun').length
+  const rkWalks = rk.length - rkRuns
+  const rkKm = rk.reduce((a, r) => a + (toNum(r.distance_km) || 0), 0)
+  const rkTarget = 50
 
   // per-year totals for each tracked metric
   const agg = {}
@@ -154,6 +169,29 @@ export default function Goals() {
           <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> to go</span>
         </div>
       </section>
+
+      {/* A different kind of goal: fifty trips to one place */}
+      {rk.length > 0 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="03"
+            title="Fifty trips to Ras Kilomoni"
+            note={`Not every goal is a distance. Through 2026 one destination kept pulling the training back to it, the Ras Kilomoni headland, and the trips were numbered as they went, I to L. The target was a clean fifty, and the wall fills exactly: ${rkWalks} reached at a walk, ${rkRuns} on the run, no more and no fewer. The bars below drop each trip onto the calendar from ${longDate(rk[0].date)} to ${longDate(rk[rk.length - 1].date)}, the busy weeks and the long gaps laid bare, each bar as tall as that day was far. Trip fifty fell on the same day as the 2,000th activity of the whole record, a milestone landing on a milestone.`}
+            source="Activity Log (named-trip series)"
+            tableCaption="Every Ras Kilomoni trip in order, with date, sport and distance"
+            columns={['Trip', 'Date', 'Sport', 'km']}
+            rows={rk.map((r) => [`Ras Kilomoni ${r.roman}`, r.date, r.sport, fmtNum(toNum(r.distance_km) || 0, 1)])}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{rk.length} / {rkTarget}</span><span className="rask__statl">trips, target met</span></li>
+              <li className="rask__stat"><span className="rask__statv">{fmtInt(rkKm)} km</span><span className="rask__statl">covered getting there</span></li>
+              <li className="rask__stat"><span className="rask__statv">{rkWalks} &middot; {rkRuns}</span><span className="rask__statl">walks &middot; runs</span></li>
+              <li className="rask__stat"><span className="rask__statv">{longDate(rk[0].date)}</span><span className="rask__statl">first trip, to Aug 28</span></li>
+            </ul>
+            <RasKilomoni rows={rk} />
+          </Figure>
+        </section>
+      )}
     </DetailFrame>
   )
 }

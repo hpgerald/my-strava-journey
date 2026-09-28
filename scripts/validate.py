@@ -11,9 +11,9 @@ REQUIRED_SOURCE_PAGE = {
     "activities", "activity_geo", "comparisons", "countries", "fun_journey", "gear",
     "hr_zones", "indoor_outdoor", "kudos_leaderboard", "lifetime_totals", "meta",
     "monthly_totals", "most_repeated_titles", "nav_index", "pace_zones", "power_zones",
-    "pr_activities", "pr_elevation", "pr_longest", "relative_effort_by_year", "sport_breakdown",
-    "streaks", "tanzania_regions", "time_of_day_patterns", "timeline", "weekday_patterns",
-    "yearly_by_sport", "yearly_totals",
+    "pr_activities", "pr_elevation", "pr_longest", "ras_kilomoni", "relative_effort_by_year",
+    "sport_breakdown", "streaks", "tanzania_regions", "time_of_day_patterns", "timeline",
+    "weekday_patterns", "yearly_by_sport", "yearly_totals",
 }
 
 

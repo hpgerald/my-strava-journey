@@ -1731,6 +1731,19 @@ text.chart-panel-title {
   .goalhero__list { width: 100%; }
 }
 
+/* ---- Goals: Ras Kilomoni stamp wall + cadence ribbon --------------- */
+.rask { position: relative; }
+.rask__roman { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.02em; }
+.rask__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.rask__mon { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.rask__ribttl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; fill: var(--fg-faint); }
+.rask__legend { margin-top: var(--sp-4); }
+.rask__stats { display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-5); margin: 0 0 var(--sp-5); padding: 0; list-style: none; }
+.rask__stat { display: flex; flex-direction: column; gap: 1px; }
+.rask__statv { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); line-height: 1; }
+.rask__statv--accent { color: var(--accent); }
+.rask__statl { font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
 /* ---- What It Means: Verdict (typographic hero stat) ----------------- */
 .verdict { position: relative; }
 .verdict__leap { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }

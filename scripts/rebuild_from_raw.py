@@ -303,4 +303,33 @@ Wr("meta.csv", ["key", "value", "source_page"], [["coverage_start", "2019-08-17"
     ["total_activities", str(len(rows)), "Notes"], ["units", "Metric (km, meters, km/h)", "Notes"],
     ["data_source", "Strava API via connected Strava MCP", "Notes"], ["last_refreshed", today, "Notes"],
     ["refresh_cadence", "Weekly automated rebuild", "Notes"]])
+# ============ RAS KILOMONI CHALLENGE (named-trip series, from raw titles) ============
+# A 2026 personal challenge: 50 trips to the Ras Kilomoni headland, each titled
+# "Ras Kilomoni <roman>" (I..L). Extracted straight from the raw activity names
+# (the only table that carries titles) into a small, self-contained public series
+# that names nothing but this one challenge. Day, date, sport and metrics only.
+def _roman(s):
+    val = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+    tot = 0; prev = 0
+    for ch in reversed(s):
+        v = val[ch]; tot += -v if v < prev else v; prev = v
+    return tot
+_rk_pat = re.compile(r"Ras Kilomoni\s+([IVXLCDM]+)\b")
+rk = []
+for r in csv.DictReader(open(RAW)):
+    nm = r.get("name") or ""
+    m = _rk_pat.search(nm)
+    if not m:
+        continue
+    dist = fnum(r.get("summary_distance")); elev = fnum(r.get("summary_elevation_gain"))
+    rk.append({"day": _roman(m.group(1)), "roman": m.group(1), "date": (r["start_local"] or "")[:10],
+        "sport": r["sport_type"], "distance_km": fmt(dist / 1000, 2) if dist is not None else "",
+        "elevation_m": fmt(elev, 0) if elev is not None else "0"})
+rk.sort(key=lambda x: x["day"])
+if rk:
+    Wr("ras_kilomoni.csv", ["day", "roman", "date", "sport", "distance_km", "elevation_m", "source_page"],
+        [[x["day"], x["roman"], x["date"], x["sport"], x["distance_km"], x["elevation_m"], "Goals"] for x in rk])
+    seq = [x["day"] for x in rk]
+    print(f"  ras_kilomoni: {len(rk)} trips, days {min(seq)}-{max(seq)}, contiguous={sorted(set(seq)) == list(range(min(seq), max(seq) + 1))}")
+
 print(f"REBUILD DONE. {len(rows)} activities; last {days[-1]}; streak {best} longest / {cur_len} current")
