@@ -3,6 +3,13 @@ import Figure from '../charts/Figure.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
 import KiliHalf from '../charts/KiliHalf.jsx'
+import MonthChain from '../charts/MonthChain.jsx'
+import HalfClub from '../charts/HalfClub.jsx'
+import DoubleThousand from '../charts/DoubleThousand.jsx'
+import DistanceArc from '../charts/DistanceArc.jsx'
+import CenturyMonths from '../charts/CenturyMonths.jsx'
+import DistanceExtremes from '../charts/DistanceExtremes.jsx'
+import StageRace from '../charts/StageRace.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -47,6 +54,50 @@ export default function Goals() {
   const khLast = kh[kh.length - 1]
   const khFaster = kh.length ? (toNum(khFirst.moving_min) - toNum(khLast.moving_min)) : 0
   const khStops = (r) => Math.round(toNum(r.elapsed_min) - toNum(r.moving_min))
+
+  // Silent goals unearthed from the data.
+  const monthly = useTable('monthly_totals')
+  const yearlyTotals = useTable('yearly_totals')
+  const FOOT_ALL = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+  const RUN_ALL = new Set(['Run', 'TrailRun'])
+  // month streak: consecutive active months ending at the latest
+  const activeMonths = [...new Set(monthly.map((m) => m.month))].sort()
+  const nextMonth = (m) => { let y = +m.slice(0, 4), mm = +m.slice(5, 7) + 1; if (mm > 12) { mm = 1; y += 1 } return `${y}-${String(mm).padStart(2, '0')}` }
+  let monthStreak = 0
+  if (activeMonths.length) {
+    const set = new Set(activeMonths)
+    let cur = activeMonths[activeMonths.length - 1]
+    while (set.has(cur)) { monthStreak += 1; let y = +cur.slice(0, 4), mm = +cur.slice(5, 7) - 1; if (mm < 1) { mm = 12; y -= 1 } cur = `${y}-${String(mm).padStart(2, '0')}` }
+  }
+  const sparkLabel = activeMonths.length ? (() => {
+    const set = new Set(activeMonths); let cur = activeMonths[activeMonths.length - 1], prev = cur
+    while (set.has(cur)) { prev = cur; let y = +cur.slice(0, 4), mm = +cur.slice(5, 7) - 1; if (mm < 1) { mm = 12; y -= 1 } cur = `${y}-${String(mm).padStart(2, '0')}` }
+    return `${MONTHS[+prev.slice(5, 7) - 1]} ${prev.slice(0, 4)}`
+  })() : ''
+  // half-marathon club
+  const halfCount = activities.filter((a) => FOOT_ALL.has(a.sport_type) && (toNum(a.distance_km) || 0) >= 21.0975).length
+  // double thousand: latest year with both run>=1000 and walk>=1000
+  const yrAgg = {}
+  for (const a of activities) { const y = a.year; if (!y) continue; const e = (yrAgg[y] = yrAgg[y] || { run: 0, walk: 0 }); const km = toNum(a.distance_km) || 0; if (RUN_ALL.has(a.sport_type)) e.run += km; if (a.sport_type === 'Walk') e.walk += km }
+  const doubleYears = Object.keys(yrAgg).filter((y) => yrAgg[y].run >= 1000 && yrAgg[y].walk >= 1000).sort()
+  const dblYear = doubleYears[doubleYears.length - 1]
+  // arc peak
+  const arcPeak = [...yearlyTotals].sort((a, b) => toNum(b.distance_km) - toNum(a.distance_km))[0]
+  // century months: how many cleared 100 km, and the longest consecutive run
+  const monthSet = {}
+  for (const mm of monthly) monthSet[mm.month] = toNum(mm.distance_km)
+  const calMonths = Object.keys(monthSet).sort()
+  let centuryCount = 0, centuryBest = 0, cCur = 0
+  if (calMonths.length) {
+    const nextM = (m) => { let y = +m.slice(0, 4), mo = +m.slice(5, 7) + 1; if (mo > 12) { mo = 1; y += 1 } return `${y}-${String(mo).padStart(2, '0')}` }
+    let c = calMonths[0]
+    const end = calMonths[calMonths.length - 1]
+    while (c <= end) {
+      const over = (monthSet[c] || 0) >= 100
+      if (over) { centuryCount += 1; cCur += 1; centuryBest = Math.max(centuryBest, cCur) } else cCur = 0
+      c = nextM(c)
+    }
+  }
 
   // per-year totals for each tracked metric
   const agg = {}
@@ -227,6 +278,147 @@ export default function Goals() {
           </Figure>
         </section>
       )}
+
+      {/* Silent goal: every month since the spark */}
+      {monthly.length > 12 && monthStreak > 6 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="05"
+            title="Every month since the spark"
+            note={`Some goals were never set out loud. This is one: since ${sparkLabel}, not a single calendar month has gone by without an activity. That is ${monthStreak} months in an unbroken row, more than five years, still running. It began as a tentative return that June, then roared to life in July; the opening years flicker with gaps, but from there the grid is solid. Each cell is a month, shaded by the ground it covered on foot.`}
+            source="Monthly Trends"
+            tableCaption="Distance on foot by month"
+            columns={['Month', 'Activities', 'km on foot']}
+            rows={[...monthly].sort((a, b) => b.month.localeCompare(a.month)).map((m) => [m.month, m.activities, fmtNum(toNum(m.distance_km), 0)])}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{monthStreak} months</span><span className="rask__statl">unbroken, still going</span></li>
+              <li className="rask__stat"><span className="rask__statv">{sparkLabel}</span><span className="rask__statl">streak begins</span></li>
+              <li className="rask__stat"><span className="rask__statv">0</span><span className="rask__statl">missed since</span></li>
+            </ul>
+            <MonthChain months={monthly} />
+          </Figure>
+        </section>
+      )}
+
+      {/* Silent goal: the half-marathon club */}
+      {halfCount > 5 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="06"
+            title="The road to eighty-three"
+            note={`For most people twenty-one kilometres is a race entered once and remembered forever. Here it is a habit. This line is a running tally of every outing that went the half-marathon distance or beyond, stacked in the order they happened: ${halfCount} of them. It rockets up through 2021 and 2022 when the long day was almost routine, levels off through the leaner years, and climbs hard again lately. The one full marathon is marked, and the four-in-four-days of the stage race shows as a near-vertical jump.`}
+            source="Activity Log"
+            tableCaption="Outings of 21.1 km or more, by distance"
+            columns={['Count', 'Threshold']}
+            rows={[[String(halfCount), '21.1 km or more, on foot']]}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{halfCount}</span><span className="rask__statl">times past the half</span></li>
+              <li className="rask__stat"><span className="rask__statv">1</span><span className="rask__statl">full marathon</span></li>
+            </ul>
+            <HalfClub activities={activities} />
+          </Figure>
+        </section>
+      )}
+
+      {/* Silent goal: the double thousand */}
+      {dblYear && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="07"
+            title="The double thousand"
+            note={`Each year throws two arms: how far it ran, to the right, and how far it walked, to the left, on one shared scale. Dashed marks stand at a thousand kilometres on each side. The big years fling a long running arm but a stubby walking one, and the walking years never run as far; almost every year clears a thousand on one side alone. ${dblYear} is the first to stretch past a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the only year to span the full width.`}
+            source="Activity Log"
+            tableCaption="Running and walking distance by year"
+            columns={['Year', 'km run', 'km walked', 'Both 1,000?']}
+            rows={Object.keys(yrAgg).filter((y) => yrAgg[y].run + yrAgg[y].walk >= 200).sort().map((y) => [y, fmtInt(yrAgg[y].run), fmtInt(yrAgg[y].walk), yrAgg[y].run >= 1000 && yrAgg[y].walk >= 1000 ? 'yes' : 'no'])}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{dblYear}</span><span className="rask__statl">first double thousand</span></li>
+              <li className="rask__stat"><span className="rask__statv">{fmtInt(yrAgg[dblYear].run)} &middot; {fmtInt(yrAgg[dblYear].walk)}</span><span className="rask__statl">km run &middot; walked</span></li>
+            </ul>
+            <DoubleThousand activities={activities} />
+          </Figure>
+        </section>
+      )}
+
+      {/* Silent goal: the seven-year arc */}
+      {yearlyTotals.length > 3 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="08"
+            title="The seven-year arc"
+            note={`The whole journey in one line. Two near-dormant opening years, then the habit ignites and 2021 and 2022 pour out almost three thousand kilometres each, ${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} at the peak. A dip follows, then the climb back. The dashed line is the 2,400 kilometres set as a target in 2021, and cleared. Distance on foot only.`}
+            source="Yearly Trends"
+            tableCaption="Distance on foot by year"
+            columns={['Year', 'km on foot', 'Activities']}
+            rows={[...yearlyTotals].sort((a, b) => b.year.localeCompare(a.year)).map((r) => [r.year, fmtNum(toNum(r.distance_km), 0), r.activities])}
+          >
+            <DistanceArc years={yearlyTotals} target={2400} inProgressYear={latest} />
+          </Figure>
+        </section>
+      )}
+
+      {/* Silent goal: the century months */}
+      {monthly.length > 12 && centuryCount > 5 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="09"
+            title="The century months"
+            note={`A hundred kilometres on foot in a calendar month is a quiet standard to hold. It has been held ${centuryCount} times. Each column here is a month, and the part that rises above the 100 km waterline is the stretch that cleared it; the caps, read across, are the months that made it. The longest unbroken run reached ${centuryBest} months in a row before a quieter month broke it.`}
+            source="Monthly Trends"
+            tableCaption="Distance on foot by month, against the 100 km line"
+            columns={['Month', 'km on foot', 'Century?']}
+            rows={[...monthly].sort((a, b) => b.month.localeCompare(a.month)).map((mm) => [mm.month, fmtNum(toNum(mm.distance_km), 0), toNum(mm.distance_km) >= 100 ? 'yes' : 'no'])}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{centuryCount} months</span><span className="rask__statl">cleared 100 km</span></li>
+              <li className="rask__stat"><span className="rask__statv">{centuryBest} in a row</span><span className="rask__statl">longest run</span></li>
+            </ul>
+            <CenturyMonths months={monthly} line={100} />
+          </Figure>
+        </section>
+      )}
+
+      {/* Silent goal: the lone marathon */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="10"
+          title="The lone marathon"
+          note="Exactly once has a full 42 kilometres been run in a single day, and it was run hard: 42.75 km in 2 hours 56, a shade over four minutes a kilometre, on a flat May morning in 2022. Set against a normal long day, it is twice the distance covered at better than half the usual pace, and it stands alone as the furthest ever gone between one sunrise and the next."
+          source="Activity Log"
+          tableCaption="The one full marathon, against a normal long day"
+          columns={['Effort', 'Distance', 'Time', 'Pace']}
+          rows={[['A normal long day', '21.1 km', '—', '—'], ['The full marathon', '42.75 km', '2:56:44', '4:08/km']]}
+        >
+          <ul className="rask__stats">
+            <li className="rask__stat"><span className="rask__statv rask__statv--accent">2:56:44</span><span className="rask__statl">the only full marathon</span></li>
+            <li className="rask__stat"><span className="rask__statv">4:08 /km</span><span className="rask__statl">sub-three-hours, flat</span></li>
+          </ul>
+          <DistanceExtremes />
+        </Figure>
+      </section>
+
+      {/* The special challenge: the 100 km four-day stage race */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          n="11"
+          title="The 100 km stage race"
+          note="One challenge stands apart from every other: 100 kilometres covered across four straight evenings in March 2023, 25 kilometres each night, back to back. The furthest ever gone at all, and the story is in the pacing. After two steady openers he found another gear, dropping close to half a minute a kilometre to run the third evening the quickest of the four, then holding it on the last. Ten and a half hours of moving over four nights, and getting faster as it wore on."
+          source="Activity Log (named-race series)"
+          tableCaption="Each evening of the 100 km stage race"
+          columns={['Evening', 'Date', 'Distance', 'Time', 'Pace']}
+          rows={[['Day 1', 'Mar 24, 2023', '25.0 km', '2:42', '6:29/km'], ['Day 2', 'Mar 25, 2023', '25.1 km', '2:42', '6:27/km'], ['Day 3', 'Mar 26, 2023', '25.1 km', '2:30', '5:59/km'], ['Day 4', 'Mar 27, 2023', '25.1 km', '2:33', '6:06/km']]}
+        >
+          <ul className="rask__stats">
+            <li className="rask__stat"><span className="rask__statv rask__statv--accent">100 km</span><span className="rask__statl">four nights, back to back</span></li>
+            <li className="rask__stat"><span className="rask__statv">5:59 /km</span><span className="rask__statl">quickest, the third night</span></li>
+            <li className="rask__stat"><span className="rask__statv">10:27</span><span className="rask__statl">moving, in all</span></li>
+          </ul>
+          <StageRace />
+        </Figure>
+      </section>
     </DetailFrame>
   )
 }

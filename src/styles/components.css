@@ -1759,6 +1759,66 @@ text.chart-panel-title {
 .kh__legend-lo, .kh__legend-hi { font-family: var(--font-mono); }
 .kh__legnote { margin-left: auto; }
 
+/* ---- Goals: silent goals (month chain, half club, double thousand, arc) --- */
+.mchain { position: relative; }
+.mchain__mon { font-family: var(--font-mono); font-size: 9px; fill: var(--fg-faint); }
+.mchain__yr { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-muted); }
+.mchain__legend { margin-top: var(--sp-4); }
+.mchain__ramp { width: 70px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 16%, var(--paper)), var(--accent)); }
+.mchain__ramp-lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); }
+
+.road { position: relative; }
+.road__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.road__yr { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.road__mark { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.road__end { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); fill: var(--accent-ink); }
+.road__legend { margin-top: var(--sp-4); }
+.road__note { margin-left: auto; color: var(--fg-muted); }
+
+.dt2 { position: relative; }
+.dt2__hdr { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; fill: var(--fg-muted); text-anchor: middle; }
+.dt2__kmark { font-family: var(--font-mono); font-size: 9px; fill: var(--accent-ink); }
+.dt2__yr { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.dt2__yr--hot { fill: var(--accent-ink); font-size: var(--fs-sm); }
+.dt2__val { font-family: var(--font-mono); font-size: 9px; fill: var(--fg-muted); }
+.dt2__badge { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); }
+
+.stg { position: relative; }
+.stg__axlbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; fill: var(--fg-faint); }
+.stg__pace { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.stg__pace--hot { fill: var(--accent-ink); font-weight: 700; }
+.stg__fast { font-family: var(--font-mono); font-size: 9px; fill: var(--accent-ink); }
+.stg__day { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); fill: var(--paper); }
+.stg__km { font-family: var(--font-mono); font-size: 9px; fill: var(--paper); }
+.stg__tick { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.stg__legend { margin-top: var(--sp-4); }
+.stg__note { margin-left: auto; color: var(--fg-muted); }
+
+.darc { position: relative; }
+.darc__target { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.darc__peak { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--accent-ink); font-weight: 700; }
+.darc__yr { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.darc__yr--prog { fill: var(--accent-ink); font-weight: 700; }
+.darc__prog { font-family: var(--font-mono); font-size: 9px; fill: var(--accent-ink); }
+.darc__note { font-family: var(--font-mono); font-size: 9px; fill: var(--fg-faint); }
+
+.cent { position: relative; }
+.cent__yr { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.cent__wl { font-family: var(--font-mono); font-size: 10px; font-weight: 700; fill: var(--ink); }
+.cent__wlk { font-family: var(--font-mono); font-size: 8px; fill: var(--fg-muted); }
+.cent__chain { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); }
+.cent__legend { margin-top: var(--sp-4); }
+.cent__note { margin-left: auto; color: var(--fg-muted); }
+
+.dext { position: relative; }
+.dext__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: 0.05em; fill: var(--ink); font-weight: 700; }
+.dext__sub { font-weight: 400; letter-spacing: 0; fill: var(--fg-muted); }
+.dext__val { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); fill: var(--ink); }
+.dext__val--hot { fill: var(--accent-ink); }
+.dext__tick { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.dext__mark { font-family: var(--font-mono); font-size: 9px; fill: var(--fg-muted); }
+.dext__intime { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--paper); }
+
 /* ---- What It Means: Verdict (typographic hero stat) ----------------- */
 .verdict { position: relative; }
 .verdict__leap { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }
