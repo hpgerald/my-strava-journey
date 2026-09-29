@@ -332,4 +332,30 @@ if rk:
     seq = [x["day"] for x in rk]
     print(f"  ras_kilomoni: {len(rk)} trips, days {min(seq)}-{max(seq)}, contiguous={sorted(set(seq)) == list(range(min(seq), max(seq) + 1))}")
 
+# ============ KILIMANJARO HALF MARATHON (annual race series, from raw titles) ============
+# The Kilimanjaro Half Marathon, one edition a year. Pulled from the raw names
+# (titles carrying both "half marathon" and "kili"), one clean public row per year
+# with the finish metrics only. Same ~21.1 km course each February/March.
+kh = []
+for r in csv.DictReader(open(RAW)):
+    nm = (r.get("name") or "").lower()
+    if "half marathon" not in nm or "kili" not in nm:
+        continue
+    dist = fnum(r.get("summary_distance")); mv = fnum(r.get("summary_moving_time"))
+    el = fnum(r.get("summary_elapsed_time")); elev = fnum(r.get("summary_elevation_gain"))
+    avs = fnum(r.get("summary_avg_speed")); date = (r["start_local"] or "")[:10]
+    kh.append({"year": date[:4], "date": date,
+        "distance_km": fmt(dist / 1000, 2) if dist is not None else "",
+        "moving_min": fmt(mv / 60, 1) if mv is not None else "",
+        "elapsed_min": fmt(el / 60, 1) if el is not None else "",
+        "elevation_m": fmt(elev, 0) if elev is not None else "0",
+        "avg_speed_kmh": fmt(avs * 3.6, 2) if avs is not None else "",
+        "kudos": (r["summary_kudos_count"] or "").strip()})
+kh.sort(key=lambda x: x["date"])
+if kh:
+    Wr("kili_half.csv", ["year", "date", "distance_km", "moving_min", "elapsed_min", "elevation_m", "avg_speed_kmh", "kudos", "source_page"],
+        [[x["year"], x["date"], x["distance_km"], x["moving_min"], x["elapsed_min"], x["elevation_m"], x["avg_speed_kmh"], x["kudos"], "Goals"] for x in kh])
+    yrs = [x["year"] for x in kh]
+    print(f"  kili_half: {len(kh)} editions, years {yrs}, consecutive={[int(y) for y in yrs] == list(range(int(yrs[0]), int(yrs[0]) + len(yrs)))}")
+
 print(f"REBUILD DONE. {len(rows)} activities; last {days[-1]}; streak {best} longest / {cur_len} current")

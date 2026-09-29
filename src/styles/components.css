@@ -1744,6 +1744,21 @@ text.chart-panel-title {
 .rask__statv--accent { color: var(--accent); }
 .rask__statl { font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 
+/* ---- Goals: Kilimanjaro Half Marathon course + pace ribbons -------- */
+.kh { position: relative; }
+.kh__grid { stroke: var(--rule-faint); stroke-width: 1; }
+.kh__peak { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-muted); }
+.kh__terr { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; fill: var(--fg-faint); }
+.kh__yr { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); fill: var(--ink); }
+.kh__yr--hot { fill: var(--accent); }
+.kh__fin { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.kh__tick { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.kh__legend { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-4); flex-wrap: wrap; font-size: var(--fs-2xs); color: var(--fg-muted); }
+.kh__legttl { text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); }
+.kh__ramp { width: 96px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #F2DECC, #CC3900); }
+.kh__legend-lo, .kh__legend-hi { font-family: var(--font-mono); }
+.kh__legnote { margin-left: auto; }
+
 /* ---- What It Means: Verdict (typographic hero stat) ----------------- */
 .verdict { position: relative; }
 .verdict__leap { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }

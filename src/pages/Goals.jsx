@@ -2,6 +2,7 @@ import DetailFrame from '../components/DetailFrame.jsx'
 import Figure from '../charts/Figure.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
+import KiliHalf from '../charts/KiliHalf.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -11,6 +12,8 @@ const longDate = (iso) => {
   const d = new Date(iso + 'T00:00:00Z')
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`
 }
+const clock = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
+const paceOf = (min, km) => { const p = min / (km || 1); const m = Math.floor(p); const s = Math.round((p - m) * 60); return `${m}:${String(s).padStart(2, '0')}` }
 
 // The same targets are held up against every year (the choice: one fixed bar,
 // so the years can be compared on equal terms). Edit these to change the goals.
@@ -35,6 +38,15 @@ export default function Goals() {
   const rkWalks = rk.length - rkRuns
   const rkKm = rk.reduce((a, r) => a + (toNum(r.distance_km) || 0), 0)
   const rkTarget = 50
+
+  // Kilimanjaro Half Marathon: one edition a year, and faster each time.
+  const kiliHalf = useTable('kili_half')
+  const kiliProfile = useTable('kili_half_profile')
+  const kh = [...kiliHalf].sort((a, b) => a.date.localeCompare(b.date))
+  const khFirst = kh[0]
+  const khLast = kh[kh.length - 1]
+  const khFaster = kh.length ? (toNum(khFirst.moving_min) - toNum(khLast.moving_min)) : 0
+  const khStops = (r) => Math.round(toNum(r.elapsed_min) - toNum(r.moving_min))
 
   // per-year totals for each tracked metric
   const agg = {}
@@ -189,6 +201,29 @@ export default function Goals() {
               <li className="rask__stat"><span className="rask__statv">{longDate(rk[0].date)}</span><span className="rask__statl">first trip, to Aug 28</span></li>
             </ul>
             <RasKilomoni rows={rk} />
+          </Figure>
+        </section>
+      )}
+
+      {/* An annual date: the Kilimanjaro Half Marathon, faster every year */}
+      {kh.length > 1 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="04"
+            title="Four years at the Kilimanjaro Half"
+            note={`One race has come round every year since ${khFirst.year}: the Kilimanjaro Half Marathon, the same twenty-one kilometres each time. ${kh.length} editions in an unbroken row, and quicker at every one. The finish came down from ${clock(toNum(khFirst.moving_min))} in ${khFirst.year} to ${clock(toNum(khLast.moving_min))} in ${khLast.year}, ${Math.round(khFaster)} minutes off the clock, the pace easing from ${paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} to ${paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))} per kilometre. The standing around shrank even faster, from ${khStops(khFirst)} minutes lost to stops in the first to just ${khStops(khLast)} in the latest. Drawn from the actual GPS tracks, the terrain up top is the course itself, a real 268 metre climb to the turnaround near 9 km before it falls away home; beneath it, one pace ribbon a year, every stretch coloured by how fast it was run there. Read down the years and the ribbons warm as the race quickens; read across and every year drags on the climb and flies on the descent.`}
+            source="Activity Log + Strava GPS streams"
+            tableCaption="Each Kilimanjaro Half Marathon: distance, finish and pace"
+            columns={['Year', 'Date', 'km', 'Finish', 'Pace /km', 'On course']}
+            rows={kh.map((r) => [r.year, r.date, fmtNum(toNum(r.distance_km), 1), clock(toNum(r.moving_min)), paceOf(toNum(r.moving_min), toNum(r.distance_km)), clock(toNum(r.elapsed_min))])}
+          >
+            <ul className="rask__stats">
+              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{kh.length} in a row</span><span className="rask__statl">years, {khFirst.year}&ndash;{khLast.year}</span></li>
+              <li className="rask__stat"><span className="rask__statv">{clock(toNum(khFirst.moving_min))} &rarr; {clock(toNum(khLast.moving_min))}</span><span className="rask__statl">finish, faster each year</span></li>
+              <li className="rask__stat"><span className="rask__statv">{paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} &rarr; {paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))}</span><span className="rask__statl">min per km</span></li>
+              <li className="rask__stat"><span className="rask__statv">{Math.round(khFaster)} min</span><span className="rask__statl">off the finish vs {khFirst.year}</span></li>
+            </ul>
+            <KiliHalf rows={kh} profile={kiliProfile} />
           </Figure>
         </section>
       )}
