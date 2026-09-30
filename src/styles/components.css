@@ -1777,8 +1777,8 @@ text.chart-panel-title {
 .goalhero__pace { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); }
 .goalhero__proj { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--accent-ink); }
 
-.goalgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-5) var(--sp-4); }
-.goalgrid__cell { padding: var(--sp-4) var(--sp-3); border: 1px solid var(--rule-faint); border-radius: 4px; }
+.goalgrid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-5) var(--sp-4); }
+.goalgrid__cell { flex: 1 1 280px; max-width: 360px; padding: var(--sp-4) var(--sp-3); border: 1px solid var(--rule-faint); border-radius: 4px; }
 .goalgrid__cell--now { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .goalgrid__yr { text-align: center; font-weight: 700; font-size: var(--fs-md); margin-bottom: var(--sp-2); }
 .goalgrid__live { font-family: var(--font-body); font-weight: 400; font-size: var(--fs-2xs); color: var(--accent-ink); text-transform: none; letter-spacing: 0; }
@@ -1800,11 +1800,49 @@ text.chart-panel-title {
 .rask__mon { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
 .rask__ribttl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; fill: var(--fg-faint); }
 .rask__legend { margin-top: var(--sp-4); }
-.rask__stats { display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-5); margin: 0 0 var(--sp-5); padding: 0; list-style: none; }
-.rask__stat { display: flex; flex-direction: column; gap: 1px; }
+.rask__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--sp-4) var(--sp-5); margin: 0 0 var(--sp-5); padding: 0; list-style: none; }
+.rask__stat { display: flex; flex-direction: column; gap: 1px; padding-left: var(--sp-4); border-left: 2px solid var(--rule); }
+.rask__stat:first-child { border-left-color: var(--accent); }
 .rask__statv { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); line-height: 1; }
 .rask__statv--accent { color: var(--accent); }
 .rask__statl { font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---- Golden two-column figure: a compact plot beside a stat ledger ---- */
+.figduo { display: grid; gap: var(--sp-5); }
+@media (min-width: 52rem) {
+  .figduo { grid-template-columns: 1fr 1.618fr; column-gap: var(--sp-8); align-items: center; }
+}
+.figduo__main { min-width: 0; }
+.ledger { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-5); }
+.ledger__item { padding-left: var(--sp-4); border-left: 2px solid var(--rule); }
+.ledger__item:first-child { border-left-color: var(--accent); }
+.ledger__v { display: block; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-snug); }
+.ledger__v--accent { color: var(--accent); }
+.ledger__l { display: block; margin-top: 7px; font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+
+/* ---- Movement header: groups a run of figures into a titled section --- */
+.movement {
+  margin-top: var(--sp-9, var(--sp-8));
+  padding-top: var(--sp-5);
+  border-top: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--sp-5);
+  align-items: start;
+}
+.movement__num {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--fs-xl); line-height: 0.9; color: var(--accent);
+}
+.movement__body { display: grid; gap: var(--sp-2); }
+.movement__eyebrow { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); margin: 0; }
+.movement__title { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1.05; margin: 0; letter-spacing: var(--tr-snug); }
+.movement__lede { margin: 0; color: var(--fg-muted); font-size: var(--fs-sm); line-height: 1.55; max-width: var(--measure); }
+@media (min-width: 52rem) {
+  .movement__body { grid-template-columns: 1.618fr 1fr; column-gap: var(--sp-7); align-items: end; }
+  .movement__lede { padding-bottom: 0.35em; }
+  .movement__eyebrow { grid-column: 1 / -1; }
+}
 
 /* ---- Goals: Kilimanjaro Half Marathon course + pace ribbons -------- */
 .kh { position: relative; }

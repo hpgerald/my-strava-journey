@@ -23,7 +23,8 @@ export default function RasKilomoni({ rows }) {
   const cols = narrow ? 5 : 10
   const nrows = Math.ceil(data.length / cols)
   const gap = narrow ? 8 : 9
-  const s = Math.min(narrow ? 60 : 66, (W - (cols - 1) * gap) / cols)
+  // sized to fill its column at a tasteful tile size, bounded so it never bloats
+  const s = Math.min(narrow ? 60 : 64, (W - (cols - 1) * gap) / cols)
   const gridW = cols * s + (cols - 1) * gap
   const gx = (W - gridW) / 2
   const gridTop = 6

@@ -38,7 +38,8 @@ export default function MonthChain({ months }) {
   const leftW = narrow ? 34 : 40
   const topH = 16
   const gap = 3
-  const cell = Math.min(narrow ? 22 : 28, (W - leftW - 4 - 11 * gap) / 12)
+  // sized to fill its column at a tasteful cell size, bounded so it never bloats
+  const cell = Math.min(narrow ? 22 : 56, (W - leftW - 4 - 11 * gap) / 12)
   const gridW = 12 * cell + 11 * gap
   const H = topH + years.length * (cell + gap) + 6
 

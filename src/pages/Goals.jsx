@@ -34,6 +34,20 @@ const GOALS = [
 
 const fmtVal = (v, unit) => `${fmtInt(v)} ${unit}`
 
+// A titled break that groups a run of figures into one movement of the page.
+function Movement({ num, eyebrow, title, lede }) {
+  return (
+    <header className="movement">
+      <span className="movement__num" aria-hidden="true">{num}</span>
+      <div className="movement__body">
+        <p className="movement__eyebrow">{eyebrow}</p>
+        <h2 className="movement__title">{title}</h2>
+        <p className="movement__lede">{lede}</p>
+      </div>
+    </header>
+  )
+}
+
 export default function Goals() {
   const activities = useTable('activities')
   const rasKilomoni = useTable('ras_kilomoni')
@@ -81,6 +95,8 @@ export default function Goals() {
   for (const a of activities) { const y = a.year; if (!y) continue; const e = (yrAgg[y] = yrAgg[y] || { run: 0, walk: 0 }); const km = toNum(a.distance_km) || 0; if (RUN_ALL.has(a.sport_type)) e.run += km; if (a.sport_type === 'Walk') e.walk += km }
   const doubleYears = Object.keys(yrAgg).filter((y) => yrAgg[y].run >= 1000 && yrAgg[y].walk >= 1000).sort()
   const dblYear = doubleYears[doubleYears.length - 1]
+  const topRunYear = Object.keys(yrAgg).reduce((b, y) => (yrAgg[y].run > (yrAgg[b] ? yrAgg[b].run : 0) ? y : b), Object.keys(yrAgg)[0])
+  const topRun = topRunYear ? yrAgg[topRunYear].run : 0
   // arc peak
   const arcPeak = [...yearlyTotals].sort((a, b) => toNum(b.distance_km) - toNum(a.distance_km))[0]
   // century months: how many cleared 100 km, and the longest consecutive run
@@ -98,6 +114,7 @@ export default function Goals() {
       c = nextM(c)
     }
   }
+  const maxMonthKm = calMonths.length ? Math.max(...Object.values(monthSet)) : 0
 
   // per-year totals for each tracked metric
   const agg = {}
@@ -153,6 +170,14 @@ export default function Goals() {
       prev={prev}
       next={next}
     >
+      {/* ===== Movement I: the goals set out loud ===== */}
+      <Movement
+        num="I"
+        eyebrow="Movement one"
+        title="The set goals"
+        lede="Three targets, chosen in advance and held up against every year on the same terms."
+      />
+
       {/* This year, up close */}
       {latest && (
         <section style={{ paddingTop: 'var(--sp-6)' }}>
@@ -233,9 +258,17 @@ export default function Goals() {
         </div>
       </section>
 
+      {/* ===== Movement II: the recurring, named goals ===== */}
+      <Movement
+        num="II"
+        eyebrow="Movement two"
+        title="The kept dates"
+        lede="Two goals that came round again and again, a place and a race, each one returned to on purpose."
+      />
+
       {/* A different kind of goal: fifty trips to one place */}
       {rk.length > 0 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <section style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             n="03"
             title="Fifty trips to Ras Kilomoni"
@@ -245,13 +278,15 @@ export default function Goals() {
             columns={['Trip', 'Date', 'Sport', 'km']}
             rows={rk.map((r) => [`Ras Kilomoni ${r.roman}`, r.date, r.sport, fmtNum(toNum(r.distance_km) || 0, 1)])}
           >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{rk.length} / {rkTarget}</span><span className="rask__statl">trips, target met</span></li>
-              <li className="rask__stat"><span className="rask__statv">{fmtInt(rkKm)} km</span><span className="rask__statl">covered getting there</span></li>
-              <li className="rask__stat"><span className="rask__statv">{rkWalks} &middot; {rkRuns}</span><span className="rask__statl">walks &middot; runs</span></li>
-              <li className="rask__stat"><span className="rask__statv">{longDate(rk[0].date)}</span><span className="rask__statl">first trip, to Aug 28</span></li>
-            </ul>
-            <RasKilomoni rows={rk} />
+            <div className="figduo">
+              <ul className="ledger">
+                <li className="ledger__item"><span className="ledger__v ledger__v--accent">{rk.length} / {rkTarget}</span><span className="ledger__l">trips, target met</span></li>
+                <li className="ledger__item"><span className="ledger__v">{fmtInt(rkKm)} km</span><span className="ledger__l">covered getting there</span></li>
+                <li className="ledger__item"><span className="ledger__v">{rkWalks} &middot; {rkRuns}</span><span className="ledger__l">walks &middot; runs</span></li>
+                <li className="ledger__item"><span className="ledger__v">{longDate(rk[0].date)}</span><span className="ledger__l">first trip, to Aug 28</span></li>
+              </ul>
+              <div className="figduo__main"><RasKilomoni rows={rk} /></div>
+            </div>
           </Figure>
         </section>
       )}
@@ -279,9 +314,17 @@ export default function Goals() {
         </section>
       )}
 
+      {/* ===== Movement III: the goals never set out loud ===== */}
+      <Movement
+        num="III"
+        eyebrow="Movement three"
+        title="The silent goals"
+        lede="Standards the data kept without anyone naming them: streaks held, thresholds crossed, a shape drawn over seven years."
+      />
+
       {/* Silent goal: every month since the spark */}
       {monthly.length > 12 && monthStreak > 6 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <section style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             n="05"
             title="Every month since the spark"
@@ -291,12 +334,14 @@ export default function Goals() {
             columns={['Month', 'Activities', 'km on foot']}
             rows={[...monthly].sort((a, b) => b.month.localeCompare(a.month)).map((m) => [m.month, m.activities, fmtNum(toNum(m.distance_km), 0)])}
           >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{monthStreak} months</span><span className="rask__statl">unbroken, still going</span></li>
-              <li className="rask__stat"><span className="rask__statv">{sparkLabel}</span><span className="rask__statl">streak begins</span></li>
-              <li className="rask__stat"><span className="rask__statv">0</span><span className="rask__statl">missed since</span></li>
-            </ul>
-            <MonthChain months={monthly} />
+            <div className="figduo">
+              <ul className="ledger">
+                <li className="ledger__item"><span className="ledger__v ledger__v--accent">{monthStreak} months</span><span className="ledger__l">unbroken, still going</span></li>
+                <li className="ledger__item"><span className="ledger__v">{sparkLabel}</span><span className="ledger__l">streak begins</span></li>
+                <li className="ledger__item"><span className="ledger__v">0</span><span className="ledger__l">missed since</span></li>
+              </ul>
+              <div className="figduo__main"><MonthChain months={monthly} /></div>
+            </div>
           </Figure>
         </section>
       )}
@@ -316,6 +361,7 @@ export default function Goals() {
             <ul className="rask__stats">
               <li className="rask__stat"><span className="rask__statv rask__statv--accent">{halfCount}</span><span className="rask__statl">times past the half</span></li>
               <li className="rask__stat"><span className="rask__statv">1</span><span className="rask__statl">full marathon</span></li>
+              <li className="rask__stat"><span className="rask__statv">4 in 4 days</span><span className="rask__statl">the stage-race jump</span></li>
             </ul>
             <HalfClub activities={activities} />
           </Figure>
@@ -337,6 +383,7 @@ export default function Goals() {
             <ul className="rask__stats">
               <li className="rask__stat"><span className="rask__statv rask__statv--accent">{dblYear}</span><span className="rask__statl">first double thousand</span></li>
               <li className="rask__stat"><span className="rask__statv">{fmtInt(yrAgg[dblYear].run)} &middot; {fmtInt(yrAgg[dblYear].walk)}</span><span className="rask__statl">km run &middot; walked</span></li>
+              <li className="rask__stat"><span className="rask__statv">{fmtInt(topRun)} km</span><span className="rask__statl">biggest running year, {topRunYear}</span></li>
             </ul>
             <DoubleThousand activities={activities} />
           </Figure>
@@ -375,14 +422,23 @@ export default function Goals() {
             <ul className="rask__stats">
               <li className="rask__stat"><span className="rask__statv rask__statv--accent">{centuryCount} months</span><span className="rask__statl">cleared 100 km</span></li>
               <li className="rask__stat"><span className="rask__statv">{centuryBest} in a row</span><span className="rask__statl">longest run</span></li>
+              <li className="rask__stat"><span className="rask__statv">{fmtInt(maxMonthKm)} km</span><span className="rask__statl">the biggest month</span></li>
             </ul>
             <CenturyMonths months={monthly} line={100} />
           </Figure>
         </section>
       )}
 
+      {/* ===== Movement IV: the rare extremes ===== */}
+      <Movement
+        num="IV"
+        eyebrow="Movement four"
+        title="The far edges"
+        lede="The two efforts that stand at the outer limit of the whole record, each run exactly once."
+      />
+
       {/* Silent goal: the lone marathon */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
+      <section style={{ paddingTop: 'var(--sp-6)' }}>
         <Figure
           n="10"
           title="The lone marathon"
@@ -390,11 +446,12 @@ export default function Goals() {
           source="Activity Log"
           tableCaption="The one full marathon, against a normal long day"
           columns={['Effort', 'Distance', 'Time', 'Pace']}
-          rows={[['A normal long day', '21.1 km', '—', '—'], ['The full marathon', '42.75 km', '2:56:44', '4:08/km']]}
+          rows={[['A normal long day', '21.1 km', 'varies', 'varies'], ['The full marathon', '42.75 km', '2:56:44', '4:08/km']]}
         >
           <ul className="rask__stats">
             <li className="rask__stat"><span className="rask__statv rask__statv--accent">2:56:44</span><span className="rask__statl">the only full marathon</span></li>
             <li className="rask__stat"><span className="rask__statv">4:08 /km</span><span className="rask__statl">sub-three-hours, flat</span></li>
+            <li className="rask__stat"><span className="rask__statv">42.75 km</span><span className="rask__statl">one flat May morning, 2022</span></li>
           </ul>
           <DistanceExtremes />
         </Figure>
