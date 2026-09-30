@@ -2,7 +2,7 @@
 // a title, a hairline rule, an optional note, the plot, a source line, and a
 // visually-hidden data table so every chart is fully readable as text and to a
 // screen reader (a brief non-negotiable).
-export default function Figure({ n, title, note, source, tableCaption, columns, rows, children }) {
+export default function Figure({ n, title, note, source, tableCaption, columns, rows, children, footer }) {
   return (
     <figure className="fig">
       {title ? (
@@ -16,6 +16,8 @@ export default function Figure({ n, title, note, source, tableCaption, columns, 
       {note ? <p className="fig__note">{note}</p> : null}
 
       <div className="chart">{children}</div>
+
+      {footer ? <div className="fig__aside">{footer}</div> : null}
 
       {columns && rows ? (
         <div className="visually-hidden">

@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { prettySport } from '../lib/slug.js'
 
-// A unit chart: one dot per activity, laid out in reading order (left to right,
-// top to bottom) from the very first upload to the latest. Colour deepens with
-// the year, so the thin pale start and the dense recent seasons read at a glance.
+// A unit chart: one dot per activity, but grouped into a band per year so the
+// arrangement itself carries the story. Years run oldest at the top to newest at
+// the foot; inside a band the dots fill left to right in date order and wrap onto
+// as many rows as that year needs. The two-year hobby is two thin stubs; the habit
+// years are thick blocks of their own. Colour still deepens with the year as a
+// second cue. Hover any dot for its date.
 // items: [{ year:number, date:string, sport:string }] (chronological)
 // years: sorted unique years present.
 const STOPS = [
@@ -29,87 +32,100 @@ export default function DotGrid({ items, years }) {
 
   const cell = 9
   const r = 3
-  const cols = Math.max(10, Math.floor((w - r * 2) / cell))
-  const n = items.length
-  const rows = Math.ceil(n / cols)
-  const height = rows * cell + r * 2
+  const W = Math.max(w, 1)
+  const narrow = W < 520
+  const gutter = narrow ? 40 : 62 // left labels
+  const padR = 4
+  const bandGap = narrow ? 9 : 11
+  const plotW = Math.max(cell * 8, W - gutter - padR)
+  const cols = Math.max(8, Math.floor(plotW / cell))
+
   const y0 = years[0]
   const y1 = years[years.length - 1]
   const shade = (y) => ramp(y1 > y0 ? (y - y0) / (y1 - y0) : 0.5)
 
-  const yearColor = {}
-  const yearCount = {}
-  for (const y of years) { yearColor[y] = shade(y); yearCount[y] = 0 }
-  for (const it of items) yearCount[it.year] = (yearCount[it.year] || 0) + 1
+  // lay out one band per year, oldest first (top) to newest (bottom)
+  const byYear = {}
+  for (const y of years) byYear[y] = []
+  for (const it of items) if (byYear[it.year]) byYear[it.year].push(it)
+
+  const placed = [] // { cx, cy, item }
+  const bands = []
+  let yCur = r
+  for (const y of years) {
+    const list = byYear[y]
+    const nRows = Math.max(1, Math.ceil(list.length / cols))
+    const bandH = nRows * cell
+    const color = shade(y)
+    list.forEach((it, i) => {
+      const c = i % cols
+      const rw = Math.floor(i / cols)
+      placed.push({ cx: gutter + c * cell + cell / 2, cy: yCur + rw * cell + cell / 2, color, item: it })
+    })
+    bands.push({ y, color, top: yCur, mid: yCur + bandH / 2, count: list.length })
+    yCur += bandH + bandGap
+  }
+  const height = yCur - bandGap + r
 
   const onMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const yy = e.clientY - rect.top
-    const c = Math.floor((x - r) / cell)
-    const rw = Math.floor((yy - r) / cell)
-    const idx = rw * cols + c
-    if (c >= 0 && c < cols && idx >= 0 && idx < n) { setHi(idx); setPos({ x, y: yy }) }
+    const scale = rect.width / W
+    const x = (e.clientX - rect.left) / scale
+    const yy = (e.clientY - rect.top) / scale
+    let best = null
+    let bestD = (cell * 0.75) ** 2
+    for (let i = 0; i < placed.length; i++) {
+      const dx = placed[i].cx - x
+      const dy = placed[i].cy - yy
+      const d = dx * dx + dy * dy
+      if (d < bestD) { bestD = d; best = i }
+    }
+    if (best != null) { setHi(best); setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top }) }
     else setHi(null)
   }
 
-  const h = hi != null ? items[hi] : null
+  const h = hi != null ? placed[hi] : null
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <svg
         width="100%"
         height={height}
-        viewBox={`0 0 ${Math.max(w, 1)} ${height}`}
+        viewBox={`0 0 ${W} ${height}`}
         role="img"
-        aria-label="Every activity as one dot, coloured by year"
+        aria-label="Every activity as one dot, grouped into a band per year from 2019 at the top to 2026 at the foot; the first two years are thin, every year since fills rows of its own."
         style={{ display: 'block' }}
         onMouseMove={onMove}
         onMouseLeave={() => setHi(null)}
       >
-        {items.map((it, i) => {
-          const c = i % cols
-          const rw = Math.floor(i / cols)
-          return (
-            <circle
-              key={i}
-              cx={r + c * cell + cell / 2 - r}
-              cy={r + rw * cell + cell / 2 - r}
-              r={r}
-              fill={yearColor[it.year]}
-              opacity={hi == null || hi === i ? 1 : 0.5}
-            />
-          )
-        })}
+        {/* year labels down the left edge */}
+        {bands.map((b) => (
+          <g key={b.y}>
+            <text x={gutter - 12} y={b.mid} textAnchor="end" dominantBaseline="middle" className="dotgrid__ylbl">{b.y}</text>
+            <text x={gutter - 12} y={b.mid + 12} textAnchor="end" dominantBaseline="middle" className="dotgrid__ycount">{b.count}</text>
+          </g>
+        ))}
+        {placed.map((p, i) => (
+          <circle key={i} cx={p.cx} cy={p.cy} r={r} fill={p.color} opacity={hi == null || hi === i ? 1 : 0.45} />
+        ))}
         {h && (
-          <circle
-            cx={r + (hi % cols) * cell + cell / 2 - r}
-            cy={r + Math.floor(hi / cols) * cell + cell / 2 - r}
-            r={r + 2}
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="1.5"
-          />
+          <circle cx={h.cx} cy={h.cy} r={r + 2} fill="none" stroke="var(--ink)" strokeWidth="1.5" />
         )}
       </svg>
 
       {h && (
-        <div className="chart-tip" style={{ left: Math.min(Math.max(pos.x, 70), w - 70), top: Math.max(pos.y - 46, 0) }}>
-          <strong>{prettySport(h.sport)}</strong>
+        <div className="chart-tip" style={{ left: Math.min(Math.max(pos.x, 70), W - 70), top: Math.max(pos.y - 46, 0) }}>
+          <strong>{prettySport(h.item.sport)}</strong>
           <br />
-          {(h.date || '').slice(0, 10)}
+          {(h.item.date || '').slice(0, 10)}
         </div>
       )}
 
-      <ul className="dotgrid__legend">
-        {years.map((y) => (
-          <li key={y}>
-            <span className="dotgrid__swatch" style={{ background: yearColor[y] }} />
-            <span className="mono">{y}</span>
-            <span className="dotgrid__count mono">{yearCount[y]}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="dotgrid__key">
+        <span className="dotgrid__keylbl">one dot = one activity · older</span>
+        <span className="dotgrid__ramp" aria-hidden="true" />
+        <span className="dotgrid__keylbl">newer</span>
+      </div>
     </div>
   )
 }

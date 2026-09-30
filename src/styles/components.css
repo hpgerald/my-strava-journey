@@ -901,14 +901,38 @@ text.chart-panel-title {
 .heatstrip__cellwrap.is-hi .heatstrip__cell { outline: 2px solid var(--ink); outline-offset: 1px; }
 .heatstrip__lbl { font-size: var(--fs-2xs); color: var(--fg-faint); }
 
-/* ---- Dot grid: every activity as one unit (Home) ----------------------- */
-.dotgrid__legend {
-  list-style: none; margin: var(--sp-4) 0 0; padding: 0;
-  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4);
+/* ---- Dot grid: every activity as one unit, banded by year (Home) ------- */
+.dotgrid__ylbl { font-family: var(--font-mono); font-size: 12px; font-weight: 700; fill: var(--ink); }
+.dotgrid__ycount { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+.dotgrid__key {
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted);
 }
-.dotgrid__legend li { display: inline-flex; align-items: baseline; gap: 0.45em; font-size: var(--fs-2xs); }
-.dotgrid__swatch { width: 0.7em; height: 0.7em; border-radius: 50%; align-self: center; }
-.dotgrid__count { color: var(--fg-faint); }
+.dotgrid__ramp {
+  flex: 0 0 auto; width: 120px; height: 10px; border-radius: 5px;
+  background: linear-gradient(90deg, rgb(255, 178, 140), rgb(252, 76, 2), rgb(150, 42, 0));
+}
+/* the intro note runs the full width of the plot instead of a narrow measure,
+   so it never looks cut off beside the wide dot field */
+.dotfig .fig__note { max-width: none; }
+.dotfig__foot {
+  margin-top: var(--sp-5); padding-top: var(--sp-4);
+  border-top: 1px solid var(--rule-faint);
+  display: grid; grid-template-columns: 1fr; gap: var(--sp-5) var(--sp-8);
+  font-size: var(--fs-sm); line-height: 1.55;
+}
+.dotfig__key { list-style: none; margin: 0; padding: 0; color: var(--fg-muted); }
+.dotfig__key li { position: relative; padding-left: 1.1em; margin-bottom: var(--sp-1); }
+.dotfig__key li::before {
+  content: ""; position: absolute; left: 0; top: 0.55em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+@media (min-width: 48rem) {
+  .dotfig .fig__note { column-count: 2; column-gap: var(--sp-8); }
+  .dotfig__foot { grid-template-columns: 1.4fr 1fr; }
+}
 
 /* ---- Animated hero: headline left, key figures stacked right -----------
    Sized and centred to sit inside a single viewport (no scroll to see it). */
@@ -976,8 +1000,31 @@ text.chart-panel-title {
   line-height: 1; letter-spacing: var(--tr-tight); font-feature-settings: 'tnum' 1;
 }
 .funfacts__suffix { font-size: 0.46em; font-weight: 600; margin-left: 0.1em; color: var(--fg-muted); }
-.funfacts__lbl { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.3; margin-top: 4px; white-space: nowrap; }
+.funfacts__lbl { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.3; margin-top: 4px; }
 @media (max-width: 26rem) { .funfacts { grid-template-columns: 1fr; } }
+
+/* ---- Home: full-bleed narrative bands ----------------------------- */
+.bleed { padding-block: var(--sp-7); }
+.bleed--switch { background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-block: 1px solid var(--rule-faint); }
+.bleed--edges { background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-block: 1px solid var(--rule-faint); }
+
+/* ---- Home: the far-edges teaser cards ----------------------------- */
+.edges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); grid-template-columns: 1fr; }
+@media (min-width: 40rem) { .edges { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 62rem) { .edges { grid-template-columns: repeat(4, 1fr); } }
+.edgecard {
+  display: flex; flex-direction: column; gap: var(--sp-2); height: 100%;
+  padding: var(--sp-5); background: var(--paper); text-decoration: none;
+  border: 1px solid var(--rule); border-top: 3px solid var(--accent); border-radius: 6px;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.edgecard:hover, .edgecard:focus-visible { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
+.edgecard__stat { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xl); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); }
+.edgecard__lbl { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.35; }
+.edgecard__arrow { margin-top: auto; padding-top: var(--sp-3); color: var(--accent); font-size: var(--fs-lg); }
+.edgecard:hover .edgecard__stat, .edgecard:focus-visible .edgecard__stat,
+.edgecard:hover .edgecard__lbl, .edgecard:focus-visible .edgecard__lbl,
+.edgecard:hover .edgecard__arrow, .edgecard:focus-visible .edgecard__arrow { color: var(--paper); }
 
 /* ---- Foot deep dive: RangeBars ---------------------------------------- */
 .rangebars { list-style: none; margin: 0; padding: 0; }
@@ -1505,6 +1552,17 @@ text.chart-panel-title {
 .fig__note { margin: 0 0 var(--sp-4); font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; max-width: var(--measure); }
 .fig__source { margin-top: var(--sp-3); }
 
+/* a short closing narration that fills the space under a shorter plot */
+.fig__aside {
+  margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid var(--rule-faint);
+  font-size: var(--fs-sm); color: var(--fg-muted);
+  line-height: 1.55; max-width: var(--measure);
+}
+.fig__aside > * { margin: 0; }
+.fig__aside > * + * { margin-top: var(--sp-2); }
+.fig__aside strong { color: var(--ink); font-weight: 600; }
+
 /* figures in a shared grid row line up: same header/note block height so the
    plots start on the same line */
 @media (min-width: 40rem) {
@@ -1512,6 +1570,10 @@ text.chart-panel-title {
   .grid--3 > figure.fig { display: flex; flex-direction: column; height: 100%; }
   .grid--2 > figure.fig > .chart,
   .grid--3 > figure.fig > .chart { flex: 1 1 auto; }
+  /* closer-look row: let the plot sit at its natural height, pin the source to
+     the foot so credits line up, and drop a narration into the freed space */
+  .grid--2.closer-grid > figure.fig > .chart { flex: 0 1 auto; }
+  .grid--2.closer-grid > figure.fig > .fig__source { margin-top: auto; padding-top: var(--sp-4); }
 }
 
 /* ---- Home: IgnitionStream ("The Switch") ------------------------------ */
@@ -1818,6 +1880,45 @@ text.chart-panel-title {
 .dext__tick { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
 .dext__mark { font-family: var(--font-mono); font-size: 9px; fill: var(--fg-muted); }
 .dext__intime { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--paper); }
+
+/* ---- Home: GeoBubbles (where in the world) -------------------------- */
+.geo { position: relative; }
+.geo__grid { display: flex; gap: var(--sp-6); align-items: center; }
+.geo__grid.is-narrow { flex-direction: column; align-items: stretch; gap: var(--sp-5); }
+.geo__home { flex: 0 0 auto; text-align: center; }
+.geo__grid.is-narrow .geo__home { align-self: center; }
+.geo__disc-pct { font-family: var(--font-display); font-weight: 800; font-size: 34px; fill: var(--paper); }
+.geo__disc-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--paper); }
+.geo__home-cap { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
+.geo__home-cap strong { color: var(--ink); }
+.geo__away { flex: 1 1 auto; min-width: 0; }
+.geo__away-hd { margin: 0 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.geo__list { list-style: none; margin: 0; padding: 0; }
+.geo__row { display: grid; grid-template-columns: minmax(84px, auto) 1fr auto auto; align-items: center; gap: var(--sp-3); padding-block: 5px; border-top: 1px solid var(--rule-faint); }
+.geo__row:first-child { border-top: 0; }
+.geo__row.is-hi { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.geo__cty { font-size: var(--fs-sm); color: var(--ink); }
+.geo__bar-wrap { height: 8px; background: var(--grey-10); border-radius: 4px; overflow: hidden; }
+.geo__bar { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.geo__n { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--ink); text-align: right; min-width: 2.4em; }
+.geo__yr { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-faint); text-align: right; min-width: 2.6em; }
+
+/* ---- Home: SportTreemap (every way to move) ------------------------- */
+.tm { position: relative; }
+.tm__readout { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); color: var(--fg-muted); }
+.tm__readout strong { color: var(--accent-ink); }
+.tm__readout-n { font-weight: 700; color: var(--ink); }
+.tm__name { font-family: var(--font-display); font-weight: 700; font-size: 12px; fill: var(--ink); }
+.tm__name--on { fill: var(--paper); }
+.tm__n { font-size: 10px; fill: var(--fg-muted); }
+.tm__n--on { fill: var(--paper); }
+.tm__legend { margin-top: var(--sp-3); }
+
+/* ---- Home: IndoorOutdoor (off the treadmill) ------------------------ */
+.io { position: relative; }
+.io__band { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.12em; fill: var(--accent-ink); opacity: 0.85; }
+.io__band--mute { fill: var(--fg-muted); }
+.io__call { font-family: var(--font-mono); font-size: 11px; font-weight: 700; fill: var(--accent-ink); }
 
 /* ---- What It Means: Verdict (typographic hero stat) ----------------- */
 .verdict { position: relative; }
