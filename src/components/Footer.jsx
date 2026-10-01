@@ -28,9 +28,6 @@ export default function Footer() {
               <li>
                 <Link to="/about">About &amp; method</Link>
               </li>
-              <li>
-                <Link to="/debug">Data debug</Link>
-              </li>
             </ul>
           </div>
           <div>

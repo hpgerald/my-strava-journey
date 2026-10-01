@@ -1,17 +1,29 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
+
+// Which chapters carry a distinct atmosphere (a faint page wash + tinted
+// watermark). The rest keep the base warm-paper / orange identity.
+const CHAPTER_ATMO = { '/where': 'where', '/rhythm': 'rhythm', '/gear': 'gear' }
 
 // One frame for every detail page: breadcrumb, big header, content, prev/next paging.
 // `number` shows the 01..09 index for top-level sections; omit it for sub-item pages.
 export default function DetailFrame({ crumbs = [], number, title, subtitle, lede, children, prev, next }) {
+  const location = useLocation()
   useEffect(() => {
     document.title = title ? `${title} · My Strava Journey` : 'My Strava Journey'
     return () => {
       document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
     }
   }, [title])
+  useEffect(() => {
+    const base = '/' + (location.pathname.split('/')[1] || '')
+    const atmo = CHAPTER_ATMO[base]
+    if (atmo) document.body.setAttribute('data-chapter', atmo)
+    else document.body.removeAttribute('data-chapter')
+    return () => document.body.removeAttribute('data-chapter')
+  }, [location.pathname])
   return (
     <Layout>
       <Container>

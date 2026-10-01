@@ -17,6 +17,11 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
 
   const W = Math.max(320, width)
   const narrow = W < 560
+  // colour carries the job: trail/hill shoes in earth brown, road shoes in rubber
+  // rubber tones alternate so adjacent reigns read apart; moss flags a trail pair
+  const RUBBER = ['#3f3c38', '#6b5a48'], RUBBER_LT = '#9b938a'
+  const TRAIL = '#5e6e3a', TRAIL_LT = '#97a06f'
+  const isTrail = (s) => (s.trailPct || 0) >= 50
   const short = (s) => s.replace(/\s*\(.*\)$/, '').replace(/^(Air Zoom|Zoom|Nike)\s+/, '').replace(/\s+XT\s+\d+$/, '')
   const m = { r: 12, b: 30, l: 12 }
   const sx = linScale([t(start), t(end)], [m.l, W - m.r])
@@ -83,10 +88,9 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
           const x1 = sx(t(p.reignEnd))
           const w = Math.max(2, x1 - x0)
           const on = hover === null || hover === `p${i}`
-          const dark = i % 2 === 1
           return (
             <g key={i} opacity={on ? 1 : 0.45} onMouseEnter={() => setHover(`p${i}`)} onMouseLeave={() => setHover(null)}>
-              <rect x={x0 + 1} y={laneY} width={Math.max(1, w - 2)} height={laneH} rx="3" fill={dark ? 'var(--accent-ink)' : 'var(--accent)'} />
+              <rect x={x0 + 1} y={laneY} width={Math.max(1, w - 2)} height={laneH} rx="3" fill={isTrail(p) ? TRAIL : RUBBER[i % 2]} />
               {w > 34 && <text x={x0 + w / 2} y={laneY + laneH / 2 + 4} textAnchor="middle" className="relay__km">{Math.round(p.km)}</text>}
               {/* baton dot at the handoff (start of each reign after the first) */}
               {i > 0 && <circle cx={x0} cy={laneY + laneH / 2} r="5.5" fill="var(--paper)" stroke="var(--ink)" strokeWidth="2" />}
@@ -104,12 +108,18 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
           const on = hover === null || hover === `c${i}`
           return (
             <g key={i} opacity={on ? 1 : 0.4} onMouseEnter={() => setHover(`c${i}`)} onMouseLeave={() => setHover(null)}>
-              <rect x={x0} y={cameoY} width={Math.max(3, x1 - x0)} height={8} rx="2" fill="var(--grey-45)" />
+              <rect x={x0} y={cameoY} width={Math.max(3, x1 - x0)} height={8} rx="2" fill={isTrail(c) ? TRAIL_LT : RUBBER_LT} />
               {camByI[i] && <text x={camByI[i].cx} y={cameoY - 5 - camByI[i].row * 12} textAnchor={camByI[i].anchor} className="relay__cameo">{camByI[i].name}</text>}
             </g>
           )
         })}
       </svg>
+      <div className="relay__legend chart-legend">
+        <span><i className="chart-swatch" style={{ background: RUBBER[1] }} /> road pair</span>
+        <span><i className="chart-swatch" style={{ background: TRAIL }} /> trail &amp; hill pair</span>
+        <span><i className="chart-swatch" style={{ background: 'var(--paper)', boxShadow: 'inset 0 0 0 2px var(--ink)', borderRadius: '50%' }} /> the baton: a handoff within days</span>
+        <span className="relay__note">number = km logged in each pair</span>
+      </div>
       {hover != null && (() => {
         const isP = hover[0] === 'p'
         const d = isP ? primaries[+hover.slice(1)] : cameos[+hover.slice(1)]

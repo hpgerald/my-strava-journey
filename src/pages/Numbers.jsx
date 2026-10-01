@@ -80,7 +80,7 @@ export default function Numbers() {
       number="02"
       title="By the Numbers"
       subtitle="Then against now"
-      lede="Every headline figure, the first five months of 2019 against 2026 so far. The change is not incremental, it is categorical: a 27-activity dabble turned into a way of life. The bars share a scale; the real numbers sit underneath. Filter by category or measure."
+      lede="Every headline figure, the first five months of 2019 against 2026 so far. The first year was a 27-activity dabble; by 2026 those same months look nothing like it. The bars share a scale; the real numbers sit underneath. Filter by category or measure."
       prev={prev}
       next={next}
     >

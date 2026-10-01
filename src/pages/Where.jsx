@@ -5,6 +5,7 @@ import Figure from '../charts/Figure.jsx'
 import Choropleth from '../charts/Choropleth.jsx'
 import ProportionBar from '../charts/ProportionBar.jsx'
 import EquatorArc from '../charts/EquatorArc.jsx'
+import TerrainLand from '../charts/TerrainLand.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
@@ -81,6 +82,24 @@ export default function Where() {
           </Figure>
         </section>
       )}
+
+      {/* Signature: the ground underfoot, as a range of hills */}
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>What ground shaped the training?</p>
+        <Figure
+          title="Flat at home, steep away"
+          note="Each region drawn as a hill: its height is how steep the ground is, metres climbed for every kilometre covered, and its width is how much training happened there. Home, on the left, is broad and low - Dodoma and Dar es Salaam carry most of the days over almost no vertical. The mountains stand on the right: Kilimanjaro, visited often enough to raise a real hill of its own, and the Uluguru slopes behind Morogoro, the sharpest ground of all and climbed only now and then."
+          source="Strava GPS + Natural Earth admin-1"
+          tableCaption="Each Tanzanian region: activities, distance, climb and steepness"
+          columns={['Region', 'Activities', 'Distance km', 'Climb m', 'm per km']}
+          rows={[...regions]
+            .map((r) => ({ r, s: (toNum(r.elevation_m) || 0) / (toNum(r.distance_km) || 1) }))
+            .sort((a, b) => a.s - b.s)
+            .map(({ r, s }) => [r.region, r.activities, Math.round(toNum(r.distance_km)), Math.round(toNum(r.elevation_m)), s >= 10 ? Math.round(s) : s.toFixed(1)])}
+        >
+          <TerrainLand rows={regions} />
+        </Figure>
+      </section>
 
       {/* Two maps, side by side */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>

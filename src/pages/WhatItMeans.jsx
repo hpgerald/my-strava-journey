@@ -100,12 +100,11 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you are just starting out</h2>
             <p className="measure">
-              Start small and stay in the game. This began in 2019 as {acts2019} activities and no
-              real intent, and it did not reach {fmtInt(totalActs)} through talent or heroics. It got
-              there because in July 2021 a hobby quietly became the default, and the default was never
-              switched off. That is the single loudest lesson in the data: almost nothing here came
-              from the first two years, and almost everything came from refusing to stop after them.
-              A modest habit, compounded over years, dwarfs any burst of motivation.
+              In 2019 the log held {acts2019} activities and no particular plan. The count reached
+              {' '}{fmtInt(totalActs)} slowly, and not through talent: from July 2021 the habit stopped
+              being optional, and the total looked after itself. Almost none of it came from the first
+              two years. Nearly all of it came after. What you keep doing seems to matter more than
+              how you begin.
             </p>
           </div>
           <Verdict from={acts2019} to={fmtInt(totalActs)} mult={`about ${Math.round(totalActs / (acts2019 || 1))}x more activities`} sub="27 activities in 2019, and the totals looked after themselves once the habit held." />
@@ -115,13 +114,12 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you are chasing consistency</h2>
             <p className="measure">
-              Consistency is not built from big days; it is built from small ones you refuse to skip.
-              The longest unbroken run here is {fmtInt(streak)} days, sitting inside a 158-week streak
-              that reaches back three full years, and {activePct}% of every calendar day across seven
-              years carries an activity. None of that was earned on the epic outings. It was earned on
-              the short evening walk logged only to keep the chain alive. That is why{' '}
-              <Term name="Moving time">moving time</Term> and turning up will always beat a single
-              personal best.
+              The longest unbroken run here is {fmtInt(streak)} days, inside a 158-week streak that
+              reaches back three full years, and {activePct}% of every calendar day across seven years
+              carries an activity. Little of that was earned on the epic outings. Most of it came from
+              the short evening walk logged just to keep the chain alive. Over seven years,{' '}
+              <Term name="Moving time">moving time</Term> and simply turning up added up to more than
+              any single personal best.
             </p>
           </div>
           <Verdict value={fmtInt(streak)} unit="days" sub={`unbroken, inside a 158-week streak, with ${activePct}% of all days active.`} />
@@ -131,12 +129,11 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you are coming back from a break</h2>
             <p className="measure">
-              A gap is not the end of the story. The biggest silence in this whole record is 353 days,
-              nearly a full year, from July 2020 to June 2021, with nothing logged at all. What came
-              next was not a slow, guilty return but the most productive stretch of the entire seven
-              years. The lesson is not that rest is failure; it is that a long layoff and a lasting
-              comeback can sit right next to each other. The clock does not have to reset your ambition,
-              only your pace back in.
+              The biggest silence in the record is 353 days, nearly a full year, from July 2020 to
+              June 2021, with nothing logged at all. The stretch that followed became the most active
+              of the whole seven years. Here, at least, a long layoff and a lasting comeback sat right
+              next to each other. A break set the pace to return at, more than the ceiling on what
+              came next.
             </p>
           </div>
           <Verdict value="353" unit="days away" sub="the longest gap on record, immediately before the most consistent stretch of all." />
@@ -146,12 +143,12 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you are a runner working on pace</h2>
             <p className="measure">
-              Fitness is easiest to see not in speed, which the treadmill distorts, but in cost. Divide
-              how hard a session felt by how far it went and you get the price of a kilometre in{' '}
+              On a treadmill, speed tells you little. Cost is steadier: how hard a session felt divided
+              by how far it went, the price of a kilometre in{' '}
               <Term name="Relative Effort">relative effort</Term>. In 2019 a kilometre on foot cost about{' '}
               {fmtNum(epkFirst?.value, 1)} points; by {epkLow?.year} it cost {fmtNum(epkLow?.value, 1)}.
-              The same ground, for a fraction of the toll. That downward curve, not any one fast run, is
-              what getting fitter actually looks like. Chase it in the <Term name="Pace zones">pace zones</Term>.
+              The same ground for a fraction of the toll. That slow downward curve is what getting fitter
+              looked like here, more than any single fast run. Chase it in the <Term name="Pace zones">pace zones</Term>.
             </p>
           </div>
           <EffortPerKm data={effortPerKm} />
@@ -161,11 +158,11 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you are short on time</h2>
             <p className="measure">
-              You do not need long days. The typical foot outing here is just {fmtNum(medKm, 1)} km, and
-              on {doublePct}% of active days there were two or more sessions rather than one long one.
-              The volume that stacked up to a third of the way around the Earth was assembled almost
-              entirely out of short, ordinary efforts squeezed into ordinary days. A brisk half hour,
-              repeated, is the engine. The long session is the exception, not the requirement.
+              The typical foot outing here is just {fmtNum(medKm, 1)} km, and on {doublePct}% of active
+              days there were two or more short sessions rather than one long one. The distance that
+              stacked up to a third of the way around the Earth was assembled almost entirely out of
+              ordinary efforts squeezed into ordinary days. A brisk half hour, repeated, did most of the
+              work. The long session was the exception.
             </p>
           </div>
           <Verdict value={fmtNum(medKm, 1)} unit="km" sub={`the median outing, and ${doublePct}% of active days held more than one.`} />
@@ -175,12 +172,12 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you live for vertical</h2>
             <p className="measure">
-              Elevation does not come from where you would guess. Running is {runDistPct}% of the
-              distance on foot but only {runClimbPct}% of the climb, because it stays flat and mostly on
-              a treadmill. The vertical, all {fmtInt(elevation)} metres of it, {fmtNum(everests)} Everests,
-              is carried by walking uphill and by the trails, where a single trail run averages around
-              350 metres of gain and a hike climbs over 700. If you want <Term name="Elevation gain">elevation</Term>, the answer
-              is not to run harder. It is to walk uphill, and to get on the trails often.
+              The climbing comes from an unexpected place. Running is {runDistPct}% of the distance on
+              foot but only {runClimbPct}% of the climb, because it stays flat and mostly on a treadmill.
+              The vertical, all {fmtInt(elevation)} metres of it, {fmtNum(everests)} Everests, is carried
+              by walking uphill and by the trails, where a single trail run averages around 350 metres of
+              gain and a hike climbs over 700. The metres here were earned on foot and uphill. For more{' '}
+              <Term name="Elevation gain">elevation</Term>, the trails are the answer.
             </p>
           </div>
           <ClimbShare items={climbShareData} />
@@ -190,11 +187,11 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">If you train through travel</h2>
             <p className="measure">
-              The routine does not have to stay home. These activities begin in {realCountries} countries
-              and {regionCount} regions of Tanzania, and travel never broke the streak, it fed it. Some
-              of the standout days, a gravel ride across a border, a dawn walk in an unfamiliar city,
-              happened precisely because the habit packed its shoes and came along for the trip. A new
-              place is not an excuse to stop; it is a fresh route to log.
+              The routine travelled well. These activities begin in {realCountries} countries and{' '}
+              {regionCount} regions of Tanzania, and travel never broke the streak. Some of the standout
+              days, a gravel ride across a border, a dawn walk in an unfamiliar city, happened because
+              the habit packed its shoes and came along. A new place, here, mostly became another route
+              to log.
             </p>
           </div>
           <div className="reach">

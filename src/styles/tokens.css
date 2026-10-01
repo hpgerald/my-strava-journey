@@ -104,4 +104,11 @@
     --dur: 0ms;
     --dur-slow: 0ms;
   }
+  /* safety net: neutralise any motion not already gated behind no-preference */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

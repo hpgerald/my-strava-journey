@@ -1326,6 +1326,17 @@ text.chart-panel-title {
 .hero__plate::after { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
 @media (max-width: 59.999rem) { .hero__plate { display: none; } }
 
+/* ---- Chapter atmospheres: a restrained per-chapter mood ---------------
+   A faint page wash and a tinted watermark give a few chapters their own
+   air, under the same black/white/orange identity. The washes mix into
+   --paper, so they adapt in dark mode; the accent stays orange (brand) so
+   text contrast is untouched. */
+body[data-chapter="where"] { --chapter-hue: #4a6b8a; }   /* dusty blue, place */
+body[data-chapter="rhythm"] { --chapter-hue: #4b4b86; }  /* indigo, time of day */
+body[data-chapter="gear"] { --chapter-hue: #6b5a48; }    /* rubber brown, wear */
+body[data-chapter] { background: color-mix(in srgb, var(--chapter-hue) 5%, var(--paper)); }
+body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue) 15%, var(--paper)); }
+
 /* ---- Chapter frontispiece + chapter turn (section pages) --------------- */
 .chapter { position: relative; }
 .chapter__kicker {
@@ -1589,6 +1600,36 @@ text.chart-panel-title {
 }
 @keyframes igniteIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* closer-look figures are supporting, not heroes: quieter titles and notes */
+.closer-grid > figure.fig .fig__title { font-size: var(--fs-base); }
+.closer-grid > figure.fig .fig__note { font-size: var(--fs-xs); color: var(--fg-muted); }
+
+/* ---- Home: SwitchReveal (the hero scrub) ----------------------------- */
+.switchr { position: relative; }
+.switchr__readout { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-2); min-height: 2.6rem; }
+.switchr__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); line-height: 0.9; color: var(--grey-55); }
+.switchr__num--on { color: var(--accent); }
+.switchr__cap { font-size: var(--fs-md); color: var(--ink); }
+.switchr__era { color: var(--fg-muted); }
+.switchr__head { stroke: var(--ink); stroke-width: 1.5; }
+.switchr__range {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 22px;
+  margin-top: var(--sp-2); background: transparent; cursor: pointer;
+}
+.switchr__range:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+.switchr__range::-webkit-slider-runnable-track { height: 3px; background: var(--rule); border-radius: 2px; }
+.switchr__range::-moz-range-track { height: 3px; background: var(--rule); border-radius: 2px; }
+.switchr__range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; margin-top: -8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+.switchr__range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+
+/* ---- Where: TerrainLand (regions as a range of hills) ---------------- */
+.terr { position: relative; }
+.terr__axlbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; fill: var(--fg-faint); }
+.terr__peak { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xs); fill: var(--ink); }
+.terr__peak--home { fill: var(--accent-ink); }
+.terr__foot { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-muted); }
+.terr__legend { margin-top: var(--sp-3); }
+
 /* ---- Home: FootFlip (distance-vs-climb alluvial) ---------------------- */
 .flip { position: relative; }
 .flip__col { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; fill: var(--fg-muted); font-weight: 600; }
@@ -1820,6 +1861,16 @@ text.chart-panel-title {
 .ledger__v--accent { color: var(--accent); }
 .ledger__l { display: block; margin-top: 7px; font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
 
+/* ---- Goals: GoalsField (constellation overview) ---------------------- */
+.gfield { position: relative; }
+.gfield__star { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--ink); }
+.gfield__grp { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; fill: var(--fg-muted); }
+.gfield__grpnum { fill: var(--accent); font-weight: 700; }
+.gfield__legend { margin-top: var(--sp-3); }
+.gfield__sw-closed { background: var(--accent); border-radius: 50%; }
+.gfield__sw-rec { background: var(--paper); border: 2px solid var(--accent); border-radius: 50%; box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent); }
+.gfield__sw-open { background: var(--paper); border: 2px solid var(--grey-45); border-radius: 50%; }
+
 /* ---- Movement header: groups a run of figures into a titled section --- */
 .movement {
   margin-top: var(--sp-9, var(--sp-8));
@@ -2007,6 +2058,8 @@ text.chart-panel-title {
 .relay__km { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--paper); }
 .relay__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-2xs); fill: var(--ink); }
 .relay__cameo { font-family: var(--font-body); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.relay__legend { margin-top: var(--sp-4); }
+.relay__note { margin-left: auto; color: var(--fg-muted); text-transform: none; letter-spacing: 0; }
 
 /* ---- Gear: ShoePersonality (pace x steepness scatter) --------------- */
 .shoep { position: relative; }

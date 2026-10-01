@@ -10,6 +10,7 @@ import DistanceArc from '../charts/DistanceArc.jsx'
 import CenturyMonths from '../charts/CenturyMonths.jsx'
 import DistanceExtremes from '../charts/DistanceExtremes.jsx'
 import StageRace from '../charts/StageRace.jsx'
+import GoalsField from '../charts/GoalsField.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -160,6 +161,35 @@ export default function Goals() {
 
   const closed = (y) => GOALS.filter((g) => agg[y][g.key] >= g.target).length
 
+  // ---- the goals as a constellation: a map of the whole chapter ----
+  const setStar = (k, label, short) => {
+    const s = status.find((x) => x.key === k) || {}
+    return { name: label, value: short, status: s.done ? 'closed' : 'open', mag: 0.7, detail: `${Math.round(s.pct || 0)}% of the ${label.toLowerCase()} target` }
+  }
+  const fieldGroups = [
+    { key: 'I', label: 'Set goals', stars: [
+      setStar('walk', 'Walking', '1,000'),
+      setStar('run', 'Running', '1,000'),
+      setStar('elev', 'Climbing', '24k'),
+    ] },
+    { key: 'II', label: 'Kept dates', stars: [
+      { name: 'Ras Kilomoni', value: '50', status: 'recurring', mag: 0.85, detail: 'fifty trips to one headland, met exactly' },
+      { name: 'Kilimanjaro Half', value: `${kh.length}×`, status: 'recurring', mag: 0.8, detail: `${kh.length} years running, quicker each time` },
+    ] },
+    { key: 'III', label: 'Silent goals', stars: [
+      { name: 'Every month', value: `${monthStreak}`, status: 'recurring', mag: 1, detail: `${monthStreak} months unbroken, still going` },
+      { name: 'Past the half', value: `${halfCount}`, status: 'closed', mag: 0.9, detail: `${halfCount} outings of 21.1 km or more` },
+      { name: 'Double thousand', value: dblYear || '', status: 'closed', mag: 0.7, detail: `${dblYear}: first year past 1,000 km on both feet` },
+      { name: 'Century months', value: `${centuryCount}`, status: 'recurring', mag: 0.8, detail: `${centuryCount} months over 100 km on foot` },
+      { name: 'The peak year', value: arcPeak ? Math.round(toNum(arcPeak.distance_km) / 1000) + 'k' : '', status: 'closed', mag: 0.75, detail: `${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} km on foot in one year` },
+    ] },
+    { key: 'IV', label: 'Far edges', stars: [
+      { name: 'The marathon', value: '2:56', status: 'closed', mag: 0.85, detail: 'the one full marathon, sub-three-hours' },
+      { name: 'Stage race', value: '100', status: 'closed', mag: 0.95, detail: '100 km over four straight nights' },
+    ] },
+  ]
+  const fieldRows = fieldGroups.flatMap((g) => g.stars.map((s) => [`${g.key} · ${g.label}`, s.name, s.status]))
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Goals' }]}
@@ -170,6 +200,21 @@ export default function Goals() {
       prev={prev}
       next={next}
     >
+      {/* The whole chapter as a constellation */}
+      <section style={{ paddingTop: 'var(--sp-6)' }}>
+        <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Everything that was chased</p>
+        <Figure
+          title="The goals, as a sky"
+          note="Every goal in this chapter as one star, grouped into the four movements below. A filled star is a goal met, a ringed star is one returned to on a cycle, a hollow star is still open. The brightest here is the streak that has not broken in more than five years."
+          source="Activity Log"
+          tableCaption="Every goal, its movement and its state"
+          columns={['Movement', 'Goal', 'State']}
+          rows={fieldRows}
+        >
+          <GoalsField groups={fieldGroups} />
+        </Figure>
+      </section>
+
       {/* ===== Movement I: the goals set out loud ===== */}
       <Movement
         num="I"

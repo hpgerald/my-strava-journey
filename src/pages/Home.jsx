@@ -12,8 +12,8 @@ import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
 import HeroRotator from '../charts/HeroRotator.jsx'
 import ContourField from '../charts/ContourField.jsx'
-import IgnitionStream from '../charts/IgnitionStream.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
+import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -306,16 +306,16 @@ export default function Home() {
       {/* ---- The Switch: the narrative climax, full-bleed -------------- */}
       <div className="bleed bleed--switch">
         <Container>
-          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The whole story in one month</p>
+          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>When did this become a habit?</p>
           <Figure
             title="The switch"
-            note="Activities per month across seven years, gaps and all. For two years it barely registered. Then in July 2021 it turned on, and it has not turned off since. This single month is the whole story of the site."
+            note="For nearly two years the calendar barely registers, a handful of entries a month at most. Then June 2021 has two, and July has fifty-eight. Nothing in the record says why; it only shows that from that month on it never really went quiet again. Drag the marker to move through the months."
             source="Monthly Trends"
             tableCaption="Activities per month"
             columns={['Month', 'Activities']}
             rows={monthlyTotals.map((mm) => [mm.month, mm.activities])}
           >
-            <IgnitionStream rows={monthlyTotals} switchMonth="2021-07" />
+            <SwitchReveal rows={monthlyTotals} switchMonth="2021-07" />
           </Figure>
           {switchRate && (
             <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingTop: 'var(--sp-6)' }}>
@@ -376,8 +376,8 @@ export default function Home() {
         <hr className="rule" />
         <div className="section-head">
           <p className="eyebrow">A closer look</p>
-          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-            Six things the data shows.
+          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>
+            Six smaller things the data shows.
           </h2>
         </div>
         <div className="grid grid--2 closer-grid" style={{ gap: 'var(--sp-8) var(--sp-7)', paddingBottom: 'var(--sp-7)' }}>
@@ -474,7 +474,7 @@ export default function Home() {
               The records hiding in the data.
             </h2>
             <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-              Quiet feats, never announced, that the seven years quietly produced. A few worth pulling out.
+              Records the seven years turned up without any fuss. A few worth pulling out.
             </p>
           </div>
           <ul className="edges">
