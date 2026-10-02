@@ -5,6 +5,7 @@ import FleetPrints from '../charts/FleetPrints.jsx'
 import ShoeRelay from '../charts/ShoeRelay.jsx'
 import ShoePersonality from '../charts/ShoePersonality.jsx'
 import BurnRate from '../charts/BurnRate.jsx'
+import OnePairEra from '../charts/OnePairEra.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -71,6 +72,32 @@ export default function Gear() {
   })
   const handoffs = primaries.slice(1).map((p, i) => dayGap(primaries[i].last, p.first))
   const cleanHandoffs = handoffs.filter((g) => g >= 0 && g <= 3).length
+
+  // ---- one pair, one era: cumulative km over life for two telling shoes ----
+  const monByGid = {}
+  for (const a of activities) {
+    const gid = a.gear_id; if (!gid) continue
+    const mo = (a.date || '').slice(0, 7); if (!/^\d{4}-\d{2}$/.test(mo)) continue
+    ;(monByGid[gid] = monByGid[gid] || {})[mo] = (monByGid[gid][mo] || 0) + (toNum(a.distance_km) || 0)
+  }
+  const buildMonthly = (gid) => {
+    const mm = monByGid[gid] || {}
+    let cum = 0
+    return Object.keys(mm).sort().map((k) => { cum += mm[k]; return { month: k, cum } })
+  }
+  const PAIR_NOTE = {
+    'Lunarglide 7': 'The pair that caught the switch. Most of its kilometres came in the first explosive years, almost all on the road.',
+  }
+  const makePair = (sh, role) => sh ? {
+    ...sh, role, monthly: buildMonthly(sh.gid),
+    note: PAIR_NOTE[sh.model] || `${sh.retired ? 'Retired' : 'Still in rotation'} after ${Math.round(sh.km)} km, mostly on the ${sh.trailPct >= 50 ? 'trail' : 'road'}.`,
+  } : null
+  const workhorse = [...shoesData].sort((a, b) => b.km - a.km)[0]
+  const current = [...shoesData].filter((s) => !s.retired).sort((a, b) => b.km - a.km)[0]
+  const eraPairs = [
+    makePair(workhorse, 'The workhorse'),
+    makePair(current && workhorse && current.gid !== workhorse.gid ? current : null, 'On rotation now'),
+  ].filter(Boolean)
 
   // ---- personalities: pace x steepness, sized by distance ----
   const personality = [...shoesData].filter((s) => s.pace > 0).map((s) => ({
@@ -166,6 +193,22 @@ export default function Gear() {
           <FleetPrints rows={treadRows} />
         </Figure>
       </section>
+
+      {/* One pair, one era */}
+      {eraPairs.length > 0 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <div className="section-head">
+            <p className="eyebrow">One pair, one era</p>
+            <h2 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>
+              Two pairs, read closely.
+            </h2>
+          </div>
+          <div className="grid grid--2" style={{ gap: 'var(--sp-5)', paddingTop: 'var(--sp-2)' }}>
+            {eraPairs.map((p) => <OnePairEra key={p.gid} pair={p} />)}
+          </div>
+          <p className="source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log + Gear</p>
+        </section>
+      )}
     </DetailFrame>
   )
 }

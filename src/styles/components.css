@@ -530,6 +530,8 @@ a.stat:focus-visible { background: var(--ink); color: var(--paper); }
 /* ---- Persona blocks ---------------------------------------------------- */
 .persona { padding: var(--sp-6) 0; border-top: 1px solid var(--rule-faint); }
 .persona:first-of-type { border-top: 2px solid var(--ink); }
+.means-close { margin-top: var(--sp-6); padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); }
+.means-close .measure { color: var(--fg-muted); }
 .persona__who {
   font-family: var(--font-display);
   font-size: var(--fs-xl);
@@ -875,8 +877,14 @@ text.chart-panel-title {
 }
 .radial__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); margin-top: 3px; }
 
-/* ---- Compact index (Home side menu) ------------------------------------ */
-.index--compact .index__link { padding: var(--sp-3) var(--sp-3); grid-template-columns: 2.6rem 1fr auto; gap: var(--sp-3); }
+/* ---- Compact index (Home exit): a card grid, not one long column ------- */
+.index--compact { border-top: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-3); }
+@media (min-width: 40rem) { .index--compact { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .index--compact { grid-template-columns: repeat(3, 1fr); } }
+.index--compact .index__item { border: 1px solid var(--rule-faint); border-top: 2px solid var(--rule); border-radius: 4px; }
+.index--compact .index__link { padding: var(--sp-4); grid-template-columns: 2.4rem 1fr; gap: var(--sp-3); align-items: start; height: 100%; }
+.index--compact .index__link:hover, .index--compact .index__link:focus-visible { padding-left: var(--sp-4); }
+.index--compact .index__arrow { display: none; }
 .index--compact .index__title { font-size: var(--fs-md); }
 .index--compact .index__num { font-size: var(--fs-sm); }
 .index--compact .index__sub { font-size: var(--fs-xs); }
@@ -920,18 +928,17 @@ text.chart-panel-title {
 .dotfig__foot {
   margin-top: var(--sp-5); padding-top: var(--sp-4);
   border-top: 1px solid var(--rule-faint);
-  display: grid; grid-template-columns: 1fr; gap: var(--sp-5) var(--sp-8);
-  font-size: var(--fs-sm); line-height: 1.55;
+  font-size: var(--fs-sm);
 }
-.dotfig__key { list-style: none; margin: 0; padding: 0; color: var(--fg-muted); }
-.dotfig__key li { position: relative; padding-left: 1.1em; margin-bottom: var(--sp-1); }
+.dotfig__key { list-style: none; margin: 0; padding: 0; color: var(--fg-muted);
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); }
+.dotfig__key li { position: relative; padding-left: 1.1em; }
 .dotfig__key li::before {
-  content: ""; position: absolute; left: 0; top: 0.55em;
+  content: ""; position: absolute; left: 0; top: 0.5em;
   width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
 }
 @media (min-width: 48rem) {
   .dotfig .fig__note { column-count: 2; column-gap: var(--sp-8); }
-  .dotfig__foot { grid-template-columns: 1.4fr 1fr; }
 }
 
 /* ---- Animated hero: headline left, key figures stacked right -----------
@@ -1622,6 +1629,53 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 .switchr__range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; margin-top: -8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
 .switchr__range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
 
+/* ---- Records: OrdinaryDay (the humble counterweight) ----------------- */
+.ord { position: relative; }
+.ord__blk { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--accent-ink); font-weight: 700; }
+.ord__stats { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--sp-4) var(--sp-5); }
+.ord__stats li { display: flex; flex-direction: column; gap: 2px; padding-left: var(--sp-4); border-left: 2px solid var(--rule); }
+.ord__stats li:first-child { border-left-color: var(--accent); }
+.ord__v { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; }
+.ord__u { font-size: var(--fs-sm); font-weight: 700; color: var(--fg-muted); }
+.ord__l { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg-muted); }
+
+/* ---- Gear: OnePairEra (one shoe, read closely) ----------------------- */
+.opr { border: 1px solid var(--rule-faint); border-top: 3px solid var(--grey-45); border-radius: 4px; padding: var(--sp-5); }
+.opr__role { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.opr__role--live { color: var(--accent-ink); }
+.opr__name { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); margin: var(--sp-1) 0 2px; line-height: 1.05; }
+.opr__era { font-size: var(--fs-2xs); color: var(--fg-muted); margin: 0 0 var(--sp-3); }
+.opr__stats { list-style: none; margin: var(--sp-2) 0 var(--sp-3); padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); }
+.opr__stats li { display: flex; flex-direction: column; gap: 1px; }
+.opr__v { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); line-height: 1; }
+.opr__l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg-faint); }
+.opr__note { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; }
+
+/* ---- Rhythm: ActivityWeather (activity against the seasons) ---------- */
+.wx { position: relative; }
+.wx__season { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; fill: var(--fg-faint); }
+.wx__season--peak { fill: var(--accent-ink); font-weight: 700; }
+.wx__legend { margin-top: var(--sp-3); }
+.wx__note { margin-left: auto; color: var(--fg-muted); text-transform: none; letter-spacing: 0; }
+
+/* ---- Timeline: HabitAtlas (seven years as rings) --------------------- */
+.atlas { position: relative; }
+.atlas__grid { display: grid; gap: var(--sp-6); align-items: center; }
+@media (min-width: 52rem) { .atlas__grid { grid-template-columns: auto 1fr; column-gap: var(--sp-8); } }
+.atlas__ring { justify-self: center; }
+.atlas__cyr { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); fill: var(--ink); }
+.atlas__csub { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); }
+.atlas__mon { font-family: var(--font-mono); font-size: 8px; fill: var(--fg-faint); }
+.atlas__years { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--sp-4); }
+.atlas__ybtn { font-family: var(--font-mono); font-size: var(--fs-2xs); padding: 4px 9px; border: 1px solid var(--rule); background: var(--paper); color: var(--fg-muted); border-radius: 3px; cursor: pointer; }
+.atlas__ybtn:hover { border-color: var(--accent); color: var(--accent-ink); }
+.atlas__ybtn.is-on { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--paper); font-weight: 700; }
+.atlas__ybtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.atlas__read { margin: 0 0 var(--sp-2); display: flex; flex-direction: column; gap: 2px; }
+.atlas__big { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; }
+.atlas__meta { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); }
+.atlas__fact { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.55; max-width: 34em; }
+
 /* ---- Where: TerrainLand (regions as a range of hills) ---------------- */
 .terr { position: relative; }
 .terr__axlbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; fill: var(--fg-faint); }
@@ -1977,7 +2031,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 .geo__home { flex: 0 0 auto; text-align: center; }
 .geo__grid.is-narrow .geo__home { align-self: center; }
 .geo__disc-pct { font-family: var(--font-display); font-weight: 800; font-size: 34px; fill: var(--paper); }
-.geo__disc-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--paper); }
+.geo__disc-lbl { font-family: var(--font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--paper); }
 .geo__home-cap { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
 .geo__home-cap strong { color: var(--ink); }
 .geo__away { flex: 1 1 auto; min-width: 0; }

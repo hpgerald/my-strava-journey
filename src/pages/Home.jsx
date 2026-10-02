@@ -206,9 +206,9 @@ export default function Home() {
     .filter((s) => s.sport)
     .map((s) => [s.sport, fmtInt(s.activities)])
 
-  const menuItems = nav
-    .filter((r) => r.route !== '/')
-    .map((r, i) => ({ ...r, number: String(i + 1).padStart(2, '0') }))
+  // use each chapter's own number from nav_index so the index matches the number
+  // shown on the chapter's own page (02-10), not a re-sequenced 01-09
+  const menuItems = nav.filter((r) => r.route !== '/')
 
   return (
     <Layout>
@@ -273,7 +273,7 @@ export default function Home() {
         <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
           <Figure
             title="Every activity, one dot"
-            note={`One dot for every activity, ${fmtInt(activityLog.length)} in all, stacked into a band per year: 2019 at the top, this year at the foot. Inside each band the dots run left to right in date order and wrap onto as many rows as that year needed, so the height of a band is how much a year held. Colour deepens with the year as well. Hover any dot for its date.`}
+            note={`For two years it was a hobby: 27 activities in 2019, 35 in 2020, each barely a row. Then July 2021 turned it on, and every year since fills three or four rows of its own. One dot is one activity, oldest at the top, this year at the foot; point at any for its date.`}
             source="Activity Log"
             tableCaption="Activities by year"
             columns={['Year', 'Activities']}
@@ -282,23 +282,13 @@ export default function Home() {
             <DotGrid items={items} years={gridYears} />
           </Figure>
           <div className="dotfig__foot">
-            <div>
-              <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Reading the dots</p>
-              <p style={{ margin: 0, color: 'var(--fg-muted)' }}>
-                For two years this was a hobby: 27 activities in 2019, 35 in 2020, each a thin stub of
-                a band. Then July 2021 flipped a switch. Two activities that June became fifty-eight in
-                July, and every year since has cleared 270, filling three or four rows of its own.
-              </p>
-            </div>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>How to read it</p>
-              <ul className="dotfig__key">
-                <li>Each dot is a single activity.</li>
-                <li>Bands are years, oldest at the top, this year at the foot.</li>
-                <li>A short band was a quiet year; a deep one, a busy year.</li>
-                <li>Colour deepens as the years pass.</li>
-              </ul>
-            </div>
+            <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>How to read it</p>
+            <ul className="dotfig__key">
+              <li>One dot, one activity</li>
+              <li>Bands are years, oldest on top</li>
+              <li>A deeper band is a busier year</li>
+              <li>Colour deepens over time</li>
+            </ul>
           </div>
         </div>
       </Container>
@@ -389,6 +379,12 @@ export default function Home() {
             tableCaption="Located activities by country"
             columns={['Country', 'Activities']}
             rows={geoRows}
+            footer={(
+              <>
+                <p className="eyebrow">The far countries</p>
+                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. The rest thin out fast: a pair in Rwanda, a pair in Saudi Arabia, and a single run logged in the UK in 2026, the newest stamp in the book.</p>
+              </>
+            )}
           >
             <GeoBubbles rows={countries} />
           </Figure>

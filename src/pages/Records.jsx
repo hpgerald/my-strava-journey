@@ -1,14 +1,11 @@
 import DetailFrame from '../components/DetailFrame.jsx'
 import StatCard from '../components/StatCard.jsx'
 import Figure from '../charts/Figure.jsx'
-import DistanceStartLine from '../charts/DistanceStartLine.jsx'
-import KudosStarburst from '../charts/KudosStarburst.jsx'
 import MotionClock from '../charts/MotionClock.jsx'
 import CaloriePlates from '../charts/CaloriePlates.jsx'
-import PRPulse from '../charts/PRPulse.jsx'
 import RecordWall from '../charts/RecordWall.jsx'
 import AscentProfile from '../charts/AscentProfile.jsx'
-import MilestoneLadder from '../charts/MilestoneLadder.jsx'
+import OrdinaryDay from '../charts/OrdinaryDay.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { prettySport } from '../lib/slug.js'
@@ -114,6 +111,18 @@ export default function Records() {
   ]
 
   // ---- aggregate tape measure ----
+  // the ordinary day: a humble counterweight to the extremes above
+  const med = (arr) => { const s = [...arr].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0 }
+  const ordMedKm = med(foot.map((a) => toNum(a.distance_km)).filter((v) => v > 0))
+  const ordMedMin = med(foot.map((a) => toNum(a.moving_time_min)).filter((v) => v > 0))
+  const hourCount = {}
+  for (const a of activities) { const h = parseInt(a.hour, 10); if (h >= 0 && h < 24) hourCount[h] = (hourCount[h] || 0) + 1 }
+  const ordHour = Number(Object.keys(hourCount).reduce((b, h) => (hourCount[h] > (hourCount[b] || 0) ? h : b), '18'))
+  const dayCount = {}
+  for (const a of activities) { const d = (a.date || '').slice(0, 10); if (d) dayCount[d] = (dayCount[d] || 0) + 1 }
+  const dayVals = Object.values(dayCount)
+  const ordDoublesPct = Math.round((100 * dayVals.filter((c) => c >= 2).length) / (dayVals.length || 1))
+
   const totalDist = foot.reduce((s, a) => s + (toNum(a.distance_km) || 0), 0)
   const totalElev = foot.reduce((s, a) => s + (toNum(a.elevation_gain_m) || 0), 0)
   const totalHours = foot.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
@@ -264,63 +273,30 @@ export default function Records() {
         </Figure>
       </section>
 
-      {/* Milestone ladder */}
+      {/* The ordinary day: counterweight to the records */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <hr className="rule" />
+        <div className="section-head">
+          <p className="eyebrow">And yet, most days</p>
+          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-xl)' }}>
+            The ordinary day did the work.
+          </h2>
+        </div>
         <Figure
           n="04"
-          title="The road to ten thousand kilometres"
-          note="Each rung is the day a running foot-distance total was crossed. The first thousand kilometres took two years of dabbling. The next fifteen hundred took three months, once July 2021 lit the fuse."
+          title="A usual outing, where it usually falls"
+          note={`The records above are rare by definition. Almost all of the ${fmtInt(totalDist)} km came from days like this one: a single short outing, run or walked in the early evening. The median foot outing is ${fmtNum(ordMedKm, 1)} km and lasts about ${Math.round(ordMedMin)} minutes; on ${ordDoublesPct}% of active days there is a second.`}
           source="Activity Log"
-          tableCaption="Date each cumulative foot-distance milestone was crossed"
-          columns={['Milestone', 'Crossed']}
-          rows={ladder.map((l) => [l.km, l.date])}
+          tableCaption="The typical outing and active day"
+          columns={['Measure', 'Value']}
+          rows={[
+            ['Median outing', `${fmtNum(ordMedKm, 1)} km`],
+            ['Typical duration', `${Math.round(ordMedMin)} min`],
+            ['Most common start', `${ordHour}:00`],
+            ['Active days with two or more', `${ordDoublesPct}%`],
+          ]}
         >
-          <MilestoneLadder data={ladder} axisNote={`${fmtMon(days[0])} to ${fmtMon(days[days.length - 1])}`} />
-        </Figure>
-      </section>
-
-      {/* Furthest, off a start line */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="05"
-          title="Furthest in each discipline"
-          note="Every way of travelling on foot leaves the same start line and runs its own lane to its single longest outing. On one shared distance axis the order is plain: a full marathon on the run out front, a long trail and a long walk in the thirties, the biggest hike barely past halfway."
-          source="Activity Log"
-          tableCaption="Longest single outing by discipline"
-          columns={['Discipline', 'km', 'When']}
-          rows={furthest.map((d) => [d.label, d.display, (d.sub || '').replace(/^·\s*/, '')])}
-        >
-          <DistanceStartLine data={furthest} />
-        </Figure>
-      </section>
-
-      {/* Most loved, a burst of applause */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="06"
-          title="A burst of applause"
-          note="The six activities that drew the most kudos, each a ray leaving the centre as long as the cheers it earned. Running fills the burst; a single trail run breaks in among them."
-          source="Activity Log"
-          tableCaption="The six most-cheered activities by kudos"
-          columns={['Activity', 'Kudos']}
-          rows={loved.map((d) => [d.label, d.display])}
-        >
-          <KudosStarburst data={loved} />
-        </Figure>
-      </section>
-
-      {/* PRs come in bursts */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="07"
-          title="Records come in bursts"
-          note="A personal record is Strava's flag for a best-ever split. Plotted as a rate per outing by year, they do not fade with age, they pulse: a spike in 2023, then the hungriest year on record in 2026, catching more bests per outing than ever. The dot grows with the number of records that year."
-          source="Activity Log"
-          tableCaption="Personal records per outing, and total, by year"
-          columns={['Year', 'PRs / outing', 'Total PRs']}
-          rows={prByYear.map((d) => [d.year, d.rate.toFixed(2), String(d.total)])}
-        >
-          <PRPulse data={prByYear} />
+          <OrdinaryDay medKm={ordMedKm} medMin={ordMedMin} hour={ordHour} doublesPct={ordDoublesPct} />
         </Figure>
       </section>
 

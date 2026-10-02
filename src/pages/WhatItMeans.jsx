@@ -91,20 +91,20 @@ export default function WhatItMeans() {
       number="10"
       title="What It Means"
       subtitle="What the numbers say to you."
-      lede="A record is only worth keeping if it tells you something. Everything on this site converges on a handful of lessons, and which one matters depends on where you are in your own training. Here is what seven years of showing up has to say. Dotted words carry plain definitions; hover, tap or tab."
+      lede="Seven years of a record, read back. Four things it shows plainly, and a last one it only hints at. Dotted words carry plain definitions; hover, tap or tab."
       prev={prev}
       next={next}
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you are just starting out</h2>
+            <h2 className="persona__who">Almost all of it came after 2021</h2>
             <p className="measure">
               In 2019 the log held {acts2019} activities and no particular plan. The count reached
-              {' '}{fmtInt(totalActs)} slowly, and not through talent: from July 2021 the habit stopped
-              being optional, and the total looked after itself. Almost none of it came from the first
-              two years. Nearly all of it came after. What you keep doing seems to matter more than
-              how you begin.
+              {' '}{fmtInt(totalActs)} slowly: from July 2021 the habit stopped being optional, and the
+              total looked after itself. The longest unbroken run is {fmtInt(streak)} days, inside a
+              158-week streak, and {activePct}% of every calendar day carries something, most of them
+              short evening walks logged just to keep the chain going.
             </p>
           </div>
           <Verdict from={acts2019} to={fmtInt(totalActs)} mult={`about ${Math.round(totalActs / (acts2019 || 1))}x more activities`} sub="27 activities in 2019, and the totals looked after themselves once the habit held." />
@@ -112,28 +112,12 @@ export default function WhatItMeans() {
 
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you are chasing consistency</h2>
+            <h2 className="persona__who">A year of silence, then the busiest stretch</h2>
             <p className="measure">
-              The longest unbroken run here is {fmtInt(streak)} days, inside a 158-week streak that
-              reaches back three full years, and {activePct}% of every calendar day across seven years
-              carries an activity. Little of that was earned on the epic outings. Most of it came from
-              the short evening walk logged just to keep the chain alive. Over seven years,{' '}
-              <Term name="Moving time">moving time</Term> and simply turning up added up to more than
-              any single personal best.
-            </p>
-          </div>
-          <Verdict value={fmtInt(streak)} unit="days" sub={`unbroken, inside a 158-week streak, with ${activePct}% of all days active.`} />
-        </article>
-
-        <article className="persona persona--split">
-          <div>
-            <h2 className="persona__who">If you are coming back from a break</h2>
-            <p className="measure">
-              The biggest silence in the record is 353 days, nearly a full year, from July 2020 to
-              June 2021, with nothing logged at all. The stretch that followed became the most active
-              of the whole seven years. Here, at least, a long layoff and a lasting comeback sat right
-              next to each other. A break set the pace to return at, more than the ceiling on what
-              came next.
+              The biggest gap in the record is 353 days, nearly a full year, from July 2020 to June
+              2021, with nothing logged at all. The stretch that followed became the most active of the
+              whole seven years. Here, at least, a long layoff and a lasting comeback sat right next to
+              each other.
             </p>
           </div>
           <Verdict value="353" unit="days away" sub="the longest gap on record, immediately before the most consistent stretch of all." />
@@ -141,43 +125,13 @@ export default function WhatItMeans() {
 
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you are a runner working on pace</h2>
+            <h2 className="persona__who">The climb was walked, not run</h2>
             <p className="measure">
-              On a treadmill, speed tells you little. Cost is steadier: how hard a session felt divided
-              by how far it went, the price of a kilometre in{' '}
-              <Term name="Relative Effort">relative effort</Term>. In 2019 a kilometre on foot cost about{' '}
-              {fmtNum(epkFirst?.value, 1)} points; by {epkLow?.year} it cost {fmtNum(epkLow?.value, 1)}.
-              The same ground for a fraction of the toll. That slow downward curve is what getting fitter
-              looked like here, more than any single fast run. Chase it in the <Term name="Pace zones">pace zones</Term>.
-            </p>
-          </div>
-          <EffortPerKm data={effortPerKm} />
-        </article>
-
-        <article className="persona persona--split">
-          <div>
-            <h2 className="persona__who">If you are short on time</h2>
-            <p className="measure">
-              The typical foot outing here is just {fmtNum(medKm, 1)} km, and on {doublePct}% of active
-              days there were two or more short sessions rather than one long one. The distance that
-              stacked up to a third of the way around the Earth was assembled almost entirely out of
-              ordinary efforts squeezed into ordinary days. A brisk half hour, repeated, did most of the
-              work. The long session was the exception.
-            </p>
-          </div>
-          <Verdict value={fmtNum(medKm, 1)} unit="km" sub={`the median outing, and ${doublePct}% of active days held more than one.`} />
-        </article>
-
-        <article className="persona persona--split">
-          <div>
-            <h2 className="persona__who">If you live for vertical</h2>
-            <p className="measure">
-              The climbing comes from an unexpected place. Running is {runDistPct}% of the distance on
-              foot but only {runClimbPct}% of the climb, because it stays flat and mostly on a treadmill.
-              The vertical, all {fmtInt(elevation)} metres of it, {fmtNum(everests)} Everests, is carried
-              by walking uphill and by the trails, where a single trail run averages around 350 metres of
-              gain and a hike climbs over 700. The metres here were earned on foot and uphill. For more{' '}
-              <Term name="Elevation gain">elevation</Term>, the trails are the answer.
+              Running is {runDistPct}% of the distance on foot but only {runClimbPct}% of the climb; it
+              stays flat and mostly on a treadmill. The {fmtInt(elevation)} metres of{' '}
+              <Term name="Elevation gain">vertical</Term>, {fmtNum(everests)} Everests, came from walking
+              uphill and from the trails, where a single trail run averages around 350 metres of gain and
+              a hike over 700. The metres were earned slowly, on foot.
             </p>
           </div>
           <ClimbShare items={climbShareData} />
@@ -185,27 +139,26 @@ export default function WhatItMeans() {
 
         <article className="persona persona--split">
           <div>
-            <h2 className="persona__who">If you train through travel</h2>
+            <h2 className="persona__who">The total was ordinary days</h2>
             <p className="measure">
-              The routine travelled well. These activities begin in {realCountries} countries and{' '}
-              {regionCount} regions of Tanzania, and travel never broke the streak. Some of the standout
-              days, a gravel ride across a border, a dawn walk in an unfamiliar city, happened because
-              the habit packed its shoes and came along. A new place, here, mostly became another route
-              to log.
+              The typical foot outing is just {fmtNum(medKm, 1)} km, and on {doublePct}% of active days
+              there were two or more short ones rather than one long. Speed is hard to read on a
+              treadmill; {' '}<Term name="Relative Effort">cost</Term> is steadier. A kilometre on foot
+              cost about {fmtNum(epkFirst?.value, 1)} points in 2019 and {fmtNum(epkLow?.value, 1)} by
+              {' '}{epkLow?.year}, the same ground for a smaller toll. That slow decline, more than any
+              fast run, is what getting fitter looked like.
             </p>
           </div>
-          <div className="reach">
-            <div className="reach__row">
-              <span className="reach__num">{realCountries}</span>
-              <span className="reach__lbl">countries reached</span>
-            </div>
-            <div className="reach__row">
-              <span className="reach__num">{regionCount}</span>
-              <span className="reach__lbl">Tanzania regions</span>
-            </div>
-            <p className="source" style={{ marginTop: 'var(--sp-2)' }}>Source: Activity Log &middot; GPS</p>
-          </div>
+          <EffortPerKm data={effortPerKm} />
         </article>
+
+        <div className="means-close">
+          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>In the end</p>
+          <p className="measure" style={{ fontSize: 'var(--fs-md)', margin: 0 }}>
+            Seven years in, the part I notice most is the smallest one. On an ordinary flat morning in
+            Dodoma, with nothing to train for, the walk still happens. The record only keeps count of it.
+          </p>
+        </div>
       </section>
 
       {/* Full glossary for completeness */}

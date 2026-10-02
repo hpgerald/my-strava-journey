@@ -6,6 +6,7 @@ import CalendarHeatmap from '../charts/CalendarHeatmap.jsx'
 import StreakRibbon from '../charts/StreakRibbon.jsx'
 import WeekStreakGrid from '../charts/WeekStreakGrid.jsx'
 import SeasonWheel from '../charts/SeasonWheel.jsx'
+import ActivityWeather from '../charts/ActivityWeather.jsx'
 import Matrix from '../charts/Matrix.jsx'
 import EffortTide from '../charts/EffortTide.jsx'
 import EffortPerKm from '../charts/EffortPerKm.jsx'
@@ -261,6 +262,23 @@ export default function Rhythm() {
           }, MON3.map((mn) => [mn, 0])).map((r) => [r[0], fmtInt(r[1])])}
         >
           <SeasonWheel rows={monthly} />
+        </Figure>
+      </section>
+
+      <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <Figure
+          title="Activity against the seasons"
+          note="The same twelve months as a single curve, with Tanzania's rough wet and dry spells shaded behind it. The busy stretch sits in the cool, dry middle of the year, roughly June to October; the thinner months line up with the long and short rains. It is a pattern in the record, not proof that the weather drove it."
+          source="Monthly Trends"
+          tableCaption="Activities by calendar month, summed over all years"
+          columns={['Month', 'Activities']}
+          rows={monthly.reduce((acc, m) => {
+            const mi = Number((m.month || '').slice(5, 7))
+            if (mi >= 1 && mi <= 12) acc[mi - 1][1] += toNum(m.activities) || 0
+            return acc
+          }, MON3.map((mn) => [mn, 0])).map((r) => [r[0], fmtInt(r[1])])}
+        >
+          <ActivityWeather rows={monthly} />
         </Figure>
       </section>
 

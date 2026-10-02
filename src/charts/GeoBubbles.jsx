@@ -30,10 +30,10 @@ export default function GeoBubbles({ rows }) {
   const maxAway = Math.max(1, ...away.map((a) => a.n))
 
   const W = Math.max(300, width)
-  const narrow = W < 520
+  const narrow = W < 460
   // home disc radius sized to fill its panel
-  const discPanel = narrow ? W - 8 : Math.round(W * 0.42)
-  const R = Math.min(narrow ? 96 : 118, discPanel / 2 - 6)
+  const discPanel = narrow ? W - 8 : Math.round(W * 0.40)
+  const R = Math.min(narrow ? 96 : 104, discPanel / 2 - 6)
 
   return (
     <div ref={ref} className="geo">
@@ -43,8 +43,8 @@ export default function GeoBubbles({ rows }) {
             role="img" aria-label={`Tanzania holds ${homeN.toLocaleString()} of ${total.toLocaleString()} located activities, ${homePct} percent.`}
             style={{ display: 'block', margin: '0 auto' }}>
             <circle cx={R + 4} cy={R + 4} r={R} fill="var(--accent)" />
-            <text x={R + 4} y={R + 4 - 6} textAnchor="middle" className="geo__disc-pct">{homePct}%</text>
-            <text x={R + 4} y={R + 4 + 16} textAnchor="middle" className="geo__disc-lbl">at home</text>
+            <text x={R + 4} y={R + 4 - 10} textAnchor="middle" className="geo__disc-pct">{homePct}%</text>
+            <text x={R + 4} y={R + 4 + 22} textAnchor="middle" className="geo__disc-lbl">at home</text>
           </svg>
           <p className="geo__home-cap">
             <strong>{HOME}</strong> · {homeN.toLocaleString()} activities

@@ -3,6 +3,7 @@ import Tag from '../components/Tag.jsx'
 import Figure from '../charts/Figure.jsx'
 import PulseYears from '../charts/PulseYears.jsx'
 import LostYearThread from '../charts/LostYearThread.jsx'
+import HabitAtlas from '../charts/HabitAtlas.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 
@@ -26,7 +27,24 @@ export default function Timeline() {
     >
       {monthly.length > 3 && (
         <section style={{ paddingTop: 'var(--sp-6)' }}>
+          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The whole record, year by year</p>
           <Figure
+            title="The habit atlas"
+            note="Seven years as rings, the first on the inside. Each ring is split into twelve months and shaded by how many activities it held. Pick a year to read its busiest month and a line about it. The two pale inner rings are the two quiet years before the switch."
+            source="Monthly Trends"
+            tableCaption="Activities per year, with the busiest month"
+            columns={['Year', 'Activities']}
+            rows={[...new Set(monthly.map((m) => m.month.slice(0, 4)))].sort().map((y) => [y, monthly.filter((m) => m.month.slice(0, 4) === y).reduce((a, m) => a + (Number(m.activities) || 0), 0)])}
+          >
+            <HabitAtlas rows={monthly} />
+          </Figure>
+        </section>
+      )}
+
+      {monthly.length > 3 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="02"
             title="Seven years, one pulse"
             note="Every month is a beat mirrored off the centre line, as tall as the activities it held. For two years the pulse barely registers. The month the switch is thrown, July 2021, it quickens all at once and it has not settled back since."
             source="Monthly Trends"
@@ -42,7 +60,7 @@ export default function Timeline() {
       {monthly.length > 3 && (
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <Figure
-            n="02"
+            n="03"
             title="The lost year, in three beats"
             note="Zoom in on the two years around the switch and the whole arc is there. The biggest single day ever recorded, a 240 km ride across the border into Kenya, then 353 days with nothing logged, then July 2021 and a return that never stopped. The largest effort on record sits right before the longest silence."
             source="Activity Log + Monthly Trends"
