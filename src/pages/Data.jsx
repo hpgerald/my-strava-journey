@@ -73,6 +73,10 @@ export default function Data() {
   const { data } = useData()
   useTables(CSV_FILES)
   const rowCount = (name) => (data && data[name] ? data[name].length : '–')
+  // activities that carry GPS = all located countries (everything but the indoor bucket)
+  const gpsCount = (data && data.countries
+    ? data.countries.filter((c) => c.country && !/Indoor/.test(c.country)).reduce((s, c) => s + (Number(c.activities) || 0), 0)
+    : 0) || 1116
 
   return (
     <DetailFrame
@@ -126,7 +130,7 @@ export default function Data() {
           </p>
           <p>
             Numbers are never invented. Where a value was unavailable it is left blank and logged.
-            The geographic totals cover the 1,116 activities that carry GPS; indoor and trainer
+            The geographic totals cover the {gpsCount.toLocaleString()} activities that carry GPS; indoor and trainer
             sessions have none. The country and region maps are approximate cartography, and the
             full method notes ship with the project.
           </p>

@@ -39,7 +39,21 @@ git push -u origin main
 
 ## Updating later (including weekly data refreshes)
 
-The site is data-driven: everything lives in `public/data/*.csv`. To update, replace or add CSVs (or edit any file), then:
+The site is data-driven: everything lives in `public/data/*.csv`. A weekly refresh starts from a
+fresh Strava raw export and regenerates every table (and the README headline figures):
+
+```bash
+STRAVA_RAW=/path/to/strava_activities_raw.csv python3 scripts/rebuild_from_raw.py
+python3 scripts/apply_foot_only.py      # distance/elevation -> foot sports only
+python3 scripts/build_derived.py        # comparisons, timeline, nav, glossary
+python3 scripts/sanitize_public_data.py # strip any sensitive columns
+python3 scripts/validate.py             # reconcile and sanity-check
+python3 scripts/update_readme.py        # refresh README highlights from the data
+```
+
+The choropleth map counts (`africa.geojson`, `tz_regions.geojson`) are tagged by
+`scripts/build_maps.py` (needs geopandas); if that is unavailable, only their `act`/`dist`
+properties need re-tagging from `countries.csv` / `tanzania_regions.csv`. Then commit:
 
 ```bash
 git add .
@@ -47,7 +61,7 @@ git commit -m "Weekly data refresh"
 git push
 ```
 
-The Action redeploys automatically. No other steps.
+The Action redeploys automatically.
 
 ---
 
