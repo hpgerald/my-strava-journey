@@ -32,7 +32,7 @@ export default function Timeline() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The whole record, year by year</p>
           <Figure
             title="The habit atlas"
-            note="Seven years as rings, the first on the inside. Each ring is split into twelve months and shaded by how many activities it held. Pick a year to read its busiest month and a line about it. The two pale inner rings are the two quiet years before the switch."
+            note="Seven years as rings, the oldest in the middle. A ring runs twelve months around, shaded darker where a month was busy. Pick a year to read its busiest month and a line about it. The two faint rings at the centre are the quiet years before the switch."
             source="Monthly Trends"
             tableCaption="Activities per year, with the busiest month"
             columns={['Year', 'Activities']}

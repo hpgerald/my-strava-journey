@@ -291,9 +291,9 @@ export default function Home() {
             </div>
           </div>
           <div className="hero__cards" aria-label="Headline figures">
-            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Running, walking and hiking only. Nearly a third of the way around the equator." />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Nine and a half times the height of Everest. Most of it walked, not run." />
-            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="The longest gap-free run yet, and still counting." />
+            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Run, walked and hiked. That alone is close to a third of the way around the equator." />
+            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="About nine and a half Everests of climbing, and most of it came on walks, not runs." />
+            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="The longest run of days without a gap so far, and it is still going." />
           </div>
         </section>
       </Container>
@@ -324,7 +324,7 @@ export default function Home() {
         <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
           <Figure
             title="Every activity, one dot"
-            note={`Read the bands from the top and the habit arrives in stages. For two years it is a trickle, 27 outings in 2019 and 35 in 2020, two or three a month. The second half of 2021 breaks it open to 328, and 2022 is the busiest year on record at 443. After that the count stops climbing and levels off, close to 300 a year, around six a week, and it has held there for four straight years. 2026 has already passed 300 with the year still unfinished. The tall years built the habit; the steady bands beneath show it holding.`}
+            note={`The first two years barely register: 27 outings in 2019, 35 in 2020, a couple a month. Then the back half of 2021 cracks it open to 328, and 2022 tops out at 443, the busiest there has been. The quiet surprise is what comes after. The count stops climbing and settles around 300 a year, roughly six a week, and it has sat there four years running. 2026 passed 300 before the year was even out. The spike started the habit. The flat bands under it are the habit just carrying on.`}
             source="Activity Log"
             tableCaption="Activities by year"
             columns={['Year', 'Activities']}
@@ -341,7 +341,7 @@ export default function Home() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>When did this become a habit?</p>
           <Figure
             title="The switch"
-            note="For nearly two years the calendar barely registers, a handful of entries a month at most. Then June 2021 has two, and July has fifty-eight. Nothing in the record says why; it only shows that from that month on it never really went quiet again. Drag the marker to move through the months."
+            note="Two quiet years, a few entries a month at most. Then June 2021 logs two activities and July logs fifty-eight. The data never says why it happened, only that from that month on the quiet never really came back. Drag the marker to walk through the months."
             source="Monthly Trends"
             tableCaption="Activities per month"
             columns={['Month', 'Activities']}
@@ -354,7 +354,7 @@ export default function Home() {
               <Figure
                 n="01"
                 title="A hobby, then a habit"
-                note="The same story as one number: activities per calendar month before the switch against every month since. The rate multiplied elevenfold and has held for five years."
+                note="Before July 2021 it ran at under three activities a month. Since then it has held near thirty-one. Eleven times as often, five years without settling back."
                 source="Monthly Trends"
                 tableCaption="Activities per month, before July 2021 versus since"
                 columns={['Era', 'Activities / month']}
@@ -368,7 +368,7 @@ export default function Home() {
                   Two-point-eight a month became thirty-one.
                 </p>
                 <p className="text-muted" style={{ marginTop: 'var(--sp-3)', fontSize: 'var(--fs-sm)' }}>
-                  Nothing about the effort in any single week looks dramatic. Stacked into a rate, the change is categorical: an eleven-fold jump that never came back down.
+                  No single week looks dramatic on its own. Stack it all into a rate and the jump is hard to miss: eleven times as often, and it never came back down.
                 </p>
               </div>
             </div>
@@ -381,7 +381,7 @@ export default function Home() {
         <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
           <Figure
             title="Walking climbs, running runs"
-            note="Each sport's share of the total on the left as distance, on the right as climb. Follow a ribbon across and it flips."
+            note="Distance down the left, climb down the right, one ribbon per foot sport. A sport that is a fat band for distance can be a sliver for climb, and the other way round. Watch running make the switch."
             source="Activity Log"
             tableCaption="Share of distance and share of elevation by foot sport"
             columns={['Sport', 'Distance km', 'Climb m']}
@@ -416,7 +416,7 @@ export default function Home() {
           {/* Row 1 — the range of it: where, then what */}
           <Figure
             title="Where in the world"
-            note={`Every activity a GPS fix could place, sorted by country. More than nine in ten sit inside Tanzania, home; the rest are passport stamps in ${geoLocated.length - 1} other countries, a handful of activities each, from Kenya to a single run in the UK.`}
+            note={`Wherever a GPS fix could place an activity, grouped by country. More than nine in ten happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to one lone run logged in the UK.`}
             source="Strava GPS + point-in-polygon"
             tableCaption="Located activities by country"
             columns={['Country', 'Activities']}
@@ -433,7 +433,7 @@ export default function Home() {
 
           <Figure
             title="Every way to move"
-            note="One tile per sport, sized by how many activities it holds. Walking and running swallow the frame; around them sits everything else tried at least once, down to a single afternoon of golf and one canoe trip. Fifteen sports, but four of every five outings are on foot."
+            note="Each sport is a tile, bigger the more often it was done. Walking and running take almost the whole frame. The rest is everything tried at least once and mostly left there, down to one round of golf and a single afternoon in a canoe. Fifteen sports all told, and four in five outings still happen on two feet."
             source="Strava Overview"
             tableCaption="Activities by sport type"
             columns={['Sport', 'Activities']}
@@ -451,7 +451,7 @@ export default function Home() {
           {/* Row 2 — the rhythm of it: hour of day, then time of year */}
           <Figure
             title="When the day gets moving"
-            note="Every activity by the hour it started. Two rushes: a small dawn crowd near 6am and a much larger one after work. Evening, 5 to 8pm, is the busiest window by far, and 6pm the single busiest hour."
+            note="Sorted by the hour each one began. There are two rushes. A thin dawn crowd shows up near 6am, then a much bigger one after work. Five to eight in the evening carries the day, and 6pm is the busiest hour on the clock."
             source="Activity Log"
             tableCaption="Activities by hour of day"
             columns={['Hour', 'Activities']}
@@ -462,7 +462,7 @@ export default function Home() {
 
           <Figure
             title="The year has a season"
-            note="Activities by calendar month, all seven years stacked. July, deep in the cool dry season, is the busiest by a clear margin; February is the thinnest. The training has a season, and it tracks the weather."
+            note="Seven years of months laid on top of each other. July wins by a distance, right in the cool dry season, while February is the emptiest. The training keeps a calendar, and it belongs to the weather, not the gym."
             source="Activity Log"
             tableCaption="Activities by calendar month"
             columns={['Month', 'Activities']}
@@ -471,7 +471,7 @@ export default function Home() {
               <>
                 <p className="eyebrow">A weather habit</p>
                 <p>The calendar the body keeps is Tanzania&rsquo;s, not the gym&rsquo;s. The long dry season runs June to October, cool and rainless on the central plateau, and those are the months that swell here.</p>
-                <p>The lean months line up with the short rains of November and the hot build-up around February. Seven years on, the pattern barely wavers: the training breathes with the seasons.</p>
+                <p>The thin months line up with the short rains in November and the hot build-up around February. Seven years on it hardly shifts: the training keeps the weather's calendar.</p>
               </>
             )}
           >
@@ -481,7 +481,7 @@ export default function Home() {
           {/* Row 3 — the habit of it: the move outside, then the streak */}
           <Figure
             title="Off the treadmill"
-            note="Each year's activities split into indoor, on a machine, against outdoor, stacked to a full hundred percent. The waterline climbs steadily: nearly two of every three sessions began indoors in the early years, barely one in six by the last. The habit moved outside."
+            note="Every year split into indoor sessions and outdoor ones, stacked to a hundred percent. Early on, nearly two in three started indoors on a machine. By last year that was down to about one in six. Little by little, the habit walked out the door."
             source="Activity Log"
             tableCaption="Indoor share of activities by year"
             columns={['Year', 'Indoor share']}
@@ -492,7 +492,7 @@ export default function Home() {
 
           <Figure
             title="Rarely a day off"
-            note={`Once a day has an activity, the next usually comes fast: four times in five, it is the very next day. Across seven years, ${pctActiveDays}% of all calendar days carry at least one activity, and gaps of three days or more happen less than once in ten.`}
+            note={`After an active day, the next one tends to follow straight away: four times in five it is the very next day. Over seven years, ${pctActiveDays}% of all calendar days carry something, and a gap of three days or more shows up less than once in ten.`}
             source="Activity Log"
             tableCaption="Days until the next active day"
             columns={['Gap to next active day', 'Share']}

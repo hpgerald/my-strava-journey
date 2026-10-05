@@ -65,7 +65,7 @@ export default function DoubleThousand({ activities }) {
               <text x={cx} y={y - barH / 2 - 4} textAnchor="middle" className={`dt2__yr${r.both ? ' dt2__yr--hot' : ''}`}>{r.y}</text>
               <text x={cx + r.run * u + 5} y={y + 3} className="dt2__val">{Math.round(r.run)}</text>
               <text x={cx - r.walk * u - 5} y={y + 3} textAnchor="end" className="dt2__val">{Math.round(r.walk)}</text>
-              {r.both && <text x={cx} y={y + barH / 2 + 11} textAnchor="middle" className="dt2__badge">both past 1,000 &mdash; the double thousand</text>}
+              {r.both && <text x={cx} y={y + barH / 2 + 11} textAnchor="middle" className="dt2__badge">both past 1,000: the double thousand</text>}
             </g>
           )
         })}

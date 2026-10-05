@@ -115,7 +115,7 @@ export default function YearInSport() {
       number="02"
       title="Year in Sport"
       subtitle="Pick a year. See the whole story."
-      lede="Seven years, one at a time. Choose a year and the page rebuilds itself around it: the headline totals, the shape of the months, how it moved, the days that never broke, the biggest efforts, and the one thing that made that year its own."
+      lede="Seven years, taken one at a time. Pick a year and the whole page rebuilds around it: the totals, the shape of its months, how it moved, how many days went unbroken, its biggest efforts, and the one thing that set it apart from the rest."
       prev={prev}
       next={next}
     >
@@ -154,7 +154,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="The year, month by month"
-            note={`Every activity placed in the month it happened. The busiest stretch of ${activeYear} stands tallest; empty months sit on the line.`}
+            note={`Each activity dropped into the month it happened. The busiest stretch of ${activeYear} is the tallest bar, and any month with nothing in it sits flat on the line.`}
             source="Activity Log"
             tableCaption={`Activities by month in ${activeYear}`}
             columns={['Month', 'Activities']}
@@ -168,7 +168,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="How the year moved"
-            note="Each kind of activity by how many times it happened. Walking and running carry most years; everything else is counted and folded in."
+            note="Each kind of activity, counted by how often it was done. Walking and running carry most years. Whatever else got logged is in here too, folded in below them."
             source="Activity Log"
             tableCaption={`Activities by type in ${activeYear}`}
             columns={['Type', 'Activities']}
@@ -182,7 +182,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="When the day got moving"
-            note={`Every ${activeYear} activity by the hour it started, around a 24-hour clock. The longer the spoke, the more sessions began then.`}
+            note={`Every ${activeYear} activity set on a 24-hour clock by the hour it began. The bulges are when the day actually got moving.`}
             source="Activity Log"
             tableCaption={`Activities by hour of day in ${activeYear}`}
             columns={['Hour', 'Activities']}
@@ -196,7 +196,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title={`Every day of ${activeYear}`}
-            note={`${fmtInt(s.activeDays)} days carried an activity. The longest unbroken run of the year reached ${s.streakLen} days${s.streakStartISO ? `, from ${fmtMonth(s.streakStartISO)} on` : ''}.`}
+            note={`${fmtInt(s.activeDays)} days that year carried an activity. The longest unbroken run of them reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
             source="Activity Log"
             tableCaption={`Consistency in ${activeYear}`}
             columns={['Measure', 'Value']}
@@ -230,7 +230,7 @@ export default function YearInSport() {
           <Reveal as="section" className="yis-sec">
             <Figure
               title={`Where ${activeYear} happened`}
-              note={`Located activities by country. ${s.countries.length} countries carried ${activeYear}, home and away.`}
+              note={`Where the year's activities landed, by country. ${activeYear} touched ${s.countries.length} countries, home and away.`}
               source="Strava GPS + point-in-polygon"
               tableCaption={`Located activities by country in ${activeYear}`}
               columns={['Country', 'Activities']}
@@ -250,7 +250,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="Against the other years"
-            note={`How ${activeYear} compares on activity count. The chosen year is in accent; the rest sit behind it.`}
+            note={`Where ${activeYear} sits against every other year for sheer activity count. It is the orange bar; the others are there for scale.`}
             source="Activity Log"
             tableCaption="Activities per year"
             columns={['Year', 'Activities']}

@@ -218,7 +218,7 @@ export default function Sports() {
         <Figure
           n="01"
           title="Distance against days"
-          note="Each sport off a shared centre: its share of every kilometre on the left, its share of every session on the right. The bars cross over. Running is a long left bar and a stub on the right; walking is the exact inverse, a fraction of the ground but the bulk of the days out."
+          note="Share of the kilometres on the left, share of the sessions on the right, both off a shared centre. The bars cross over. Running is a long bar on the left and a stub on the right. Walking is the mirror image, a sliver of the ground but most of the days out."
           source="Overview"
           tableCaption="Share of total distance and total activities by sport"
           columns={['Sport', 'Distance', 'Activities']}
@@ -251,7 +251,7 @@ export default function Sports() {
         <Figure
           n="02"
           title="How each sport behaves"
-          note="Every foot sport placed by its typical outing: how far it goes across the bottom, how much it climbs up the side, the bubble sized by how often it is logged. Running lands far out and flat on the floor. The trails and the hike float high on almost no distance. Walking is the busy dot in between."
+          note="A typical outing for each foot sport: how far it goes along the bottom, how much it climbs up the side, the bubble bigger the more often it happens. Running sits far out and low. The trails and the hike float high on almost no distance. Walking is the busy dot in the middle."
           source="Activity Log"
           tableCaption="Median distance, median climb and count by foot sport"
           columns={['Sport', 'Median km', 'Median climb', 'Logged']}

@@ -88,7 +88,7 @@ export default function Where() {
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>What ground shaped the training?</p>
         <Figure
           title="Flat at home, steep away"
-          note="Each region drawn as a hill: its height is how steep the ground is, metres climbed for every kilometre covered, and its width is how much training happened there. Home, on the left, is broad and low - Dodoma and Dar es Salaam carry most of the days over almost no vertical. The mountains stand on the right: Kilimanjaro, visited often enough to raise a real hill of its own, and the Uluguru slopes behind Morogoro, the sharpest ground of all and climbed only now and then."
+          note="Every region is a hill. Its height is how steep the ground there is, metres of climb for each kilometre covered, and its width is how much training it holds. Home sits broad and low on the left, where Dodoma and Dar es Salaam carry most of the days over almost no vertical. The mountains stand to the right. Kilimanjaro has been climbed often enough to raise a real hill of its own, and behind Morogoro the Uluguru slopes are the sharpest ground of the lot, reached only now and then."
           source="Strava GPS + Natural Earth admin-1"
           tableCaption="Each Tanzanian region: activities, distance, climb and steepness"
           columns={['Region', 'Activities', 'Distance km', 'Climb m', 'm per km']}
@@ -118,7 +118,7 @@ export default function Where() {
           </Figure>
           <Figure
             title="Tanzania, by region"
-            note="Regions shaded by activity count. Dodoma and Dar es Salaam log the most days, but the vertical is a different map: Kilimanjaro region alone holds barely a tenth of the activities and more than a third of all the metres climbed. Flat at home, steep away."
+            note="Shaded by how many activities started in each region. Dodoma and Dar es Salaam log the most days, but climb draws a different map entirely. Kilimanjaro region holds barely a tenth of the activities and more than a third of every metre gained. Flat at home, steep away."
             source="Strava GPS + Natural Earth admin-1"
             tableCaption="Activities by Tanzanian region"
             columns={['Region', 'Activities', 'Distance km']}

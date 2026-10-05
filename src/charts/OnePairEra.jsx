@@ -8,7 +8,7 @@ import { linScale, smoothLinePath } from './primitives.js'
 // last, km, kmMo, pace, trailPct, elev, retired, monthly:[{month, cum}], note }.
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const label = (iso) => { const d = new Date(iso + 'T00:00:00Z'); return `${MON[d.getUTCMonth()]} ${d.getUTCFullYear()}` }
-const paceStr = (p) => p > 0 ? `${Math.floor(p)}:${String(Math.round((p - Math.floor(p)) * 60)).padStart(2, '0')}` : '—'
+const paceStr = (p) => p > 0 ? `${Math.floor(p)}:${String(Math.round((p - Math.floor(p)) * 60)).padStart(2, '0')}` : 'n/a'
 
 export default function OnePairEra({ pair }) {
   const [ref, width] = useWidth(380)

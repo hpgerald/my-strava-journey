@@ -251,7 +251,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="The shape of the year"
-          note="Every activity placed on a twelve-month wheel, so the training year reads as a silhouette rather than a row of bars. The cool dry months around midyear bulge out; the short rains pull it in. Pick a single year to see how its rhythm compares."
+          note="The whole year wrapped onto a twelve-month wheel, so its shape reads at a glance. The cool dry months around midyear bulge out, and the short rains pull it back in. Pick a single year to see how its rhythm compares."
           source="Monthly Trends"
           tableCaption="Activities by calendar month, all years combined"
           columns={['Month', 'Activities']}
@@ -287,7 +287,7 @@ export default function Rhythm() {
         <div className="grid grid--2">
           <Figure
             title="Weekday × time of day"
-            note="Where the activities fall across the week. The single busiest slot is picked out in orange."
+            note="How the week fills up, hour by hour and day by day. The single busiest slot is the one picked out in orange."
             source="Activity Log"
             tableCaption="Activity count by weekday and time of day"
             columns={matrixCols}

@@ -271,7 +271,7 @@ export default function Goals() {
         <Figure
           n="02"
           title="Every year against the same three rings"
-          note="One glyph per year, the same targets each time. Scan a single ring colour down the years to see when a goal was cleared and when it fell short. Running cleared the bar early and often; walking and the big elevation number are the harder climbs."
+          note="One set of rings per year, the same three targets each time. Follow a single colour down the years and you can see when a goal was cleared and when it fell short. Running got there early and often. Walking and that big elevation number are the harder climbs."
           source="Activity Log"
           tableCaption="Percent of each target reached, by year"
           columns={['Year', 'Walk', 'All runs', 'Foot elevation', 'Rings closed']}

@@ -6,11 +6,16 @@
    motion (see src/components/Reveal.jsx).
    ========================================================================= */
 
-/* ---- scroll reveal ---- */
+/* ---- scroll reveal (Year in Sport's own Reveal component) ---- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
 .reveal.is-in { opacity: 1; transform: none; }
+
+/* ---- site-wide scroll reveal (applied by Layout to figures & section heads) --- */
+.areveal { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+.areveal.is-in { opacity: 1; transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1 !important; transform: none !important; }
+  .reveal, .areveal { opacity: 1 !important; transform: none !important; }
 }
 
 /* ---- year picker (sticky) ---- */
@@ -45,7 +50,7 @@
 .yis-hero__theme { font-size: var(--fs-lg); color: var(--ink); margin: var(--sp-2) 0 var(--sp-6); font-weight: 600; }
 .yis-hero__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sp-5) var(--sp-4); }
 .yis-hero__stat { display: flex; flex-direction: column; gap: 2px; border-top: 2px solid var(--ink); padding-top: var(--sp-2); }
-.yis-hero__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--ink); font-variant-numeric: tabular-nums; }
+.yis-hero__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--accent); font-variant-numeric: tabular-nums; }
 .yis-hero__unit { font-size: 0.5em; font-weight: 700; color: var(--fg-muted); margin-left: 0.2em; }
 .yis-hero__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
 
@@ -138,25 +143,23 @@
 .yis-cta__btn:hover { background: var(--ink); color: var(--paper); }
 .yis-cta__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* ---- Home: seven years, seven characters ---- */
-.years { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+/* ---- Home: seven years, seven characters (three columns) ---- */
+.years { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-3); }
+@media (min-width: 40rem) { .years { grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); } }
+@media (min-width: 64rem) { .years { grid-template-columns: repeat(3, 1fr); } }
 .years > li { margin: 0; }
 .yearrow {
-  display: grid; grid-template-columns: 4.2rem 1fr auto; gap: var(--sp-4); align-items: baseline;
-  padding: var(--sp-4) var(--sp-2); border-bottom: 1px solid var(--rule-faint);
-  text-decoration: none; color: inherit;
-  transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+  position: relative; height: 100%;
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto;
+  column-gap: var(--sp-3); row-gap: var(--sp-2); align-content: start;
+  padding: var(--sp-4); border: 1px solid var(--rule-faint); border-top: 2px solid var(--ink); border-radius: 4px;
+  text-decoration: none; color: inherit; background: var(--paper);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
-.yearrow:hover, .yearrow:focus-visible { background: var(--grey-03); padding-left: var(--sp-3); outline: none; }
-.yearrow:focus-visible { box-shadow: inset 2px 0 0 var(--accent); }
-.yearrow__year { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); font-variant-numeric: tabular-nums; }
-.yearrow__main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.yearrow__label { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); color: var(--ink); letter-spacing: var(--tr-snug); line-height: 1.1; }
-.yearrow__line { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; max-width: 44rem; }
-.yearrow__arrow { align-self: center; color: var(--grey-35); transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
-.yearrow:hover .yearrow__year, .yearrow:focus-visible .yearrow__year { color: var(--accent); }
-.yearrow:hover .yearrow__arrow, .yearrow:focus-visible .yearrow__arrow { color: var(--accent); transform: translateX(4px); }
-@media (max-width: 40rem) {
-  .yearrow { grid-template-columns: 3.4rem 1fr; }
-  .yearrow__arrow { display: none; }
-}
+.yearrow:hover, .yearrow:focus-visible { border-top-color: var(--accent); background: var(--grey-03); outline: none; transform: translateY(-2px); }
+.yearrow:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.yearrow__year { grid-row: 1; grid-column: 1; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 0.9; color: var(--accent); letter-spacing: var(--tr-tight); font-variant-numeric: tabular-nums; }
+.yearrow__label { grid-row: 1; grid-column: 2; align-self: center; padding-right: 1.4rem; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); color: var(--ink); letter-spacing: var(--tr-snug); line-height: 1.05; }
+.yearrow__line { grid-row: 2; grid-column: 1 / -1; font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; margin: 0; }
+.yearrow__arrow { position: absolute; top: var(--sp-3); right: var(--sp-3); color: var(--grey-25); transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+.yearrow:hover .yearrow__arrow, .yearrow:focus-visible .yearrow__arrow { color: var(--accent); transform: translateX(3px); }

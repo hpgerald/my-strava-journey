@@ -239,7 +239,7 @@ export default function Records() {
         <Figure
           n="02"
           title="Total climb, on foot, as a range of Everests"
-          note="Every hill, trail and staircase across the walking, running and hiking, drawn as the mountain range it adds up to: one Everest-height summit for each Everest climbed, with Kilimanjaro marked for scale. The final summit is only the leftover metres."
+          note="All the climbing from the walks, runs and hikes, drawn as the mountain range it adds up to. There is one Everest-height summit for every Everest's worth of ascent, with Kilimanjaro marked for scale. The last summit is just the leftover metres."
           source="Activity Log"
           tableCaption="Total foot elevation gain against Everest and Kilimanjaro"
           columns={['Measure', 'Value']}
