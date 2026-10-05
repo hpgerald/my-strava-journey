@@ -81,11 +81,9 @@ sport_plain={
  "Walk":"Walking is the single biggest source of distance now.",
  "Run":"Running distance climbed year on year.",
  "TrailRun":"No trail running in 2019. A staple now.",
- "GravelRide":"Gravel riding spiked mid-way, then eased off.",
- "Ride":"Road riding was an early focus. It faded as the work moved to feet.",
 }
-sport_pretty={"Walk":"Walk","Run":"Run","TrailRun":"Trail Run","GravelRide":"Gravel Ride","Ride":"Ride"}
-for sp in ["Walk","Run","TrailRun","GravelRide","Ride"]:
+sport_pretty={"Walk":"Walk","Run":"Run","TrailRun":"Trail Run"}
+for sp in ["Walk","Run","TrailRun"]:
     comp.append(cmp_row(f"{sport_pretty[sp]} distance in the year","By sport","distance","km",
         sport_dist(y0,sp),sport_dist(y1,sp),sport_plain.get(sp,""),"Yearly Trends"))
 write("comparisons.csv",
@@ -153,9 +151,8 @@ gl=[
  ["PR","Personal Record: a best-ever time over a segment or standard distance."],
  ["Achievement","A Strava badge earned on a segment (for example a top-10 or a personal best)."],
  ["Elevation gain","Total metres climbed over an activity, summed over every uphill section."],
- ["Cadence","Steps per minute when running, or pedal revolutions per minute when cycling."],
+ ["Cadence","Steps per minute when running."],
  ["Moving time","Time spent actually moving, with auto-pauses removed. Elapsed time includes stops."],
- ["FTP","Functional Threshold Power: the highest power in watts a cyclist can hold for about an hour."],
  ["Heart-rate zones","Five bands from easy (Z1) to maximal (Z5), based on max heart rate, used to gauge intensity."],
  ["Pace zones","Running speed bands in minutes per kilometre, from easy to fastest."],
  ["Trainer","An indoor session (treadmill or stationary trainer) flagged by Strava; these carry no GPS."],

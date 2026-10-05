@@ -8,14 +8,14 @@ import { useWidth } from './useWidth.js'
 // monthly_totals [{ month:'YYYY-MM', activities }].
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const FACT = {
-  2019: 'The first upload is a 31 km bike ride in August. Twenty-seven activities, then it goes quiet.',
+  2019: 'The log opens in August with a short run. Twenty-seven activities that year, then it goes quiet.',
   2020: 'A near-dormant year. Thirty-five activities, most of them in one short summer run.',
   2021: 'July flips the switch: two activities in June become fifty-eight in July, and it never fully stops again.',
   2022: 'The biggest year on record, 443 activities and close to 2,900 km on foot.',
   2023: 'March holds the 100 km stage race, four nights back to back.',
   2024: 'Quieter by distance, but not one calendar month goes unlogged.',
   2025: 'The climb back. Distance rises again, week after week.',
-  2026: 'Still going, already near three hundred activities with months to spare.',
+  2026: 'Still going, already past three hundred activities with months to spare.',
 }
 
 function seg(cx, cy, r0, r1, a0, a1) {

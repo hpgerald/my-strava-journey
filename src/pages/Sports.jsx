@@ -52,15 +52,17 @@ export default function Sports() {
     .filter((s) => toNum(s.distance_km) > 0)
     .sort((a, b) => toNum(b.distance_km) - toNum(a.distance_km))
 
-  // mirrored split: top sports by distance, each with its distance and its
+  // mirrored split: the foot sports by distance, each with its distance and its
   // activity count, so the inversion (running long, walking frequent) shows.
+  // Everything else is folded into one bucket, counted but not broken out.
+  const FOOT_SET = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
   const splitData = (() => {
-    const top = distSorted.slice(0, 6)
-    const rest = distSorted.slice(6)
-    const rows = top.map((s) => ({ label: prettySport(s.sport), dist: toNum(s.distance_km), acts: toNum(s.activities) }))
+    const foot = distSorted.filter((s) => FOOT_SET.has(s.sport))
+    const rest = distSorted.filter((s) => !FOOT_SET.has(s.sport))
+    const rows = foot.map((s) => ({ label: prettySport(s.sport), dist: toNum(s.distance_km), acts: toNum(s.activities) }))
     if (rest.length) {
       rows.push({
-        label: `Other (${rest.length})`,
+        label: 'Everything else',
         dist: rest.reduce((a, s) => a + toNum(s.distance_km), 0),
         acts: rest.reduce((a, s) => a + toNum(s.activities), 0),
       })

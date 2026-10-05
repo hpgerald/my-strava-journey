@@ -34,9 +34,10 @@ export default function DotGrid({ items, years }) {
   const r = 3
   const W = Math.max(w, 1)
   const narrow = W < 520
-  const gutter = narrow ? 40 : 62 // left labels
-  const padR = 4
-  const bandGap = narrow ? 9 : 11
+  const gutter = narrow ? 48 : 66 // left labels (year + count)
+  const padR = narrow ? 6 : 14 // keep the last column clear of the edge
+  const bandGap = 10
+  const LABEL_H = 26 // min band height so the year + count label never collides
   const plotW = Math.max(cell * 8, W - gutter - padR)
   const cols = Math.max(8, Math.floor(plotW / cell))
 
@@ -55,14 +56,16 @@ export default function DotGrid({ items, years }) {
   for (const y of years) {
     const list = byYear[y]
     const nRows = Math.max(1, Math.ceil(list.length / cols))
-    const bandH = nRows * cell
+    const contentH = nRows * cell
+    const bandH = Math.max(contentH, LABEL_H)
+    const dotTop = yCur + (bandH - contentH) / 2 // centre a thin year's dots in its slot
     const color = shade(y)
     list.forEach((it, i) => {
       const c = i % cols
       const rw = Math.floor(i / cols)
-      placed.push({ cx: gutter + c * cell + cell / 2, cy: yCur + rw * cell + cell / 2, color, item: it })
+      placed.push({ cx: gutter + c * cell + cell / 2, cy: dotTop + rw * cell + cell / 2, color, item: it })
     })
-    bands.push({ y, color, top: yCur, mid: yCur + bandH / 2, count: list.length })
+    bands.push({ y, color, mid: yCur + bandH / 2, count: list.length })
     yCur += bandH + bandGap
   }
   const height = yCur - bandGap + r
@@ -98,11 +101,11 @@ export default function DotGrid({ items, years }) {
         onMouseMove={onMove}
         onMouseLeave={() => setHi(null)}
       >
-        {/* year labels down the left edge */}
+        {/* year labels down the left edge, year over count, centred on the band */}
         {bands.map((b) => (
           <g key={b.y}>
-            <text x={gutter - 12} y={b.mid} textAnchor="end" dominantBaseline="middle" className="dotgrid__ylbl">{b.y}</text>
-            <text x={gutter - 12} y={b.mid + 12} textAnchor="end" dominantBaseline="middle" className="dotgrid__ycount">{b.count}</text>
+            <text x={gutter - 14} y={b.mid - 5} textAnchor="end" dominantBaseline="middle" className="dotgrid__ylbl">{b.y}</text>
+            <text x={gutter - 14} y={b.mid + 9} textAnchor="end" dominantBaseline="middle" className="dotgrid__ycount">{b.count.toLocaleString()}</text>
           </g>
         ))}
         {placed.map((p, i) => (
@@ -121,10 +124,17 @@ export default function DotGrid({ items, years }) {
         </div>
       )}
 
-      <div className="dotgrid__key">
-        <span className="dotgrid__keylbl">one dot = one activity · older</span>
-        <span className="dotgrid__ramp" aria-hidden="true" />
-        <span className="dotgrid__keylbl">newer</span>
+      <div className="dotgrid__legend">
+        <span className="dotgrid__legkey">
+          <span className="dotgrid__legdot" aria-hidden="true" />
+          one dot, one activity
+        </span>
+        <span className="dotgrid__legkey">
+          colour by year
+          <span className="dotgrid__ramplbl">{y0}</span>
+          <span className="dotgrid__ramp" aria-hidden="true" />
+          <span className="dotgrid__ramplbl">{y1}</span>
+        </span>
       </div>
     </div>
   )

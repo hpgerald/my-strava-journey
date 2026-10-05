@@ -98,7 +98,7 @@ export default function Numbers() {
         ) : (
           <Figure
             title="Then against now, indexed"
-            note="Every metric starts from its 2019 baseline on the left and fans to its 2026 multiple on the right, on a log scale. Orange rises, grey falls. Almost everything multiplied many times over; only ride distance and the effort each session costs went the other way."
+            note="Every metric starts from its 2019 baseline on the left and fans to its 2026 multiple on the right, on a log scale. Orange rises, grey falls. Almost everything multiplied several times over; the effort each session costs is the one line that came down."
             source="Yearly Trends + Activity Log"
             tableCaption="2019 baseline versus 2026 for each metric"
             columns={['Metric', '2019', '2026', 'Change']}

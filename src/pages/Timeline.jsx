@@ -4,12 +4,14 @@ import Figure from '../charts/Figure.jsx'
 import PulseYears from '../charts/PulseYears.jsx'
 import LostYearThread from '../charts/LostYearThread.jsx'
 import HabitAtlas from '../charts/HabitAtlas.jsx'
-import { useTable } from '../context/DataContext.jsx'
+import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 
 export default function Timeline() {
   const rows = useTable('timeline')
   const monthly = useTable('monthly_totals')
+  const streaks = useKeyed('streaks', 'metric', 'value')
+  const dayStreak = parseInt(streaks['Longest consecutive-day streak'], 10) || 273
   const { prev, next } = useSectionPaging('/timeline')
 
   // chronological, earliest first
@@ -21,7 +23,7 @@ export default function Timeline() {
       number="08"
       title="Timeline"
       subtitle="In order. First upload to now."
-      lede="Seven years in order, from a single noon bike ride to a 273-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced."
+      lede={`Seven years in order, from the first run in August 2019 to a ${dayStreak}-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced.`}
       prev={prev}
       next={next}
     >
@@ -61,8 +63,8 @@ export default function Timeline() {
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <Figure
             n="03"
-            title="The lost year, in three beats"
-            note="Zoom in on the two years around the switch and the whole arc is there. The biggest single day ever recorded, a 240 km ride across the border into Kenya, then 353 days with nothing logged, then July 2021 and a return that never stopped. The largest effort on record sits right before the longest silence."
+            title="The lost year"
+            note="Zoom in on the two years around the switch. A scatter of activity through the first half of 2020, then the log falls silent for 353 straight days, then July 2021 and a return that did not stop. The longest silence in the whole record sits right before the habit that replaced it."
             source="Activity Log + Monthly Trends"
             tableCaption="Activities per month through the lost year"
             columns={['Month', 'Activities']}

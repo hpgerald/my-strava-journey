@@ -34,7 +34,7 @@ const GROUPS = [
     title: 'Effort & zones',
     items: [
       ['hr_zones', 'Heart-rate zone boundaries.'],
-      ['power_zones', 'Cycling power zone boundaries.'],
+      ['power_zones', 'Power zone boundaries.'],
       ['pace_zones', 'Running pace zone boundaries.'],
       ['relative_effort_by_year', 'Relative effort and cadence per year.'],
     ],
@@ -53,7 +53,7 @@ const GROUPS = [
       ['time_of_day_patterns', 'Activity by time of day.'],
       ['indoor_outdoor', 'Indoor/trainer versus outdoor.'],
       ['streaks', 'Longest and current active streaks.'],
-      ['gear', 'Shoes and bikes.'],
+      ['gear', 'Shoes, with lifetime and in-log distance.'],
       ['fun_journey', 'Distance as marathons, Everests and more.'],
     ],
   },

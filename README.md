@@ -4,7 +4,7 @@ Seven years of Strava activity, turned into a website anyone can read.
 
 **Live site:** https://hpgerald.github.io/my-strava-journey/
 
-This is a static, data-driven explainer built from a personal Strava export: **2,031 activities** logged between August 2019 and September 2026, across running, walking, trail running, hiking, cycling and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); rides and other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
+This is a static, data-driven explainer built from a personal Strava export: **2,039 activities** logged between August 2019 and October 2026, across running, walking, trail running, hiking and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); all other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
 
 ---
 
@@ -31,13 +31,13 @@ At the last refresh the record covered:
 
 | Metric | Value |
 | --- | --- |
-| Activities | 2,031 |
-| Distance on foot | 13,094 km |
-| Moving time on foot | 2,082 hours |
-| Elevation gained on foot | 84,152 m (about 9.5 times Everest) |
-| Kudos received | 71,720 |
-| Longest active streak | 273 days, still going |
-| Longest week streak | 158 weeks (3 years), still going |
+| Activities | 2,039 |
+| Distance on foot | 13,125 km |
+| Moving time on foot | 2,089 hours |
+| Elevation gained on foot | 84,235 m (about 9.5 times Everest) |
+| Kudos received | 71,905 |
+| Longest active streak | 280 days, still going |
+| Longest week streak | 159 weeks (3 years), still going |
 | Countries | 7 |
 | Tanzanian regions | 17 |
 | Coverage | 2019-08-17 to 2026-09-27 |

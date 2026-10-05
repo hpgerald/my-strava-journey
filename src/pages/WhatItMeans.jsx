@@ -84,6 +84,15 @@ export default function WhatItMeans() {
   const spanDays = dates.length ? Math.round((Date.parse(dates[dates.length - 1]) - Date.parse(dates[0])) / 86400000) + 1 : 1
   const activePct = Math.round((100 * activeDays) / spanDays)
   const streak = toNum(life('longest streak'))
+  // current week streak: consecutive ISO weeks with at least one activity, ending now
+  const weekStreak = (() => {
+    const wk = new Set()
+    for (const d of dates) { const dt = new Date(`${d}T00:00:00Z`); dt.setUTCDate(dt.getUTCDate() - ((dt.getUTCDay() + 6) % 7)); wk.add(dt.toISOString().slice(0, 10)) }
+    if (!wk.size) return 158
+    let cur = [...wk].sort().pop(); let n = 0
+    while (wk.has(cur)) { n += 1; const p = new Date(`${cur}T00:00:00Z`); p.setUTCDate(p.getUTCDate() - 7); cur = p.toISOString().slice(0, 10) }
+    return n
+  })()
 
   return (
     <DetailFrame
@@ -103,7 +112,7 @@ export default function WhatItMeans() {
               In 2019 the log held {acts2019} activities and no particular plan. The count reached
               {' '}{fmtInt(totalActs)} slowly: from July 2021 the habit stopped being optional, and the
               total looked after itself. The longest unbroken run is {fmtInt(streak)} days, inside a
-              158-week streak, and {activePct}% of every calendar day carries something, most of them
+              {' '}{weekStreak}-week streak, and {activePct}% of every calendar day carries something, most of them
               short evening walks logged just to keep the chain going.
             </p>
           </div>

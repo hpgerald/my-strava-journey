@@ -910,36 +910,25 @@ text.chart-panel-title {
 .heatstrip__lbl { font-size: var(--fs-2xs); color: var(--fg-faint); }
 
 /* ---- Dot grid: every activity as one unit, banded by year (Home) ------- */
-.dotgrid__ylbl { font-family: var(--font-mono); font-size: 12px; font-weight: 700; fill: var(--ink); }
-.dotgrid__ycount { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
-.dotgrid__key {
-  display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
-  margin-top: var(--sp-4);
+.dotgrid__ylbl { font-family: var(--font-mono); font-size: 13px; font-weight: 700; fill: var(--ink); }
+.dotgrid__ycount { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-muted); }
+.dotgrid__legend {
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-3) var(--sp-6);
+  margin-top: var(--sp-5); padding-top: var(--sp-4);
+  border-top: 1px solid var(--rule-faint);
   font-family: var(--font-mono); font-size: var(--fs-2xs);
   letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted);
 }
+.dotgrid__legkey { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.dotgrid__legdot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.dotgrid__ramplbl { color: var(--fg-muted); }
 .dotgrid__ramp {
-  flex: 0 0 auto; width: 120px; height: 10px; border-radius: 5px;
+  flex: 0 0 auto; width: 96px; height: 9px; border-radius: 5px;
   background: linear-gradient(90deg, rgb(255, 178, 140), rgb(252, 76, 2), rgb(150, 42, 0));
 }
-/* the intro note runs the full width of the plot instead of a narrow measure,
-   so it never looks cut off beside the wide dot field */
-.dotfig .fig__note { max-width: none; }
-.dotfig__foot {
-  margin-top: var(--sp-5); padding-top: var(--sp-4);
-  border-top: 1px solid var(--rule-faint);
-  font-size: var(--fs-sm);
-}
-.dotfig__key { list-style: none; margin: 0; padding: 0; color: var(--fg-muted);
-  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); }
-.dotfig__key li { position: relative; padding-left: 1.1em; }
-.dotfig__key li::before {
-  content: ""; position: absolute; left: 0; top: 0.5em;
-  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-}
-@media (min-width: 48rem) {
-  .dotfig .fig__note { column-count: 2; column-gap: var(--sp-8); }
-}
+/* the signature chart's lead reads as one clean paragraph at a comfortable
+   measure, a touch larger than a supporting note */
+.dotfig .fig__note { font-size: var(--fs-base); line-height: 1.6; color: var(--ink); }
 
 /* ---- Animated hero: headline left, key figures stacked right -----------
    Sized and centred to sit inside a single viewport (no scroll to see it). */

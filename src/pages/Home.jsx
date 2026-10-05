@@ -19,6 +19,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, toNum } from '../lib/format.js'
+import { prettySport } from '../lib/slug.js'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -202,9 +203,17 @@ export default function Home() {
   // geography and sport tables (from their source CSVs)
   const geoLocated = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS')
   const geoRows = geoLocated.map((c) => [c.country, fmtInt(c.activities)])
-  const sportRows = sportBreakdown
-    .filter((s) => s.sport)
-    .map((s) => [s.sport, fmtInt(s.activities)])
+  // group by display name so the hidden data table matches the chart and never
+  // names the quiet sports (they fold into one "Other activity" row)
+  const sportRows = (() => {
+    const by = new Map()
+    for (const s of sportBreakdown) {
+      if (!s.sport) continue
+      const label = prettySport(s.sport)
+      by.set(label, (by.get(label) || 0) + (toNum(s.activities) || 0))
+    }
+    return [...by.entries()].sort((a, b) => b[1] - a[1]).map(([label, n]) => [label, fmtInt(n)])
+  })()
 
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
@@ -239,7 +248,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              It started at noon on 17 August 2019 with a 31 km bike ride, then went quiet for two
+              It started with a 5 km run in August 2019, then went quiet for nearly two
               years. In July 2021 the habit switched on and never switched off. Seven years of it,
               mostly on foot, mostly around Tanzania, reaching {countryCount || 'seven'} countries and
               logged on more than half of every day since.
@@ -273,7 +282,7 @@ export default function Home() {
         <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
           <Figure
             title="Every activity, one dot"
-            note={`For two years it was a hobby: 27 activities in 2019, 35 in 2020, each barely a row. Then July 2021 turned it on, and every year since fills three or four rows of its own. One dot is one activity, oldest at the top, this year at the foot; point at any for its date.`}
+            note={`Read the bands from the top and the habit arrives in stages. For two years it is a trickle, 27 outings in 2019 and 35 in 2020, two or three a month. The second half of 2021 breaks it open to 328, and 2022 is the busiest year on record at 443. After that the count stops climbing and levels off, close to 300 a year, around six a week, and it has held there for four straight years. 2026 has already passed 300 with the year still unfinished. The tall years built the habit; the steady bands beneath show it holding.`}
             source="Activity Log"
             tableCaption="Activities by year"
             columns={['Year', 'Activities']}
@@ -281,15 +290,6 @@ export default function Home() {
           >
             <DotGrid items={items} years={gridYears} />
           </Figure>
-          <div className="dotfig__foot">
-            <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>How to read it</p>
-            <ul className="dotfig__key">
-              <li>One dot, one activity</li>
-              <li>Bands are years, oldest on top</li>
-              <li>A deeper band is a busier year</li>
-              <li>Colour deepens over time</li>
-            </ul>
-          </div>
         </div>
       </Container>
 
@@ -399,7 +399,7 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">The shape of it</p>
-                <p>Set walking and running aside and the other thirteen sports together make up barely a sixth of every outing. The range is real, from gravel rides to a single afternoon of sailing, yet the centre of gravity never drifts far from two feet on the ground.</p>
+                <p>Set walking and running aside and the other thirteen sports together make up barely a sixth of every outing. The range is real, from a single round of golf to an afternoon on the water, yet the centre of gravity never drifts far from two feet on the ground.</p>
               </>
             )}
           >

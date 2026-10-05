@@ -43,8 +43,8 @@ export default function About() {
           <div className="stack">
             <p>
               It covers {meta.total_activities || '2,000'} activities from {meta.coverage_start || '2019'}{' '}
-              to {meta.coverage_end || '2026'}. Running, walking, trail running, cycling, hiking, and a
-              few odd others. Mostly Tanzania, with the occasional trip abroad. It refreshes each week
+              to {meta.coverage_end || '2026'}. Running, walking, trail running, hiking, and a
+              handful of other activities. Mostly Tanzania, with the occasional trip abroad. It refreshes each week
               as new activities land.
             </p>
 
@@ -62,9 +62,9 @@ export default function About() {
             <p>
               Figures are shown as logged on Strava. One deliberate choice runs through the whole site:
               distance and elevation count foot sports only, running, walking, trail running and hiking.
-              Rides and everything else still count as activities and appear in every other metric, but
-              their kilometres and vertical are left out of the distance and climb totals, which keeps
-              the focus on training on foot. The country and region breakdowns are derived from each
+              Everything else still counts as an activity and appears in every other metric, but
+              the kilometres and vertical from those sports are left out of the distance and climb totals,
+              which keeps the focus on training on foot. The country and region breakdowns are derived from each
               activity's GPS start point and are approximate near international borders. The full method,
               confidence levels and known gaps are documented on the{' '}
               <Link to="/data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>

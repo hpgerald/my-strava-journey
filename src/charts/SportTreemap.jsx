@@ -9,8 +9,10 @@ import { useWidth } from './useWidth.js'
 // on two feet.
 // props: rows (sport_breakdown table: { sport, activities })
 const FOOT = new Set(['Walk', 'Run', 'TrailRun', 'Hike'])
-const NICE = { TrailRun: 'Trail run', GravelRide: 'Gravel ride', EBikeRide: 'E-bike', PhysicalTherapy: 'Physio', WeightTraining: 'Weights', MountainBikeRide: 'MTB' }
-const nm = (s) => NICE[s] || s
+// counted in every total, but left unnamed on the chart
+const QUIET = new Set(['Ride', 'GravelRide', 'EBikeRide', 'MountainBikeRide'])
+const NICE = { TrailRun: 'Trail run', PhysicalTherapy: 'Physio', WeightTraining: 'Weights' }
+const nm = (s) => (QUIET.has(s) ? 'Other' : NICE[s] || s)
 
 function squarify(items, x, y, w, h) {
   const result = []
@@ -78,8 +80,9 @@ export default function SportTreemap({ rows }) {
           const base = foot
             ? (hover === i ? 'var(--accent)' : 'color-mix(in srgb, var(--accent) 34%, var(--paper))')
             : (hover === i ? 'var(--grey-45)' : 'var(--grey-15)')
-          const showName = t.w >= 58 && t.h >= 34
-          const showN = t.w >= 40 && t.h >= 22
+          const quiet = QUIET.has(t.sport)
+          const showName = !quiet && t.w >= 58 && t.h >= 34
+          const showN = !quiet && t.w >= 40 && t.h >= 22
           const dark = foot && hover === i
           return (
             <g key={t.sport} opacity={on ? 1 : 0.55} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
@@ -97,7 +100,7 @@ export default function SportTreemap({ rows }) {
       </svg>
       <div className="tm__legend chart-legend">
         <span><i className="chart-swatch" style={{ background: 'color-mix(in srgb, var(--accent) 34%, var(--paper))' }} /> on foot</span>
-        <span><i className="chart-swatch" style={{ background: 'var(--grey-15)' }} /> wheels, water &amp; gym</span>
+        <span><i className="chart-swatch" style={{ background: 'var(--grey-15)' }} /> everything else</span>
       </div>
       {hover != null && tiles[hover] && (
         <div className="chart-tip" style={{ left: Math.min(Math.max(tiles[hover].x + tiles[hover].w / 2 - 60, 8), W - 150), top: Math.max(4, tiles[hover].y + 6) }}>

@@ -170,7 +170,7 @@ export default function Rhythm() {
       number="06"
       title="Rhythm"
       subtitle="When. And how hard."
-      lede="The training runs like a metronome. More than half of all calendar days carry an activity, and when one day is active the next usually is too. This is when the work happens, how hard it has settled, and the two streaks, 273 days and 158 weeks, both still alive."
+      lede={`The training runs like a metronome. More than half of all calendar days carry an activity, and when one day is active the next usually is too. This is when the work happens, how hard it has settled, and the two streaks, ${streakLen} and ${weekStreakLen} weeks, both still alive.`}
       prev={prev}
       next={next}
     >

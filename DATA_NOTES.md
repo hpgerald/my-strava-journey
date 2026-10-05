@@ -5,7 +5,10 @@ The CSVs are the single source of truth for the site. No figure was invented; wh
 value was unavailable it was left blank and logged here.
 
 Generated for Phase 1 of the "my-strava-journey" build.
-Coverage: 2019-08-17 through 2026-08-24 (1,996 activities). Workbook last refreshed 2026-08-25.
+Coverage: 2019-08-17 through 2026-10-04 (2,039 activities). Last refreshed 2026-10-05.
+Figures below from the original Phase-1 build are retained for provenance; current totals
+come from the weekly rebuild (`rebuild_from_raw.py` → `apply_foot_only.py` →
+`build_derived.py` → `sanitize_public_data.py` → `validate.py`).
 
 ---
 

@@ -1,9 +1,9 @@
 import { useWidth } from './useWidth.js'
 import { linScale } from './primitives.js'
 
-// The lost year, told in three beats on one thread: the biggest single day ever
-// (a 240 km ride into Kenya), then a 353-day flatline of silence, then the July
-// 2021 ignition. rows: monthly_totals [{month, activities}].
+// The lost year on one thread: a scatter of activity through early 2020, then the
+// log goes quiet, a 353-day flatline of silence, then the July 2021 ignition.
+// rows: monthly_totals [{month, activities}].
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const mlabel = (k) => `${MON[Number(k.slice(5, 7)) - 1]} ${k.slice(0, 4)}`
 
@@ -42,7 +42,7 @@ export default function LostYearThread({ rows, spikeMonth = '2020-07', igniteMon
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="The biggest day, then a 353-day silence, then the July 2021 ignition."
+        aria-label="A quiet first half of 2020, then a 353-day silence, then the July 2021 ignition."
         style={{ display: 'block' }}
       >
         {/* baseline */}
@@ -72,12 +72,12 @@ export default function LostYearThread({ rows, spikeMonth = '2020-07', igniteMon
           <text key={'y' + d.key} x={sx(i)} y={H - 10} textAnchor="middle" className="chart-tick">{d.key.slice(0, 4)}</text>
         ) : null))}
 
-        {/* beat 1: the spike */}
+        {/* beat 1: where the log goes quiet */}
         {si >= 0 && (
           <g>
             <line x1={sx(si)} y1={base} x2={sx(si)} y2={pad.t - 6} className="lyt__mark lyt__mark--spike" />
             <circle cx={sx(si)} cy={pad.t - 6} r="4" fill="var(--ink)" />
-            <text x={sx(si)} y={pad.t - 14} textAnchor="middle" className="lyt__spikelbl">240 km into Kenya</text>
+            <text x={sx(si)} y={pad.t - 14} textAnchor="middle" className="lyt__spikelbl">the last entry</text>
             <text x={sx(si)} y={base + 18} textAnchor="middle" className="lyt__foot">{mlabel(spikeMonth)}</text>
           </g>
         )}
