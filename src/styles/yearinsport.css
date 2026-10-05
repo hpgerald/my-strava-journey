@@ -1,0 +1,162 @@
+/* =========================================================================
+   Year in Sport (chapter 02): an animated, per-year scroll report.
+   Motion is opt-in: every entrance is a transform/opacity transition that the
+   reduced-motion safety net in tokens.css neutralises, and the .reveal / .is-in
+   logic resolves to the visible, full-value state immediately under reduced
+   motion (see src/components/Reveal.jsx).
+   ========================================================================= */
+
+/* ---- scroll reveal ---- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---- year picker (sticky) ---- */
+.yis-picker {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; gap: var(--sp-2); flex-wrap: nowrap; overflow-x: auto;
+  padding: var(--sp-3) 0; margin-top: var(--sp-5);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule-faint);
+  scrollbar-width: thin;
+}
+.yis-picker__yr {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: var(--fs-base);
+  padding: 0.35em 0.8em; border: 1px solid var(--rule-faint); border-radius: 999px;
+  background: var(--paper); color: var(--fg-muted);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.yis-picker__yr:hover { color: var(--ink); border-color: var(--grey-35); }
+.yis-picker__yr.is-on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.yis-picker__yr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- hero ---- */
+.yis-report { padding-top: var(--sp-6); }
+.yis-hero { padding: var(--sp-6) 0 var(--sp-7); border-bottom: 1px solid var(--rule-faint); }
+.yis-hero__kicker { color: var(--accent-ink); }
+.yis-hero__year {
+  font-size: var(--fs-4xl); line-height: 0.9; letter-spacing: var(--tr-mega);
+  margin: var(--sp-2) 0 0;
+}
+.yis-hero__theme { font-size: var(--fs-lg); color: var(--ink); margin: var(--sp-2) 0 var(--sp-6); font-weight: 600; }
+.yis-hero__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sp-5) var(--sp-4); }
+.yis-hero__stat { display: flex; flex-direction: column; gap: 2px; border-top: 2px solid var(--ink); padding-top: var(--sp-2); }
+.yis-hero__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--ink); font-variant-numeric: tabular-nums; }
+.yis-hero__unit { font-size: 0.5em; font-weight: 700; color: var(--fg-muted); margin-left: 0.2em; }
+.yis-hero__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+
+/* ---- sections ---- */
+.yis-sec { padding-top: var(--sp-7); }
+.yis-sec--moment { padding-top: var(--sp-8); }
+
+/* ---- month bars ---- */
+.ymon__peak { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); }
+.ymon__bar { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
+.ymon__plot.is-in .ymon__bar { transform: scaleY(1); }
+
+/* ---- movement / country mix ---- */
+.ymix__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.ymix__row { display: grid; grid-template-columns: minmax(96px, 26%) 1fr auto auto; align-items: center; gap: var(--sp-3); }
+.ymix__lbl { font-size: var(--fs-sm); color: var(--ink); }
+.ymix__track { height: 14px; background: var(--grey-06); border-radius: 4px; overflow: hidden; }
+.ymix__fill { display: block; height: 100%; border-radius: 4px; transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease); }
+.ymix.is-in .ymix__fill { transform: scaleX(1); }
+.ymix__n { font-size: var(--fs-sm); color: var(--ink); text-align: right; min-width: 2.6em; }
+.ymix__pct { font-size: var(--fs-xs); color: var(--fg-faint); text-align: right; min-width: 3em; }
+
+/* ---- streak calendar ---- */
+.ystreak__cell { opacity: 0; transform: scale(0.35); transform-box: fill-box; transform-origin: center; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.ystreak__plot.is-in .ystreak__cell { opacity: 1; transform: scale(1); }
+.ystreak__key { margin-top: var(--sp-3); }
+
+/* ---- cross-year rank ---- */
+.yrank__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.yrank__row { display: grid; grid-template-columns: 3ch 1fr auto; align-items: center; gap: var(--sp-3); }
+.yrank__yr { font-size: var(--fs-sm); color: var(--fg-muted); }
+.yrank__row.is-sel .yrank__yr { color: var(--ink); font-weight: 700; }
+.yrank__track { height: 16px; background: var(--grey-06); border-radius: 4px; overflow: hidden; }
+.yrank__fill { display: block; height: 100%; border-radius: 4px; transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease); }
+.yrank.is-in .yrank__fill { transform: scaleX(1); }
+.yrank__val { font-size: var(--fs-sm); color: var(--fg-muted); text-align: right; min-width: 3em; }
+.yrank__val.is-sel { color: var(--accent-ink); font-weight: 700; }
+
+/* ---- biggest-effort cards ---- */
+.yis-recs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-4); }
+.yis-rec { border: 1px solid var(--rule-faint); border-top: 2px solid var(--ink); border-radius: 4px; padding: var(--sp-4); }
+.yis-rec__val { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); line-height: 1; letter-spacing: var(--tr-tight); margin: var(--sp-2) 0 0; color: var(--accent); font-variant-numeric: tabular-nums; }
+.yis-rec__unit { font-size: 0.45em; font-weight: 700; color: var(--fg-muted); margin-left: 0.2em; }
+.yis-rec__lbl { font-size: var(--fs-sm); color: var(--ink); margin: var(--sp-2) 0 0; }
+.yis-rec__sub { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-faint); margin: var(--sp-1) 0 0; }
+
+/* ---- the moment ---- */
+.ymom { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+@media (min-width: 52rem) { .ymom { grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: var(--sp-8); } }
+.ymom__kicker { color: var(--accent-ink); }
+.ymom__title { font-size: var(--fs-2xl); line-height: 1.04; letter-spacing: var(--tr-tight); margin: var(--sp-2) 0 var(--sp-3); }
+.ymom__body { color: var(--fg-muted); font-size: var(--fs-md); line-height: 1.5; margin: 0; }
+.ymom__big { font-family: var(--font-display); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+.ymom__chips { display: flex; flex-wrap: wrap; gap: var(--sp-5) var(--sp-6); }
+.ymom__chip { display: flex; flex-direction: column; gap: 2px; border-left: 3px solid var(--accent-soft); padding-left: var(--sp-3); }
+.ymom__chip .ymom__big { font-size: var(--fs-2xl); line-height: 1; }
+.ymom__chiplbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.ymom__cap { font-size: var(--fs-sm); color: var(--fg-muted); margin: var(--sp-3) 0 0; }
+.ymom__cap b { color: var(--ink); }
+
+/* jump bars (2021) */
+.ymom__jump { display: flex; gap: var(--sp-4); align-items: flex-end; }
+.ymom__jumpcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+.ymom__jumpval { font-size: var(--fs-md); font-weight: 700; color: var(--ink); }
+.ymom__jumptrack { width: 100%; height: 150px; display: flex; align-items: flex-end; }
+.ymom__jumpbar { width: 100%; border-radius: 3px 3px 0 0; transform: scaleY(0); transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
+.ymom__jump.is-in .ymom__jumpbar { transform: scaleY(1); }
+.ymom__jumplbl { }
+
+/* versus (2022) */
+.ymom__versus { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ymom__vrow { display: grid; grid-template-columns: 3.4em 1fr auto; align-items: center; gap: var(--sp-3); }
+.ymom__vlbl { font-size: var(--fs-sm); color: var(--ink); }
+.ymom__vbar { height: 20px; border-radius: 4px; transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease); }
+.reveal.is-in .ymom__vbar, .ymom__fig.is-in .ymom__vbar { transform: scaleX(1); }
+
+/* stamps (2024) */
+.ymom__stamps { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+.ymom__stamp { border: 1px solid var(--grey-25); border-radius: 4px; padding: 0.4em 0.7em; font-size: var(--fs-sm); color: var(--ink);
+  opacity: 0; transform: translateY(8px) rotate(-1.5deg); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+.reveal.is-in .ymom__stamp { opacity: 1; transform: none; }
+.ymom__stamp b { color: var(--accent-ink); margin-left: 0.3em; }
+
+/* ---- CTA ---- */
+.yis-cta { padding: var(--sp-8) 0 var(--sp-6); text-align: center; }
+.yis-cta p { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); margin: 0 0 var(--sp-3); }
+.yis-cta__btn { appearance: none; cursor: pointer; font-family: var(--font-mono); font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: var(--tr-wide);
+  padding: 0.6em 1.2em; border: 1px solid var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.yis-cta__btn:hover { background: var(--ink); color: var(--paper); }
+.yis-cta__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- Home: seven years, seven characters ---- */
+.years { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.years > li { margin: 0; }
+.yearrow {
+  display: grid; grid-template-columns: 4.2rem 1fr auto; gap: var(--sp-4); align-items: baseline;
+  padding: var(--sp-4) var(--sp-2); border-bottom: 1px solid var(--rule-faint);
+  text-decoration: none; color: inherit;
+  transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.yearrow:hover, .yearrow:focus-visible { background: var(--grey-03); padding-left: var(--sp-3); outline: none; }
+.yearrow:focus-visible { box-shadow: inset 2px 0 0 var(--accent); }
+.yearrow__year { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); font-variant-numeric: tabular-nums; }
+.yearrow__main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.yearrow__label { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); color: var(--ink); letter-spacing: var(--tr-snug); line-height: 1.1; }
+.yearrow__line { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; max-width: 44rem; }
+.yearrow__arrow { align-self: center; color: var(--grey-35); transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+.yearrow:hover .yearrow__year, .yearrow:focus-visible .yearrow__year { color: var(--accent); }
+.yearrow:hover .yearrow__arrow, .yearrow:focus-visible .yearrow__arrow { color: var(--accent); transform: translateX(4px); }
+@media (max-width: 40rem) {
+  .yearrow { grid-template-columns: 3.4rem 1fr; }
+  .yearrow__arrow { display: none; }
+}

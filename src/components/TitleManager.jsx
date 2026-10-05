@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 const BASE = 'My Strava Journey'
 const STATIC = {
   '/': BASE,
-  '/numbers': 'By the Numbers',
+  '/numbers': 'Year in Sport',
   '/sports': 'Sports',
   '/records': 'Records',
   '/where': 'Where',

@@ -132,7 +132,7 @@ write("timeline.csv",["date","label","category","note","source_page"],tl)
 # ---------- nav_index.csv (authored structure) ----------
 nav=[
  ["01","The Journey","Seven years. One habit. The totals.","/","overview","authored"],
- ["02","By the Numbers","Then against now.","/numbers","dashboard","authored"],
+ ["02","Year in Sport","Pick a year. See the whole story.","/numbers","report","authored"],
  ["03","Sports","What the work is made of.","/sports","section","authored"],
  ["04","Records","The far edges. Longest, highest, hardest.","/records","section","authored"],
  ["05","Where","Seven countries. Seventeen regions.","/where","geography","authored"],

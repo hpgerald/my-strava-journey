@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import TitleManager from './components/TitleManager.jsx'
 import Home from './pages/Home.jsx'
-import Numbers from './pages/Numbers.jsx'
+import YearInSport from './pages/YearInSport.jsx'
 import Sports from './pages/Sports.jsx'
 import SportDetail from './pages/SportDetail.jsx'
 import Records from './pages/Records.jsx'
@@ -25,8 +25,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        {/* Numbers dashboard (Phase 6) */}
-        <Route path="/numbers" element={<Numbers />} />
+        {/* Year in Sport report (chapter 02); /numbers/:year deep-links a year */}
+        <Route path="/numbers" element={<YearInSport />} />
+        <Route path="/numbers/:year" element={<YearInSport />} />
 
         {/* Section detail pages (Phase 5) */}
         <Route path="/sports" element={<Sports />} />

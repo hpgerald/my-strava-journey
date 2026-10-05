@@ -30,6 +30,9 @@ export default function DotGrid({ items, years }) {
   const [hi, setHi] = useState(null)
   const [pos, setPos] = useState({ x: 0, y: 0 })
 
+  // nothing to draw until the data arrives (avoids a negative-height SVG)
+  if (!items || !items.length || !years || !years.length) return <div ref={ref} />
+
   const cell = 9
   const r = 3
   const W = Math.max(w, 1)

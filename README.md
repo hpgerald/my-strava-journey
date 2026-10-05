@@ -51,7 +51,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | # | Section | What it shows |
 | --- | --- | --- |
 | 01 | **The Journey** (home) | The headline totals, an animated count-up, one dot for every activity, the July 2021 "switch" that turned a hobby into a habit, and how running owns the distance while walking owns the vertical. |
-| 02 | **By the Numbers** | The debut half-year of 2019 against the latest year as an indexed slopegraph: every metric fans from its 2019 baseline to its 2026 multiple on a log scale, so what multiplied and what fell read in one image. |
+| 02 | **Year in Sport** | Pick any year, 2019 through today, and the page rebuilds itself into an animated report of it: headline totals that count up, the shape of the months, how the year moved, every day drawn as a streak calendar, the biggest efforts, where it happened, and a signature "moment" unique to that year. |
 | 03 | **Sports** | What the training is made of, as a mirrored distance-versus-days split and a sport-personality scatter, plus a deep dive into the foot data: pace and distance spreads, the treadmill-to-road shift, steepness, time of day and weekend trails. |
 | 04 | **Records** | The far edges: a wall of the furthest, highest and hardest efforts, the total climb drawn as a stack of Everests, the calories burned read back as plates of food, and the shape of an ordinary training day. |
 | 05 | **Where** | Choropleth maps of the countries and Tanzanian regions the activities started in, worked out from each activity's GPS start point. |

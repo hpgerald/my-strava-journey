@@ -7,6 +7,7 @@ import '@fontsource-variable/archivo'
 import '@fontsource-variable/inter'
 import './styles/tokens.css'
 import './styles/components.css'
+import './styles/yearinsport.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

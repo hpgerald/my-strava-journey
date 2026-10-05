@@ -15,11 +15,13 @@ import ContourField from '../charts/ContourField.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, toNum } from '../lib/format.js'
 import { prettySport } from '../lib/slug.js'
+import { buildYearSummaries } from '../lib/yearStats.js'
+import YearCharacters from '../components/YearCharacters.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -60,9 +62,27 @@ export default function Home() {
   const countries = useTable('countries')
   const fun = useTable('fun_journey')
   const activityLog = useTable('activities')
+  const activityGeo = useTable('activity_geo')
   const monthlyTotals = useTable('monthly_totals')
   const sportBreakdown = useTable('sport_breakdown')
   const nav = useTable('nav_index')
+
+  // per-year character narrative (shared with the Year in Sport report)
+  const geoByKey = useMemo(() => {
+    const m = {}
+    for (const g of activityGeo) m[g.activity_key] = g
+    return m
+  }, [activityGeo])
+  const yearSummaries = useMemo(
+    () => (activityLog.length ? buildYearSummaries(activityLog, geoByKey) : []),
+    [activityLog, geoByKey]
+  )
+  const bestBy = (f) => yearSummaries.reduce((m, y) => (f(y.stats) > (m ? f(m.stats) : -1) ? y : m), null)
+  const peakYr = bestBy((s) => s.n)
+  const elevYr = bestBy((s) => s.elev)
+  const ctryYr = bestBy((s) => s.countries.length)
+  const latestSum = yearSummaries[yearSummaries.length - 1]
+  const streakMonths = latestSum ? Math.max(1, Math.floor(latestSum.stats.streakLen / 30.44)) : 9
 
   const life = (needle) => lifetime.find((r) => (r.metric || '').toLowerCase().includes(needle)) || {}
 
@@ -248,10 +268,12 @@ export default function Home() {
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              It started with a 5 km run in August 2019, then went quiet for nearly two
-              years. In July 2021 the habit switched on and never switched off. Seven years of it,
-              mostly on foot, mostly around Tanzania, reaching {countryCount || 'seven'} countries and
-              logged on more than half of every day since.
+              {years || 7} years of training, and no two of them alike. It took two years to catch,
+              then July 2021 flipped a switch that has not flipped back. Every year since has had its
+              own character: a peak of {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities, a year
+              that climbed over {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres
+              on foot, another that reached {ctryYr ? ctryYr.stats.countries.length : 6} countries, and the
+              one running now that has not missed a day in {streakMonths} months.
             </p>
             <div className="hero__extra">
               <p className="eyebrow">Put another way, that is</p>
@@ -275,6 +297,26 @@ export default function Home() {
           </div>
         </section>
       </Container>
+
+      {/* ---- Seven years, seven characters: the per-year narrative ------ */}
+      {yearSummaries.length > 0 && (
+        <Container>
+          <hr className="rule" />
+          <div style={{ paddingBlock: 'var(--sp-7)' }}>
+            <div className="section-head">
+              <p className="eyebrow">No two years the same</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+                Seven years, seven characters.
+              </h2>
+              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
+                The habit held the whole way, but each year ran differently. Here is the one thing that
+                set each apart. Open any year for its full report.
+              </p>
+            </div>
+            <YearCharacters summaries={yearSummaries} />
+          </div>
+        </Container>
+      )}
 
       {/* ---- The signature image: every activity, one dot -------------- */}
       <Container>
