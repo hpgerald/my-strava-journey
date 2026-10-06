@@ -1005,6 +1005,23 @@ text.chart-panel-title {
 .bleed { padding-block: var(--sp-7); }
 .bleed--switch { background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-block: 1px solid var(--rule-faint); }
 .bleed--edges { background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-block: 1px solid var(--rule-faint); }
+.bleed--level { background: color-mix(in srgb, var(--accent) 6%, var(--paper)); border-block: 1px solid var(--rule-faint); }
+
+/* ---- Home: the opening "even week" wow band ----------------------- */
+.levelband__head { font-size: var(--fs-2xl); line-height: 1.04; letter-spacing: var(--tr-tight); margin: var(--sp-2) 0 var(--sp-3); }
+.levelband__lede { margin: 0 0 var(--sp-5); font-size: var(--fs-md); }
+.levelband__stat { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px var(--sp-3); margin: 0; }
+.levelband__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-3xl); line-height: 0.85; color: var(--accent); letter-spacing: var(--tr-tight); font-variant-numeric: tabular-nums; }
+.levelband__num--muted { color: var(--fg-faint); }
+.levelband__cap { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.levelband__vs { grid-column: 1 / -1; font-size: var(--fs-sm); color: var(--fg-muted); margin: var(--sp-2) 0; }
+
+.wklvl__bar { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
+.wklvl__plot.is-in .wklvl__bar { transform: scaleY(1); }
+.wklvl__day { font-family: var(--font-mono); font-size: var(--fs-xs); fill: var(--fg-muted); }
+.wklvl__pct { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--ink); font-variant-numeric: tabular-nums; }
+.wklvl__ref { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+@media (prefers-reduced-motion: reduce) { .wklvl__bar { transform: none !important; } }
 
 /* ---- Home: the far-edges teaser cards ----------------------------- */
 .edges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); grid-template-columns: 1fr; }

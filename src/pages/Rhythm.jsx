@@ -109,6 +109,21 @@ export default function Rhythm() {
     if (r >= 0 && c >= 0) matrix[r][c] += 1
   }
 
+  // live highlights for the matrix note, so the weekly refresh can never make
+  // the words disagree with the picture: the busiest slot, the evening's share,
+  // the flattest-to-fullest weekday spread, and how little the weekend leans.
+  const wdTotals = WEEKDAYS.map((_, r) => matrix[r].reduce((a, b) => a + b, 0))
+  const matrixTotal = wdTotals.reduce((a, b) => a + b, 0) || 1
+  let bestCell = { r: 0, c: 0, v: -1 }
+  for (let r = 0; r < WEEKDAYS.length; r++) for (let c = 0; c < BUCKETS.length; c++) if (matrix[r][c] > bestCell.v) bestCell = { r, c, v: matrix[r][c] }
+  const bucketWord = (BUCKETS[bestCell.c]?.[0] || '').split(' (')[0].toLowerCase()
+  const busiestSlot = `${WEEKDAYS[bestCell.r]} ${bucketWord}`
+  const busyWd = WEEKDAYS[wdTotals.indexOf(Math.max(...wdTotals))]
+  const quietWd = WEEKDAYS[wdTotals.indexOf(Math.min(...wdTotals))]
+  const eveCol = BUCKETS.findIndex(([full]) => full === 'Evening (17-20)')
+  const eveShare = eveCol >= 0 ? Math.round((100 * WEEKDAYS.reduce((s, _, r) => s + matrix[r][eveCol], 0)) / matrixTotal) : 0
+  const weekendShare = Math.round((100 * (matrix[WEEKDAYS.indexOf('Saturday')].reduce((a, b) => a + b, 0) + matrix[WEEKDAYS.indexOf('Sunday')].reduce((a, b) => a + b, 0))) / matrixTotal)
+
   const indoor = io.find((r) => /indoor|trainer/i.test(r.setting)) || {}
   const outdoor = io.find((r) => /outdoor/i.test(r.setting)) || {}
 
@@ -287,7 +302,7 @@ export default function Rhythm() {
         <div className="grid grid--2">
           <Figure
             title="Weekday × time of day"
-            note="How the week fills up, hour by hour and day by day. The single busiest slot is the one picked out in orange."
+            note={`One band carries the whole grid. The evening, roughly five to eight, takes ${eveShare}% of every week, and ${busiestSlot} is the single busiest slot, picked out in orange. Side to side the days stay oddly level, from ${quietWd} at the low end to ${busyWd} at the high, so the habit barely leans into the weekend: Saturday and Sunday hold ${weekendShare}% of it, a hair above the 29% that two days in seven would give by chance.`}
             source="Activity Log"
             tableCaption="Activity count by weekday and time of day"
             columns={matrixCols}
@@ -303,7 +318,7 @@ export default function Rhythm() {
           </Figure>
           <Figure
             title="The effort tide"
-            note="The season's total cardiovascular load, rising and ebbing like a tide off a shore line. 2021 was high tide by a distance; then it drew back as fitness caught up and each session cost less, before 2026 began flooding back in."
+            note="Each year's total cardiovascular load, drawn as a tide that rises and falls. 2021 was high water by a distance; then it drew back as fitness caught up and each session cost less, before 2026 came flooding in."
             source="Zones & Effort"
             tableCaption="Total relative effort by year"
             columns={['Year', 'Total relative effort']}

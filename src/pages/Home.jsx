@@ -15,6 +15,7 @@ import ContourField from '../charts/ContourField.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
+import WeekLevel from '../charts/WeekLevel.jsx'
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
@@ -144,6 +145,29 @@ export default function Home() {
     const dstr = (a.date || '').slice(0, 10)
     if (dstr) daySet.add(dstr)
   }
+
+  // ---- the opening "wow": a week so even the habit barely knows it is the
+  // weekend. Computed live so the weekly refresh can never age the words out.
+  const WD_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  const weekday7 = WD_ORDER.map(() => 0)
+  let eveningN = 0
+  const slotCount = {}
+  for (const a of activityLog) {
+    const wi = WD_ORDER.indexOf(a.weekday)
+    if (wi >= 0) weekday7[wi] += 1
+    if (a.time_bucket === 'Evening (17-20)') eveningN += 1
+    if (a.weekday && a.time_bucket) {
+      const k = `${a.weekday}|${a.time_bucket}`
+      slotCount[k] = (slotCount[k] || 0) + 1
+    }
+  }
+  const weekTotal = weekday7.reduce((s, n) => s + n, 0) || 1
+  const weekendPct = Math.round((100 * (weekday7[5] + weekday7[6])) / weekTotal)
+  const chancePct = Math.round((100 * 2) / 7)
+  const eveningPct = Math.round((100 * eveningN) / weekTotal)
+  const busiestSlot = Object.entries(slotCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Sunday|Evening (17-20)'
+  const busiestSlotLabel = `${busiestSlot.split('|')[0]} ${busiestSlot.split('|')[1].split(' (')[0].toLowerCase()}`
+  const weekdayTableRows = WD_ORDER.map((d, i) => [d, fmtInt(weekday7[i]), `${Math.round((100 * weekday7[i]) / weekTotal)}%`])
 
   // distance vs climb by foot sport, for the flip
   const FOOT_ORDER = ['Run', 'Walk', 'TrailRun', 'Hike']
@@ -297,6 +321,41 @@ export default function Home() {
           </div>
         </section>
       </Container>
+
+      {/* ---- The opening wow: a week so even it ignores the weekend ----- */}
+      <div className="bleed bleed--level">
+        <Container>
+          <div className="grid grid--2 levelband" style={{ alignItems: 'center', gap: 'var(--sp-5) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
+            <div className="levelband__say">
+              <p className="eyebrow">First, the surprise</p>
+              <h2 className="display levelband__head">The habit barely knows it&rsquo;s the weekend.</h2>
+              <p className="measure text-muted levelband__lede">
+                Lay all seven years onto the days of the week and it falls almost dead level. Every weekday
+                carries between {Math.round((100 * Math.min(...weekday7)) / weekTotal)}% and {Math.round((100 * Math.max(...weekday7)) / weekTotal)}% of the whole record, and the weekend adds barely a
+                nudge. Evenings take about {eveningPct}% of it, and {busiestSlotLabel} is the single busiest hour
+                of the week. Weekday or weekend, the training keeps the same clock.
+              </p>
+              <p className="levelband__stat" aria-hidden="true">
+                <span className="levelband__num">{weekendPct}%</span>
+                <span className="levelband__cap">on the weekend</span>
+                <span className="levelband__vs">barely above</span>
+                <span className="levelband__num levelband__num--muted">{chancePct}%</span>
+                <span className="levelband__cap">by pure chance</span>
+              </p>
+            </div>
+            <Figure
+              title="Seven years, by weekday"
+              note="Every activity dropped onto the day of the week it happened, as a share of the whole. The dashed line is a perfectly even week; the bars barely clear it. The two weekend bars are tinted, so any real weekend bulge would jump out. It does not."
+              source="Activity Log"
+              tableCaption="Activities by weekday, all seven years"
+              columns={['Weekday', 'Activities', 'Share']}
+              rows={weekdayTableRows}
+            >
+              <WeekLevel counts={weekday7} />
+            </Figure>
+          </div>
+        </Container>
+      </div>
 
       {/* ---- Seven years, seven characters: the per-year narrative ------ */}
       {yearSummaries.length > 0 && (
