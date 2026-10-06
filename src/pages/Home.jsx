@@ -18,8 +18,8 @@ import FootFlip from '../charts/FootFlip.jsx'
 // WeekLevel (even-week band) retired from the home opener; still available for Rhythm.
 import JourneyArc from '../charts/JourneyArc.jsx'
 import EveryDayField from '../charts/EveryDayField.jsx'
-import AddsUpTo from '../charts/AddsUpTo.jsx'
-import PulseYears from '../charts/PulseYears.jsx'
+import HabitMomentum from '../charts/HabitMomentum.jsx'
+import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
@@ -231,6 +231,16 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityLog, edLast])
   const edTotalDays = (edFirst && edLast) ? Math.round((Date.parse(edLast) - Date.parse(edFirst)) / DAY) + 1 : 0
+  // C. habit momentum: the Markov transition curves (momentum vs rust)
+  const momentum = useMemo(
+    () => (edFirst ? computeHabitMomentum(daySet, edFirst, edLast, '2021-07-01', 30) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activityLog, edFirst, edLast]
+  )
+  const mBefore = momentum ? Math.round(momentum.before.p11 * 100) : 35
+  const mAfter = momentum ? Math.round(momentum.origin * 100) : 82
+  const mDeep = momentum && momentum.stick.length ? Math.round(momentum.stick[momentum.stick.length - 1].p * 100) : 99
+  const mRest = momentum && momentum.rebound.length ? Math.round(momentum.rebound[momentum.rebound.length - 1].p * 100) : 33
 
   // one dot per activity, in chronological order, tagged with its year
   const items = activityLog
@@ -334,81 +344,64 @@ export default function Home() {
         </section>
       </Container>
 
-      {/* ===== OPENER OPTION 1 · the annotated journey arc ===== */}
-      {arcPoints.length > 10 && (
+      {/* ===== OPENER OPTION 1 · the physics of the habit (momentum) ===== */}
+      {momentum && (
         <Container>
           <hr className="rule" />
           <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
             <div className="section-head">
-              <p className="eyebrow">Opener 1 &middot; The whole journey</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Thirteen thousand kilometres, one climbing line.</h2>
+              <p className="eyebrow">Opener 1 &middot; The physics of the habit</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A streak keeps itself going.</h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                Every kilometre on foot, stacked end to end from the first run to today. Two years barely lift off the floor, then July 2021 and the line rears up and never flattens. The moments that mattered sit pinned where they happened.
+                Read day by day, the habit behaves like a Markov chain. Before July 2021, moving one day barely hinted at the next, a {mBefore}% chance. Since the switch it is {mAfter}%, and the deeper a streak runs the more certain it gets, {mDeep}% once a month is on the board. Stop, though, and it unravels: a few days off and the odds of coming back slide to {mRest}%. It reads as pure momentum, each day done pulling the next along.
               </p>
             </div>
-            <JourneyArc points={arcPoints} marks={arcMarks} />
+            <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
+            <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since July 2021</p>
           </div>
         </Container>
       )}
 
-      {/* ===== OPENER OPTION 2 · every single day ===== */}
-      {edFirst && (
+      {/* ===== OPENER OPTION 2 · the annotated journey arc ===== */}
+      {arcPoints.length > 10 && (
         <div className="bleed bleed--level">
           <Container>
             <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
               <div className="section-head">
-                <p className="eyebrow">Opener 2 &middot; Every single day</p>
-                <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-                  Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
-                </h2>
+                <p className="eyebrow">Opener 2 &middot; The whole journey</p>
+                <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Thirteen thousand kilometres, one climbing line.</h2>
                 <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                  One square for every day since the first run. The lit ones carried an activity, more than half of all of them. The long dark band is the 353-day silence; the bright run at the end is the streak still going.
+                  Every kilometre on foot, stacked end to end from the first run to today. Two years barely lift off the floor, then July 2021 and the line rears up and never flattens. The moments that mattered sit pinned where they happened.
                 </p>
               </div>
-              <EveryDayField firstISO={edFirst} lastISO={edLast} activeSet={daySet} streakStartISO={edStreak.start} streakEndISO={edStreak.end} />
-              <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
-                <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> rest day</span>
-                <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> active</span>
-                <span><i className="chart-swatch" style={{ background: 'var(--accent-ink)' }} /> current streak</span>
-              </div>
+              <JourneyArc points={arcPoints} marks={arcMarks} />
             </div>
           </Container>
         </div>
       )}
 
-      {/* ===== OPENER OPTION 3 · the heartbeat ===== */}
-      {monthlyTotals.length > 3 && (
+      {/* ===== OPENER OPTION 3 · every single day ===== */}
+      {edFirst && (
         <Container>
           <hr className="rule" />
           <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
             <div className="section-head">
-              <p className="eyebrow">Opener 3 &middot; Seven years, one heartbeat</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A pulse that barely registered, then caught.</h2>
+              <p className="eyebrow">Opener 3 &middot; Every single day</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+                Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
+              </h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                Every month a beat, mirrored off the centre line, as tall as the activities it held. For two years it is almost flat. The month the switch is thrown it quickens, and it has not settled since.
+                One square for every day since the first run. The lit ones carried an activity, more than half of all of them. The long dark band is the 353-day silence; the bright run at the end is the streak still going.
               </p>
             </div>
-            <PulseYears rows={monthlyTotals} switchMonth="2021-07" />
-          </div>
-        </Container>
-      )}
-
-      {/* ===== OPENER OPTION 4 · what it adds up to ===== */}
-      {toNum(km) != null && (
-      <div className="bleed bleed--level">
-        <Container>
-          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
-            <div className="section-head">
-              <p className="eyebrow">Opener 4 &middot; What it adds up to</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Seven years, in things you can picture.</h2>
-              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                The totals read as distances and heights, not bare numbers: a third of the way around the planet on foot, a stack of Everests climbed, months of time spent moving.
-              </p>
+            <EveryDayField firstISO={edFirst} lastISO={edLast} activeSet={daySet} streakStartISO={edStreak.start} streakEndISO={edStreak.end} />
+            <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
+              <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> rest day</span>
+              <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> active</span>
+              <span><i className="chart-swatch" style={{ background: 'var(--accent-ink)' }} /> current streak</span>
             </div>
-            <AddsUpTo km={toNum(km)} elev={toNum(elevation)} activities={toNum(activities)} hours={toNum(hoursMoving)} />
           </div>
         </Container>
-      </div>
       )}
 
       {/* ---- Seven years, seven characters: the per-year narrative ------ */}
@@ -529,7 +522,7 @@ export default function Home() {
           {/* Row 1 — the range of it: where, then what */}
           <Figure
             title="Where in the world"
-            note={`Wherever a GPS fix could place an activity, grouped by country. More than nine in ten happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to one lone run logged in the UK.`}
+            note={`Wherever a GPS fix could place an activity, grouped by country. More than nine in ten happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to a single run in the farthest of them.`}
             source="Strava GPS + point-in-polygon"
             tableCaption="Located activities by country"
             columns={['Country', 'Activities']}
@@ -537,7 +530,8 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">The far countries</p>
-                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. The rest thin out fast: a pair in Rwanda, a pair in Saudi Arabia, and a single run logged in the UK in 2026, the newest stamp in the book.</p>
+                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. The rest thin out fast: a pair in Rwanda, and beyond them a handful of one-off stops, down to a single run in 2026 that added the newest stamp of all.</p>
+                <p>The shape is lopsided by design. Nine in ten pins fall inside Tanzania, most of them looped through Dodoma and Dar es Salaam. The away days are stretched thin across three continents and seven years, and nearly all of them are a single trip that never came round again.</p>
               </>
             )}
           >

@@ -1,5 +1,6 @@
 import { toNum } from './format.js'
 import { prettySport } from './slug.js'
+import { prettyCountry } from './geo.js'
 
 // Per-year statistics computed from the activity log, shared by the Year in Sport
 // report and the home page's year-character narrative so both tell the same story
@@ -65,9 +66,13 @@ export function computeYearStats(year, acts, geo) {
   const cMap = new Map()
   for (const a of ya) {
     const g = geo[a.activity_key]
-    if (g && g.country && !/Indoor/.test(g.country)) cMap.set(g.country, (cMap.get(g.country) || 0) + 1)
+    if (g && g.country && !/Indoor/.test(g.country)) {
+      const c = prettyCountry(g.country)
+      cMap.set(c, (cMap.get(c) || 0) + 1)
+    }
   }
-  const countries = [...cMap.entries()].map(([country, n]) => ({ country, n })).sort((a, b) => b.n - a.n)
+  const countries = [...cMap.entries()].map(([country, n]) => ({ country, n }))
+    .sort((a, b) => (a.country === 'Other' ? 1 : b.country === 'Other' ? -1 : b.n - a.n))
 
   const footActs = ya.filter((a) => FOOT.has(a.sport_type))
   const rec = (a, key) => (a ? { date: (a.date || '').slice(0, 10), val: num(a, key), sport: prettySport(a.sport_type) } : null)

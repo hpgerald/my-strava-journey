@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
+import { NAMED_COUNTRIES } from '../lib/geo.js'
 
 // Where in the world the seven years happened. Almost all of it is home: of every
 // activity a GPS fix could place, more than nine in ten sit inside Tanzania, drawn
@@ -19,10 +20,16 @@ export default function GeoBubbles({ rows }) {
 
   const located = rows.filter((r) => r.country && r.country !== INDOOR)
   const home = located.find((r) => r.country === HOME)
-  const away = located
+  const awayRaw = located
     .filter((r) => r.country !== HOME)
     .map((r) => ({ country: r.country, n: N(r.activities), year: (r.first_activity_date || '').slice(0, 4) }))
     .sort((a, b) => b.n - a.n)
+  const trueAwayCount = awayRaw.length
+  // name only the five; fold the rest into one "Other" row
+  const namedAway = awayRaw.filter((a) => NAMED_COUNTRIES.has(a.country))
+  const restAway = awayRaw.filter((a) => !NAMED_COUNTRIES.has(a.country))
+  const away = [...namedAway]
+  if (restAway.length) away.push({ country: 'Other', n: restAway.reduce((s, a) => s + a.n, 0), year: '' })
   const total = located.reduce((a, r) => a + N(r.activities), 0)
   const homeN = home ? N(home.activities) : 0
   const homePct = total ? Math.round((homeN / total) * 100) : 0
@@ -53,7 +60,7 @@ export default function GeoBubbles({ rows }) {
 
         <div className="geo__away">
           <p className="geo__away-hd">
-            The passport · {awayN.toLocaleString()} activities, {away.length} other countries
+            The passport · {awayN.toLocaleString()} activities, {trueAwayCount} other countries
           </p>
           <ul className="geo__list">
             {away.map((a, i) => (

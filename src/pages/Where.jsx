@@ -9,6 +9,7 @@ import TerrainLand from '../charts/TerrainLand.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
+import { NAMED_COUNTRIES } from '../lib/geo.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
 export default function Where() {
@@ -25,7 +26,9 @@ export default function Where() {
   const indoor = countries.find((c) => c.country === 'Indoor / no GPS') || {}
   const homeRegion = regions[0] || {}
 
+  // name only the five; everything else folds into one unlinked "Other" segment
   const countrySegments = [...realCountries]
+    .filter((c) => NAMED_COUNTRIES.has(c.country))
     .sort((a, b) => toNum(b.activities) - toNum(a.activities))
     .map((c) => ({
       label: c.country,
@@ -33,6 +36,11 @@ export default function Where() {
       display: fmtInt(c.activities),
       to: `/where/${slugify(c.country)}`,
     }))
+  const restCountries = realCountries.filter((c) => !NAMED_COUNTRIES.has(c.country))
+  if (restCountries.length) {
+    const otherN = restCountries.reduce((s, c) => s + toNum(c.activities), 0)
+    countrySegments.push({ label: 'Other', value: otherN, display: fmtInt(otherN) })
+  }
 
   const regionRows = [...regions]
     .sort((a, b) => toNum(b.activities) - toNum(a.activities))
@@ -133,7 +141,7 @@ export default function Where() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every country, as one bar"
-          note="Each country's share of all placed activities, home included. Tanzania dominates; the travel countries are the slivers. Select any name for its own page."
+          note="Each country's share of all placed activities, home included. Tanzania dominates the frame; the travel countries are slivers, and the farthest few fold into one. Select a named country for its own page."
           source="Strava GPS"
           columns={['Country', 'Activities']}
           rows={countrySegments.map((c) => [c.label, c.display])}

@@ -1032,11 +1032,30 @@ text.chart-panel-title {
 .adds__globepct { font-family: var(--font-display); font-weight: 800; font-size: 26px; fill: var(--accent); }
 .adds__globecap { font-family: var(--font-mono); font-size: 9px; letter-spacing: var(--tr-wide); text-transform: uppercase; fill: var(--fg-muted); }
 
+/* habit momentum (Markov conditional-probability curves) */
+.hmom__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); }
+.hmom__plot.is-in .hmom__line--up { stroke-dashoffset: 0; }
+.hmom__plot.is-in .hmom__line--down { stroke-dashoffset: 0; transition-delay: 0.15s; }
+.hmom__area { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.4s; }
+.hmom__plot.is-in .hmom__area { opacity: 1; }
+.hmom__dot, .hmom__onum, .hmom__end, .hmom__todaylbl { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.hmom__plot.is-in .hmom__dot, .hmom__plot.is-in .hmom__onum, .hmom__plot.is-in .hmom__end, .hmom__plot.is-in .hmom__todaylbl { opacity: 1; transition-delay: 1s; }
+.hmom__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.hmom__todaylbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); }
+.hmom__onum { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--ink); font-variant-numeric: tabular-nums; }
+.hmom__end { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); }
+.hmom__end--up { fill: var(--accent-ink); }
+.hmom__end--down { fill: var(--grey-55); }
+.hmom__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.hmom__ycap { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+
 @media (prefers-reduced-motion: reduce) {
   .jarc__line { stroke-dashoffset: 0 !important; }
   .jarc__area, .jarc__mark { opacity: 1 !important; }
   .edf__cell { opacity: 1 !important; }
   .adds__ring { transition: none !important; }
+  .hmom__line { stroke-dashoffset: 0 !important; }
+  .hmom__area, .hmom__dot, .hmom__onum, .hmom__end, .hmom__todaylbl { opacity: 1 !important; }
 }
 
 /* ---- Home: the opening "even week" wow band ----------------------- */
