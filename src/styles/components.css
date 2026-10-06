@@ -1007,6 +1007,38 @@ text.chart-panel-title {
 .bleed--edges { background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-block: 1px solid var(--rule-faint); }
 .bleed--level { background: color-mix(in srgb, var(--accent) 6%, var(--paper)); border-block: 1px solid var(--rule-faint); }
 
+/* ---- Home opener candidates (journey arc / every-day field / adds-up) ---- */
+.jarc__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); }
+.jarc__plot.is-in .jarc__line { stroke-dashoffset: 0; }
+.jarc__area { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.4s; }
+.jarc__plot.is-in .jarc__area { opacity: 1; }
+.jarc__mark { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.jarc__plot.is-in .jarc__mark { opacity: 1; transition-delay: 1s; }
+.jarc__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--ink); letter-spacing: var(--tr-wide); }
+
+.edf__cell { opacity: 0; transition: opacity var(--dur) var(--ease); }
+.edf__plot.is-in .edf__cell { opacity: 1; }
+
+.adds { display: grid; grid-template-columns: 1fr; gap: var(--sp-6); align-items: center; }
+@media (min-width: 52rem) { .adds { grid-template-columns: 1.15fr 0.85fr; } }
+.adds__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-5) var(--sp-6); }
+.adds__stat { border-top: 2px solid var(--ink); padding-top: var(--sp-2); }
+.adds__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--accent); font-variant-numeric: tabular-nums; margin: 0; }
+.adds__unit { font-size: 0.4em; font-weight: 700; color: var(--fg-muted); margin-left: 0.2em; }
+.adds__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); margin: var(--sp-1) 0 0; }
+.adds__equiv { font-size: var(--fs-sm); color: var(--fg-muted); margin: var(--sp-1) 0 0; line-height: 1.3; }
+.adds__globe { display: flex; justify-content: center; }
+.adds__ring { transition: stroke-dashoffset 1.4s var(--ease); }
+.adds__globepct { font-family: var(--font-display); font-weight: 800; font-size: 26px; fill: var(--accent); }
+.adds__globecap { font-family: var(--font-mono); font-size: 9px; letter-spacing: var(--tr-wide); text-transform: uppercase; fill: var(--fg-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .jarc__line { stroke-dashoffset: 0 !important; }
+  .jarc__area, .jarc__mark { opacity: 1 !important; }
+  .edf__cell { opacity: 1 !important; }
+  .adds__ring { transition: none !important; }
+}
+
 /* ---- Home: the opening "even week" wow band ----------------------- */
 .levelband__head { font-size: var(--fs-2xl); line-height: 1.04; letter-spacing: var(--tr-tight); margin: var(--sp-2) 0 var(--sp-3); }
 .levelband__lede { margin: 0 0 var(--sp-5); font-size: var(--fs-md); }
@@ -1034,12 +1066,18 @@ text.chart-panel-title {
   transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .edgecard:hover, .edgecard:focus-visible { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
-.edgecard__stat { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xl); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); }
+.edgecard__stat { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xl); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.edgecard__unit { font-size: 0.42em; font-weight: 700; color: var(--fg-muted); margin-left: 0.3em; letter-spacing: var(--tr-wide); text-transform: uppercase; }
 .edgecard__lbl { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.35; }
-.edgecard__arrow { margin-top: auto; padding-top: var(--sp-3); color: var(--accent); font-size: var(--fs-lg); }
+.edgecard__foot { margin-top: auto; padding-top: var(--sp-4); display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); border-top: 1px solid var(--rule-faint); }
+.edgecard__when { font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-faint); }
+.edgecard__arrow { color: var(--accent); font-size: var(--fs-lg); }
 .edgecard:hover .edgecard__stat, .edgecard:focus-visible .edgecard__stat,
+.edgecard:hover .edgecard__unit, .edgecard:focus-visible .edgecard__unit,
 .edgecard:hover .edgecard__lbl, .edgecard:focus-visible .edgecard__lbl,
+.edgecard:hover .edgecard__when, .edgecard:focus-visible .edgecard__when,
 .edgecard:hover .edgecard__arrow, .edgecard:focus-visible .edgecard__arrow { color: var(--paper); }
+.edgecard:hover .edgecard__foot, .edgecard:focus-visible .edgecard__foot { border-top-color: color-mix(in srgb, var(--paper) 40%, transparent); }
 
 /* ---- Foot deep dive: RangeBars ---------------------------------------- */
 .rangebars { list-style: none; margin: 0; padding: 0; }
@@ -1602,10 +1640,13 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .grid--3 > figure.fig { display: flex; flex-direction: column; height: 100%; }
   .grid--2 > figure.fig > .chart,
   .grid--3 > figure.fig > .chart { flex: 1 1 auto; }
-  /* closer-look row: let the plot sit at its natural height, pin the source to
-     the foot so credits line up, and drop a narration into the freed space */
+  /* closer-look row: let each figure sit at its own natural height (aligned to
+     the top), so a shorter column ends cleanly instead of pinning its source to
+     the foot and leaving a hanging gap above it */
+  .grid--2.closer-grid { align-items: start; }
+  .grid--2.closer-grid > figure.fig { height: auto; }
   .grid--2.closer-grid > figure.fig > .chart { flex: 0 1 auto; }
-  .grid--2.closer-grid > figure.fig > .fig__source { margin-top: auto; padding-top: var(--sp-4); }
+  .grid--2.closer-grid > figure.fig > .fig__source { margin-top: var(--sp-4); padding-top: 0; }
 }
 
 /* ---- Home: IgnitionStream ("The Switch") ------------------------------ */

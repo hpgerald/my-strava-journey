@@ -11,6 +11,8 @@ import CenturyMonths from '../charts/CenturyMonths.jsx'
 import DistanceExtremes from '../charts/DistanceExtremes.jsx'
 import StageRace from '../charts/StageRace.jsx'
 import GoalsField from '../charts/GoalsField.jsx'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -53,6 +55,23 @@ export default function Goals() {
   const activities = useTable('activities')
   const rasKilomoni = useTable('ras_kilomoni')
   const { prev, next } = useSectionPaging('/goals')
+
+  // Deep-link support: /goals#kili-half etc. scrolls to that record once the
+  // data has rendered the section (charts load from CSV after mount, so retry).
+  const location = useLocation()
+  useEffect(() => {
+    const id = location.hash ? location.hash.slice(1) : ''
+    if (!id) return
+    let tries = 0
+    let timer
+    const go = () => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      else if (tries++ < 25) timer = setTimeout(go, 100)
+    }
+    timer = setTimeout(go, 120)
+    return () => clearTimeout(timer)
+  }, [location.hash, activities.length])
 
   // Ras Kilomoni: a 2026 challenge to reach one headland fifty times, numbered I..L.
   const rk = [...rasKilomoni].sort((a, b) => Number(a.day) - Number(b.day))
@@ -338,7 +357,7 @@ export default function Goals() {
 
       {/* An annual date: the Kilimanjaro Half Marathon, faster every year */}
       {kh.length > 1 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
+        <section id="kili-half" style={{ paddingTop: 'var(--sp-7)', scrollMarginTop: '90px' }}>
           <Figure
             n="04"
             title="Four years at the Kilimanjaro Half"
@@ -369,7 +388,7 @@ export default function Goals() {
 
       {/* Silent goal: every month since the spark */}
       {monthly.length > 12 && monthStreak > 6 && (
-        <section style={{ paddingTop: 'var(--sp-6)' }}>
+        <section id="month-streak" style={{ paddingTop: 'var(--sp-6)', scrollMarginTop: '90px' }}>
           <Figure
             n="05"
             title="Every month since the spark"
@@ -483,7 +502,7 @@ export default function Goals() {
       />
 
       {/* Silent goal: the lone marathon */}
-      <section style={{ paddingTop: 'var(--sp-6)' }}>
+      <section id="marathon" style={{ paddingTop: 'var(--sp-6)', scrollMarginTop: '90px' }}>
         <Figure
           n="10"
           title="The lone marathon"
@@ -503,7 +522,7 @@ export default function Goals() {
       </section>
 
       {/* The special challenge: the 100 km four-day stage race */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
+      <section id="stage-race" style={{ paddingTop: 'var(--sp-7)', scrollMarginTop: '90px' }}>
         <Figure
           n="11"
           title="The 100 km stage race"

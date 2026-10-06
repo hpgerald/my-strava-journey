@@ -15,7 +15,11 @@ import ContourField from '../charts/ContourField.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
-import WeekLevel from '../charts/WeekLevel.jsx'
+// WeekLevel (even-week band) retired from the home opener; still available for Rhythm.
+import JourneyArc from '../charts/JourneyArc.jsx'
+import EveryDayField from '../charts/EveryDayField.jsx'
+import AddsUpTo from '../charts/AddsUpTo.jsx'
+import PulseYears from '../charts/PulseYears.jsx'
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
@@ -146,29 +150,6 @@ export default function Home() {
     if (dstr) daySet.add(dstr)
   }
 
-  // ---- the opening "wow": a week so even the habit barely knows it is the
-  // weekend. Computed live so the weekly refresh can never age the words out.
-  const WD_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  const weekday7 = WD_ORDER.map(() => 0)
-  let eveningN = 0
-  const slotCount = {}
-  for (const a of activityLog) {
-    const wi = WD_ORDER.indexOf(a.weekday)
-    if (wi >= 0) weekday7[wi] += 1
-    if (a.time_bucket === 'Evening (17-20)') eveningN += 1
-    if (a.weekday && a.time_bucket) {
-      const k = `${a.weekday}|${a.time_bucket}`
-      slotCount[k] = (slotCount[k] || 0) + 1
-    }
-  }
-  const weekTotal = weekday7.reduce((s, n) => s + n, 0) || 1
-  const weekendPct = Math.round((100 * (weekday7[5] + weekday7[6])) / weekTotal)
-  const chancePct = Math.round((100 * 2) / 7)
-  const eveningPct = Math.round((100 * eveningN) / weekTotal)
-  const busiestSlot = Object.entries(slotCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Sunday|Evening (17-20)'
-  const busiestSlotLabel = `${busiestSlot.split('|')[0]} ${busiestSlot.split('|')[1].split(' (')[0].toLowerCase()}`
-  const weekdayTableRows = WD_ORDER.map((d, i) => [d, fmtInt(weekday7[i]), `${Math.round((100 * weekday7[i]) / weekTotal)}%`])
-
   // distance vs climb by foot sport, for the flip
   const FOOT_ORDER = ['Run', 'Walk', 'TrailRun', 'Hike']
   const FOOT_NAME = { Run: 'Run', Walk: 'Walk', TrailRun: 'Trail', Hike: 'Hike' }
@@ -219,6 +200,37 @@ export default function Home() {
     ? Math.round((Date.parse(sortedDays[sortedDays.length - 1]) - Date.parse(sortedDays[0])) / 86400000) + 1
     : 1
   const pctActiveDays = Math.round((activeDays / spanDays) * 100)
+
+  // ---- opener candidates (stacked for review; cut down to the keeper) ----
+  const DAY = 86400000
+  // A. cumulative foot kilometres across the whole record, with signature marks
+  const arcPoints = useMemo(() => {
+    const acts = activityLog
+      .filter((a) => FOOT_HOME.has(a.sport_type) && a.date)
+      .map((a) => ({ t: Date.parse((a.date || '').replace(' ', 'T')), km: toNum(a.distance_km) || 0 }))
+      .filter((a) => Number.isFinite(a.t))
+      .sort((a, b) => a.t - b.t)
+    let cum = 0
+    return acts.map((a) => { cum += a.km; return { t: a.t, cum } })
+  }, [activityLog])
+  const arcMarks = arcPoints.length ? [
+    { t: Date.UTC(2020, 5, 15), label: 'Two quiet years' },
+    { t: Date.UTC(2021, 6, 1), label: 'July 2021 · the switch' },
+    { t: Date.UTC(2022, 4, 1), label: 'The lone marathon' },
+    { t: Date.UTC(2023, 2, 24), label: '100 km, four nights' },
+    { t: arcPoints[arcPoints.length - 1].t, label: 'Unbroken, still going' },
+  ] : []
+  // B. every-day field: the ongoing streak range, for the highlight band
+  const edFirst = sortedDays[0]
+  const edLast = sortedDays[sortedDays.length - 1]
+  const edStreak = useMemo(() => {
+    if (!sortedDays.length) return {}
+    let startMs = Date.parse(edLast)
+    while (daySet.has(new Date(startMs - DAY).toISOString().slice(0, 10))) startMs -= DAY
+    return { start: new Date(startMs).toISOString().slice(0, 10), end: edLast }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activityLog, edLast])
+  const edTotalDays = (edFirst && edLast) ? Math.round((Date.parse(edLast) - Date.parse(edFirst)) / DAY) + 1 : 0
 
   // one dot per activity, in chronological order, tagged with its year
   const items = activityLog
@@ -322,40 +334,82 @@ export default function Home() {
         </section>
       </Container>
 
-      {/* ---- The opening wow: a week so even it ignores the weekend ----- */}
-      <div className="bleed bleed--level">
+      {/* ===== OPENER OPTION 1 · the annotated journey arc ===== */}
+      {arcPoints.length > 10 && (
         <Container>
-          <div className="grid grid--2 levelband" style={{ alignItems: 'center', gap: 'var(--sp-5) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
-            <div className="levelband__say">
-              <p className="eyebrow">First, the surprise</p>
-              <h2 className="display levelband__head">The habit barely knows it&rsquo;s the weekend.</h2>
-              <p className="measure text-muted levelband__lede">
-                Lay all seven years onto the days of the week and it falls almost dead level. Every weekday
-                carries between {Math.round((100 * Math.min(...weekday7)) / weekTotal)}% and {Math.round((100 * Math.max(...weekday7)) / weekTotal)}% of the whole record, and the weekend adds barely a
-                nudge. Evenings take about {eveningPct}% of it, and {busiestSlotLabel} is the single busiest hour
-                of the week. Weekday or weekend, the training keeps the same clock.
-              </p>
-              <p className="levelband__stat" aria-hidden="true">
-                <span className="levelband__num">{weekendPct}%</span>
-                <span className="levelband__cap">on the weekend</span>
-                <span className="levelband__vs">barely above</span>
-                <span className="levelband__num levelband__num--muted">{chancePct}%</span>
-                <span className="levelband__cap">by pure chance</span>
+          <hr className="rule" />
+          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
+            <div className="section-head">
+              <p className="eyebrow">Opener 1 &middot; The whole journey</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Thirteen thousand kilometres, one climbing line.</h2>
+              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
+                Every kilometre on foot, stacked end to end from the first run to today. Two years barely lift off the floor, then July 2021 and the line rears up and never flattens. The moments that mattered sit pinned where they happened.
               </p>
             </div>
-            <Figure
-              title="Seven years, by weekday"
-              note="Every activity dropped onto the day of the week it happened, as a share of the whole. The dashed line is a perfectly even week; the bars barely clear it. The two weekend bars are tinted, so any real weekend bulge would jump out. It does not."
-              source="Activity Log"
-              tableCaption="Activities by weekday, all seven years"
-              columns={['Weekday', 'Activities', 'Share']}
-              rows={weekdayTableRows}
-            >
-              <WeekLevel counts={weekday7} />
-            </Figure>
+            <JourneyArc points={arcPoints} marks={arcMarks} />
+          </div>
+        </Container>
+      )}
+
+      {/* ===== OPENER OPTION 2 · every single day ===== */}
+      {edFirst && (
+        <div className="bleed bleed--level">
+          <Container>
+            <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
+              <div className="section-head">
+                <p className="eyebrow">Opener 2 &middot; Every single day</p>
+                <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+                  Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
+                </h2>
+                <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
+                  One square for every day since the first run. The lit ones carried an activity, more than half of all of them. The long dark band is the 353-day silence; the bright run at the end is the streak still going.
+                </p>
+              </div>
+              <EveryDayField firstISO={edFirst} lastISO={edLast} activeSet={daySet} streakStartISO={edStreak.start} streakEndISO={edStreak.end} />
+              <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
+                <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> rest day</span>
+                <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> active</span>
+                <span><i className="chart-swatch" style={{ background: 'var(--accent-ink)' }} /> current streak</span>
+              </div>
+            </div>
+          </Container>
+        </div>
+      )}
+
+      {/* ===== OPENER OPTION 3 · the heartbeat ===== */}
+      {monthlyTotals.length > 3 && (
+        <Container>
+          <hr className="rule" />
+          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
+            <div className="section-head">
+              <p className="eyebrow">Opener 3 &middot; Seven years, one heartbeat</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A pulse that barely registered, then caught.</h2>
+              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
+                Every month a beat, mirrored off the centre line, as tall as the activities it held. For two years it is almost flat. The month the switch is thrown it quickens, and it has not settled since.
+              </p>
+            </div>
+            <PulseYears rows={monthlyTotals} switchMonth="2021-07" />
+          </div>
+        </Container>
+      )}
+
+      {/* ===== OPENER OPTION 4 · what it adds up to ===== */}
+      {toNum(km) != null && (
+      <div className="bleed bleed--level">
+        <Container>
+          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
+            <div className="section-head">
+              <p className="eyebrow">Opener 4 &middot; What it adds up to</p>
+              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Seven years, in things you can picture.</h2>
+              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
+                The totals read as distances and heights, not bare numbers: a third of the way around the planet on foot, a stack of Everests climbed, months of time spent moving.
+              </p>
+            </div>
+            <AddsUpTo km={toNum(km)} elev={toNum(elevation)} activities={toNum(activities)} hours={toNum(hoursMoving)} />
           </div>
         </Container>
       </div>
+      )}
 
       {/* ---- Seven years, seven characters: the per-year narrative ------ */}
       {yearSummaries.length > 0 && (
@@ -492,7 +546,7 @@ export default function Home() {
 
           <Figure
             title="Every way to move"
-            note="Each sport is a tile, bigger the more often it was done. Walking and running take almost the whole frame. The rest is everything tried at least once and mostly left there, down to one round of golf and a single afternoon in a canoe. Fifteen sports all told, and four in five outings still happen on two feet."
+            note="Each foot sport is a tile, bigger the more often it was done. Walking and running take almost the whole frame. Everything off the feet is gathered into one other bucket, counted but never broken out. Four in five outings still happen on two feet."
             source="Strava Overview"
             tableCaption="Activities by sport type"
             columns={['Sport', 'Activities']}
@@ -500,7 +554,7 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">The shape of it</p>
-                <p>Set walking and running aside and the other thirteen sports together make up barely a sixth of every outing. The range is real, from a single round of golf to an afternoon on the water, yet the centre of gravity never drifts far from two feet on the ground.</p>
+                <p>Set walking and running aside and everything else together makes up barely a sixth of every outing. The log holds other ways of moving too, but the centre of gravity never drifts far from two feet on the ground.</p>
               </>
             )}
           >
@@ -575,25 +629,37 @@ export default function Home() {
             </p>
           </div>
           <ul className="edges">
-            <li><Link className="edgecard" to="/goals">
+            <li><Link className="edgecard" to="/goals#marathon">
               <span className="edgecard__stat">2:56:44</span>
               <span className="edgecard__lbl">The one full marathon, run sub&#8209;three&#8209;hours</span>
-              <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              <span className="edgecard__foot">
+                <span className="edgecard__when mono">May 2022</span>
+                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              </span>
             </Link></li>
-            <li><Link className="edgecard" to="/goals">
-              <span className="edgecard__stat">4 years</span>
+            <li><Link className="edgecard" to="/goals#kili-half">
+              <span className="edgecard__stat">4<span className="edgecard__unit">years</span></span>
               <span className="edgecard__lbl">The Kilimanjaro Half, quicker every single time</span>
-              <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              <span className="edgecard__foot">
+                <span className="edgecard__when mono">2023&ndash;2026</span>
+                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              </span>
             </Link></li>
-            <li><Link className="edgecard" to="/goals">
-              <span className="edgecard__stat">100 km</span>
+            <li><Link className="edgecard" to="/goals#stage-race">
+              <span className="edgecard__stat">100<span className="edgecard__unit">km</span></span>
               <span className="edgecard__lbl">A stage race, four evenings back to back</span>
-              <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              <span className="edgecard__foot">
+                <span className="edgecard__when mono">Mar 2023</span>
+                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              </span>
             </Link></li>
-            <li><Link className="edgecard" to="/goals">
-              <span className="edgecard__stat">{monthStreak} months</span>
-              <span className="edgecard__lbl">Every calendar month, unbroken since the spark</span>
-              <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+            <li><Link className="edgecard" to="/goals#month-streak">
+              <span className="edgecard__stat">{monthStreak}<span className="edgecard__unit">months</span></span>
+              <span className="edgecard__lbl">Every calendar month, unbroken and still going</span>
+              <span className="edgecard__foot">
+                <span className="edgecard__when mono">since Jun 2021</span>
+                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
+              </span>
             </Link></li>
           </ul>
         </Container>

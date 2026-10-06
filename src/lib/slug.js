@@ -5,20 +5,20 @@ export function slugify(s) {
     .replace(/(^-|-$)/g, '')
 }
 
-const SPORT_LABELS = {
+// Only the four foot sports are ever named. Everything else the log holds
+// (rides, workouts, physio, golf, canoe and the rest) is counted in every total
+// but folded into a single neutral "Other activities" label wherever a sport
+// name would otherwise appear.
+const FOOT_LABELS = {
+  Run: 'Run',
+  Walk: 'Walk',
   TrailRun: 'Trail Run',
-  PhysicalTherapy: 'Physical Therapy',
-  WeightTraining: 'Weight Training',
+  Hike: 'Hike',
 }
+export const OTHER_LABEL = 'Other activities'
 
-// Cycling variants are counted in every total but never named; they surface as
-// a neutral label wherever a sport name would otherwise be shown.
-const QUIET_SPORTS = new Set(['Ride', 'GravelRide', 'EBikeRide', 'MountainBikeRide'])
-
-// "TrailRun" -> "Trail Run"; known compounds handled explicitly.
+// A foot sport returns its clean name; anything else returns OTHER_LABEL.
 export function prettySport(s) {
   if (!s) return ''
-  if (QUIET_SPORTS.has(s)) return 'Other activity'
-  if (SPORT_LABELS[s]) return SPORT_LABELS[s]
-  return String(s).replace(/([a-z])([A-Z])/g, '$1 $2')
+  return FOOT_LABELS[s] || OTHER_LABEL
 }

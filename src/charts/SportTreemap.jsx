@@ -1,18 +1,16 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 
-// Every way the seven years moved, one tile per sport, area set by how many
-// activities it holds. Two warm tiles swallow the frame - walking and running -
-// and the eye reads the answer before the labels: this is a life on foot. Around
-// them, a cool scatter of everything else tried at least once, down to a single
-// round of golf and one afternoon in a canoe. Fifteen sports; four of five outings
-// on two feet.
+// Every way the seven years moved. Only the four foot sports get a tile and a
+// name; everything else the log holds is gathered into one neutral "Other
+// activities" tile, counted but never broken out. Two warm tiles swallow the
+// frame - walking and running - and the eye reads the answer before the labels:
+// this is a life on foot.
 // props: rows (sport_breakdown table: { sport, activities })
 const FOOT = new Set(['Walk', 'Run', 'TrailRun', 'Hike'])
-// counted in every total, but left unnamed on the chart
-const QUIET = new Set(['Ride', 'GravelRide', 'EBikeRide', 'MountainBikeRide'])
-const NICE = { TrailRun: 'Trail run', PhysicalTherapy: 'Physio', WeightTraining: 'Weights' }
-const nm = (s) => (QUIET.has(s) ? 'Other' : NICE[s] || s)
+const OTHER = '__other'
+const NICE = { TrailRun: 'Trail run' }
+const nm = (s) => (s === OTHER ? 'Other activities' : NICE[s] || s)
 
 function squarify(items, x, y, w, h) {
   const result = []
@@ -53,13 +51,20 @@ export default function SportTreemap({ rows }) {
   const N = (x) => Number(x) || 0
   if (!rows || !rows.length) return <div ref={ref} />
 
-  const items = rows
+  const all = rows
     .map((r) => ({ sport: r.sport, value: N(r.activities) }))
     .filter((d) => d.value > 0)
     .sort((a, b) => b.value - a.value)
-  const total = items.reduce((s, d) => s + d.value, 0)
-  const footN = items.filter((d) => FOOT.has(d.sport)).reduce((s, d) => s + d.value, 0)
+  const total = all.reduce((s, d) => s + d.value, 0)
+  const footN = all.filter((d) => FOOT.has(d.sport)).reduce((s, d) => s + d.value, 0)
   const footPct = total ? Math.round((footN / total) * 100) : 0
+  const distinctN = all.length
+
+  // one tile per foot sport, plus a single aggregated "Other activities" tile
+  const footTiles = all.filter((d) => FOOT.has(d.sport))
+  const otherVal = total - footN
+  const items = (otherVal > 0 ? [...footTiles, { sport: OTHER, value: otherVal }] : footTiles)
+    .sort((a, b) => b.value - a.value)
 
   const W = Math.max(300, width)
   const H = W < 520 ? 260 : 300
@@ -68,11 +73,11 @@ export default function SportTreemap({ rows }) {
   return (
     <div ref={ref} className="tm">
       <p className="tm__readout">
-        <span className="mono tm__readout-n">{items.length}</span> sports in all, yet{' '}
+        <span className="mono tm__readout-n">{distinctN}</span> sports in all, yet{' '}
         <strong>{footPct}%</strong> of every outing is on foot.
       </p>
       <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img"
-        aria-label={`Fifteen sports sized by activity count. Walking and running dominate; ${footPct} percent of all outings are on foot.`}
+        aria-label={`The four foot sports sized by how often they were done, with everything else gathered into one other-activities tile. ${footPct} percent of all outings are on foot.`}
         style={{ display: 'block' }} onMouseLeave={() => setHover(null)}>
         {tiles.map((t, i) => {
           const foot = FOOT.has(t.sport)
@@ -80,9 +85,8 @@ export default function SportTreemap({ rows }) {
           const base = foot
             ? (hover === i ? 'var(--accent)' : 'color-mix(in srgb, var(--accent) 34%, var(--paper))')
             : (hover === i ? 'var(--grey-45)' : 'var(--grey-15)')
-          const quiet = QUIET.has(t.sport)
-          const showName = !quiet && t.w >= 58 && t.h >= 34
-          const showN = !quiet && t.w >= 40 && t.h >= 22
+          const showName = t.w >= 58 && t.h >= 34
+          const showN = t.w >= 40 && t.h >= 22
           const dark = foot && hover === i
           return (
             <g key={t.sport} opacity={on ? 1 : 0.55} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
