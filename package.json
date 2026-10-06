@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist",
+    "deploy": "npm run build && gh-pages -d dist --nojekyll",
     "test": "node --test",
     "check:data": "python scripts/validate.py",
     "check:encoding": "node scripts/check-encoding.mjs",

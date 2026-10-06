@@ -143,6 +143,58 @@
 .yis-cta__btn:hover { background: var(--ink); color: var(--paper); }
 .yis-cta__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* ---- cumulative build-up (YearProgress) ---- */
+.yprog__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.25s var(--ease); }
+.yprog__plot.is-in .yprog__line { stroke-dashoffset: 0; }
+.yprog__area { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.35s; }
+.yprog__plot.is-in .yprog__area { opacity: 1; }
+.yprog__dot { opacity: 0; transition: opacity var(--dur) var(--ease) 1.05s; }
+.yprog__plot.is-in .yprog__dot { opacity: 1; }
+
+/* ---- shape of the week (YearWeekdays) ---- */
+.yweek { display: flex; gap: var(--sp-2); align-items: flex-end; }
+.yweek__col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); min-width: 0; }
+.yweek__val { font-size: var(--fs-sm); color: var(--ink); font-variant-numeric: tabular-nums; }
+.yweek__track { width: 100%; height: 150px; display: flex; align-items: flex-end; }
+.yweek__bar { width: 100%; border-radius: 3px 3px 0 0; background: var(--grey-25);
+  transform: scaleY(0); transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
+.yweek__bar.is-peak { background: var(--accent); }
+.yweek.is-in .yweek__bar { transform: scaleY(1); }
+.yweek__day { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--fg-muted); text-transform: uppercase; }
+.yweek__pct { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-faint); }
+
+/* ---- typical outing (YearDistances) ---- */
+.ydist__bar { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
+.ydist__plot.is-in .ydist__bar { transform: scaleY(1); }
+
+/* ---- against last year (YearVsPrev) ---- */
+.yvp__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-4); }
+.yvp__row { display: grid; grid-template-columns: minmax(84px, 22%) 1fr auto; align-items: center; gap: var(--sp-2) var(--sp-4); }
+.yvp__lbl { font-size: var(--fs-sm); color: var(--ink); }
+.yvp__bars { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.yvp__barwrap { display: block; white-space: nowrap; line-height: 1; }
+.yvp__bar { display: inline-block; vertical-align: middle; height: 13px; border-radius: 3px;
+  transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease); }
+.yvp__bar--cur { background: var(--accent); }
+.yvp__bar--prev { background: var(--grey-25); height: 9px; }
+.yvp.is-in .yvp__bar { transform: scaleX(1); }
+.yvp__num { display: inline-block; vertical-align: middle; margin-left: var(--sp-2); font-size: var(--fs-xs); color: var(--ink); font-variant-numeric: tabular-nums; }
+.yvp__num--prev { color: var(--fg-faint); }
+.yvp__u { color: var(--fg-faint); }
+.yvp__delta { font-family: var(--font-mono); font-size: var(--fs-sm); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.yvp__delta.is-up { color: var(--accent-ink); }
+.yvp__delta.is-down { color: var(--fg-muted); }
+.yvp__leg { display: flex; align-items: center; gap: var(--sp-2); margin: var(--sp-5) 0 0; font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg-faint); }
+.yvp__swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.yvp__swatch--cur { background: var(--accent); }
+.yvp__swatch--prev { background: var(--grey-25); margin-left: var(--sp-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .yprog__line { stroke-dashoffset: 0 !important; }
+  .yprog__area, .yprog__dot { opacity: 1 !important; }
+  .yweek__bar, .ydist__bar, .yvp__bar { transform: none !important; }
+}
+
 /* ---- Home: seven years, seven characters (three columns) ---- */
 .years { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-3); }
 @media (min-width: 40rem) { .years { grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); } }

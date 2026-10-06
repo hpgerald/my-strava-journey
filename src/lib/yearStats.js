@@ -72,14 +72,65 @@ export function computeYearStats(year, acts, geo) {
   const footActs = ya.filter((a) => FOOT.has(a.sport_type))
   const rec = (a, key) => (a ? { date: (a.date || '').slice(0, 10), val: num(a, key), sport: prettySport(a.sport_type) } : null)
 
+  const calories = ya.reduce((s, a) => s + num(a, 'calories'), 0)
+
+  // weeks touched, counted by the Monday that starts each week (avoids ISO edge
+  // cases while still counting distinct calendar weeks). weeksElapsed frames a
+  // partial year honestly: weeks from Jan 1 to the last recorded day.
+  const mondayKey = (iso) => {
+    const d = new Date(iso + 'T00:00:00Z')
+    const back = (d.getUTCDay() + 6) % 7
+    d.setUTCDate(d.getUTCDate() - back)
+    return d.toISOString().slice(0, 10)
+  }
+  const weeksActive = new Set(dates.map(mondayKey)).size
+  const endISO = dates.length ? dates[dates.length - 1] : `${year}-12-31`
+  const weeksElapsed = dates.length
+    ? Math.floor((Date.parse(endISO) - Date.parse(`${year}-01-01`)) / (7 * 86400000)) + 1
+    : 0
+
+  // cumulative foot kilometres at each month end, drawn only through the last
+  // month that actually carried activity (so a partial year does not flatline).
+  let lastActiveMonth = -1
+  for (let i = 0; i < 12; i++) if (monthsActivities[i] > 0) lastActiveMonth = i
+  const cumByMonth = []
+  let acc = 0
+  for (let i = 0; i < 12; i++) { acc += monthsKm[i]; cumByMonth.push({ m: i + 1, cum: acc, inRange: i <= lastActiveMonth }) }
+
+  // distribution of foot outings by rounded kilometre, long tail folded at 25+.
+  const CAP = 25
+  const footBins = Array.from({ length: CAP }, (_, i) => ({ km: i + 1, count: 0, cap: i + 1 === CAP }))
+  for (const a of footActs) {
+    const d = num(a, 'distance_km')
+    if (d < 0.5) continue
+    const k = Math.min(CAP, Math.max(1, Math.round(d)))
+    footBins[k - 1].count += 1
+  }
+  const peakBins = [...footBins].filter((b) => b.count > 0).sort((a, b) => b.count - a.count).slice(0, 2).map((b) => b.km)
+  const medianFoot = (() => {
+    const ds = footActs.map((a) => num(a, 'distance_km')).filter((d) => d >= 0.5).sort((a, b) => a - b)
+    if (!ds.length) return 0
+    const mid = Math.floor(ds.length / 2)
+    return ds.length % 2 ? ds[mid] : (ds[mid - 1] + ds[mid]) / 2
+  })()
+
+  const mk = maxBy(ya, (a) => num(a, 'kudos'))
+  const mostKudos = mk ? { date: (mk.date || '').slice(0, 10), sport: prettySport(mk.sport_type), kudos: num(mk, 'kudos') } : null
+
   return {
-    year, n: ya.length, footKm, hours, elev, kudos, prs, achievements,
+    year, n: ya.length, footKm, hours, elev, kudos, prs, achievements, calories,
     activeDays: dates.length, activeSet, streakLen: best, streakStartISO: bStart, streakEndISO: bEnd,
-    endISO: dates.length ? dates[dates.length - 1] : `${year}-12-31`,
+    endISO,
+    weeksActive, weeksElapsed,
     monthsActivities, monthsKm, monthsElev, hours24, weekday7, mix, countries,
+    cumByMonth, lastActiveMonth, footBins, peakBins, medianFoot,
+    peakWeekdayIdx: weekday7.indexOf(Math.max(1, ...weekday7)),
     biggestFoot: rec(maxBy(footActs, (a) => num(a, 'distance_km')), 'distance_km'),
     highestClimb: rec(maxBy(footActs, (a) => num(a, 'elevation_gain_m')), 'elevation_gain_m'),
     hardest: rec(maxBy(ya, (a) => num(a, 'relative_effort')), 'relative_effort'),
+    longestTime: rec(maxBy(footActs, (a) => num(a, 'moving_time_min')), 'moving_time_min'),
+    mostKudos,
+    footN: footActs.length,
     walkN: ya.filter((a) => a.sport_type === 'Walk').length,
     runN: ya.filter((a) => a.sport_type === 'Run').length,
   }

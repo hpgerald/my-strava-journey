@@ -8,6 +8,11 @@ import YearMix from '../charts/YearMix.jsx'
 import YearStreak from '../charts/YearStreak.jsx'
 import YearRank from '../charts/YearRank.jsx'
 import YearMoment from '../charts/YearMoment.jsx'
+import YearProgress from '../charts/YearProgress.jsx'
+import YearWeekdays from '../charts/YearWeekdays.jsx'
+import YearDistances from '../charts/YearDistances.jsx'
+import YearVsPrev from '../charts/YearVsPrev.jsx'
+import EverestLedger from '../charts/EverestLedger.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -37,20 +42,29 @@ function HeroStat({ value, unit, label, decimals = 0 }) {
   )
 }
 
-function RecordCard({ kicker, value, unit, label, sub, decimals = 0 }) {
+function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, text = null }) {
   const [ref, inView] = useInView()
   const v = useCountUp(value, inView, { decimals, dur: 1000 })
   return (
     <div ref={ref} className="yis-rec">
       <p className="eyebrow">{kicker}</p>
       <p className="yis-rec__val">
-        {v.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+        {text != null ? text : v.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
         {unit ? <span className="yis-rec__unit">{unit}</span> : null}
       </p>
       <p className="yis-rec__lbl">{label}</p>
       {sub ? <p className="yis-rec__sub">{sub}</p> : null}
     </div>
   )
+}
+
+const WEEK_FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const DAR_DODOMA_KM = 450 // Dar es Salaam to Dodoma by road (A7), approx one way
+
+function hoursMin(min) {
+  const h = Math.floor(min / 60)
+  const m = Math.round(min % 60)
+  return h > 0 ? `${h} h ${m} min` : `${m} min`
 }
 
 export default function YearInSport() {
@@ -88,6 +102,13 @@ export default function YearInSport() {
   const rankSeries = useMemo(
     () => years.map((y) => ({ year: y, value: activities.filter((a) => Number(a.year) === y).length })),
     [years, activities]
+  )
+
+  // the year immediately before, for the head-to-head comparison
+  const prevYear = years.includes(activeYear - 1) ? activeYear - 1 : null
+  const prevStats = useMemo(
+    () => (prevYear && activities.length ? computeYearStats(prevYear, activities, geoByKey) : null),
+    [prevYear, activities, geoByKey]
   )
 
   const pickerRef = useRef(null)
@@ -147,6 +168,7 @@ export default function YearInSport() {
             <HeroStat value={Math.round(s.hours)} unit="h" label="moving" />
             <HeroStat value={Math.round(s.elev)} unit="m" label="climbed" />
             <HeroStat value={Math.round(s.kudos)} label="kudos" />
+            <HeroStat value={Math.round(s.prs)} label="personal records" />
           </div>
         </section>
 
@@ -164,6 +186,22 @@ export default function YearInSport() {
           </Figure>
         </Reveal>
 
+        {/* How the kilometres added up */}
+        {s.footKm > 0 && s.lastActiveMonth >= 1 && (
+          <Reveal as="section" className="yis-sec">
+            <Figure
+              title="How the kilometres added up"
+              note={`Every foot kilometre of ${activeYear}, stacked end to end as the months pass. The line climbs steeply where a stretch of long outings landed close together and levels off through the quieter weeks, finishing the year at ${Math.round(s.footKm).toLocaleString()} km.`}
+              source="Activity Log"
+              tableCaption={`Cumulative foot kilometres by month end in ${activeYear}`}
+              columns={['Through', 'Cumulative km']}
+              rows={s.cumByMonth.filter((d) => d.inRange).map((d) => [MONTH_F[d.m - 1], fmtInt(d.cum)])}
+            >
+              <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} />
+            </Figure>
+          </Reveal>
+        )}
+
         {/* How it moved */}
         <Reveal as="section" className="yis-sec">
           <Figure
@@ -175,6 +213,24 @@ export default function YearInSport() {
             rows={s.mix.map((d) => [d.label, fmtInt(d.n)])}
           >
             <YearMix mix={s.mix} />
+          </Figure>
+        </Reveal>
+
+        {/* The shape of the week */}
+        <Reveal as="section" className="yis-sec">
+          <Figure
+            title="The shape of the week"
+            note={`Every ${activeYear} activity sorted into the weekday it fell on. ${
+              Math.max(...s.weekday7) - Math.min(...s.weekday7) <= Math.max(2, Math.round(s.n * 0.03))
+                ? 'The seven columns stand almost level, the mark of a habit that ran every day of the week alike.'
+                : `${WEEK_FULL[s.peakWeekdayIdx]} carried the most, with ${s.weekday7[s.peakWeekdayIdx]} of them.`
+            }`}
+            source="Activity Log"
+            tableCaption={`Activities by weekday in ${activeYear}`}
+            columns={['Weekday', 'Activities']}
+            rows={WEEK_FULL.map((d, i) => [d, fmtInt(s.weekday7[i])])}
+          >
+            <YearWeekdays counts={s.weekday7} />
           </Figure>
         </Reveal>
 
@@ -192,15 +248,35 @@ export default function YearInSport() {
           </Figure>
         </Reveal>
 
+        {/* The typical outing */}
+        {s.footN >= 20 && (
+          <Reveal as="section" className="yis-sec">
+            <Figure
+              title="The typical outing"
+              note={`Every walk, run and hike of ${activeYear} sorted by distance into one-kilometre bins. The median outing came to ${s.medianFoot.toFixed(1)} km${
+                s.peakBins.length ? `, and the lengths it kept returning to were around ${s.peakBins.slice().sort((a, b) => a - b).join(' and ')} km` : ''
+              }. Anything past 25 km is folded into the last bar.`}
+              source="Activity Log"
+              tableCaption={`Foot outings by distance in ${activeYear}`}
+              columns={['Distance', 'Outings']}
+              rows={s.footBins.filter((b) => b.count > 0).map((b) => [`${b.km}${b.cap ? '+' : ''} km`, fmtInt(b.count)])}
+            >
+              <YearDistances bins={s.footBins} peaks={s.peakBins} />
+            </Figure>
+          </Reveal>
+        )}
+
         {/* Consistency / streak */}
         <Reveal as="section" className="yis-sec">
           <Figure
             title={`Every day of ${activeYear}`}
-            note={`${fmtInt(s.activeDays)} days that year carried an activity. The longest unbroken run of them reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
+            note={`${fmtInt(s.activeDays)} days that year carried an activity, spread across ${s.weeksActive} ${
+              isPartial ? `of the ${s.weeksElapsed} weeks run so far` : 'different weeks'
+            }. The longest unbroken run of them reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
             source="Activity Log"
             tableCaption={`Consistency in ${activeYear}`}
             columns={['Measure', 'Value']}
-            rows={[['Active days', fmtInt(s.activeDays)], ['Longest streak', `${s.streakLen} days`]]}
+            rows={[['Active days', fmtInt(s.activeDays)], ['Weeks with activity', isPartial ? `${s.weeksActive} of ${s.weeksElapsed}` : String(s.weeksActive)], ['Longest streak', `${s.streakLen} days`]]}
           >
             <YearStreak activeSet={s.activeSet} year={activeYear} endISO={s.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} />
           </Figure>
@@ -215,12 +291,52 @@ export default function YearInSport() {
               {s.biggestFoot && s.biggestFoot.val > 0 && (
                 <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} unit="km" decimals={1} label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} />
               )}
+              {s.longestTime && s.longestTime.val > 0 && (
+                <RecordCard kicker="Longest outing" text={hoursMin(s.longestTime.val)} label="moving, start to finish" sub={fmtMonth(s.longestTime.date)} />
+              )}
               {s.highestClimb && s.highestClimb.val > 0 && (
                 <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of vertical in a day" sub={fmtMonth(s.highestClimb.date)} />
               )}
               {s.hardest && s.hardest.val > 0 && (
                 <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative-effort score" sub={fmtMonth(s.hardest.date)} />
               )}
+            </div>
+          </Reveal>
+        )}
+
+        {/* Breakthroughs: PRs, achievements, the most-cheered day */}
+        {(s.prs > 0 || s.achievements >= 10) && (
+          <Reveal as="section" className="yis-sec">
+            <div className="section-head"><p className="eyebrow">Breakthroughs</p>
+              <h3 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>Records set, crowns earned.</h3></div>
+            <div className="yis-recs">
+              {s.prs > 0 && (
+                <RecordCard kicker="Personal records" value={Math.round(s.prs)} label="segment bests beaten" sub={`${activeYear}`} />
+              )}
+              {s.achievements > 0 && (
+                <RecordCard kicker="Achievements" value={Math.round(s.achievements)} label="crowns and cups collected" sub={`${activeYear}`} />
+              )}
+              {s.mostKudos && s.mostKudos.kudos > 0 && (
+                <RecordCard kicker="Most cheered" value={Math.round(s.mostKudos.kudos)} label={`kudos on one ${s.mostKudos.sport.toLowerCase()}`} sub={fmtMonth(s.mostKudos.date)} />
+              )}
+            </div>
+          </Reveal>
+        )}
+
+        {/* In real terms: what the year's totals add up to */}
+        {s.footKm >= 100 && (
+          <Reveal as="section" className="yis-sec">
+            <div className="section-head"><p className="eyebrow">In real terms</p>
+              <h3 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>What {activeYear} adds up to.</h3></div>
+            {s.elev >= 800 && (
+              <div style={{ margin: 'var(--sp-4) 0 var(--sp-5)' }}>
+                <EverestLedger meters={s.elev} />
+              </div>
+            )}
+            <div className="yis-recs">
+              <RecordCard kicker="On foot" text={`${(s.footKm / DAR_DODOMA_KM).toFixed(1)}×`} label="the road from Dar es Salaam to Dodoma" sub={`${Math.round(s.footKm).toLocaleString()} km walked and run`} />
+              <RecordCard kicker="Energy" value={Math.round(s.calories)} label="calories burned across the year" />
+              <RecordCard kicker="Time" value={Math.round(s.hours)} unit="h" label="spent moving, all told" sub={`about ${Math.round(s.hours / Math.max(1, s.weeksElapsed || 52))} h a week`} />
             </div>
           </Reveal>
         )}
@@ -237,6 +353,41 @@ export default function YearInSport() {
               rows={s.countries.map((c) => [c.country, fmtInt(c.n)])}
             >
               <YearMix mix={s.countries.map((c) => ({ label: c.country, n: c.n, foot: true }))} />
+            </Figure>
+          </Reveal>
+        )}
+
+        {/* Against last year */}
+        {prevStats && s.n >= 50 && (
+          <Reveal as="section" className="yis-sec">
+            <Figure
+              title={`${activeYear} against ${prevYear}`}
+              note={`The year set beside the one before it, measure by measure.${
+                isPartial ? ` ${activeYear} is still unfolding, so these totals run against a full ${prevYear}, and the gaps will narrow as the year fills out.` : ''
+              }`}
+              source="Activity Log"
+              tableCaption={`${activeYear} compared with ${prevYear}`}
+              columns={['Measure', `${activeYear}`, `${prevYear}`]}
+              rows={[
+                ['Activities', fmtInt(s.n), fmtInt(prevStats.n)],
+                ['Kilometres on foot', fmtInt(s.footKm), fmtInt(prevStats.footKm)],
+                ['Hours moving', fmtInt(s.hours), fmtInt(prevStats.hours)],
+                ['Metres climbed', fmtInt(s.elev), fmtInt(prevStats.elev)],
+                ['Kudos', fmtInt(s.kudos), fmtInt(prevStats.kudos)],
+                ['Personal records', fmtInt(s.prs), fmtInt(prevStats.prs)],
+              ]}
+            >
+              <YearVsPrev
+                prevYear={prevYear}
+                rows={[
+                  { label: 'Activities', cur: s.n, prev: prevStats.n },
+                  { label: 'Km on foot', cur: Math.round(s.footKm), prev: Math.round(prevStats.footKm), unit: 'km' },
+                  { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(prevStats.hours), unit: 'h' },
+                  { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(prevStats.elev), unit: 'm' },
+                  { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(prevStats.kudos) },
+                  { label: 'Personal records', cur: Math.round(s.prs), prev: Math.round(prevStats.prs) },
+                ]}
+              />
             </Figure>
           </Reveal>
         )}
