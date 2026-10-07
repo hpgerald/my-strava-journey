@@ -84,7 +84,7 @@ export default function Where() {
           <Figure
             n="01"
             title="A third of the way around the Earth"
-            note="All the ground covered on foot, laid against the length of the equator. Twelve thousand nine hundred kilometres of running, walking and hiking is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, most of it looped through a handful of home regions."
+            note={`All the ground covered on foot, laid against the length of the equator. ${fmtInt(footKm)} kilometres of running, walking and hiking is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, most of it looped through a handful of home regions.`}
             source="Activity Log"
             tableCaption="Foot distance against the equator and Tanzania's border"
             columns={['Measure', 'Value']}

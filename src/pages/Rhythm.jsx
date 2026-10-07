@@ -395,7 +395,7 @@ export default function Rhythm() {
           <Figure
             n="04"
             title="The falling price of a kilometre"
-            note="Relative effort divides how hard a session felt by how far it went. Read by year, the cost of a single kilometre on foot falls from about fourteen points in 2019 to under four: the same ground, a fraction of the toll, as fitness rose. The earliest two years rest on light samples and are drawn faint."
+            note="Relative effort divides how hard a session felt by how far it went. Read by year, the cost of a single kilometre on foot falls from about fourteen points in 2019 to around four in the recent years: the same ground, a fraction of the toll, as fitness rose. The earliest two years rest on light samples and are drawn faint."
             source="Activity Log + Zones & Effort"
             tableCaption="Relative effort spent per km on foot, by year"
             columns={['Year', 'Effort per km']}

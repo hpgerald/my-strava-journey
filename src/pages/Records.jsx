@@ -224,7 +224,7 @@ export default function Records() {
           <Figure
             n="01"
             title="A record is not a little better than usual"
-            note={`Every run ever logged, sorted into bins by distance. The crowd sits near the average of ${tail.mean.toFixed(1)} km, and almost everything falls within a standard deviation or two of it, the shaded band. The one full marathon stands alone far out in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations past the average, beyond the ${tail.pct} of all ${tail.n} runs. That is what makes it a record. Not a good day, but a day the distribution says should almost never happen.`}
+            note={`Every run ever logged, sorted into bins by distance. The crowd sits near the average of ${tail.mean.toFixed(1)} km, and almost everything falls within a standard deviation or two of it, the shaded band. The one full marathon stands alone far out in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations past the average, beyond the ${tail.pct} of all ${tail.n} runs. That distance is what makes it a record, a day so rare the distribution says it should almost never happen.`}
             source="Activity Log"
             tableCaption="Run distance distribution and where the record falls"
             columns={['Measure', 'Value']}
@@ -244,7 +244,7 @@ export default function Records() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           n="02"
-          title="Ninety-six days in motion"
+          title={`${fmtInt(movingHours / 24)} days in motion`}
           note="Add up the moving time on every activity ever logged and it comes to more than three months of continuous movement, day and night without pause. Alongside it runs the dead time: the fraction of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
           source="Activity Log"
           tableCaption="Total moving time against elapsed time"

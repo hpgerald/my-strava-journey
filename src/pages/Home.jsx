@@ -374,7 +374,7 @@ export default function Home() {
               <div className="opener2col opener2col--text">
                 <div className="section-head" style={{ margin: 0 }}>
                   <p className="eyebrow">Opener 2 &middot; Who does the work</p>
-                  <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>No single day carries the record, but the big ones pull their weight.</h2>
+                  <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>The big days pull more than their weight.</h2>
                   <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
                     Sort every active day by how far it went and stack them up. The busiest tenth of days hold about {top10Share}% of all the ground, and the top fifth hold {top20Share}%. The gap between the curve and the straight line of a perfectly even record is the Gini coefficient, {lorenzData.gini.toFixed(2)}, a moderate lean rather than a handful of epic days doing everything.
                   </p>
