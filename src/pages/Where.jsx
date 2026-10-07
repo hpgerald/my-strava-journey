@@ -6,6 +6,7 @@ import Choropleth from '../charts/Choropleth.jsx'
 import ProportionBar from '../charts/ProportionBar.jsx'
 import EquatorArc from '../charts/EquatorArc.jsx'
 import TerrainLand from '../charts/TerrainLand.jsx'
+import RankSize from '../charts/RankSize.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
@@ -45,6 +46,14 @@ export default function Where() {
   const regionRows = [...regions]
     .sort((a, b) => toNum(b.activities) - toNum(a.activities))
   const regionMax = Math.max(1, ...regionRows.map((r) => toNum(r.activities) || 0))
+
+  // rank-size: every region ranked by activity count, for the power-law plot
+  const rankItems = regionRows
+    .map((r) => ({ label: r.region, value: toNum(r.activities) || 0 }))
+    .filter((d) => d.value > 0)
+  const rankTotal = rankItems.reduce((s, d) => s + d.value, 0) || 1
+  const topRegionShare = Math.round((100 * (rankItems[0]?.value || 0)) / rankTotal)
+  const top3Share = Math.round((100 * rankItems.slice(0, 3).reduce((s, d) => s + d.value, 0)) / rankTotal)
 
   return (
     <DetailFrame
@@ -149,6 +158,23 @@ export default function Where() {
           <ProportionBar segments={countrySegments} unit="acts" />
         </Figure>
       </section>
+
+      {/* The geography obeys a power law */}
+      {rankItems.length >= 5 && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>How the map concentrates</p>
+          <Figure
+            title="A few places hold almost everything"
+            note={`Rank each region by how often it appears, then plot rank against count with both axes on a log scale. The points drop along a near-straight line, the signature of a power law: the busiest region alone holds ${topRegionShare}% of all placed activity and the top three hold ${top3Share}%, while the long tail of regions is visited once or twice and never again. It is the same lopsided shape that governs city sizes and word frequencies, drawn here from one person's map of home.`}
+            source="Strava GPS + Natural Earth admin-1"
+            tableCaption="Every region ranked by activity count"
+            columns={['Rank', 'Region', 'Activities']}
+            rows={rankItems.map((d, i) => [String(i + 1), d.label, fmtInt(d.value)])}
+          >
+            <RankSize items={rankItems} unit="activities" />
+          </Figure>
+        </section>
+      )}
 
       {/* Regions: compact clickable index with mini bars */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>

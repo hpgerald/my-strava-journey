@@ -16,10 +16,12 @@ import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
 // WeekLevel (even-week band) retired from the home opener; still available for Rhythm.
-import JourneyArc from '../charts/JourneyArc.jsx'
 import EveryDayField from '../charts/EveryDayField.jsx'
 import HabitMomentum from '../charts/HabitMomentum.jsx'
+import TransitionMatrix from '../charts/TransitionMatrix.jsx'
+import LorenzCurve from '../charts/LorenzCurve.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
+import { lorenz, topShare } from '../lib/stats.js'
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
@@ -201,25 +203,19 @@ export default function Home() {
     : 1
   const pctActiveDays = Math.round((activeDays / spanDays) * 100)
 
-  // ---- opener candidates (stacked for review; cut down to the keeper) ----
+  // ---- opener data ----
   const DAY = 86400000
-  // A. cumulative foot kilometres across the whole record, with signature marks
-  const arcPoints = useMemo(() => {
-    const acts = activityLog
-      .filter((a) => FOOT_HOME.has(a.sport_type) && a.date)
-      .map((a) => ({ t: Date.parse((a.date || '').replace(' ', 'T')), km: toNum(a.distance_km) || 0 }))
-      .filter((a) => Number.isFinite(a.t))
-      .sort((a, b) => a.t - b.t)
-    let cum = 0
-    return acts.map((a) => { cum += a.km; return { t: a.t, cum } })
+  // A. concentration of distance across days, for the Lorenz curve (Opener 2)
+  const dailyFootKm = useMemo(() => {
+    const m = {}
+    for (const a of activityLog) {
+      if (FOOT_HOME.has(a.sport_type)) { const d = (a.date || '').slice(0, 10); if (d) m[d] = (m[d] || 0) + (toNum(a.distance_km) || 0) }
+    }
+    return Object.values(m).filter((v) => v > 0)
   }, [activityLog])
-  const arcMarks = arcPoints.length ? [
-    { t: Date.UTC(2020, 5, 15), label: 'Two quiet years' },
-    { t: Date.UTC(2021, 6, 1), label: 'July 2021 · the switch' },
-    { t: Date.UTC(2022, 4, 1), label: 'The lone marathon' },
-    { t: Date.UTC(2023, 2, 24), label: '100 km, four nights' },
-    { t: arcPoints[arcPoints.length - 1].t, label: 'Unbroken, still going' },
-  ] : []
+  const lorenzData = useMemo(() => lorenz(dailyFootKm), [dailyFootKm])
+  const top10Share = Math.round(topShare(dailyFootKm, 0.1) * 100)
+  const top20Share = Math.round(topShare(dailyFootKm, 0.2) * 100)
   // B. every-day field: the ongoing streak range, for the highlight band
   const edFirst = sortedDays[0]
   const edLast = sortedDays[sortedDays.length - 1]
@@ -353,28 +349,39 @@ export default function Home() {
               <p className="eyebrow">Opener 1 &middot; The physics of the habit</p>
               <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A streak keeps itself going.</h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                Read day by day, the habit behaves like a Markov chain. Before July 2021, moving one day barely hinted at the next, a {mBefore}% chance. Since the switch it is {mAfter}%, and the deeper a streak runs the more certain it gets, {mDeep}% once a month is on the board. Stop, though, and it unravels: a few days off and the odds of coming back slide to {mRest}%. It reads as pure momentum, each day done pulling the next along.
+                Read day by day, the training behaves like a Markov chain: what you do today shifts the odds for tomorrow. The deeper a streak runs the more certain the next day gets, up to {mDeep}% once a month is on the board; stop, and a few days off slide the odds of coming back down to {mRest}%. On the left is how those odds move. On the right is the engine driving them.
               </p>
             </div>
-            <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
-            <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since July 2021</p>
+            <div className="opener2col">
+              <div>
+                <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
+                <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since July 2021</p>
+              </div>
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>Today &rarr; tomorrow</p>
+                <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} beforeP11={momentum.before.p11} activeFrac={momentum.activeFrac} />
+              </div>
+            </div>
           </div>
         </Container>
       )}
 
-      {/* ===== OPENER OPTION 2 · the annotated journey arc ===== */}
-      {arcPoints.length > 10 && (
+      {/* ===== OPENER OPTION 2 · how evenly the distance is shared (Lorenz) ===== */}
+      {dailyFootKm.length > 20 && (
         <div className="bleed bleed--level">
           <Container>
             <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
-              <div className="section-head">
-                <p className="eyebrow">Opener 2 &middot; The whole journey</p>
-                <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Thirteen thousand kilometres, one climbing line.</h2>
-                <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                  Every kilometre on foot, stacked end to end from the first run to today. Two years barely lift off the floor, then July 2021 and the line rears up and never flattens. The moments that mattered sit pinned where they happened.
-                </p>
+              <div className="opener2col opener2col--text">
+                <div className="section-head" style={{ margin: 0 }}>
+                  <p className="eyebrow">Opener 2 &middot; Who does the work</p>
+                  <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>No single day carries the record, but the big ones pull their weight.</h2>
+                  <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
+                    Sort every active day by how far it went and stack them up. The busiest tenth of days hold about {top10Share}% of all the ground, and the top fifth hold {top20Share}%. The gap between the curve and the straight line of a perfectly even record is the Gini coefficient, {lorenzData.gini.toFixed(2)}, a moderate lean rather than a handful of epic days doing everything.
+                  </p>
+                </div>
+                <LorenzCurve points={lorenzData.points} gini={lorenzData.gini} markP={0.9} unitLabel="distance on foot" />
               </div>
-              <JourneyArc points={arcPoints} marks={arcMarks} />
+              <p className="source fig__source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log &middot; daily foot distance, {dailyFootKm.length} active days</p>
             </div>
           </Container>
         </div>

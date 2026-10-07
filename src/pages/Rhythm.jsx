@@ -12,6 +12,7 @@ import EffortTide from '../charts/EffortTide.jsx'
 import EffortPerKm from '../charts/EffortPerKm.jsx'
 import DoublesBar from '../charts/DoublesBar.jsx'
 import MiniTrend from '../charts/MiniTrend.jsx'
+import Correlogram from '../charts/Correlogram.jsx'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
@@ -179,6 +180,44 @@ export default function Rhythm() {
   ]
   const multiPct = Math.round((100 * dayVals.filter((v) => v >= 2).length) / dayVals.length)
 
+  // ---- autocorrelation of the daily active/rest series ----
+  // Build a binary series over the full span: 1 if the day carried an activity,
+  // 0 if not. Its autocorrelation at a lag answers "does training today predict
+  // training that many days later?". A slow decay is a habit with long memory.
+  const acfData = (() => {
+    const ds = Object.keys(counts).sort()
+    if (ds.length < 60) return null
+    const DAY = 86400000
+    const t0 = Date.parse(`${ds[0]}T00:00:00Z`)
+    const t1 = Date.parse(`${ds[ds.length - 1]}T00:00:00Z`)
+    const span = Math.round((t1 - t0) / DAY) + 1
+    const active = new Array(span).fill(0)
+    for (const d of ds) {
+      const i = Math.round((Date.parse(`${d}T00:00:00Z`) - t0) / DAY)
+      if (i >= 0 && i < span) active[i] = 1
+    }
+    const mu = active.reduce((a, b) => a + b, 0) / span
+    const den = active.reduce((s, v) => s + (v - mu) * (v - mu), 0) || 1
+    const acf = (lag) => {
+      let num = 0
+      for (let i = lag; i < span; i++) num += (active[i] - mu) * (active[i - lag] - mu)
+      return num / den
+    }
+    const lags = []
+    for (let l = 1; l <= 30; l++) lags.push(l)
+    for (const l of [45, 60, 90, 120, 150, 180, 240, 300, 365]) if (l < span) lags.push(l)
+    const bars = lags.map((lag) => ({ lag, acf: Math.max(0, acf(lag)) }))
+    return {
+      bars,
+      conf: 2 / Math.sqrt(span),
+      activeFrac: mu,
+      lag1: acf(1),
+      lag30: acf(30),
+      lag365: span > 365 ? acf(365) : null,
+      span,
+    }
+  })()
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Rhythm' }]}
@@ -238,6 +277,22 @@ export default function Rhythm() {
           </div>
         </Figure>
       </section>
+
+      {/* The habit has memory: autocorrelation */}
+      {acfData && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            title="The habit has a long memory"
+            note={`Mark every one of the ${acfData.span.toLocaleString('en-US')} days in the span active or not, then ask how much one day predicts another a fixed number of days later. That correlation starts high, ${acfData.lag1.toFixed(2)} from one day to the next, and barely fades across the first month, still ${acfData.lag30.toFixed(2)} thirty days on. Training does not reset each morning; it carries. Only out at a full year${acfData.lag365 != null ? `, ${acfData.lag365.toFixed(2)},` : ''} does the signal fall back into the noise, so the rhythm is a rolling habit, not an annual cycle. Anything above the dashed line is more than chance.`}
+            source="Activity Log"
+            tableCaption="Autocorrelation of the daily active series by lag, in days"
+            columns={['Lag (days)', 'Correlation']}
+            rows={acfData.bars.filter((b) => [1, 2, 3, 7, 14, 30, 60, 90, 180, 365].includes(b.lag)).map((b) => [String(b.lag), b.acf.toFixed(3)])}
+          >
+            <Correlogram bars={acfData.bars} conf={acfData.conf} marks={[{ lag: 30, label: 'first month' }, { lag: 365, label: 'one year' }]} />
+          </Figure>
+        </section>
+      )}
 
       {/* Doubles: more than once a day */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>

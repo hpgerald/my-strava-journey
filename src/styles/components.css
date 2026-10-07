@@ -1049,6 +1049,80 @@ text.chart-panel-title {
 .hmom__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
 .hmom__ycap { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); text-transform: uppercase; }
 
+/* two-column opener layout */
+.opener2col { display: grid; grid-template-columns: 1fr; gap: var(--sp-6); align-items: center; }
+@media (min-width: 52rem) {
+  .opener2col { grid-template-columns: 1.45fr 1fr; gap: var(--sp-8); }
+  .opener2col--text { grid-template-columns: 1fr 0.92fr; }
+}
+
+/* transition matrix (Markov) */
+.tmx__grid { display: grid; grid-template-columns: minmax(96px, auto) 1fr 1fr; gap: 5px; align-items: stretch; }
+.tmx__corner { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-faint); align-self: end; padding-bottom: var(--sp-1); text-transform: uppercase; letter-spacing: var(--tr-wide); }
+.tmx__colhd { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-wide); text-align: center; align-self: end; padding-bottom: var(--sp-1); }
+.tmx__rowhd { font-size: var(--fs-sm); color: var(--ink); align-self: center; padding-right: var(--sp-2); }
+.tmx__cell { display: flex; align-items: center; justify-content: center; min-height: 64px; border-radius: 4px;
+  opacity: 0; transform: scale(0.92); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.tmx.is-in .tmx__cell { opacity: 1; transform: none; }
+.tmx__cell b { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; font-variant-numeric: tabular-nums; }
+.tmx__note { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; margin: var(--sp-4) 0 0; }
+.tmx__note strong { color: var(--accent-ink); }
+
+/* Lorenz curve */
+.lorenz__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); }
+.lorenz__plot.is-in .lorenz__line { stroke-dashoffset: 0; }
+.lorenz__area { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.4s; }
+.lorenz__plot.is-in .lorenz__area { opacity: 1; }
+.lorenz__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.lorenz__eq { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.lorenz__gini { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--accent); }
+.lorenz__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+
+/* correlogram (autocorrelation) */
+.corr__bar { transform: scaleY(0); transition: transform var(--dur) var(--ease); }
+.corr__plot.is-in .corr__bar { transform: scaleY(1); }
+.corr__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.corr__band { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.corr__mark { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.5s; }
+.corr__plot.is-in .corr__mark { opacity: 1; }
+.corr__mkl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--accent-ink); letter-spacing: var(--tr-wide); }
+.corr__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.corr__axis--dim { fill: var(--fg-faint); opacity: 0.8; text-transform: none; letter-spacing: 0.02em; }
+
+/* rank-size (Zipf log-log) */
+.ranksize__dot { opacity: 0; transition: opacity var(--dur) var(--ease); }
+.ranksize__plot.is-in .ranksize__dot { opacity: 1; }
+.ranksize__fit { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.2s var(--ease) 0.2s; }
+.ranksize__plot.is-in .ranksize__fit { stroke-dashoffset: 0; }
+.ranksize__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.ranksize__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--ink); }
+.ranksize__fitlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.ranksize__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+
+/* tail outlier (extreme-value) */
+.tail__bar { transform: scaleY(0); transition: transform var(--dur) var(--ease); }
+.tail__plot.is-in .tail__bar { transform: scaleY(1); }
+.tail__mark, .tail__gap { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.6s; }
+.tail__plot.is-in .tail__mark, .tail__plot.is-in .tail__gap { opacity: 1; }
+.tail__markv { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-sm); fill: var(--accent); font-variant-numeric: tabular-nums; }
+.tail__meanlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.tail__meanlbl--dim { fill: var(--fg-faint); }
+.tail__gaplbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--accent-ink); letter-spacing: var(--tr-wide); }
+.tail__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.tail__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tmx__cell { opacity: 1 !important; transform: none !important; }
+  .lorenz__line { stroke-dashoffset: 0 !important; }
+  .lorenz__area { opacity: 1 !important; }
+  .corr__bar { transform: scaleY(1) !important; }
+  .corr__mark { opacity: 1 !important; }
+  .ranksize__dot { opacity: 1 !important; }
+  .ranksize__fit { stroke-dashoffset: 0 !important; }
+  .tail__bar { transform: scaleY(1) !important; }
+  .tail__mark, .tail__gap { opacity: 1 !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .jarc__line { stroke-dashoffset: 0 !important; }
   .jarc__area, .jarc__mark { opacity: 1 !important; }

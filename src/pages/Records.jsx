@@ -6,6 +6,7 @@ import CaloriePlates from '../charts/CaloriePlates.jsx'
 import RecordWall from '../charts/RecordWall.jsx'
 import AscentProfile from '../charts/AscentProfile.jsx'
 import OrdinaryDay from '../charts/OrdinaryDay.jsx'
+import TailOutlier from '../charts/TailOutlier.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { prettySport } from '../lib/slug.js'
@@ -123,6 +124,21 @@ export default function Records() {
   const dayVals = Object.values(dayCount)
   const ordDoublesPct = Math.round((100 * dayVals.filter((c) => c >= 2).length) / (dayVals.length || 1))
 
+  // ---- how far out the furthest run sits in its own distribution ----
+  const runDist = activities.filter((a) => a.sport_type === 'Run').map((a) => toNum(a.distance_km)).filter((v) => v > 0)
+  const tail = (() => {
+    const n = runDist.length
+    if (n < 30) return null
+    const mean = runDist.reduce((s, v) => s + v, 0) / n
+    const sd = Math.sqrt(runDist.reduce((s, v) => s + (v - mean) * (v - mean), 0) / n)
+    const mark = Math.max(...runDist)
+    const z = sd ? (mark - mean) / sd : 0
+    const below = runDist.filter((v) => v < mark).length
+    const pctNum = (100 * below) / n
+    const pct = `${pctNum.toFixed(pctNum >= 99.9 ? 2 : 1)}th percentile`
+    return { values: runDist, mean, sd, mark, z, pct, n }
+  })()
+
   const totalDist = foot.reduce((s, a) => s + (toNum(a.distance_km) || 0), 0)
   const totalElev = foot.reduce((s, a) => s + (toNum(a.elevation_gain_m) || 0), 0)
   const totalHours = foot.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
@@ -202,10 +218,32 @@ export default function Records() {
         <p className="source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log</p>
       </section>
 
+      {/* How far out the record sits */}
+      {tail && (
+        <section style={{ paddingTop: 'var(--sp-7)' }}>
+          <Figure
+            n="01"
+            title="A record is not a little better than usual"
+            note={`Every run ever logged, sorted into bins by distance. The crowd sits near the average of ${tail.mean.toFixed(1)} km, and almost everything falls within a standard deviation or two of it, the shaded band. The one full marathon stands alone far out in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations past the average, beyond the ${tail.pct} of all ${tail.n} runs. That is what makes it a record. Not a good day, but a day the distribution says should almost never happen.`}
+            source="Activity Log"
+            tableCaption="Run distance distribution and where the record falls"
+            columns={['Measure', 'Value']}
+            rows={[
+              ['Average run', `${tail.mean.toFixed(1)} km`],
+              ['Standard deviation', `${tail.sd.toFixed(1)} km`],
+              ['The furthest run', `${tail.mark.toFixed(1)} km`],
+              ['Distance out', `${tail.z.toFixed(1)} sd · ${tail.pct}`],
+            ]}
+          >
+            <TailOutlier values={tail.values} mark={tail.mark} mean={tail.mean} sd={tail.sd} z={tail.z} pct={tail.pct} unit="km" markLabel="the marathon" />
+          </Figure>
+        </section>
+      )}
+
       {/* Time in motion */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
-          n="01"
+          n="02"
           title="Ninety-six days in motion"
           note="Add up the moving time on every activity ever logged and it comes to more than three months of continuous movement, day and night without pause. Alongside it runs the dead time: the fraction of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
           source="Activity Log"
@@ -237,7 +275,7 @@ export default function Records() {
           </p>
         </div>
         <Figure
-          n="02"
+          n="03"
           title="Total climb, on foot, as a range of Everests"
           note="All the climbing from the walks, runs and hikes, drawn as the mountain range it adds up to. There is one Everest-height summit for every Everest's worth of ascent, with Kilimanjaro marked for scale. The last summit is just the leftover metres."
           source="Activity Log"
@@ -257,7 +295,7 @@ export default function Records() {
       {/* Energy burned, as food */}
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
-          n="03"
+          n="04"
           title="Fuel: the burn, in plates of ugali"
           note="Strava totals the calories each activity burns. Across seven years that comes to over a million and a half, roughly two thousand eight hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead."
           source="Activity Log"
@@ -283,7 +321,7 @@ export default function Records() {
           </h2>
         </div>
         <Figure
-          n="04"
+          n="05"
           title="A usual outing, where it usually falls"
           note={`The records above are rare by definition. Almost all of the ${fmtInt(totalDist)} km came from days like this one: a single short outing, run or walked in the early evening. The median foot outing is ${fmtNum(ordMedKm, 1)} km and lasts about ${Math.round(ordMedMin)} minutes; on ${ordDoublesPct}% of active days there is a second.`}
           source="Activity Log"
