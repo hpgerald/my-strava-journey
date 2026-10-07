@@ -43,8 +43,6 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
   const topLabels = 16 + pRows * 13
   const laneY = topLabels + 8
   const laneH = 30
-  const cameoY = laneY + laneH + 36
-  const H = cameoY + 40
 
   // stagger cameo labels so overlapping windows (e.g. the 2026 trio) don't garble
   const camLayout = cameos.map((c, i) => {
@@ -60,6 +58,14 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
   const rowR = []
   for (const L of camLayout) { let r = 0; while (r < rowR.length && rowR[r] > L.left - 4) r += 1; L.row = r; rowR[r] = L.right }
   const camByI = Object.fromEntries(camLayout.map((L) => [L.i, L]))
+  const maxCamRow = camLayout.length ? Math.max(...camLayout.map((L) => L.row)) : 0
+
+  // Lay the cameo strip below the primary lane, leaving room for the stacked cameo
+  // labels and, above them on its own line, the section caption, so the caption can
+  // never collide with a cameo label at narrow widths.
+  const cameoY = laneY + laneH + 18 + (maxCamRow + 1) * 12 + 15
+  const secY = cameoY - 5 - maxCamRow * 12 - 14
+  const H = cameoY + 40
 
   return (
     <div ref={ref} className="relay">
@@ -101,7 +107,7 @@ export default function ShoeRelay({ primaries, cameos, start, end }) {
         })}
 
         {/* cameos: specialist pairs that overlapped a reign */}
-        <text x={m.l} y={cameoY - 10} className="relay__lanelbl relay__lanelbl--sub">SPECIALIST CAMEOS</text>
+        <text x={m.l} y={secY} className="relay__lanelbl relay__lanelbl--sub">SPECIALIST CAMEOS</text>
         {cameos.map((c, i) => {
           const x0 = sx(t(c.first))
           const x1 = sx(t(c.last))

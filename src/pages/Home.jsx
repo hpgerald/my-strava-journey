@@ -340,13 +340,13 @@ export default function Home() {
         </section>
       </Container>
 
-      {/* ===== OPENER OPTION 1 · the physics of the habit (momentum) ===== */}
+      {/* ===== The physics of the habit: momentum + transition matrix ===== */}
       {momentum && (
         <Container>
           <hr className="rule" />
           <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
             <div className="section-head">
-              <p className="eyebrow">Opener 1 &middot; The physics of the habit</p>
+              <p className="eyebrow">The physics of the habit</p>
               <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A streak keeps itself going.</h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
                 Read day by day, the training behaves like a Markov chain: what you do today shifts the odds for tomorrow. The deeper a streak runs the more certain the next day gets, up to {mDeep}% once a month is on the board; stop, and a few days off slide the odds of coming back down to {mRest}%. On the left is how those odds move. On the right is the engine driving them.
@@ -366,14 +366,14 @@ export default function Home() {
         </Container>
       )}
 
-      {/* ===== OPENER OPTION 2 · how evenly the distance is shared (Lorenz) ===== */}
+      {/* ===== Who does the work: Lorenz curve of distance concentration ===== */}
       {dailyFootKm.length > 20 && (
         <div className="bleed bleed--level">
           <Container>
             <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
               <div className="opener2col opener2col--text">
                 <div className="section-head" style={{ margin: 0 }}>
-                  <p className="eyebrow">Opener 2 &middot; Who does the work</p>
+                  <p className="eyebrow">Who does the work</p>
                   <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>The big days pull more than their weight.</h2>
                   <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
                     Sort every active day by how far it went and stack them up. The busiest tenth of days hold about {top10Share}% of all the ground, and the top fifth hold {top20Share}%. The gap between the curve and the straight line of a perfectly even record is the Gini coefficient, {lorenzData.gini.toFixed(2)}, a moderate lean rather than a handful of epic days doing everything.
@@ -387,13 +387,13 @@ export default function Home() {
         </div>
       )}
 
-      {/* ===== OPENER OPTION 3 · every single day ===== */}
+      {/* ===== Every single day: the active-day field ===== */}
       {edFirst && (
         <Container>
           <hr className="rule" />
           <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
             <div className="section-head">
-              <p className="eyebrow">Opener 3 &middot; Every single day</p>
+              <p className="eyebrow">Every single day</p>
               <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
                 Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
               </h2>

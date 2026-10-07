@@ -42,8 +42,10 @@ export default function RankSize({ items, unit = 'activities' }) {
     [x(xmax), y(fit.predict(xmax))],
   ]
 
-  // label the first three and the last point
-  const labelIdx = new Set([0, 1, 2, n - 1])
+  // Label the top place and the last always; add ranks 2 and 3 only when the plot
+  // is wide enough that their names will not collide (they sit close together).
+  const labelIdx = new Set([0, n - 1])
+  if (W >= 620) { labelIdx.add(1); labelIdx.add(2) }
 
   return (
     <div ref={ref} className="ranksize">
@@ -82,7 +84,6 @@ export default function RankSize({ items, unit = 'activities' }) {
             power-law fit · R&sup2; {r2.toFixed(2)}
           </text>
           <text x={(m.l + W - m.r) / 2} y={H - 8} textAnchor="middle" className="ranksize__axis">rank of place (log) &rarr;</text>
-          <text x={m.l - 34} y={m.t - 6} className="ranksize__axis">{unit} (log)</text>
         </svg>
       </div>
     </div>
