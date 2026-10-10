@@ -10,7 +10,6 @@ import RadialHours from '../charts/RadialHours.jsx'
 import GeoBubbles from '../charts/GeoBubbles.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
-import HeroRotator from '../charts/HeroRotator.jsx'
 import ContourField from '../charts/ContourField.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
@@ -121,15 +120,6 @@ export default function Home() {
   // the rotating headline metrics: the numbers NOT already shown in the three
   // cards (distance, vertical, streak live there), so the headline never mid-counts
   // a figure the reader is also reading solid beside it.
-  const heroMetrics = [
-    { value: toNum(activities), word: 'activities' },
-    { value: monthStreak, word: 'months unbroken' },
-    { value: halfCount, word: 'half-marathons' },
-    { value: countryCount, word: 'countries' },
-    { value: toNum(kudos), word: 'kudos' },
-    { value: toNum(hoursMoving), word: 'hours moving' },
-  ].filter((m) => Number.isFinite(m.value) && m.value > 0)
-
   // personal reframes for the "put another way" row
   const funv = (needle) => toNum((fun.find((f) => (f.comparison || '').toLowerCase().includes(needle)) || {}).value)
   const funFacts = [
@@ -305,15 +295,15 @@ export default function Home() {
             >
               <span aria-hidden="true">
                 <span className="hero__anchor">{years || 7} years.</span>
-                <HeroRotator className="hero__slot" metrics={heroMetrics} />
+                <span className="hero__slot">{fmtInt(activities)} activities.</span>
                 <span className="hero__anchor">One habit.</span>
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              {years || 7} years of training, and no two of them alike. It took two years to catch,
-              then July 2021 flipped a switch that has not flipped back. Every year since has had its
-              own character: a peak of {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities, a year
-              that climbed over {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres
+              It began in August 2019, then the record went mostly quiet: twenty-seven activities
+              that first year, thirty-five the next. July 2021 is where the calendar changes, and it
+              has not really gone quiet since. Every year after has its own character, a peak of {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities,
+              a year that climbed over {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres
               on foot, another that reached {ctryYr ? ctryYr.stats.countries.length : 6} countries, and the
               one running now that has not missed a day in {streakMonths} months.
             </p>
@@ -666,9 +656,14 @@ export default function Home() {
         </Container>
       </div>
 
-      {/* ---- The exit: the full index -------------------------------- */}
+      {/* ---- The quiet close, then the full index -------------------- */}
       <Container>
         <div style={{ paddingBlock: 'var(--sp-7)' }}>
+          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Still unfinished</p>
+          <p className="measure" style={{ fontSize: 'var(--fs-lg)', lineHeight: 1.4, margin: '0 0 var(--sp-7)' }}>
+            The record is dense enough now to look permanent. It is still made one ordinary day at a
+            time, and the last dot is only ever the most recent one.
+          </p>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-1)' }}>Explore</p>
           <h2 className="display" style={{ fontSize: 'var(--fs-2xl)', margin: '0 0 var(--sp-5)' }}>
             {cap(NUMWORD[menuItems.length] || String(menuItems.length))} ways in.
