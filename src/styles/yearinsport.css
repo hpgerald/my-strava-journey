@@ -47,7 +47,8 @@
   font-size: var(--fs-4xl); line-height: 0.9; letter-spacing: var(--tr-mega);
   margin: var(--sp-2) 0 0;
 }
-.yis-hero__theme { font-size: var(--fs-lg); color: var(--ink); margin: var(--sp-2) 0 var(--sp-6); font-weight: 600; }
+.yis-hero__theme { font-size: var(--fs-lg); color: var(--ink); margin: var(--sp-2) 0 var(--sp-3); font-weight: 600; }
+.yis-hero__lede { font-size: var(--fs-md); color: var(--fg-muted); line-height: 1.55; margin: 0 0 var(--sp-6); }
 .yis-hero__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sp-5) var(--sp-4); }
 .yis-hero__stat { display: flex; flex-direction: column; gap: 2px; border-top: 2px solid var(--ink); padding-top: var(--sp-2); }
 .yis-hero__num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; letter-spacing: var(--tr-tight); color: var(--accent); font-variant-numeric: tabular-nums; }

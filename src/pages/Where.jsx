@@ -61,7 +61,7 @@ export default function Where() {
       number="05"
       title="Where"
       subtitle="Seven countries. Seventeen regions."
-      lede={`Home is ${homeRegion.region || 'Dodoma'}, and it is flat: hundreds of activities, little vertical. The climbing lives elsewhere. ${realCountries.length} countries and ${regions.length} Tanzanian regions in all, each placed by where its GPS track begins.`}
+      lede={`${homeRegion.region || 'Dodoma'} is dead flat, and it holds more of this record than anywhere else: thousands of kilometres that give back almost no climb at all. The vertical is hoarded somewhere else entirely. The Kilimanjaro region, barely a tenth of the activities, owns more than a third of every metre ever gained. Home is where the distance lives. The mountains keep the climb.`}
       prev={prev}
       next={next}
     >

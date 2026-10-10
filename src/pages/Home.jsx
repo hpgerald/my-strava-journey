@@ -300,12 +300,12 @@ export default function Home() {
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              It began in August 2019, then the record went mostly quiet: twenty-seven activities
-              that first year, thirty-five the next. July 2021 is where the calendar changes, and it
-              has not really gone quiet since. Every year after has its own character, a peak of {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities,
-              a year that climbed over {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres
-              on foot, another that reached {ctryYr ? ctryYr.stats.countries.length : 6} countries, and the
-              one running now that has not missed a day in {streakMonths} months.
+              No two of these years are alike. One barely stirred. One went quiet for the better part
+              of a year, then caught in a single month and never let go. The busiest piled up {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities,
+              more than one every day. One wandered into {ctryYr ? ctryYr.stats.countries.length : 6} countries, one climbed over{' '}
+              {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres on foot, and the
+              year running now has not missed a single day in {streakMonths} months. One habit, seven
+              completely different years.
             </p>
             <div className="hero__extra">
               <p className="eyebrow">Put another way, that is</p>
@@ -427,7 +427,7 @@ export default function Home() {
         <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
           <Figure
             title="Every activity, one dot"
-            note={`The first two years barely register: 27 outings in 2019, 35 in 2020, a couple a month. Then the back half of 2021 cracks it open to 328, and 2022 tops out at 443, the busiest there has been. The quiet surprise is what comes after. The count stops climbing and settles around 300 a year, roughly six a week, and it has sat there four years running. 2026 passed 300 before the year was even out. The spike started the habit. The flat bands under it are the habit just carrying on.`}
+            note={`Each dot is one time out the door. The first two years are nearly empty, a couple of entries a month. Then 2021 cracks it wide open and the count explodes past three hundred. The twist is what comes next: it stops climbing and simply holds there, around three hundred a year, four years straight. The spike lit the habit. The flat years beneath it are the habit refusing to quit.`}
             source="Activity Log"
             tableCaption="Activities by year"
             columns={['Year', 'Activities']}
@@ -444,7 +444,7 @@ export default function Home() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>When did this become a habit?</p>
           <Figure
             title="The switch"
-            note="Two quiet years, a few entries a month at most. Then June 2021 logs two activities and July logs fifty-eight. The data never says why it happened, only that from that month on the quiet never really came back. Drag the marker to walk through the months."
+            note="For two years the record idles, a few entries a month, sometimes none at all. Then one month it catches. Two activities become fifty-eight, almost overnight, and from that month on the calendar refuses to go empty. What lit it, the record will not say. Drag the marker to walk through the months."
             source="Monthly Trends"
             tableCaption="Activities per month"
             columns={['Month', 'Activities']}
@@ -457,7 +457,7 @@ export default function Home() {
               <Figure
                 n="01"
                 title="A hobby, then a habit"
-                note="Before July 2021 it ran at under three activities a month. Since then it has held near thirty-one. Eleven times as often, five years without settling back."
+                note="Before, it moved a couple of times a month, the pace of a passing interest. After, it settled near thirty and stayed there. Eleven times as often, and it has not once drifted back."
                 source="Monthly Trends"
                 tableCaption="Activities per month, before July 2021 versus since"
                 columns={['Era', 'Activities / month']}

@@ -157,14 +157,30 @@ export const YEAR_THEME = {
 // narrative. Each line is filled from that year's own numbers.
 const num0 = (v) => Math.round(v).toLocaleString()
 export const YEAR_CHARACTERS = {
-  2019: { label: 'The debut', line: (s) => `${s.n} activities and the first runs, most of them logged indoors. No sign yet of what it becomes.` },
-  2020: { label: 'The false start', line: (s) => `Only ${s.n} activities all year, and after midsummer the log falls silent for the better part of a year.` },
-  2021: { label: 'The switch', line: (s) => `July flips it on for good. The year closes on a ${s.streakLen}-day streak and more than ${num0(s.kudos)} kudos.` },
-  2022: { label: 'The peak', line: (s) => `The busiest year on record: ${s.n} activities, more than any year before or since, and the year walking drew level with running.` },
-  2023: { label: 'The climb', line: (s) => `${num0(s.elev)} metres of vertical, far more than any year yet, capped by a 100 km stage race run over four straight nights.` },
-  2024: { label: 'The passport', line: (s) => `${s.countries.length} countries in a single year, the widest the map ever spread.` },
-  2025: { label: 'The ascent', line: (s) => `One day climbed ${num0(s.highestClimb ? s.highestClimb.val : 0)} metres, the most vertical ever gained between sunrise and sunset.` },
-  2026: { label: 'Unbroken', line: (s) => `Active ${s.streakLen} days straight and still counting, with more hours moving and more personal records than any year before.` },
+  2019: { label: 'The debut', line: (s) => `A tentative first year: ${s.n} activities in all, almost every one a run, and most of them logged indoors on a treadmill. Barely ${num0(s.footKm)} km across the whole year. Then the record goes quiet.` },
+  2020: { label: 'The false start', line: (s) => `Only ${s.n} activities all year. A 23 km run in March, a first trip over the border into Kenya, and then after midsummer the log simply stops for the better part of a year.` },
+  2021: { label: 'The switch', line: (s) => `Everything breaks open. Activities jump from 35 to ${s.n}, kudos from 30 to over eight thousand, and on more than half the days out, one session was not enough. July flips it on, and it never flips off.` },
+  2022: { label: 'The peak', line: (s) => `The busiest year on record at ${s.n} activities, more than one a day. It holds the single full marathon too, 42.75 km in 2 hours 57, and it is the year walking quietly pulls level with running.` },
+  2023: { label: 'The climb', line: (s) => `The year it pointed uphill: ${num0(s.elev)} metres of climbing, more than any year yet. One day on Mount Hanang alone took eight and a half hours and 1,718 metres up, and somewhere in it sat a 100 km race run over four straight nights.` },
+  2024: { label: 'The passport', line: (s) => `The map spreads at its widest: ${s.countries.length} countries in one year, as far apart as Rwanda and Saudi Arabia. It opens with a 34 km trail run in January, close to eight hours on the move.` },
+  2025: { label: 'The ascent', line: (s) => `One day in March climbs ${num0(s.highestClimb ? s.highestClimb.val : 0)} metres, almost two vertical kilometres between sunrise and sunset, the most ever in a single outing. Later a walk just refuses to end: eleven hours moving, start to finish.` },
+  2026: { label: 'Unbroken', line: (s) => `Still going, every single day so far, with more hours moving and more personal records than any year before, ${s.prs} of them. And the clock has shifted earlier: the busiest hour is now six in the morning, out the door and almost always outside.` },
+}
+
+// A longer, aggregate read of each year for the Year in Sport report hero. These
+// lead with the big patterns (volume, the walk-run split, indoor against outdoor,
+// consistency, how the year sits against its neighbours) rather than any single
+// outing. Headline figures interpolate live; the qualitative comparisons describe
+// settled, past years.
+export const YEAR_REPORT = {
+  2019: (s) => `A toe in the water. ${s.n} activities, almost every one a run, and more than half of them logged indoors on a treadmill. Foot distance barely cleared ${num0(s.footKm)} km for the whole year, and the longest unbroken streak never reached a week. This is the baseline everything after it is measured against.`,
+  2020: (s) => `Still finding its feet, then losing them. ${s.n} activities, mostly short indoor runs, and foot distance that actually slipped below the year before. The one real signal is a first trip into Kenya, the map's first step outside Tanzania. After midsummer the log goes dark for the better part of a year.`,
+  2021: (s) => `The year the whole thing changes gear. Activities multiply almost tenfold to ${s.n}, foot distance clears ${num0(s.footKm)} km, and the days start doubling up: on well over half of them, one outing was not the end of it. Walking arrives in force, and the split between indoor and outdoor finally evens out.`,
+  2022: (s) => `Peak volume. ${s.n} activities, more than any year before or since, and the first year walking logs more outings than running. Climbing roughly doubles on the year before as the training moves outside, and two days in three now carry something.`,
+  2023: (s) => `The year it tilts uphill. The activity count eases back from the peak, but climbing explodes to over ${num0(s.elev)} metres, more than any year on record, and real ground finally beats the treadmill, two outings outside for every one in. Personal records more than double. Less often out the door, but much harder when it happens.`,
+  2024: (s) => `The year it travels. The map reaches ${s.countries.length} countries, the widest it ever spreads, while the home rhythm settles at a steady three hundred-odd activities. Foot distance dips as more of the effort goes into trails and travel than into piling up flat kilometres.`,
+  2025: (s) => `Almost all of it outdoors now, with barely a quarter of the sessions touching a treadmill. Climbing jumps back toward its high-water mark at over ${num0(s.elev)} metres, and the habit holds near three hundred activities for a third straight year. The pattern has settled, and it points up.`,
+  2026: (s) => `The most complete year yet, and still unfinished. More hours moving and more personal records than any year before, ${s.prs} of them, with almost nothing left indoors. Distance is back over ${num0(s.footKm)} km, the climbing near its peak, and the starts have crept to dawn. Every day so far has carried something.`,
 }
 
 export function buildYearSummaries(acts, geo) {

@@ -224,7 +224,7 @@ export default function Rhythm() {
       number="06"
       title="Rhythm"
       subtitle="When. And how hard."
-      lede={`The training runs like a metronome. More than half of all calendar days carry an activity, and when one day is active the next usually is too. This is when the work happens, how hard it has settled, and the two streaks, ${streakLen} and ${weekStreakLen} weeks, both still alive.`}
+      lede={`More than half of every day in this record carries something. And the days are contagious: go out today and the odds you go out again tomorrow jump past four in five. That is the real engine. Two streaks are still alive as you read this, ${streakLen} days and ${weekStreakLen} weeks unbroken, stacked up one short evening walk at a time.`}
       prev={prev}
       next={next}
     >

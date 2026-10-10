@@ -207,9 +207,7 @@ export default function Sports() {
       number="03"
       title="Sports"
       subtitle="What the work is made of"
-      lede={`${sports.length} sports in the log, but two carry it. By activity count ${prettySport(
-        topSport.sport
-      ).toLowerCase()} leads; by distance running does. Look closer and they specialise: running is fast, flat and mostly indoors, while walking piles up the outdoor kilometres and, quietly, three-quarters of the climbing. Pick any sport for its totals, trend and best days.`}
+      lede="Two things carry almost the entire record, and each one is a specialist. Running owns the distance, quick and flat and mostly logged on a treadmill. Walking owns the climb, quietly stacking up three-quarters of every metre ever gained while running stays on the level. The trails and the rare hike are where the ground tilts hard. The surprise is just how cleanly the work divides."
       prev={prev}
       next={next}
     >

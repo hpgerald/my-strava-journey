@@ -23,7 +23,7 @@ export default function Timeline() {
       number="08"
       title="Timeline"
       subtitle="In order. First upload to now."
-      lede={`Seven years in order, from the first run in August 2019 to a ${dayStreak}-day streak still running. The round-number milestones, the standout days, the borders crossed. Every entry dated and sourced.`}
+      lede={`Seven years in the order they happened. It opens with a scatter of entries that could easily have fizzled out, goes silent for 353 straight days, then ignites and never stops. The milestones that round off, the standout days, the borders crossed, all laid end to end, so you can watch a hobby turn into something that looks permanent.`}
       prev={prev}
       next={next}
     >

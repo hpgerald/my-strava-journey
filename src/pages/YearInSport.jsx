@@ -16,7 +16,7 @@ import EverestLedger from '../charts/EverestLedger.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { computeYearStats, YEAR_THEME } from '../lib/yearStats.js'
+import { computeYearStats, YEAR_THEME, YEAR_REPORT } from '../lib/yearStats.js'
 import { fmtInt } from '../lib/format.js'
 
 const MONTH_L = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -130,6 +130,30 @@ export default function YearInSport() {
   const theme = YEAR_THEME[activeYear] || `${activeYear} in sport`
   const monthsData = MONTH_L.map((label, i) => ({ m: i + 1, label, activities: s.monthsActivities[i], km: s.monthsKm[i] }))
 
+  // per-year insights the chart notes lead with, computed fresh for whichever
+  // year is picked, so each note says something true and specific about it.
+  const busyMo = s.monthsActivities.indexOf(Math.max(1, ...s.monthsActivities))
+  const busyMoN = s.monthsActivities[busyMo] || 0
+  const peakHour = s.hours24.indexOf(Math.max(1, ...s.hours24))
+  const daysElapsed = Math.max(1, Math.round((Date.parse(s.endISO) - Date.parse(`${activeYear}-01-01`)) / 86400000) + 1)
+  const pctDays = Math.round((100 * s.activeDays) / daysElapsed)
+  const [moreSport, lessSport, moreN, lessN] = s.walkN >= s.runN
+    ? ['Walking', 'running', s.walkN, s.runN]
+    : ['Running', 'walking', s.runN, s.walkN]
+  const otherN = s.n - s.footN
+  // biggest mover against the previous year, for that comparison's note
+  const moverPct = (cur, prv) => (prv > 0 ? Math.round((100 * (cur - prv)) / prv) : null)
+  let biggestMover = null
+  if (prevStats) {
+    const cands = [
+      { label: 'activity count', pct: moverPct(s.n, prevStats.n) },
+      { label: 'foot distance', pct: moverPct(s.footKm, prevStats.footKm) },
+      { label: 'climbing', pct: moverPct(s.elev, prevStats.elev) },
+      { label: 'personal records', pct: moverPct(s.prs, prevStats.prs) },
+    ].filter((c) => c.pct != null && Number.isFinite(c.pct))
+    if (cands.length) biggestMover = cands.reduce((a, b) => (Math.abs(b.pct) > Math.abs(a.pct) ? b : a))
+  }
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]}
@@ -162,6 +186,9 @@ export default function YearInSport() {
           <p className="eyebrow yis-hero__kicker">Year in Sport{isPartial ? ' · still unfolding' : ''}</p>
           <h2 className="yis-hero__year display">{activeYear}</h2>
           <p className="yis-hero__theme">{theme}</p>
+          {YEAR_REPORT[activeYear] && (
+            <p className="yis-hero__lede measure">{YEAR_REPORT[activeYear](s)}</p>
+          )}
           <div className="yis-hero__stats">
             <HeroStat value={s.n} label="activities" />
             <HeroStat value={Math.round(s.footKm)} unit="km" label="on foot" />
@@ -176,7 +203,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="The year, month by month"
-            note={`Each activity dropped into the month it happened. The busiest stretch of ${activeYear} is the tallest bar, and any month with nothing in it sits flat on the line.`}
+            note={`${busyMoN > 0 ? `${MONTH_F[busyMo]} was the busiest month of ${activeYear}, ${busyMoN} times out the door. ` : ''}Each bar is a month, taller where more got logged. The flat stretches are the quiet weeks, or the gaps.`}
             source="Activity Log"
             tableCaption={`Activities by month in ${activeYear}`}
             columns={['Month', 'Activities']}
@@ -206,7 +233,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="How the year moved"
-            note="Each kind of activity, counted by how often it was done. Walking and running carry most years. Whatever else got logged is in here too, folded in below them."
+            note={`${moreN > 0 ? `${moreSport} led ${activeYear}, ${moreN} outings against ${lessSport}'s ${lessN}${otherN > 0 ? `, with ${otherN} of everything else` : ''}. ` : ''}Each kind of activity, counted by how often it happened. Whatever is not on foot folds in beneath the rest.`}
             source="Activity Log"
             tableCaption={`Activities by type in ${activeYear}`}
             columns={['Type', 'Activities']}
@@ -238,7 +265,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="When the day got moving"
-            note={`Every ${activeYear} activity set on a 24-hour clock by the hour it began. The bulges are when the day actually got moving.`}
+            note={`${peakHour >= 0 ? `In ${activeYear} the single busiest hour was ${peakHour}:00${peakHour <= 9 ? ', out the door before the day had properly begun' : peakHour >= 16 ? ', most of the movement waiting until the working day was done' : ''}. ` : ''}Every activity set on a 24-hour clock by the hour it began. The longer a spoke reaches, the more started then.`}
             source="Activity Log"
             tableCaption={`Activities by hour of day in ${activeYear}`}
             columns={['Hour', 'Activities']}
@@ -270,9 +297,9 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title={`Every day of ${activeYear}`}
-            note={`${fmtInt(s.activeDays)} days that year carried an activity, spread across ${s.weeksActive} ${
-              isPartial ? `of the ${s.weeksElapsed} weeks run so far` : 'different weeks'
-            }. The longest unbroken run of them reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
+            note={`Something carried ${pctDays}% of ${activeYear}, ${fmtInt(s.activeDays)} days in all, spread across ${s.weeksActive} ${
+              isPartial ? `of the ${s.weeksElapsed} weeks so far` : 'different weeks'
+            }. The longest unbroken run reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
             source="Activity Log"
             tableCaption={`Consistency in ${activeYear}`}
             columns={['Measure', 'Value']}
@@ -362,7 +389,7 @@ export default function YearInSport() {
           <Reveal as="section" className="yis-sec">
             <Figure
               title={`${activeYear} against ${prevYear}`}
-              note={`The year set beside the one before it, measure by measure.${
+              note={`${biggestMover ? `The biggest swing from ${prevYear} is ${biggestMover.label}, ${biggestMover.pct >= 0 ? 'up' : 'down'} ${Math.abs(biggestMover.pct)}%. ` : ''}Here is ${activeYear} set beside the year before it, measure by measure.${
                 isPartial ? ` ${activeYear} is still unfolding, so these totals run against a full ${prevYear}, and the gaps will narrow as the year fills out.` : ''
               }`}
               source="Activity Log"

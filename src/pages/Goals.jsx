@@ -215,7 +215,7 @@ export default function Goals() {
       number="09"
       title="Goals"
       subtitle="The targets, year by year."
-      lede={`Three targets, held up against every year on equal terms: 1,000 km walking, 1,000 km across all running, and 24,000 metres of climbing on foot. Each ring fills toward its goal${inProgress ? `, and for ${latest}, still in progress, a notch marks where today's pace sits` : ''}. A closed ring means the year cleared the bar.`}
+      lede={`The same three marks every year: a thousand kilometres walked, a thousand run, and twenty-four thousand metres climbed on foot. The rings fill as the year does${inProgress ? `, and for ${latest}, still unfolding, a notch shows where today's pace stands` : ''}, and a closed ring is a year that cleared the bar. Underneath the stated targets sit the quiet ones nobody announced: a race run faster every single year, fifty trips to one headland, and not a single calendar month missed in over five years.`}
       prev={prev}
       next={next}
     >

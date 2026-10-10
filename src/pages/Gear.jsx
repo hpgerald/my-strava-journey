@@ -121,7 +121,7 @@ export default function Gear() {
       number="07"
       title="Gear"
       subtitle="Eleven pairs, and how they were worn."
-      lede={`Eleven pairs on record, and they were not worn at random. For five years there has almost always been exactly one main pair carrying the load, and the next clocks in within a day of the last retiring: ${cleanHandoffs} of ${handoffs.length} handoffs land inside three days. Some pairs were devoured in a season, others nursed for years, and each one has a job written in how fast and how steeply it runs.`}
+      lede={`Eleven pairs, and almost never two doing the real work at once. One lead pair carries the load until it wears out, then hands straight off to the next within a day, clean ${cleanHandoffs} times out of ${handoffs.length}. One pair alone covered over a thousand kilometres. Some were burned through in a single season, others nursed along for years, and each still wears its job in how fast and how steeply it ran.`}
       prev={prev}
       next={next}
     >
