@@ -224,7 +224,7 @@ export default function Goals() {
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Everything that was chased</p>
         <Figure
           title="The goals, as a sky"
-          note="Every goal in this chapter as one star, grouped into the four movements below. A filled star is a goal met, a ringed star is one returned to on a cycle, a hollow star is still open. The brightest here is the streak that has not broken in more than five years."
+          note="The brightest star here is the streak that has not broken in more than five years. Every goal in this chapter is drawn as one star, grouped into the four movements below: a filled star is a goal met, a ringed star one returned to on a cycle, a hollow star still open."
           source="Activity Log"
           tableCaption="Every goal, its movement and its state"
           columns={['Movement', 'Goal', 'State']}
@@ -290,7 +290,7 @@ export default function Goals() {
         <Figure
           n="02"
           title="Every year against the same three rings"
-          note="One set of rings per year, the same three targets each time. Follow a single colour down the years and you can see when a goal was cleared and when it fell short. Running got there early and often. Walking and that big elevation number are the harder climbs."
+          note="Running cleared its thousand early and often; walking and that big elevation number are the harder climbs, cleared only in the strongest years. One set of rings per year, the same three targets each time, so following a single colour down the years shows when each goal was met and when it fell short."
           source="Activity Log"
           tableCaption="Percent of each target reached, by year"
           columns={['Year', 'Walk', 'All runs', 'Foot elevation', 'Rings closed']}
@@ -438,7 +438,7 @@ export default function Goals() {
           <Figure
             n="07"
             title="The double thousand"
-            note={`Each year throws two arms: how far it ran, to the right, and how far it walked, to the left, on one shared scale. Dashed marks stand at a thousand kilometres on each side. The big years fling a long running arm but a stubby walking one, and the walking years never run as far; almost every year clears a thousand on one side alone. ${dblYear} is the first to stretch past a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the only year to span the full width.`}
+            note={`Almost every year clears a thousand kilometres on one side alone, running or walking, but only ${dblYear} stretches past a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the single year to span the full width. Each year throws two arms, how far it ran to the right and how far it walked to the left, with dashed marks at a thousand on each side.`}
             source="Activity Log"
             tableCaption="Running and walking distance by year"
             columns={['Year', 'km run', 'km walked', 'Both 1,000?']}

@@ -484,7 +484,7 @@ export default function Home() {
         <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
           <Figure
             title="Walking climbs, running runs"
-            note="Distance down the left, climb down the right, one ribbon per foot sport. A sport that is a fat band for distance can be a sliver for climb, and the other way round. Watch running make the switch."
+            note="Running is a fat band for distance and a thin sliver for climb; walking is the exact mirror image. Distance runs down the left, climb down the right, one ribbon per foot sport. Watch running make the switch from one side to the other."
             source="Activity Log"
             tableCaption="Share of distance and share of elevation by foot sport"
             columns={['Sport', 'Distance km', 'Climb m']}
@@ -519,7 +519,7 @@ export default function Home() {
           {/* Row 1 — the range of it: where, then what */}
           <Figure
             title="Where in the world"
-            note={`Wherever a GPS fix could place an activity, grouped by country. More than nine in ten happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to a single run in the farthest of them.`}
+            note={`More than nine in ten activities happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to a single run in the farthest of them. Every activity a GPS fix could place, grouped by country.`}
             source="Strava GPS + point-in-polygon"
             tableCaption="Located activities by country"
             columns={['Country', 'Activities']}
@@ -537,7 +537,7 @@ export default function Home() {
 
           <Figure
             title="Every way to move"
-            note="Each foot sport is a tile, bigger the more often it was done. Walking and running take almost the whole frame. Everything off the feet is gathered into one other bucket, counted but never broken out. Four in five outings still happen on two feet."
+            note="Walking and running take almost the whole frame, and four in five outings happen on two feet. Each foot sport is a tile, bigger the more often it was done; everything off the feet gathers into one other bucket, counted but never broken out."
             source="Strava Overview"
             tableCaption="Activities by sport type"
             columns={['Sport', 'Activities']}
@@ -555,7 +555,7 @@ export default function Home() {
           {/* Row 2 — the rhythm of it: hour of day, then time of year */}
           <Figure
             title="When the day gets moving"
-            note="Sorted by the hour each one began. There are two rushes. A thin dawn crowd shows up near 6am, then a much bigger one after work. Five to eight in the evening carries the day, and 6pm is the busiest hour on the clock."
+            note="Two rushes each day: a thin dawn crowd near 6am, then a much bigger one after work. Five to eight in the evening carries the day, and 6pm is the single busiest hour on the clock. Every activity sorted by the hour it began."
             source="Activity Log"
             tableCaption="Activities by hour of day"
             columns={['Hour', 'Activities']}
@@ -566,7 +566,7 @@ export default function Home() {
 
           <Figure
             title="The year has a season"
-            note="Seven years of months laid on top of each other. July wins by a distance, right in the cool dry season, while February is the emptiest. The training keeps a calendar, and it belongs to the weather, not the gym."
+            note="July wins by a distance, right in the cool dry season, while February sits emptiest of all. Seven years of months laid on top of each other. The training keeps a calendar, and it belongs to the weather, not the gym."
             source="Activity Log"
             tableCaption="Activities by calendar month"
             columns={['Month', 'Activities']}
@@ -585,7 +585,7 @@ export default function Home() {
           {/* Row 3 — the habit of it: the move outside, then the streak */}
           <Figure
             title="Off the treadmill"
-            note="Every year split into indoor sessions and outdoor ones, stacked to a hundred percent. Early on, nearly two in three started indoors on a machine. By last year that was down to about one in six. Little by little, the habit walked out the door."
+            note="Early on, nearly two in three sessions started indoors on a machine; by last year that was down to about one in six. Little by little, the habit walked out the door. Each year split into indoor and outdoor, stacked to a hundred percent."
             source="Activity Log"
             tableCaption="Indoor share of activities by year"
             columns={['Year', 'Indoor share']}

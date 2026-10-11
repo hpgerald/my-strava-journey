@@ -233,7 +233,7 @@ export default function Rhythm() {
         <section style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             title="Three years, every single week"
-            note={`Strava counts a week streak as consecutive weeks with at least one activity. This run reached ${weekStreakLen} weeks, ${(weekStreakLen / 52).toFixed(weekStreakLen % 52 ? 1 : 0)} years without a gap, starting the week of ${fmtMonYr(weekStreakStart)}, and it is still going. Each cell is a week, one row per year, shaded by how busy that week was.`}
+            note={`${weekStreakLen} weeks in a row with at least one activity, more than ${(weekStreakLen / 52).toFixed(weekStreakLen % 52 ? 1 : 0)} years of never missing a week, running since ${fmtMonYr(weekStreakStart)} and still unbroken. Each cell is a week, one row per year, shaded by how busy it was.`}
             source="Activity Log"
             tableCaption="Weekly activity across the streak, by year of the run"
             columns={['Stretch', 'Weeks', 'Activities']}
@@ -262,7 +262,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every active day"
-          note={`Each square is a day, and darker means more activities. The orange stretch is the current run of ${streakLen || 'the streak'}, the longest I've gone without a gap, and it's still alive.`}
+          note={`Read the years from the top and the empty squares thin out until the grid is almost solid. The orange stretch is the current run of ${streakLen || 'the streak'}, the longest I have gone without a gap, and it is still alive. Each square is a day, darker the more it carried.`}
           source="Activity Log + Fun Stats"
           tableCaption="Active days and activities per year"
           columns={['Year', 'Active days', 'Activities']}
@@ -299,7 +299,7 @@ export default function Rhythm() {
         <Figure
           n="03"
           title="Twice in a day, a third of the time"
-          note={`Every active day, sorted by how many activities it held. On ${multiPct}% of them there was more than one outing, and a handful of days packed in five. Once the habit took hold, one session a day often was not the whole day.`}
+          note={`On ${multiPct}% of active days, one outing was not the end of it. Most days hold a single session, a steady slice carry two, and a handful packed in five. Once the habit took hold, a day out often meant more than one trip.`}
           source="Activity Log"
           tableCaption="Active days by number of activities that day"
           columns={['Activities that day', 'Days']}
@@ -321,7 +321,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="The shape of the year"
-          note="The whole year wrapped onto a twelve-month wheel, so its shape reads at a glance. The cool dry months around midyear bulge out, and the short rains pull it back in. Pick a single year to see how its rhythm compares."
+          note="The training year has a shape. It swells through the cool dry months around the middle of the year and pulls back in with the short rains. The whole year is wrapped onto a twelve-month wheel so that shape reads at a glance. Pick a single year to see how its rhythm compares."
           source="Monthly Trends"
           tableCaption="Activities by calendar month, all years combined"
           columns={['Month', 'Activities']}
@@ -338,7 +338,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Activity against the seasons"
-          note="The same twelve months as a single curve, with Tanzania's rough wet and dry spells shaded behind it. The busy stretch sits in the cool, dry middle of the year, roughly June to October; the thinner months line up with the long and short rains. It is a pattern in the record, not proof that the weather drove it."
+          note="The busy stretch sits in the cool, dry middle of the year, roughly June to October, and the thinner months line up with the long and short rains. The same twelve months drawn as one curve, with Tanzania's wet and dry spells shaded behind it. It is a pattern in the record, not a claim that the weather drove it."
           source="Monthly Trends"
           tableCaption="Activities by calendar month, summed over all years"
           columns={['Month', 'Activities']}
@@ -373,7 +373,7 @@ export default function Rhythm() {
           </Figure>
           <Figure
             title="The effort tide"
-            note="Each year's total cardiovascular load, drawn as a tide that rises and falls. 2021 was high water by a distance; then it drew back as fitness caught up and each session cost less, before 2026 came flooding in."
+            note="2021 was high water by a distance, then the tide drew back as fitness caught up and each session cost less, before 2026 came flooding back in. Each year's total cardiovascular load, drawn as a tide that rises and falls."
             source="Zones & Effort"
             tableCaption="Total relative effort by year"
             columns={['Year', 'Total relative effort']}
@@ -395,7 +395,7 @@ export default function Rhythm() {
           <Figure
             n="04"
             title="The falling price of a kilometre"
-            note="Relative effort divides how hard a session felt by how far it went. Read by year, the cost of a single kilometre on foot falls from about fourteen points in 2019 to around four in the recent years: the same ground, a fraction of the toll, as fitness rose. The earliest two years rest on light samples and are drawn faint."
+            note="The cost of a single kilometre on foot falls from about fourteen effort points in 2019 to around four in the recent years, the same ground for a fraction of the toll as fitness rose. Relative effort divides how hard a session felt by how far it went. The earliest two years rest on light samples and are drawn faint."
             source="Activity Log + Zones & Effort"
             tableCaption="Relative effort spent per km on foot, by year"
             columns={['Year', 'Effort per km']}

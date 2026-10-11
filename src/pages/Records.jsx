@@ -245,7 +245,7 @@ export default function Records() {
         <Figure
           n="02"
           title={`${fmtInt(movingHours / 24)} days in motion`}
-          note="Add up the moving time on every activity ever logged and it comes to more than three months of continuous movement, day and night without pause. Alongside it runs the dead time: the fraction of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
+          note="More than three months of pure motion, day and night without a single pause: that is every moving minute ever logged, stacked end to end. Beside it runs the dead time, the share of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
           source="Activity Log"
           tableCaption="Total moving time against elapsed time"
           columns={['Measure', 'Hours']}
@@ -277,7 +277,7 @@ export default function Records() {
         <Figure
           n="03"
           title="Total climb, on foot, as a range of Everests"
-          note="All the climbing from the walks, runs and hikes, drawn as the mountain range it adds up to. There is one Everest-height summit for every Everest's worth of ascent, with Kilimanjaro marked for scale. The last summit is just the leftover metres."
+          note="Stack up every metre ever climbed on foot and it builds a mountain range nine Everests high. One Everest-height summit for every Everest's worth of ascent, with Kilimanjaro marked for scale; the last summit is just the leftover metres."
           source="Activity Log"
           tableCaption="Total foot elevation gain against Everest and Kilimanjaro"
           columns={['Measure', 'Value']}
@@ -297,7 +297,7 @@ export default function Records() {
         <Figure
           n="04"
           title="Fuel: the burn, in plates of ugali"
-          note="Strava totals the calories each activity burns. Across seven years that comes to over a million and a half, roughly two thousand eight hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead."
+          note="Seven years of moving burned over a million and a half calories, roughly two thousand eight hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead. Strava totals the calories on every activity."
           source="Activity Log"
           tableCaption="Total calories burned and food equivalent"
           columns={['Measure', 'Value']}

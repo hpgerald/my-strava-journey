@@ -84,7 +84,7 @@ export default function Where() {
           <Figure
             n="01"
             title="A third of the way around the Earth"
-            note={`All the ground covered on foot, laid against the length of the equator. ${fmtInt(footKm)} kilometres of running, walking and hiking is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, most of it looped through a handful of home regions.`}
+            note={`${fmtInt(footKm)} kilometres on foot is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, and almost all of it looped through a handful of home regions. The whole distance, laid against the length of the equator.`}
             source="Activity Log"
             tableCaption="Foot distance against the equator and Tanzania's border"
             columns={['Measure', 'Value']}
@@ -105,7 +105,7 @@ export default function Where() {
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>What ground shaped the training?</p>
         <Figure
           title="Flat at home, steep away"
-          note="Every region is a hill. Its height is how steep the ground there is, metres of climb for each kilometre covered, and its width is how much training it holds. Home sits broad and low on the left, where Dodoma and Dar es Salaam carry most of the days over almost no vertical. The mountains stand to the right. Kilimanjaro has been climbed often enough to raise a real hill of its own, and behind Morogoro the Uluguru slopes are the sharpest ground of the lot, reached only now and then."
+          note="Home sits broad and low: Dodoma and Dar es Salaam carry most of the days over almost no vertical at all. The mountains stand to the right, where Kilimanjaro has been climbed often enough to raise a real hill of its own, and the Uluguru slopes behind Morogoro are the sharpest ground of the lot, reached only now and then. Every region is drawn as a hill, its height the steepness of the ground, its width the training it holds."
           source="Strava GPS + Natural Earth admin-1"
           tableCaption="Each Tanzanian region: activities, distance, climb and steepness"
           columns={['Region', 'Activities', 'Distance km', 'Climb m', 'm per km']}
@@ -123,7 +123,7 @@ export default function Where() {
         <div className="grid grid--2">
           <Figure
             title="Across Africa"
-            note="African countries shaded by how many activities started there. Tanzania is home; Kenya, Malawi, South Africa and Rwanda are trips. The scale is logarithmic, so a single visit still shows."
+            note="Tanzania is home, and everything else is a trip: Kenya, Malawi, South Africa and Rwanda. African countries shaded by how many activities started in each, on a logarithmic scale so even a single visit still shows."
             source="Strava GPS + Natural Earth"
             tableCaption="Activities by African country"
             columns={['Country', 'Activities', 'Distance km']}
@@ -150,7 +150,7 @@ export default function Where() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every country, as one bar"
-          note="Each country's share of all placed activities, home included. Tanzania dominates the frame; the travel countries are slivers, and the farthest few fold into one. Select a named country for its own page."
+          note="Tanzania swallows the whole frame; the travel countries are thin slivers beside it, and the farthest few fold into one. Each country's share of all placed activities, home included. Select a named country for its own page."
           source="Strava GPS"
           columns={['Country', 'Activities']}
           rows={countrySegments.map((c) => [c.label, c.display])}

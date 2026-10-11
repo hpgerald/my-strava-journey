@@ -138,7 +138,7 @@ export default function Gear() {
         <Figure
           n="01"
           title="The baton never drops"
-          note={`Every pair that ever led the rotation, laid end to end. One shoe reigns at a time, the number inside its bar the kilometres it carried, and a baton dot marks each handoff, almost always within a day of the last pair retiring. The Lunarglide 7 held the baton longest, over 500 days. The specialists below, a stray backup, the dedicated trail pairs, only ever came off the bench. Lately the single-driver relay has broken into a three-pair rotation running at once.`}
+          note={`One shoe reigns at a time, and when it wears out the next takes over almost always within a day. The Lunarglide 7 held the baton longest, over 500 days leading the rotation. Every pair that ever led is laid end to end, the number inside each bar the kilometres it carried, a dot marking each handoff. The specialists below, a stray backup and the dedicated trail pairs, only ever came off the bench, and lately the relay has split into three pairs running at once.`}
           source="Activity Log + Gear"
           tableCaption="Each primary pair's reign and the distance it carried"
           columns={['Pair', 'Reign', 'km']}
@@ -153,7 +153,7 @@ export default function Gear() {
         <Figure
           n="02"
           title="Every shoe has a character"
-          note={`Every pair stands on the pace line, quick on the left and a walker's amble on the right, then rises to how steeply it climbs, a metre of ascent for every kilometre. The road trainers keep low and level, the Lunarglide 5 and Pegasus 37 pure speed on the flat. The trail pairs spike up like mountains, and the ${goat.model.replace(/\s*\(.*\)$/, '')} towers over the whole fleet at over 40 metres of climb per kilometre. Notice the Pegasus Trail climbs as steeply as the far slower Zegama, five minutes a kilometre quicker up the same gradient. Head size is total distance.`}
+          note={`The road trainers keep low and level, the Lunarglide 5 and Pegasus 37 pure speed on the flat, while the trail pairs spike up like mountains and the ${goat.model.replace(/\s*\(.*\)$/, '')} towers over the whole fleet at over 40 metres of climb per kilometre. The Pegasus Trail climbs as steeply as the far slower Zegama, five minutes a kilometre quicker up the same gradient. Every pair sits on the pace line, quick on the left and a walker's amble on the right, rising to how steeply it climbs. Head size is total distance.`}
           source="Activity Log + Gear"
           tableCaption="Median pace, steepness and distance by pair"
           columns={['Pair', 'Pace /km', 'm per km', 'km']}
@@ -169,7 +169,7 @@ export default function Gear() {
         <Figure
           n="03"
           title="Sprinters and slow-burners"
-          note={`How fast each pair was used up, in kilometres run per month of its life. The spread is enormous. The ${sprinter.model.replace(/\s*\(.*\)$/, '')} was a sprinter, torn through at ${fmtInt(sprinter.kmMo)} km a month, essentially the only shoe worn for that stretch. The ${slow.model.replace(/\s*\(.*\)$/, '')} was the opposite, sipped at ${fmtInt(slow.kmMo)} km a month across its whole life. A hollow dot marks a pair still in rotation.`}
+          note={`The spread is enormous. The ${sprinter.model.replace(/\s*\(.*\)$/, '')} was a sprinter, torn through at ${fmtInt(sprinter.kmMo)} km a month as all but the only shoe worn for that stretch, while the ${slow.model.replace(/\s*\(.*\)$/, '')} was sipped at ${fmtInt(slow.kmMo)} km a month across its whole life. How fast each pair was used up, in kilometres run per month it was alive. A hollow dot marks a pair still in rotation.`}
           source="Activity Log + Gear"
           tableCaption="Kilometres per month of life, by pair"
           columns={['Pair', 'km / month', 'Total km']}
@@ -184,7 +184,7 @@ export default function Gear() {
         <Figure
           n="04"
           title="The fleet, in footprints"
-          note="The six most-worn pairs, each laid out in footprints, one for every 200 kilometres run in it. The Lunarglide 7 leaves the longest trail by far, and carries the accent as the workhorse of the fleet; a ring marks the pairs still in rotation."
+          note="The Lunarglide 7 leaves the longest trail of the lot by far, the workhorse of the whole fleet. The six most-worn pairs, each laid out in footprints, one for every 200 kilometres run in it; a ring marks the pairs still in rotation."
           source="Activity Log + Gear"
           tableCaption="Distance logged in the six most-worn pairs"
           columns={['Pair', 'km', 'Terrain']}

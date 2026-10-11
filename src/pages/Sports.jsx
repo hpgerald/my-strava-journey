@@ -216,7 +216,7 @@ export default function Sports() {
         <Figure
           n="01"
           title="Distance against days"
-          note="Share of the kilometres on the left, share of the sessions on the right, both off a shared centre. The bars cross over. Running is a long bar on the left and a stub on the right. Walking is the mirror image, a sliver of the ground but most of the days out."
+          note="The bars cross over. Running is a long bar for distance and a stub for sessions; walking is the mirror image, a sliver of the ground but most of the days out. Share of the kilometres on the left, share of the sessions on the right, both off a shared centre."
           source="Overview"
           tableCaption="Share of total distance and total activities by sport"
           columns={['Sport', 'Distance', 'Activities']}
@@ -234,7 +234,7 @@ export default function Sports() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Distance by year, on foot"
-          note="Six ways of covering ground on foot, every panel on the same scale. Running is logged mostly on the treadmill; walking is almost all outdoors, and it is the walking that climbs."
+          note="Running is logged mostly on the treadmill, walking is almost all outdoors, and it is the walking that does the climbing. Six ways of covering ground on foot, every panel drawn on the same scale."
           source="Activity Log"
           tableCaption="Distance in km by category and year"
           columns={['Category', ...years]}
@@ -249,7 +249,7 @@ export default function Sports() {
         <Figure
           n="02"
           title="How each sport behaves"
-          note="A typical outing for each foot sport: how far it goes along the bottom, how much it climbs up the side, the bubble bigger the more often it happens. Running sits far out and low. The trails and the hike float high on almost no distance. Walking is the busy dot in the middle."
+          note="Running sits far out and low, long and flat. The trails and the hike float high on almost no distance, and walking is the busy dot in the middle. A typical outing for each foot sport: distance along the bottom, climb up the side, the bubble bigger the more often it happens."
           source="Activity Log"
           tableCaption="Median distance, median climb and count by foot sport"
           columns={['Sport', 'Median km', 'Median climb', 'Logged']}
@@ -307,7 +307,7 @@ export default function Sports() {
         <div className="grid grid--2">
           <Figure
             title="How fast, on foot"
-            note="Typical pace per kilometre. The bar spans the middle half of sessions; the tick marks the median. Running is quickest, hiking slowest."
+            note="Running is the quickest on foot and hiking the slowest, with walking and trail running in between. The bar spans the middle half of sessions and the tick marks the median pace per kilometre."
             source="Activity Log"
             tableCaption="Pace per km: median and middle-50% range"
             columns={['Category', 'Median /km', 'Range']}
@@ -318,7 +318,7 @@ export default function Sports() {
 
           <Figure
             title="How far, on foot"
-            note="Typical distance per outing. Runs cover the most ground per session; walks are short and frequent."
+            note="Runs cover the most ground per outing while walks stay short and frequent. The bar spans the middle half of sessions and the tick marks the median distance."
             source="Activity Log"
             tableCaption="Distance in km: median and middle-50% range"
             columns={['Category', 'Median km', 'Range']}
@@ -331,7 +331,7 @@ export default function Sports() {
         <div className="grid grid--2" style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             title="The treadmill years"
-            note="Each column is a year of runs, split into the share done outdoors versus on the treadmill. The early years are almost all indoors; lately the road is winning back."
+            note="The early running years were almost all indoors, and lately the road is winning them back. Each column is a year of runs, split into the share done outdoors against on the treadmill."
             source="Activity Log"
             tableCaption="Runs per year by setting"
             columns={['Year', 'Outdoor', 'Indoor']}
@@ -342,7 +342,7 @@ export default function Sports() {
 
           <Figure
             title="How steep it gets"
-            note="The slope of each row is a sport's median gradient, the typical climb beside it. Running is nearly flat. The ground only tilts up on the trails and the hikes."
+            note="Running is nearly flat ground; only the trails and the hikes really tilt uphill. Each row's slope is that sport's median gradient, with the typical climb beside it."
             source="Activity Log"
             tableCaption="Median gradient and median elevation gain"
             columns={['Category', 'Median grade', 'Median climb']}
@@ -355,7 +355,7 @@ export default function Sports() {
         <div className="grid grid--2" style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             title="When you head out"
-            note="Each band is a slice of the day, as a share of that sport's own sessions. Runs skew to the dark ends, dawn and night; walks cluster in the evening."
+            note="Runs skew to the dark ends of the day, dawn and night, while walks cluster in the evening. Each band is a slice of the day, drawn as a share of that sport's own sessions."
             source="Activity Log"
             tableCaption="Share of runs and walks by time of day"
             columns={['Time of day', 'Run', 'Walk']}
@@ -366,7 +366,7 @@ export default function Sports() {
 
           <Figure
             title="Weekends are for trails"
-            note="Trail runs and hikes counted together by day of the week. They pile up on Saturday and Sunday and all but vanish midweek."
+            note="Trail runs and hikes pile up on Saturday and Sunday and all but vanish midweek. Counted together by day of the week."
             source="Activity Log"
             tableCaption="Trail runs and hikes by weekday"
             columns={['Weekday', 'Activities']}
