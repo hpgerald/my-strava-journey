@@ -1053,7 +1053,7 @@ text.chart-panel-title {
 .opener2col { display: grid; grid-template-columns: 1fr; gap: var(--sp-6); align-items: center; }
 @media (min-width: 52rem) {
   .opener2col { grid-template-columns: 1.45fr 1fr; gap: var(--sp-8); }
-  .opener2col--text { grid-template-columns: 1fr 0.92fr; }
+  .opener2col--text { grid-template-columns: 1fr 0.92fr; align-items: start; }
 }
 
 /* transition matrix (Markov) */
@@ -1074,9 +1074,18 @@ text.chart-panel-title {
 .lorenz__area { opacity: 0; transition: opacity var(--dur-slow) var(--ease) 0.4s; }
 .lorenz__plot.is-in .lorenz__area { opacity: 1; }
 .lorenz__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
-.lorenz__eq { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
-.lorenz__gini { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--accent); }
+.lorenz__gini { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--accent-ink); }
 .lorenz__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.lorenz__key { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2) var(--sp-4); margin: var(--sp-4) 0 0; }
+.lorenz__keyitem { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: var(--sp-2); align-items: center; }
+.lorenz__swatch { grid-row: 1 / 3; width: 22px; height: 12px; align-self: center; }
+.lorenz__swatch--eq { height: 0; border-top: 2px dashed color-mix(in srgb, var(--ink) 55%, transparent); }
+.lorenz__swatch--curve { height: 0; border-top: 3px solid var(--accent); border-radius: 2px; }
+.lorenz__swatch--gap { background: color-mix(in srgb, var(--accent) 14%, var(--paper)); border-radius: 2px; }
+.lorenz__swatch--mark { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-ink); justify-self: center; }
+.lorenz__keyitem dt { font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg); }
+.lorenz__keyitem dd { margin: 0; font-size: var(--fs-xs); color: var(--fg-muted); line-height: 1.4; }
+@media (max-width: 30rem) { .lorenz__key { grid-template-columns: 1fr; } }
 
 /* correlogram (autocorrelation) */
 .corr__bar { transform: scaleY(0); transition: transform var(--dur) var(--ease); }
