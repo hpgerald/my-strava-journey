@@ -215,7 +215,7 @@ export default function Goals() {
       number="09"
       title="Goals"
       subtitle="The targets, year by year."
-      lede={`The same three marks every year: a thousand kilometres walked, a thousand run, and twenty-four thousand metres climbed on foot. The rings fill as the year does${inProgress ? `, and for ${latest}, still unfolding, a notch shows where today's pace stands` : ''}, and a closed ring is a year that cleared the bar. Underneath the stated targets sit the quiet ones nobody announced: a race run faster every single year, fifty trips to one headland, and not a single calendar month missed in over five years.`}
+      lede={`The same three marks every year: a thousand kilometres walked, a thousand run, and twenty-four thousand metres climbed on foot. The rings fill as the year does${inProgress ? `, and for ${latest}, still unfolding, a notch shows where today's pace would put you by December` : ''}. A closed ring is a year that cleared the bar. Under the targets set out loud sit the quiet ones nobody announced: a race run faster every single year, fifty trips to one headland, and not a single calendar month missed in over five years.`}
       prev={prev}
       next={next}
     >
@@ -224,7 +224,7 @@ export default function Goals() {
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Everything that was chased</p>
         <Figure
           title="The goals, as a sky"
-          note="The brightest star here is the streak that has not broken in more than five years. Every goal in this chapter is drawn as one star, grouped into the four movements below: a filled star is a goal met, a ringed star one returned to on a cycle, a hollow star still open."
+          note="The brightest star is the streak that has not broken in more than five years. Every goal in this chapter is one star, grouped into the four movements below: a filled star is a goal met, a ringed star one returned to on a cycle, a hollow star still open."
           source="Activity Log"
           tableCaption="Every goal, its movement and its state"
           columns={['Movement', 'Goal', 'State']}
@@ -290,7 +290,7 @@ export default function Goals() {
         <Figure
           n="02"
           title="Every year against the same three rings"
-          note="Running cleared its thousand early and often; walking and that big elevation number are the harder climbs, cleared only in the strongest years. One set of rings per year, the same three targets each time, so following a single colour down the years shows when each goal was met and when it fell short."
+          note="Running cleared its thousand early and often. Walking and the big climbing number are the hard ones, reached only in the strongest years. One set of rings per year, the same three targets each time, so following a single colour down the years shows when each goal was met and when it fell short."
           source="Activity Log"
           tableCaption="Percent of each target reached, by year"
           columns={['Year', 'Walk', 'All runs', 'Foot elevation', 'Rings closed']}
@@ -327,7 +327,7 @@ export default function Goals() {
         num="II"
         eyebrow="Movement two"
         title="The kept dates"
-        lede="Two goals that came round again and again, a place and a race, each one returned to on purpose."
+        lede="Two goals that came round again and again, a place and a race, each returned to on purpose."
       />
 
       {/* A different kind of goal: fifty trips to one place */}
@@ -336,7 +336,7 @@ export default function Goals() {
           <Figure
             n="03"
             title="Fifty trips to Ras Kilomoni"
-            note={`Not every goal is a distance. Through 2026 one destination kept pulling the training back to it, the Ras Kilomoni headland, and the trips were numbered as they went, I to L. The target was a clean fifty, and the wall fills exactly: ${rkWalks} reached at a walk, ${rkRuns} on the run, no more and no fewer. The bars below drop each trip onto the calendar from ${longDate(rk[0].date)} to ${longDate(rk[rk.length - 1].date)}, the busy weeks and the long gaps laid bare, each bar as tall as that day was far. Trip fifty fell on the same day as the 2,000th activity of the whole record, a milestone landing on a milestone.`}
+            note={`Not every goal is a distance; some are a place. Through 2026 one headland, Ras Kilomoni, kept pulling the training back, and the trips were numbered as they went, I to L (Roman numerals, 1 to 50). The target was a clean fifty, and the wall fills exactly: ${rkWalks} reached at a walk, ${rkRuns} on the run, no more and no fewer. The bars drop each trip onto the calendar from ${longDate(rk[0].date)} to ${longDate(rk[rk.length - 1].date)}, busy weeks and long gaps and all, each bar as tall as that day was far. Trip fifty landed on the same day as the 2,000th activity of the whole record, one milestone on top of another.`}
             source="Activity Log (named-trip series)"
             tableCaption="Every Ras Kilomoni trip in order, with date, sport and distance"
             columns={['Trip', 'Date', 'Sport', 'km']}
@@ -361,7 +361,7 @@ export default function Goals() {
           <Figure
             n="04"
             title="Four years at the Kilimanjaro Half"
-            note={`One race has come round every year since ${khFirst.year}: the Kilimanjaro Half Marathon, the same twenty-one kilometres each time. ${kh.length} editions in an unbroken row, and quicker at every one. The finish came down from ${clock(toNum(khFirst.moving_min))} in ${khFirst.year} to ${clock(toNum(khLast.moving_min))} in ${khLast.year}, ${Math.round(khFaster)} minutes off the clock, the pace easing from ${paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} to ${paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))} per kilometre. The standing around shrank even faster, from ${khStops(khFirst)} minutes lost to stops in the first to just ${khStops(khLast)} in the latest. Drawn from the actual GPS tracks, the terrain up top is the course itself, a real 268 metre climb to the turnaround near 9 km before it falls away home; beneath it, one pace ribbon a year, every stretch coloured by how fast it was run there. Read down the years and the ribbons warm as the race quickens; read across and every year drags on the climb and flies on the descent.`}
+            note={`One race has come round every year since ${khFirst.year}: the Kilimanjaro Half Marathon, the same twenty-one kilometres each time, and quicker at every running. ${kh.length} editions in an unbroken row. The finish came down from ${clock(toNum(khFirst.moving_min))} in ${khFirst.year} to ${clock(toNum(khLast.moving_min))} in ${khLast.year}, ${Math.round(khFaster)} minutes off the clock, the pace easing from ${paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} to ${paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))} a kilometre, and the standing-around time shrank even faster, from ${khStops(khFirst)} minutes lost to stops in the first to ${khStops(khLast)} in the latest. The ridge up top is the real course, pulled from the GPS tracks: a 268 metre climb to the turnaround near 9 km, then a long drop home. Below it, one pace ribbon a year, each stretch coloured by how fast it was run. Read down the years and the ribbons warm as the race quickens; read across and every year drags on the climb and flies on the way down.`}
             source="Activity Log + Strava GPS streams"
             tableCaption="Each Kilimanjaro Half Marathon: distance, finish and pace"
             columns={['Year', 'Date', 'km', 'Finish', 'Pace /km', 'On course']}
@@ -391,8 +391,8 @@ export default function Goals() {
         <section id="month-streak" style={{ paddingTop: 'var(--sp-6)', scrollMarginTop: '90px' }}>
           <Figure
             n="05"
-            title="Every month since the spark"
-            note={`Some goals were never set out loud. This is one: since ${sparkLabel}, not a single calendar month has gone by without an activity. That is ${monthStreak} months in an unbroken row, more than five years, still running. It began as a tentative return that June, then roared to life in July; the opening years flicker with gaps, but from there the grid is solid. Each cell is a month, shaded by the ground it covered on foot.`}
+            title="Every month, unbroken"
+            note={`Some goals were never set out loud. This is one: since ${sparkLabel}, not a single calendar month has gone by without an activity, ${monthStreak} months in a row, more than five years, still running. It began with a quiet return that June and took hold the next month; the early years still show gaps, but from there the grid is solid. Each cell is a month, shaded by the ground it covered on foot.`}
             source="Monthly Trends"
             tableCaption="Distance on foot by month"
             columns={['Month', 'Activities', 'km on foot']}
@@ -415,8 +415,8 @@ export default function Goals() {
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <Figure
             n="06"
-            title="The road to eighty-three"
-            note={`For most people twenty-one kilometres is a race entered once and remembered forever. Here it is a habit. This line is a running tally of every outing that went the half-marathon distance or beyond, stacked in the order they happened: ${halfCount} of them. It rockets up through 2021 and 2022 when the long day was almost routine, levels off through the leaner years, and climbs hard again lately. The one full marathon is marked, and the four-in-four-days of the stage race shows as a near-vertical jump.`}
+            title="The road past the half"
+            note={`For most people twenty-one kilometres is a race run once and remembered forever. Here it is a habit. A running tally of every outing that went the half-marathon distance or beyond, in the order they happened: ${halfCount} of them. It climbs fast through 2021 and 2022 when the long day was almost routine, flattens through the leaner years, and climbs hard again lately. The one full marathon is marked, and the four-in-four-days of the stage race shows as a near-vertical jump.`}
             source="Activity Log"
             tableCaption="Outings of 21.1 km or more, by distance"
             columns={['Count', 'Threshold']}
@@ -438,7 +438,7 @@ export default function Goals() {
           <Figure
             n="07"
             title="The double thousand"
-            note={`Almost every year clears a thousand kilometres on one side alone, running or walking, but only ${dblYear} stretches past a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the single year to span the full width. Each year throws two arms, how far it ran to the right and how far it walked to the left, with dashed marks at a thousand on each side.`}
+            note={`Most years clear a thousand kilometres on one side alone, running or walking. Only ${dblYear} clears a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the single year to span the full width. Each year reaches two ways, running to the right and walking to the left, with dashed marks at a thousand on each side.`}
             source="Activity Log"
             tableCaption="Running and walking distance by year"
             columns={['Year', 'km run', 'km walked', 'Both 1,000?']}
@@ -460,7 +460,7 @@ export default function Goals() {
           <Figure
             n="08"
             title="The seven-year arc"
-            note={`The whole journey in one line. Two near-dormant opening years, then the habit ignites and 2021 and 2022 pour out almost three thousand kilometres each, ${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} at the peak. A dip follows, then the climb back. The dashed line is the 2,400 kilometres set as a target in 2021, and cleared. Distance on foot only.`}
+            note={`The whole journey in one line. Two near-empty opening years, then the habit catches and 2021 and 2022 each cover almost three thousand kilometres, ${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} at the peak. A dip, then the climb back. The dashed line is the 2,400 kilometres set as a target in 2021, and cleared. Distance on foot only.`}
             source="Yearly Trends"
             tableCaption="Distance on foot by year"
             columns={['Year', 'km on foot', 'Activities']}
@@ -477,7 +477,7 @@ export default function Goals() {
           <Figure
             n="09"
             title="The century months"
-            note={`A hundred kilometres on foot in a calendar month is a quiet standard to hold. It has been held ${centuryCount} times. Each column here is a month, and the part that rises above the 100 km waterline is the stretch that cleared it; the caps, read across, are the months that made it. The longest unbroken run reached ${centuryBest} months in a row before a quieter month broke it.`}
+            note={`A hundred kilometres on foot in a single calendar month is a quiet standard to hold, and it has been held ${centuryCount} times. Each column is a month; the part that rises above the 100 km line is the stretch that cleared it, and the caps read across are the months that made it. The longest unbroken run reached ${centuryBest} months before a quieter one broke it.`}
             source="Monthly Trends"
             tableCaption="Distance on foot by month, against the 100 km line"
             columns={['Month', 'km on foot', 'Century?']}
@@ -506,7 +506,7 @@ export default function Goals() {
         <Figure
           n="10"
           title="The lone marathon"
-          note="Exactly once has a full 42 kilometres been run in a single day, and it was run hard: 42.75 km in 2 hours 56, a shade over four minutes a kilometre, on a flat May morning in 2022. Set against a normal long day, it is twice the distance covered at better than half the usual pace, and it stands alone as the furthest ever gone between one sunrise and the next."
+          note="A full 42 kilometres has been run in a single day exactly once, and it was run hard: 42.75 km in 2 hours 56, a shade over four minutes a kilometre, on a flat May morning in 2022. Twice the distance of a normal long day at well under the usual pace, and the furthest ever covered between one sunrise and the next."
           source="Activity Log"
           tableCaption="The one full marathon, against a normal long day"
           columns={['Effort', 'Distance', 'Time', 'Pace']}
@@ -526,7 +526,7 @@ export default function Goals() {
         <Figure
           n="11"
           title="The 100 km stage race"
-          note="One challenge stands apart from every other: 100 kilometres covered across four straight evenings in March 2023, 25 kilometres each night, back to back. The furthest ever gone at all, and the story is in the pacing. After two steady openers he found another gear, dropping close to half a minute a kilometre to run the third evening the quickest of the four, then holding it on the last. Ten and a half hours of moving over four nights, and getting faster as it wore on."
+          note="One challenge stands apart from the rest: 100 kilometres across four straight evenings in March 2023, 25 kilometres a night, back to back. The furthest ever gone, and the story is in the pacing. After two steady openers the pace dropped close to half a minute a kilometre, making the third evening the quickest of the four, then held it on the last. Ten and a half hours of moving over four nights, getting faster as it wore on."
           source="Activity Log (named-race series)"
           tableCaption="Each evening of the 100 km stage race"
           columns={['Evening', 'Date', 'Distance', 'Time', 'Pace']}

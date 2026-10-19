@@ -60,7 +60,7 @@ export default function IgnitionStream({ rows, switchMonth = '2021-07' }) {
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="Activities per month across the whole history, flat for two years then surging from July 2021."
+        aria-label="Activities per month across the whole history, flat for two years then surging after the switch."
         style={{ display: 'block' }}
         onMouseLeave={() => setHover(null)}
         onMouseMove={(ev) => {
@@ -82,7 +82,7 @@ export default function IgnitionStream({ rows, switchMonth = '2021-07' }) {
         <path d={smoothLinePath(after)} className="ignition__line" />
         {/* the switch marker */}
         <line x1={switchX} y1={m.t - 6} x2={switchX} y2={baseY} className="ignition__switch" />
-        <text x={switchX + 6} y={m.t + 4} className="ignition__switchlbl">July 2021 · the switch</text>
+        <text x={switchX + 6} y={m.t + 4} className="ignition__switchlbl">the switch</text>
         <line x1={m.l} y1={baseY} x2={m.l + iw} y2={baseY} stroke="var(--ink)" strokeWidth="1" />
         {hover && (
           <circle cx={hover.x} cy={sy(hover.n)} r="4" fill="var(--ink)" stroke="var(--paper)" strokeWidth="1.5" />

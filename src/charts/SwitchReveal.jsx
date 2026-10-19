@@ -86,7 +86,7 @@ export default function SwitchReveal({ rows, switchMonth = '2021-07' }) {
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="Activities per month across the whole record, flat for two years then surging from July 2021 and staying high."
+        aria-label="Activities per month across the whole record, flat for two years then surging after the switch and staying high."
         style={{ display: 'block', touchAction: 'none' }}
         onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); setFromClientX(e.clientX) }}
         onPointerMove={(e) => { if (e.buttons) setFromClientX(e.clientX) }}
@@ -101,7 +101,7 @@ export default function SwitchReveal({ rows, switchMonth = '2021-07' }) {
         <path d={smoothAreaPath(after, baseY)} className="ignition__after" />
         <path d={smoothLinePath(after)} className="ignition__line" />
         <line x1={switchX} y1={m.t - 4} x2={switchX} y2={baseY} className="ignition__switch" />
-        {!narrow && <text x={switchX + 6} y={m.t + 6} className="ignition__switchlbl">July 2021 · the switch</text>}
+        {!narrow && <text x={switchX + 6} y={m.t + 6} className="ignition__switchlbl">the switch</text>}
         <line x1={m.l} y1={baseY} x2={m.l + iw} y2={baseY} stroke="var(--ink)" strokeWidth="1" />
         {/* playhead */}
         <line x1={selX} y1={m.t - 4} x2={selX} y2={baseY} className="switchr__head" />

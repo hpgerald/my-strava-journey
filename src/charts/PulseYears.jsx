@@ -46,7 +46,7 @@ export default function PulseYears({ rows, switchMonth = '2021-07' }) {
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="Monthly activity across seven years as a pulse, faint before July 2021 and strong after."
+        aria-label="Monthly activity across seven years as a pulse, faint before the switch and strong after."
         style={{ display: 'block' }}
         onMouseLeave={() => setHover(null)}
       >
@@ -65,7 +65,7 @@ export default function PulseYears({ rows, switchMonth = '2021-07' }) {
         {switchIdx >= 0 && (
           <>
             <line x1={sx(switchIdx)} y1={pad.t - 8} x2={sx(switchIdx)} y2={H - pad.b + 4} className="pulse__switch" />
-            <text x={sx(switchIdx) + 5} y={pad.t - 1} className="pulse__switchlbl">July 2021 · the switch</text>
+            <text x={sx(switchIdx) + 5} y={pad.t - 1} className="pulse__switchlbl">the switch</text>
           </>
         )}
 

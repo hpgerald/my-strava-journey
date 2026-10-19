@@ -10,7 +10,7 @@ const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct
 const FACT = {
   2019: 'The log opens in August with a short run. Twenty-seven activities that year, then it goes quiet.',
   2020: 'A near-dormant year. Thirty-five activities, most of them in one short summer run.',
-  2021: 'July flips the switch: two activities in June become fifty-eight in July, and it never fully stops again.',
+  2021: 'The switch: two activities in June become fifty-eight the next month, and it never fully stops again.',
   2022: 'The biggest year on record, 443 activities and close to 2,900 km on foot.',
   2023: 'March holds the 100 km stage race, four nights back to back.',
   2024: 'Quieter by distance, but not one calendar month goes unlogged.',

@@ -86,7 +86,7 @@ export default function Gear() {
     return Object.keys(mm).sort().map((k) => { cum += mm[k]; return { month: k, cum } })
   }
   const PAIR_NOTE = {
-    'Lunarglide 7': 'The pair that caught the switch. Most of its kilometres came in the first explosive years, almost all on the road.',
+    'Lunarglide 7': 'The pair that caught the switch. Most of its kilometres came in the first busy years, almost all on the road.',
   }
   const makePair = (sh, role) => sh ? {
     ...sh, role, monthly: buildMonthly(sh.gid),
@@ -121,7 +121,7 @@ export default function Gear() {
       number="07"
       title="Gear"
       subtitle="Eleven pairs, and how they were worn."
-      lede={`Eleven pairs, and almost never two doing the real work at once. One lead pair carries the load until it wears out, then hands straight off to the next within a day, clean ${cleanHandoffs} times out of ${handoffs.length}. One pair alone covered over a thousand kilometres. Some were burned through in a single season, others nursed along for years, and each still wears its job in how fast and how steeply it ran.`}
+      lede={`Eleven pairs, and rarely two doing the real work at once. One lead pair carries the load until it wears out, then hands straight to the next within a day, a clean ${cleanHandoffs} handoffs out of ${handoffs.length}. One pair alone covered over a thousand kilometres. Some were worn through in a single season, others kept going for years, and each still shows its job in how fast and how steep it ran.`}
       prev={prev}
       next={next}
     >
@@ -138,7 +138,7 @@ export default function Gear() {
         <Figure
           n="01"
           title="The baton never drops"
-          note={`One shoe reigns at a time, and when it wears out the next takes over almost always within a day. The Lunarglide 7 held the baton longest, over 500 days leading the rotation. Every pair that ever led is laid end to end, the number inside each bar the kilometres it carried, a dot marking each handoff. The specialists below, a stray backup and the dedicated trail pairs, only ever came off the bench, and lately the relay has split into three pairs running at once.`}
+          note={`Like a relay, one pair runs the lead leg at a time, and when it wears out the next takes over, almost always within a day. The Lunarglide 7 led longest, over 500 days out front. Every pair that ever led is laid end to end, the number inside each bar the kilometres it carried, a dot at each handoff. The specialists below, a spare and the trail pairs, only ever came off the bench, and lately the lead has split across three pairs at once.`}
           source="Activity Log + Gear"
           tableCaption="Each primary pair's reign and the distance it carried"
           columns={['Pair', 'Reign', 'km']}
@@ -153,7 +153,7 @@ export default function Gear() {
         <Figure
           n="02"
           title="Every shoe has a character"
-          note={`The road trainers keep low and level, the Lunarglide 5 and Pegasus 37 pure speed on the flat, while the trail pairs spike up like mountains and the ${goat.model.replace(/\s*\(.*\)$/, '')} towers over the whole fleet at over 40 metres of climb per kilometre. The Pegasus Trail climbs as steeply as the far slower Zegama, five minutes a kilometre quicker up the same gradient. Every pair sits on the pace line, quick on the left and a walker's amble on the right, rising to how steeply it climbs. Head size is total distance.`}
+          note={`You can read each shoe's job from how it ran. The road trainers sit low and level, the Lunarglide 5 and Pegasus 37 built for speed on the flat; the trail pairs spike upward, and the ${goat.model.replace(/\s*\(.*\)$/, '')} tops the whole fleet at over 40 metres of climb per kilometre. The Pegasus Trail climbs as steeply as the far slower Zegama while running five minutes a kilometre quicker up the same gradient. Each pair sits on the pace line, quick on the left and a walk on the right, higher the steeper it climbs. Head size is total distance.`}
           source="Activity Log + Gear"
           tableCaption="Median pace, steepness and distance by pair"
           columns={['Pair', 'Pace /km', 'm per km', 'km']}
@@ -169,7 +169,7 @@ export default function Gear() {
         <Figure
           n="03"
           title="Sprinters and slow-burners"
-          note={`The spread is enormous. The ${sprinter.model.replace(/\s*\(.*\)$/, '')} was a sprinter, torn through at ${fmtInt(sprinter.kmMo)} km a month as all but the only shoe worn for that stretch, while the ${slow.model.replace(/\s*\(.*\)$/, '')} was sipped at ${fmtInt(slow.kmMo)} km a month across its whole life. How fast each pair was used up, in kilometres run per month it was alive. A hollow dot marks a pair still in rotation.`}
+          note={`Some pairs were used up fast, others sipped over years. The ${sprinter.model.replace(/\s*\(.*\)$/, '')} was torn through at ${fmtInt(sprinter.kmMo)} km a month, almost the only shoe worn for that stretch, while the ${slow.model.replace(/\s*\(.*\)$/, '')} went just ${fmtInt(slow.kmMo)} km a month across its whole life. How fast each pair was spent, in kilometres per month it was in rotation. A hollow dot marks a pair still in use.`}
           source="Activity Log + Gear"
           tableCaption="Kilometres per month of life, by pair"
           columns={['Pair', 'km / month', 'Total km']}
@@ -184,7 +184,7 @@ export default function Gear() {
         <Figure
           n="04"
           title="The fleet, in footprints"
-          note="The Lunarglide 7 leaves the longest trail of the lot by far, the workhorse of the whole fleet. The six most-worn pairs, each laid out in footprints, one for every 200 kilometres run in it; a ring marks the pairs still in rotation."
+          note="The Lunarglide 7 leaves the longest trail by far, the workhorse of the fleet. The six most-worn pairs, each drawn in footprints, one for every 200 kilometres; a ring marks the pairs still in rotation."
           source="Activity Log + Gear"
           tableCaption="Distance logged in the six most-worn pairs"
           columns={['Pair', 'km', 'Terrain']}

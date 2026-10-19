@@ -100,7 +100,7 @@ export default function WhatItMeans() {
       number="10"
       title="What It Means"
       subtitle="What the numbers say to you."
-      lede="Seven years of a record, read back. Four things it shows plainly, and a last one it only hints at. Dotted words carry plain definitions; hover, tap or tab."
+      lede="Seven years of a record, read back. Four things it shows plainly, and one it only hints at. Dotted words carry plain definitions; hover, tap or tab."
       prev={prev}
       next={next}
     >
@@ -109,14 +109,14 @@ export default function WhatItMeans() {
           <div>
             <h2 className="persona__who">Almost all of it came after 2021</h2>
             <p className="measure">
-              In 2019 the log held {acts2019} activities and no particular plan. The count reached
-              {' '}{fmtInt(totalActs)} slowly: from July 2021 the habit stopped being optional, and the
-              total looked after itself. The longest unbroken run is {fmtInt(streak)} days, inside a
-              {' '}{weekStreak}-week streak, and {activePct}% of every calendar day carries something, most of them
-              short evening walks logged just to keep the chain going.
+              In 2019 the log held {acts2019} activities and no real plan. The count reached
+              {' '}{fmtInt(totalActs)} slowly; from 2021 the habit stopped being optional and the total
+              looked after itself. The longest unbroken run is {fmtInt(streak)} days, inside a{' '}
+              {weekStreak}-week streak, and {activePct}% of every calendar day carries something, most of them
+              short evening walks logged just to keep the chain alive.
             </p>
           </div>
-          <Verdict from={acts2019} to={fmtInt(totalActs)} mult={`about ${Math.round(totalActs / (acts2019 || 1))}x more activities`} sub="27 activities in 2019, and the totals looked after themselves once the habit held." />
+          <Verdict from={acts2019} to={fmtInt(totalActs)} mult={`about ${Math.round(totalActs / (acts2019 || 1))}x more activities`} sub={`${acts2019} activities in 2019, and the totals looked after themselves once the habit held.`} />
         </article>
 
         <article className="persona persona--split">
@@ -124,9 +124,8 @@ export default function WhatItMeans() {
             <h2 className="persona__who">A year of silence, then the busiest stretch</h2>
             <p className="measure">
               The biggest gap in the record is 353 days, nearly a full year, from July 2020 to June
-              2021, with nothing logged at all. The stretch that followed became the most active of the
-              whole seven years. Here, at least, a long layoff and a lasting comeback sat right next to
-              each other.
+              2021, with nothing logged at all. The stretch right after became the most active of the
+              whole seven years. A long layoff and a lasting comeback, back to back.
             </p>
           </div>
           <Verdict value="353" unit="days away" sub="the longest gap on record, immediately before the most consistent stretch of all." />
@@ -137,10 +136,10 @@ export default function WhatItMeans() {
             <h2 className="persona__who">The climb was walked, not run</h2>
             <p className="measure">
               Running is {runDistPct}% of the distance on foot but only {runClimbPct}% of the climb; it
-              stays flat and mostly on a treadmill. The {fmtInt(elevation)} metres of{' '}
-              <Term name="Elevation gain">vertical</Term>, {fmtNum(everests)} Everests, came from walking
-              uphill and from the trails, where a single trail run averages around 350 metres of gain and
-              a hike over 700. The metres were earned slowly, on foot.
+              stays flat and mostly indoors. The {fmtInt(elevation)} metres of{' '}
+              <Term name="Elevation gain">vertical</Term>, {fmtNum(everests)} times the height of Everest,
+              came from walking uphill and from the trails, where a single trail run averages around 350
+              metres of gain and a hike over 700. The height was earned slowly, on foot.
             </p>
           </div>
           <ClimbShare items={climbShareData} />
@@ -151,11 +150,10 @@ export default function WhatItMeans() {
             <h2 className="persona__who">The total was ordinary days</h2>
             <p className="measure">
               The typical foot outing is just {fmtNum(medKm, 1)} km, and on {doublePct}% of active days
-              there were two or more short ones rather than one long. Speed is hard to read on a
-              treadmill; {' '}<Term name="Relative Effort">cost</Term> is steadier. A kilometre on foot
-              cost about {fmtNum(epkFirst?.value, 1)} points in 2019 and {fmtNum(epkLow?.value, 1)} by
-              {' '}{epkLow?.year}, the same ground for a smaller toll. That slow decline, more than any
-              fast run, is what getting fitter looked like.
+              there were two or more short ones instead of one long. Speed is hard to read on a treadmill;
+              {' '}<Term name="Relative Effort">cost</Term> is steadier. A kilometre on foot cost about{' '}
+              {fmtNum(epkFirst?.value, 1)} points in 2019 and {fmtNum(epkLow?.value, 1)} by {epkLow?.year},
+              the same ground for a smaller toll. That slow decline is what getting fitter actually looked like.
             </p>
           </div>
           <EffortPerKm data={effortPerKm} />
@@ -164,7 +162,7 @@ export default function WhatItMeans() {
         <div className="means-close">
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>In the end</p>
           <p className="measure" style={{ fontSize: 'var(--fs-md)', margin: 0 }}>
-            Seven years in, the part I notice most is the smallest one. On an ordinary flat morning in
+            Seven years in, the part I notice most is the smallest part. On an ordinary flat morning in
             Dodoma, with nothing to train for, the walk still happens. The record only keeps count of it.
           </p>
         </div>

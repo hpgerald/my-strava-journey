@@ -208,7 +208,7 @@ export default function Records() {
       number="04"
       title="Records"
       subtitle="The far edges. Longest, highest, hardest."
-      lede="A full marathon, run start to finish without once stepping off a treadmill. A single day that gained close to two vertical kilometres. Enough total climb to summit Everest nine times over. A streak that has refused to break for months. This chapter leaves the averages behind for the far edges, the days that sit way out past everything typical."
+      lede="A full marathon, run start to finish without stepping off a treadmill. A single day that gained close to two vertical kilometres. Enough total climb to summit Everest nine times over. A streak months long and still unbroken. This chapter leaves the averages behind for the far edges, the days that sit well past everything typical."
       prev={prev}
       next={next}
     >
@@ -224,7 +224,7 @@ export default function Records() {
           <Figure
             n="01"
             title="A record is not a little better than usual"
-            note={`Every run ever logged, sorted into bins by distance. The crowd sits near the average of ${tail.mean.toFixed(1)} km, and almost everything falls within a standard deviation or two of it, the shaded band. The one full marathon stands alone far out in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations past the average, beyond the ${tail.pct} of all ${tail.n} runs. That distance is what makes it a record, a day so rare the distribution says it should almost never happen.`}
+            note={`A record is not a good day; it is a day so far out it should barely happen. Every run ever logged, sorted by distance, makes a crowd near the average of ${tail.mean.toFixed(1)} km. "Standard deviation" is just the typical distance a run sits from that average, about ${tail.sd.toFixed(1)} km here, and almost every run falls within one or two of them, the shaded band. The one full marathon stands alone in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations out, further than ${tail.pct} of all ${tail.n} runs. That distance is what makes it a record.`}
             source="Activity Log"
             tableCaption="Run distance distribution and where the record falls"
             columns={['Measure', 'Value']}
@@ -245,7 +245,7 @@ export default function Records() {
         <Figure
           n="02"
           title={`${fmtInt(movingHours / 24)} days in motion`}
-          note="More than three months of pure motion, day and night without a single pause: that is every moving minute ever logged, stacked end to end. Beside it runs the dead time, the share of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
+          note="Add up every moving minute ever logged and it comes to more than three months of pure motion, day and night without a pause. Beside it runs the dead time, the share of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
           source="Activity Log"
           tableCaption="Total moving time against elapsed time"
           columns={['Measure', 'Hours']}
@@ -268,16 +268,16 @@ export default function Records() {
             {fmtInt(totalElev)} metres, straight up.
           </h2>
           <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
-            Add up every hill, every trail, every set of stairs on foot and the climbing alone reaches{' '}
+            Add up every hill, trail and set of stairs taken on foot and the climbing alone reaches{' '}
             {fmtInt(totalElev)} metres. That is Everest, sea to summit, more than nine times over, or Kilimanjaro
-            fourteen times. The biggest single day put {fmtInt(biggestClimb?.elevation_gain_m)} metres underfoot at
-            once, nearly two vertical kilometres in one hike. Almost none of it came from running.
+            fourteen times. The biggest single day gained {fmtInt(biggestClimb?.elevation_gain_m)} metres at once,
+            nearly two vertical kilometres in one hike. Almost none of it came from running.
           </p>
         </div>
         <Figure
           n="03"
           title="Total climb, on foot, as a range of Everests"
-          note="Stack up every metre ever climbed on foot and it builds a mountain range nine Everests high. One Everest-height summit for every Everest's worth of ascent, with Kilimanjaro marked for scale; the last summit is just the leftover metres."
+          note="Every metre ever climbed on foot, stacked into a mountain range nine Everests high. One summit drawn for each Everest's worth of ascent, with Kilimanjaro marked for scale; the last summit is the leftover metres."
           source="Activity Log"
           tableCaption="Total foot elevation gain against Everest and Kilimanjaro"
           columns={['Measure', 'Value']}
@@ -297,7 +297,7 @@ export default function Records() {
         <Figure
           n="04"
           title="Fuel: the burn, in plates of ugali"
-          note="Seven years of moving burned over a million and a half calories, roughly two thousand eight hundred plates of ugali, or the better part of a thousand days of a body's resting energy, spent moving instead. Strava totals the calories on every activity."
+          note="Seven years of moving burned over a million and a half calories. Put in food, that is about two thousand eight hundred plates of ugali; put in rest, close to a thousand days of what a body burns just staying alive. Strava totals the calories on every activity."
           source="Activity Log"
           tableCaption="Total calories burned and food equivalent"
           columns={['Measure', 'Value']}
@@ -323,7 +323,7 @@ export default function Records() {
         <Figure
           n="05"
           title="A usual outing, where it usually falls"
-          note={`The records above are rare by definition. Almost all of the ${fmtInt(totalDist)} km came from days like this one: a single short outing, run or walked in the early evening. The median foot outing is ${fmtNum(ordMedKm, 1)} km and lasts about ${Math.round(ordMedMin)} minutes; on ${ordDoublesPct}% of active days there is a second.`}
+          note={`The records above are rare by definition; the kilometres came from the opposite. Almost all of the ${fmtInt(totalDist)} km were built from days like this one, a single short outing run or walked in the early evening. The median foot outing is ${fmtNum(ordMedKm, 1)} km and about ${Math.round(ordMedMin)} minutes, and on ${ordDoublesPct}% of active days there is a second. Something is better than nothing, logged enough times, becomes everything.`}
           source="Activity Log"
           tableCaption="The typical outing and active day"
           columns={['Measure', 'Value']}

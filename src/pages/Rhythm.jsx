@@ -224,7 +224,7 @@ export default function Rhythm() {
       number="06"
       title="Rhythm"
       subtitle="When. And how hard."
-      lede={`More than half of every day in this record carries something. And the days are contagious: go out today and the odds you go out again tomorrow jump past four in five. That is the real engine. Two streaks are still alive as you read this, ${streakLen} days and ${weekStreakLen} weeks unbroken, stacked up one short evening walk at a time.`}
+      lede={`More than half of every day in this record carries something, and the days pull each other along: go out today and the odds you go out tomorrow pass four in five. That is the real engine. Two streaks are alive as you read this, ${streakLen} days and ${weekStreakLen} weeks unbroken, built one short evening walk at a time.`}
       prev={prev}
       next={next}
     >
@@ -233,7 +233,7 @@ export default function Rhythm() {
         <section style={{ paddingTop: 'var(--sp-6)' }}>
           <Figure
             title="Three years, every single week"
-            note={`${weekStreakLen} weeks in a row with at least one activity, more than ${(weekStreakLen / 52).toFixed(weekStreakLen % 52 ? 1 : 0)} years of never missing a week, running since ${fmtMonYr(weekStreakStart)} and still unbroken. Each cell is a week, one row per year, shaded by how busy it was.`}
+            note={`More than three years have gone by without a single week missed, ${weekStreakLen} weeks in an unbroken row since ${fmtMonYr(weekStreakStart)} and still running. Each cell is a week, one row per year, shaded by how busy it was.`}
             source="Activity Log"
             tableCaption="Weekly activity across the streak, by year of the run"
             columns={['Stretch', 'Weeks', 'Activities']}
@@ -248,7 +248,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="The streak, unbroken"
-          note={`The current run of ${streakLen || 'consecutive active days'}, drawn as one continuous thread. Every day is a stitch, taller where more was logged, and the thread has not broken once. The open end is today: it is still going.`}
+          note={`The current run of ${streakLen || 'consecutive active days'}, drawn as one continuous thread. Every day is a stitch, taller where more was logged, and the thread has not snapped once. The open end is today; it is still going.`}
           source="Activity Log + Fun Stats"
           tableCaption="Current active-day streak"
           columns={['Streak', 'Span']}
@@ -262,7 +262,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every active day"
-          note={`Read the years from the top and the empty squares thin out until the grid is almost solid. The orange stretch is the current run of ${streakLen || 'the streak'}, the longest I have gone without a gap, and it is still alive. Each square is a day, darker the more it carried.`}
+          note={`Read the years from the top and the empty squares thin out until the grid is almost solid, the habit taking hold in front of you. The orange stretch is the current run of ${streakLen || 'the streak'}, the longest I have ever gone without a gap, still alive. Each square is a day, darker the more it carried.`}
           source="Activity Log + Fun Stats"
           tableCaption="Active days and activities per year"
           columns={['Year', 'Active days', 'Activities']}
@@ -283,7 +283,7 @@ export default function Rhythm() {
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <Figure
             title="The habit has a long memory"
-            note={`Mark every one of the ${acfData.span.toLocaleString('en-US')} days in the span active or not, then ask how much one day predicts another a fixed number of days later. That correlation starts high, ${acfData.lag1.toFixed(2)} from one day to the next, and barely fades across the first month, still ${acfData.lag30.toFixed(2)} thirty days on. Training does not reset each morning; it carries. Only out at a full year${acfData.lag365 != null ? `, ${acfData.lag365.toFixed(2)},` : ''} does the signal fall back into the noise, so the rhythm is a rolling habit, not an annual cycle. Anything above the dashed line is more than chance.`}
+            note={`A run today is tied to runs weeks back; the training does not reset each morning. Mark every one of the ${acfData.span.toLocaleString('en-US')} days active or rest, then ask how well one day predicts another a set number of days later. The link starts high, ${acfData.lag1.toFixed(2)} from one day to the next, and barely fades across a month, still ${acfData.lag30.toFixed(2)} thirty days on. Only out at a full year${acfData.lag365 != null ? `, ${acfData.lag365.toFixed(2)},` : ''} does it fall back to chance, so this is a rolling habit rather than a once-a-year push. Anything above the dashed line is more than coincidence.`}
             source="Activity Log"
             tableCaption="Autocorrelation of the daily active series by lag, in days"
             columns={['Lag (days)', 'Correlation']}
@@ -299,7 +299,7 @@ export default function Rhythm() {
         <Figure
           n="03"
           title="Twice in a day, a third of the time"
-          note={`On ${multiPct}% of active days, one outing was not the end of it. Most days hold a single session, a steady slice carry two, and a handful packed in five. Once the habit took hold, a day out often meant more than one trip.`}
+          note={`On ${multiPct}% of active days, one outing was not the end of it. Most days hold a single session, a steady share carry two, and a handful reached five. Once the habit took hold, going out often meant going out twice.`}
           source="Activity Log"
           tableCaption="Active days by number of activities that day"
           columns={['Activities that day', 'Days']}
@@ -313,7 +313,7 @@ export default function Rhythm() {
       <section aria-label="Indoor versus outdoor" style={{ paddingTop: 'var(--sp-7)' }}>
         <div className="grid grid--2">
           <StatCard value={fmtInt(outdoor.activities)} label="Outdoor activities" note={`${fmtNum(outdoor.distance_km, 0)} km in the open.`} source="Fun Stats" />
-          <StatCard value={fmtInt(indoor.activities)} label="Indoor / trainer" note={`${fmtNum(indoor.distance_km, 0)} km on the treadmill, more than the open-air total.`} source="Fun Stats" />
+          <StatCard value={fmtInt(indoor.activities)} label="Indoor / trainer" note={`${fmtNum(indoor.distance_km, 0)} km on the treadmill, more than the whole open-air total.`} source="Fun Stats" />
         </div>
       </section>
 
@@ -321,7 +321,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="The shape of the year"
-          note="The training year has a shape. It swells through the cool dry months around the middle of the year and pulls back in with the short rains. The whole year is wrapped onto a twelve-month wheel so that shape reads at a glance. Pick a single year to see how its rhythm compares."
+          note="The training year has a shape, and it belongs to the weather. It fills out through the cool dry months in the middle of the year and thins with the short rains. The whole year wrapped onto a twelve-month wheel so the shape reads at a glance. Pick a year to compare its rhythm."
           source="Monthly Trends"
           tableCaption="Activities by calendar month, all years combined"
           columns={['Month', 'Activities']}
@@ -338,7 +338,7 @@ export default function Rhythm() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Activity against the seasons"
-          note="The busy stretch sits in the cool, dry middle of the year, roughly June to October, and the thinner months line up with the long and short rains. The same twelve months drawn as one curve, with Tanzania's wet and dry spells shaded behind it. It is a pattern in the record, not a claim that the weather drove it."
+          note="The busy stretch sits in the cool dry middle of the year, roughly June to October, and the thin months line up with the rains. The same twelve months drawn as one curve, Tanzania's wet and dry spells shaded behind it. It is a pattern in the record, not proof the weather drove it."
           source="Monthly Trends"
           tableCaption="Activities by calendar month, summed over all years"
           columns={['Month', 'Activities']}
@@ -357,7 +357,7 @@ export default function Rhythm() {
         <div className="grid grid--2">
           <Figure
             title="Weekday × time of day"
-            note={`One band carries the whole grid. The evening, roughly five to eight, takes ${eveShare}% of every week, and ${busiestSlot} is the single busiest slot, picked out in orange. Side to side the days stay oddly level, from ${quietWd} at the low end to ${busyWd} at the high, so the habit barely leans into the weekend: Saturday and Sunday hold ${weekendShare}% of it, a hair above the 29% that two days in seven would give by chance.`}
+            note={`One band carries the whole week: the evening, roughly five to eight, takes ${eveShare}% of it, and ${busiestSlot} is the single busiest slot, picked out in orange. Across the days the training stays oddly level, from ${quietWd} low to ${busyWd} high, so it barely leans into the weekend. Saturday and Sunday hold ${weekendShare}%, a hair over the 29% that two days in seven would give by chance alone.`}
             source="Activity Log"
             tableCaption="Activity count by weekday and time of day"
             columns={matrixCols}
@@ -373,7 +373,7 @@ export default function Rhythm() {
           </Figure>
           <Figure
             title="The effort tide"
-            note="2021 was high water by a distance, then the tide drew back as fitness caught up and each session cost less, before 2026 came flooding back in. Each year's total cardiovascular load, drawn as a tide that rises and falls."
+            note="Relative effort is Strava's score of how hard a session was on the heart. Totalled by year, 2021 was the high mark by far; the total drew back as fitness rose and each session cost less, then 2026 came flooding back. Each year's total load, drawn as a tide that rises and falls."
             source="Zones & Effort"
             tableCaption="Total relative effort by year"
             columns={['Year', 'Total relative effort']}
@@ -395,7 +395,7 @@ export default function Rhythm() {
           <Figure
             n="04"
             title="The falling price of a kilometre"
-            note="The cost of a single kilometre on foot falls from about fourteen effort points in 2019 to around four in the recent years, the same ground for a fraction of the toll as fitness rose. Relative effort divides how hard a session felt by how far it went. The earliest two years rest on light samples and are drawn faint."
+            note="This is fitness made visible. The cost of one kilometre on foot, how much strain it took, falls from about fourteen effort points in 2019 to around four lately, the same ground for a fraction of the toll. The first two years rest on light data and are drawn faint."
             source="Activity Log + Zones & Effort"
             tableCaption="Relative effort spent per km on foot, by year"
             columns={['Year', 'Effort per km']}

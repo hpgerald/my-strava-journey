@@ -61,7 +61,7 @@ export default function Where() {
       number="05"
       title="Where"
       subtitle="Seven countries. Seventeen regions."
-      lede={`${homeRegion.region || 'Dodoma'} is dead flat, and it holds more of this record than anywhere else: thousands of kilometres that give back almost no climb at all. The vertical is hoarded somewhere else entirely. The Kilimanjaro region, barely a tenth of the activities, owns more than a third of every metre ever gained. Home is where the distance lives. The mountains keep the climb.`}
+      lede={`${homeRegion.region || 'Dodoma'} is flat, and it holds more of this record than anywhere else: thousands of kilometres that give back almost no climb. The height is kept somewhere else. Kilimanjaro region, barely a tenth of the activities, holds more than a third of every metre ever gained. Home has the distance. The mountains have the climb.`}
       prev={prev}
       next={next}
     >
@@ -84,7 +84,7 @@ export default function Where() {
           <Figure
             n="01"
             title="A third of the way around the Earth"
-            note={`${fmtInt(footKm)} kilometres on foot is very nearly a third of the way around the planet, or more than three times the length of Tanzania's own border, and almost all of it looped through a handful of home regions. The whole distance, laid against the length of the equator.`}
+            note={`${fmtInt(footKm)} kilometres on foot is nearly a third of the way around the planet, and more than three times the length of Tanzania's whole border, almost all of it looped through a handful of home regions. The full distance laid against the length of the equator.`}
             source="Activity Log"
             tableCaption="Foot distance against the equator and Tanzania's border"
             columns={['Measure', 'Value']}
@@ -105,7 +105,7 @@ export default function Where() {
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>What ground shaped the training?</p>
         <Figure
           title="Flat at home, steep away"
-          note="Home sits broad and low: Dodoma and Dar es Salaam carry most of the days over almost no vertical at all. The mountains stand to the right, where Kilimanjaro has been climbed often enough to raise a real hill of its own, and the Uluguru slopes behind Morogoro are the sharpest ground of the lot, reached only now and then. Every region is drawn as a hill, its height the steepness of the ground, its width the training it holds."
+          note="The ground at home barely climbs; the height comes from a few steep places visited rarely. Dodoma and Dar es Salaam sit broad and low, most of the days over almost no vertical. Kilimanjaro has been climbed often enough to raise a hill of its own, and the Uluguru slopes behind Morogoro are the sharpest ground of all, reached only now and then. Each region is a hill: its height is the steepness of the ground, its width the training it holds."
           source="Strava GPS + Natural Earth admin-1"
           tableCaption="Each Tanzanian region: activities, distance, climb and steepness"
           columns={['Region', 'Activities', 'Distance km', 'Climb m', 'm per km']}
@@ -123,7 +123,7 @@ export default function Where() {
         <div className="grid grid--2">
           <Figure
             title="Across Africa"
-            note="Tanzania is home, and everything else is a trip: Kenya, Malawi, South Africa and Rwanda. African countries shaded by how many activities started in each, on a logarithmic scale so even a single visit still shows."
+            note="Tanzania is home; everything else is a trip, Kenya, Malawi, South Africa and Rwanda. African countries shaded by how many activities started in each. The shading counts in multiples rather than even steps, a log scale, so even a single visit still shows up next to a thousand."
             source="Strava GPS + Natural Earth"
             tableCaption="Activities by African country"
             columns={['Country', 'Activities', 'Distance km']}
@@ -135,7 +135,7 @@ export default function Where() {
           </Figure>
           <Figure
             title="Tanzania, by region"
-            note="Shaded by how many activities started in each region. Dodoma and Dar es Salaam log the most days, but climb draws a different map entirely. Kilimanjaro region holds barely a tenth of the activities and more than a third of every metre gained. Flat at home, steep away."
+            note="Shaded by how many activities started in each region. Dodoma and Dar es Salaam log the most days, but climb draws a completely different map: Kilimanjaro region holds barely a tenth of the activities and more than a third of every metre gained."
             source="Strava GPS + Natural Earth admin-1"
             tableCaption="Activities by Tanzanian region"
             columns={['Region', 'Activities', 'Distance km']}
@@ -150,7 +150,7 @@ export default function Where() {
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <Figure
           title="Every country, as one bar"
-          note="Tanzania swallows the whole frame; the travel countries are thin slivers beside it, and the farthest few fold into one. Each country's share of all placed activities, home included. Select a named country for its own page."
+          note="Tanzania fills almost the entire bar; the travel countries are thin slivers beside it, and the farthest few fold into one. Each country's share of all placed activities, home included. Select a named country for its own page."
           source="Strava GPS"
           columns={['Country', 'Activities']}
           rows={countrySegments.map((c) => [c.label, c.display])}
@@ -165,7 +165,7 @@ export default function Where() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>How the map concentrates</p>
           <Figure
             title="A few places hold almost everything"
-            note={`Rank each region by how often it appears, then plot rank against count with both axes on a log scale. The points drop along a near-straight line, the signature of a power law: the busiest region alone holds ${topRegionShare}% of all placed activity and the top three hold ${top3Share}%, while the long tail of regions is visited once or twice and never again. It is the same lopsided shape that governs city sizes and word frequencies, drawn here from one person's map of home.`}
+            note={`A few places soak up almost all the training, and the rest are visited once and never again. Rank every region from most-visited to least and the busiest alone holds ${topRegionShare}% of all placed activity, the top three hold ${top3Share}%. That steep, regular drop-off has a name, a power law, the same lopsided pattern behind the sizes of cities and how often words are used. Both axes count in multiples, which turns the curve into a near-straight line.`}
             source="Strava GPS + Natural Earth admin-1"
             tableCaption="Every region ranked by activity count"
             columns={['Rank', 'Region', 'Activities']}

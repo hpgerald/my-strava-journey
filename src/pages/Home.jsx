@@ -38,7 +38,7 @@ function yearsBetween(a, b) {
   const start = new Date(a)
   const end = new Date(b)
   if (isNaN(start) || isNaN(end)) return null
-  return Math.round((end - start) / (365.25 * 24 * 3600 * 1000))
+  return Math.floor((end - start) / (365.25 * 24 * 3600 * 1000))
 }
 
 // distance and elevation are foot-only across the site
@@ -125,9 +125,9 @@ export default function Home() {
   const funv = (needle) => toNum((fun.find((f) => (f.comparison || '').toLowerCase().includes(needle)) || {}).value)
   const funFacts = [
     { num: fmtInt(funv('marathon')), suffix: '', label: 'marathons of distance' },
-    { num: String(monthStreak), suffix: '', label: 'months, every one since the spark' },
+    { num: String(monthStreak), suffix: '', label: 'months without a gap' },
     { num: String(halfCount), suffix: '', label: 'times past the half-marathon' },
-    { num: cadence ? cadence.toFixed(2) : '', suffix: '', label: 'activities a day, seven years running' },
+    { num: cadence ? cadence.toFixed(2) : '', suffix: '', label: 'activities a day on average' },
   ].filter((f) => f.num && f.num !== 'NaN' && f.num !== '0')
 
   // ---- Derived series for the front-page charts ----
@@ -268,6 +268,18 @@ export default function Home() {
     return [...by.entries()].sort((a, b) => b[1] - a[1]).map(([label, n]) => [label, fmtInt(n)])
   })()
 
+  // hero: typical outing size and the current unbroken streak
+  const medFootKm = (() => {
+    const ds = activityLog.filter((a) => FOOT_HOME.has(a.sport_type)).map((a) => toNum(a.distance_km) || 0).filter((v) => v > 0).sort((x, y) => x - y)
+    if (!ds.length) return 6
+    const m = Math.floor(ds.length / 2)
+    return ds.length % 2 ? ds[m] : (ds[m - 1] + ds[m]) / 2
+  })()
+  const curStreak = (edStreak.start && edStreak.end)
+    ? Math.round((Date.parse(edStreak.end) - Date.parse(edStreak.start)) / DAY) + 1
+    : toNum(streak)
+  const ctryMost = ctryYr ? ctryYr.stats.countries.length : 6
+
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
   const menuItems = nav.filter((r) => r.route !== '/')
@@ -301,15 +313,18 @@ export default function Home() {
               </span>
             </h1>
             <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              No two of these years are alike. One barely stirred. One went quiet for the better part
-              of a year, then caught in a single month and never let go. The busiest piled up {peakYr ? fmtInt(peakYr.stats.n) : '443'} activities,
-              more than one every day. One wandered into {ctryYr ? ctryYr.stats.countries.length : 6} countries, one climbed over{' '}
-              {elevYr ? (Math.floor(elevYr.stats.elev / 1000) * 1000).toLocaleString() : '21,000'} metres on foot, and the
-              year running now has not missed a single day in {streakMonths} months. One habit, seven
-              completely different years.
+              The record is built from days too small to notice. The usual outing is {Math.round(medFootKm)} km,
+              about an hour, a walk or an easy run. What makes it add up is how often it happens: something on{' '}
+              {pctActiveDays}% of all days across {years || 7} years, and a streak {fmtInt(curStreak)} days deep as you read this.
+            </p>
+            <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-4)' }}>
+              2019 started late, almost all treadmill runs. 2020 went quiet for close to a year. 2021 caught,
+              nearly ten times the activity. 2022 was the busiest, and held the one full marathon. 2023 climbed
+              the most. 2024 reached the most countries, {ctryMost} of them. 2025 had the steepest day, almost two
+              vertical kilometres. 2026 is not finished, and has not missed a day. Showing up daily adds up.
             </p>
             <div className="hero__extra">
-              <p className="eyebrow">Put another way, that is</p>
+              <p className="eyebrow">In other terms</p>
               <ul className="funfacts">
                 {funFacts.map((f, i) => (
                   <li key={i}>
@@ -324,9 +339,9 @@ export default function Home() {
             </div>
           </div>
           <div className="hero__cards" aria-label="Headline figures">
-            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Run, walked and hiked. That alone is close to a third of the way around the equator." />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="About nine and a half Everests of climbing, and most of it came on walks, not runs." />
-            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="The longest run of days without a gap so far, and it is still going." />
+            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Running, walking and hiking. Close to a third of the way around the equator." />
+            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Nine and a half Everests of climbing, most of it on walks." />
+            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Most days in a row without a gap. Still going." />
           </div>
         </section>
       </Container>
@@ -337,16 +352,16 @@ export default function Home() {
           <hr className="rule" />
           <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
             <div className="section-head">
-              <p className="eyebrow">The physics of the habit</p>
+              <p className="eyebrow">How the streak holds</p>
               <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A streak keeps itself going.</h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                Read day by day, the training behaves like a Markov chain: what you do today shifts the odds for tomorrow. The deeper a streak runs the more certain the next day gets, up to {mDeep}% once a month is on the board; stop, and a few days off slide the odds of coming back down to {mRest}%. On the left is how those odds move. On the right is the engine driving them.
+                The habit feeds itself. A day out makes the next day more likely; a few days off make the next one easy to skip. Once a month of training is on the board, the odds the next day is active climb to {mDeep}%. Let it lapse and they fall to {mRest}%. On the left is how the odds move. On the right is the engine, today quietly setting tomorrow.
               </p>
             </div>
             <div className="opener2col">
               <div>
                 <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
-                <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since July 2021</p>
+                <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since the 2021 switch</p>
               </div>
               <div>
                 <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>Today &rarr; tomorrow</p>
@@ -367,7 +382,7 @@ export default function Home() {
                   <p className="eyebrow">Who does the work</p>
                   <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>The big days pull more than their weight.</h2>
                   <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-                    Sort every active day by how far it went and stack them up. The busiest tenth of days hold about {top10Share}% of all the ground, and the top fifth hold {top20Share}%. The gap between the curve and the straight line of a perfectly even record is the Gini coefficient, {lorenzData.gini.toFixed(2)}, a moderate lean rather than a handful of epic days doing everything.
+                    A few big days carry a lot of the distance, but no small handful carries the whole record. Line every active day up from shortest to longest and stack the distance: the busiest tenth of days hold about {top10Share}% of all the ground, the top fifth hold {top20Share}%. The gap between the real curve and the straight "every day equal" line is the Gini coefficient, a single number for how uneven something is, where 0 is perfectly even and 1 is one day doing everything. Here it is {lorenzData.gini.toFixed(2)}, a real lean on the big days, well short of a record built on a few heroics.
                   </p>
                 </div>
                 <LorenzCurve points={lorenzData.points} gini={lorenzData.gini} markP={0.9} unitLabel="distance on foot" />
@@ -389,7 +404,7 @@ export default function Home() {
                 Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
               </h2>
               <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                One square for every day since the first run. The lit ones carried an activity, more than half of all of them. The long dark band is the 353-day silence; the bright run at the end is the streak still going.
+                More than half of every single day since the first run carried an activity. One square per day, lit when something was logged. The long dark band is the 353-day silence. The bright run on the end is the streak, still going. Showing up daily adds up, and here is what it adds up to.
               </p>
             </div>
             <EveryDayField firstISO={edFirst} lastISO={edLast} activeSet={daySet} streakStartISO={edStreak.start} streakEndISO={edStreak.end} />
@@ -428,7 +443,7 @@ export default function Home() {
         <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
           <Figure
             title="Every activity, one dot"
-            note={`Each dot is one time out the door. The first two years are nearly empty, a couple of entries a month. Then 2021 cracks it wide open and the count explodes past three hundred. The twist is what comes next: it stops climbing and simply holds there, around three hundred a year, four years straight. The spike lit the habit. The flat years beneath it are the habit refusing to quit.`}
+            note={`The habit did not build slowly; it switched on. The first two years are nearly empty, a couple of dots a month. Then 2021 jumps straight to over three hundred. What happens next is the real point: it stops climbing and holds near three hundred a year, four years running. The jump lit the habit. The flat years are the habit refusing to fade.`}
             source="Activity Log"
             tableCaption="Activities by year"
             columns={['Year', 'Activities']}
@@ -445,7 +460,7 @@ export default function Home() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>When did this become a habit?</p>
           <Figure
             title="The switch"
-            note="For two years the record idles, a few entries a month, sometimes none at all. Then one month it catches. Two activities become fifty-eight, almost overnight, and from that month on the calendar refuses to go empty. What lit it, the record will not say. Drag the marker to walk through the months."
+            note="There is an exact moment the hobby became a habit. For two years the record sits near empty, a few entries a month, sometimes none. Then one month it turns over: two activities become fifty-eight, almost overnight, and the calendar never goes blank again. The data does not say what caused it, only that from here on there is no going back. Drag the marker to move through the months."
             source="Monthly Trends"
             tableCaption="Activities per month"
             columns={['Month', 'Activities']}
@@ -458,9 +473,9 @@ export default function Home() {
               <Figure
                 n="01"
                 title="A hobby, then a habit"
-                note="Before, it moved a couple of times a month, the pace of a passing interest. After, it settled near thirty and stayed there. Eleven times as often, and it has not once drifted back."
+                note="Before the switch it ran a couple of times a month, the pace of a passing interest. After, it settled near thirty a month and stayed. Eleven times as often, and it never slipped back."
                 source="Monthly Trends"
-                tableCaption="Activities per month, before July 2021 versus since"
+                tableCaption="Activities per month, before the 2021 switch versus since"
                 columns={['Era', 'Activities / month']}
                 rows={[['Before Jul 2021', switchRate.before.toFixed(1)], ['Since', switchRate.after.toFixed(1)]]}
               >
@@ -472,7 +487,7 @@ export default function Home() {
                   Two-point-eight a month became thirty-one.
                 </p>
                 <p className="text-muted" style={{ marginTop: 'var(--sp-3)', fontSize: 'var(--fs-sm)' }}>
-                  No single week looks dramatic on its own. Stack it all into a rate and the jump is hard to miss: eleven times as often, and it never came back down.
+                  No single week looks dramatic. Line the weeks up as a monthly rate and the jump is impossible to miss: eleven times as often, and it held. A habit is built from unremarkable days.
                 </p>
               </div>
             </div>
@@ -485,7 +500,7 @@ export default function Home() {
         <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
           <Figure
             title="Walking climbs, running runs"
-            note="Running is a fat band for distance and a thin sliver for climb; walking is the exact mirror image. Distance runs down the left, climb down the right, one ribbon per foot sport. Watch running make the switch from one side to the other."
+            note="Running is a wide band for distance and a thin one for climb. Walking is the reverse. Distance on the left, climb on the right, one ribbon per foot sport. Watch running move from one side to the other."
             source="Activity Log"
             tableCaption="Share of distance and share of elevation by foot sport"
             columns={['Sport', 'Distance km', 'Climb m']}
@@ -499,9 +514,11 @@ export default function Home() {
               Running owns the distance. Walking owns the vertical.
             </h2>
             <p className="measure text-muted" style={{ margin: 0 }}>
-              Running is 63% of the kilometres and only 13% of the climb. Flip to elevation and the balance
-              inverts: walking and the trails carry three-quarters of it. A single trail run is a fraction of the
-              distance and a third of all the vertical. Home is flat; the metres are earned uphill, on foot.
+              Here is the thing most people get backwards. Running is 63% of the kilometres but only 13% of the
+              climb; it stays quick and flat, mostly on a treadmill. The metres come from somewhere else. Switch to
+              elevation and it flips: walking and the trails carry three-quarters of every vertical metre. A single
+              trail run covers little ground and a third of all the climbing. Home is flat. The height is earned
+              slowly, uphill, on foot.
             </p>
           </div>
         </div>
@@ -520,7 +537,7 @@ export default function Home() {
           {/* Row 1 — the range of it: where, then what */}
           <Figure
             title="Where in the world"
-            note={`More than nine in ten activities happened at home in Tanzania. The rest is travel, scattered thin across ${geoLocated.length - 1} other countries, a few activities apiece, down to a single run in the farthest of them. Every activity a GPS fix could place, grouped by country.`}
+            note={`This is a story told from home. More than nine in ten activities happened in Tanzania; the rest is travel, thin across ${geoLocated.length - 1} other countries, a few each, down to a single run in the farthest. Every activity a GPS fix could place, grouped by country.`}
             source="Strava GPS + point-in-polygon"
             tableCaption="Located activities by country"
             columns={['Country', 'Activities']}
@@ -528,8 +545,8 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">The far countries</p>
-                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. The rest thin out fast: a pair in Rwanda, and beyond them a handful of one-off stops, down to a single run in 2026 that added the newest stamp of all.</p>
-                <p>The shape is lopsided by design. Nine in ten pins fall inside Tanzania, most of them looped through Dodoma and Dar es Salaam. The away days are stretched thin across three continents and seven years, and nearly all of them are a single trip that never came round again.</p>
+                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. After that it drops off fast: a pair in Rwanda, then a scatter of one-off stops, down to one run in 2026, the newest pin on the map.</p>
+                <p>The shape is lopsided for a reason. Nine in ten fixes fall inside Tanzania, most looped through Dodoma and Dar es Salaam. The away days are spread across three continents and seven years, and nearly all were a single trip that never came round again.</p>
               </>
             )}
           >
@@ -538,7 +555,7 @@ export default function Home() {
 
           <Figure
             title="Every way to move"
-            note="Walking and running take almost the whole frame, and four in five outings happen on two feet. Each foot sport is a tile, bigger the more often it was done; everything off the feet gathers into one other bucket, counted but never broken out."
+            note="Four outings in five happen on two feet. Walking and running fill almost the whole frame; each foot sport is a tile, bigger the more often it was done, and everything off the feet folds into one bucket, counted but not split out."
             source="Strava Overview"
             tableCaption="Activities by sport type"
             columns={['Sport', 'Activities']}
@@ -546,7 +563,7 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">The shape of it</p>
-                <p>Set walking and running aside and everything else together makes up barely a sixth of every outing. The log holds other ways of moving too, but the centre of gravity never drifts far from two feet on the ground.</p>
+                <p>Set walking and running aside and the rest is barely a sixth of all outings. There are other ways of moving in the log, but the weight of it stays on the ground, on two feet.</p>
               </>
             )}
           >
@@ -556,7 +573,7 @@ export default function Home() {
           {/* Row 2 — the rhythm of it: hour of day, then time of year */}
           <Figure
             title="When the day gets moving"
-            note="Two rushes each day: a thin dawn crowd near 6am, then a much bigger one after work. Five to eight in the evening carries the day, and 6pm is the single busiest hour on the clock. Every activity sorted by the hour it began."
+            note="Two windows own the day. A small group heads out near 6am; a much bigger one goes after work, with five to eight in the evening carrying the day and 6pm the single busiest hour. Every activity sorted by the hour it began."
             source="Activity Log"
             tableCaption="Activities by hour of day"
             columns={['Hour', 'Activities']}
@@ -567,7 +584,7 @@ export default function Home() {
 
           <Figure
             title="The year has a season"
-            note="July wins by a distance, right in the cool dry season, while February sits emptiest of all. Seven years of months laid on top of each other. The training keeps a calendar, and it belongs to the weather, not the gym."
+            note="The training keeps the weather's calendar. July is the busiest month by far, deep in the cool dry season; February, hot and building toward the rains, is the emptiest. Seven years of months laid on top of each other."
             source="Activity Log"
             tableCaption="Activities by calendar month"
             columns={['Month', 'Activities']}
@@ -575,8 +592,8 @@ export default function Home() {
             footer={(
               <>
                 <p className="eyebrow">A weather habit</p>
-                <p>The calendar the body keeps is Tanzania&rsquo;s, not the gym&rsquo;s. The long dry season runs June to October, cool and rainless on the central plateau, and those are the months that swell here.</p>
-                <p>The thin months line up with the short rains in November and the hot build-up around February. Seven years on it hardly shifts: the training keeps the weather's calendar.</p>
+                <p>The long dry season runs June to October, cool and rainless on the central plateau, and those are the months that fill up here.</p>
+                <p>The thin months line up with the short rains in November and the heat around February. Seven years on, the shape barely moves.</p>
               </>
             )}
           >
@@ -586,7 +603,7 @@ export default function Home() {
           {/* Row 3 — the habit of it: the move outside, then the streak */}
           <Figure
             title="Off the treadmill"
-            note="Early on, nearly two in three sessions started indoors on a machine; by last year that was down to about one in six. Little by little, the habit walked out the door. Each year split into indoor and outdoor, stacked to a hundred percent."
+            note="Year by year, the habit walked outside. Early on, nearly two in three sessions were indoors on a machine. By last year, about one in six. Each year split into indoor and outdoor, stacked to 100%."
             source="Activity Log"
             tableCaption="Indoor share of activities by year"
             columns={['Year', 'Indoor share']}
@@ -597,7 +614,7 @@ export default function Home() {
 
           <Figure
             title="Rarely a day off"
-            note={`After an active day, the next one tends to follow straight away: four times in five it is the very next day. Over seven years, ${pctActiveDays}% of all calendar days carry something, and a gap of three days or more shows up less than once in ten.`}
+            note={`Once you go out, the next day tends to follow. Four times in five, the very next day carries something too. Over seven years, ${pctActiveDays}% of all calendar days have an activity, and a gap of three days or more turns up less than once in ten.`}
             source="Activity Log"
             tableCaption="Days until the next active day"
             columns={['Gap to next active day', 'Share']}
@@ -621,7 +638,7 @@ export default function Home() {
               The records hiding in the data.
             </h2>
             <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-              Records the seven years turned up without any fuss. A few worth pulling out.
+              Seven years turned these up on their own, no plan required. A few worth pulling out, each one opens its full story.
             </p>
           </div>
           <ul className="edges">
@@ -667,7 +684,7 @@ export default function Home() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Still unfinished</p>
           <p className="measure" style={{ fontSize: 'var(--fs-lg)', lineHeight: 1.4, margin: '0 0 var(--sp-7)' }}>
             The record is dense enough now to look permanent. It is still made one ordinary day at a
-            time, and the last dot is only ever the most recent one.
+            time, and the last dot is only ever the most recent.
           </p>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-1)' }}>Explore</p>
           <h2 className="display" style={{ fontSize: 'var(--fs-2xl)', margin: '0 0 var(--sp-5)' }}>

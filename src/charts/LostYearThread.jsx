@@ -42,7 +42,7 @@ export default function LostYearThread({ rows, spikeMonth = '2020-07', igniteMon
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="A quiet first half of 2020, then a 353-day silence, then the July 2021 ignition."
+        aria-label="A quiet first half of 2020, then a 353-day silence, then the 2021 return."
         style={{ display: 'block' }}
       >
         {/* baseline */}

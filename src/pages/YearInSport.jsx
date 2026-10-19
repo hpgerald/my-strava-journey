@@ -160,7 +160,7 @@ export default function YearInSport() {
       number="02"
       title="Year in Sport"
       subtitle="Pick a year. See the whole story."
-      lede="Seven years, taken one at a time. Pick a year and the whole page rebuilds around it: the totals, the shape of its months, how it moved, how many days went unbroken, its biggest efforts, and the one thing that set it apart from the rest."
+      lede="Seven years, one at a time. Pick a year and the whole page rebuilds around it: the totals, the shape of its months, how it moved, how many days ran unbroken, its biggest efforts, and the one thing that set it apart."
       prev={prev}
       next={next}
     >
@@ -203,7 +203,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="The year, month by month"
-            note={`${busyMoN > 0 ? `${MONTH_F[busyMo]} was the busiest month of ${activeYear}, ${busyMoN} times out the door. ` : ''}Each bar is a month, taller where more got logged. The flat stretches are the quiet weeks, or the gaps.`}
+            note={`${busyMoN > 0 ? `${MONTH_F[busyMo]} was the busiest month of ${activeYear}, ${busyMoN} times out the door. ` : ''}Each bar is a month, taller where more was logged; the flat stretches are quiet weeks or gaps.`}
             source="Activity Log"
             tableCaption={`Activities by month in ${activeYear}`}
             columns={['Month', 'Activities']}
@@ -218,7 +218,7 @@ export default function YearInSport() {
           <Reveal as="section" className="yis-sec">
             <Figure
               title="How the kilometres added up"
-              note={`Every foot kilometre of ${activeYear}, stacked end to end as the months pass. The line climbs steeply where a stretch of long outings landed close together and levels off through the quieter weeks, finishing the year at ${Math.round(s.footKm).toLocaleString()} km.`}
+              note={`Every foot kilometre of ${activeYear}, stacked up as the months pass. The line jumps where long outings landed close together and flattens through the quiet weeks, finishing the year at ${Math.round(s.footKm).toLocaleString()} km.`}
               source="Activity Log"
               tableCaption={`Cumulative foot kilometres by month end in ${activeYear}`}
               columns={['Through', 'Cumulative km']}
@@ -233,7 +233,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="How the year moved"
-            note={`${moreN > 0 ? `${moreSport} led ${activeYear}, ${moreN} outings against ${lessSport}'s ${lessN}${otherN > 0 ? `, with ${otherN} of everything else` : ''}. ` : ''}Each kind of activity, counted by how often it happened. Whatever is not on foot folds in beneath the rest.`}
+            note={`${moreN > 0 ? `${moreSport} led ${activeYear}, ${moreN} outings against ${lessSport}'s ${lessN}${otherN > 0 ? `, with ${otherN} of everything else` : ''}. ` : ''}Each kind of activity, counted by how often it happened. Anything not on foot folds in below.`}
             source="Activity Log"
             tableCaption={`Activities by type in ${activeYear}`}
             columns={['Type', 'Activities']}
@@ -247,11 +247,11 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="The shape of the week"
-            note={`Every ${activeYear} activity sorted into the weekday it fell on. ${
+            note={`${
               Math.max(...s.weekday7) - Math.min(...s.weekday7) <= Math.max(2, Math.round(s.n * 0.03))
-                ? 'The seven columns stand almost level, the mark of a habit that ran every day of the week alike.'
-                : `${WEEK_FULL[s.peakWeekdayIdx]} carried the most, with ${s.weekday7[s.peakWeekdayIdx]} of them.`
-            }`}
+                ? 'The seven columns stand almost level: the habit ran every day of the week about the same. '
+                : `${WEEK_FULL[s.peakWeekdayIdx]} carried the most, ${s.weekday7[s.peakWeekdayIdx]} of them. `
+            }Every ${activeYear} activity sorted by the weekday it fell on.`}
             source="Activity Log"
             tableCaption={`Activities by weekday in ${activeYear}`}
             columns={['Weekday', 'Activities']}
@@ -265,7 +265,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="When the day got moving"
-            note={`${peakHour >= 0 ? `In ${activeYear} the single busiest hour was ${peakHour}:00${peakHour <= 9 ? ', out the door before the day had properly begun' : peakHour >= 16 ? ', most of the movement waiting until the working day was done' : ''}. ` : ''}Every activity set on a 24-hour clock by the hour it began. The longer a spoke reaches, the more started then.`}
+            note={`${peakHour >= 0 ? `In ${activeYear} the single busiest hour was ${peakHour}:00${peakHour <= 9 ? ', out the door before the day had properly begun' : peakHour >= 16 ? ', most of the movement waiting until the working day was done' : ''}. ` : ''}Every activity on a 24-hour clock by the hour it began; the longer the spoke, the more started then.`}
             source="Activity Log"
             tableCaption={`Activities by hour of day in ${activeYear}`}
             columns={['Hour', 'Activities']}
@@ -280,9 +280,9 @@ export default function YearInSport() {
           <Reveal as="section" className="yis-sec">
             <Figure
               title="The typical outing"
-              note={`Every walk, run and hike of ${activeYear} sorted by distance into one-kilometre bins. The median outing came to ${s.medianFoot.toFixed(1)} km${
-                s.peakBins.length ? `, and the lengths it kept returning to were around ${s.peakBins.slice().sort((a, b) => a - b).join(' and ')} km` : ''
-              }. Anything past 25 km is folded into the last bar.`}
+              note={`Every walk, run and hike of ${activeYear} sorted by distance. The median outing, the middle one with half shorter and half longer, came to ${s.medianFoot.toFixed(1)} km${
+                s.peakBins.length ? `, and it kept coming back to around ${s.peakBins.slice().sort((a, b) => a - b).join(' and ')} km` : ''
+              }. Anything past 25 km folds into the last bar.`}
               source="Activity Log"
               tableCaption={`Foot outings by distance in ${activeYear}`}
               columns={['Distance', 'Outings']}
@@ -428,7 +428,7 @@ export default function YearInSport() {
         <Reveal as="section" className="yis-sec">
           <Figure
             title="Against the other years"
-            note={`Where ${activeYear} sits against every other year for sheer activity count. It is the orange bar; the others are there for scale.`}
+            note={`Where ${activeYear} lands against every other year by activity count. The orange bar is ${activeYear}; the rest are there for scale.`}
             source="Activity Log"
             tableCaption="Activities per year"
             columns={['Year', 'Activities']}

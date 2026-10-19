@@ -50,7 +50,7 @@ export default function MonthChain({ months }) {
   return (
     <div ref={ref} className="mchain">
       <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img"
-        aria-label="Every month of the record, shaded by distance on foot, unbroken since July 2021."
+        aria-label="Every month of the record, shaded by distance on foot, unbroken since the 2021 switch."
         style={{ display: 'block' }} onMouseLeave={() => setHover(null)}>
         {MN.map((mn, i) => (
           <text key={i} x={leftW + i * (cell + gap) + cell / 2} y={11} textAnchor="middle" className="mchain__mon">{mn}</text>

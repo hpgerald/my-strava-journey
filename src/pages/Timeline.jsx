@@ -23,7 +23,7 @@ export default function Timeline() {
       number="08"
       title="Timeline"
       subtitle="In order. First upload to now."
-      lede={`Seven years in the order they happened. It opens with a scatter of entries that could easily have fizzled out, goes silent for 353 straight days, then ignites and never stops. The milestones that round off, the standout days, the borders crossed, all laid end to end, so you can watch a hobby turn into something that looks permanent.`}
+      lede={`Seven years in the order they happened. It opens with a scatter of entries that could easily have faded out, goes silent for 353 straight days, then starts and does not stop. The round-number milestones, the standout days, the borders crossed, all laid in a line, so you can watch a hobby turn into something that looks permanent.`}
       prev={prev}
       next={next}
     >
@@ -32,7 +32,7 @@ export default function Timeline() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The whole record, year by year</p>
           <Figure
             title="The habit atlas"
-            note="The two faint rings at the centre are the quiet years before the switch; every ring outward from them burns darker and fuller. Seven years drawn as rings, the oldest in the middle, each one twelve months around and shaded by how busy the month was. Pick a year to read its busiest month and a line about it."
+            note="Read from the centre out and the quiet years give way to full ones. The two faint rings in the middle are the years before the switch; each ring outward is darker and busier. Seven years drawn as rings, the oldest at the core, each twelve months around and shaded by how busy the month was. Pick a year to read its busiest month and a line about it."
             source="Monthly Trends"
             tableCaption="Activities per year, with the busiest month"
             columns={['Year', 'Activities']}
@@ -48,7 +48,7 @@ export default function Timeline() {
           <Figure
             n="02"
             title="Seven years, one pulse"
-            note="Every month is a beat mirrored off the centre line, as tall as the activities it held. For two years the pulse barely registers. The month the switch is thrown, July 2021, it quickens all at once and it has not settled back since."
+            note="The record has a heartbeat, and you can see the moment it quickens. Every month is a beat off the centre line, as tall as the activities it held. For two years it barely registers. Then one month it jumps all at once, and it has not settled since."
             source="Monthly Trends"
             tableCaption="Activities logged per month"
             columns={['Month', 'Activities']}
@@ -64,7 +64,7 @@ export default function Timeline() {
           <Figure
             n="03"
             title="The lost year"
-            note="Zoom in on the two years around the switch. A scatter of activity through the first half of 2020, then the log falls silent for 353 straight days, then July 2021 and a return that did not stop. The longest silence in the whole record sits right before the habit that replaced it."
+            note="The longest silence in the record sits right before the habit that replaced it. Zoom in on the two years around the switch: some activity through the first half of 2020, then 353 straight days with nothing logged, then the switch and a return that never stopped."
             source="Activity Log + Monthly Trends"
             tableCaption="Activities per month through the lost year"
             columns={['Month', 'Activities']}

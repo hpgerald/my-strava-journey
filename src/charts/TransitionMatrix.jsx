@@ -38,7 +38,7 @@ export default function TransitionMatrix({ p11, p01, beforeP11, activeFrac }) {
         <span className="tmx__cell" style={cellStyle(p00, false, 240)}><b>{pct(p00)}</b></span>
       </div>
       <p className="tmx__note">
-        Run that matrix forward and it settles at <strong>{pct(stationary)}</strong> of days active, almost exactly the {pct(activeFrac)} that have carried an activity since the switch. Before July 2021 the top-left cell was only <strong>{pct(beforeP11)}</strong>, so moving one day hardly moved the next.
+        Run that matrix forward and it settles at <strong>{pct(stationary)}</strong> of days active, almost exactly the {pct(activeFrac)} that have carried an activity since the switch. Before the switch the top-left cell was only <strong>{pct(beforeP11)}</strong>, so moving one day hardly moved the next.
       </p>
     </div>
   )
