@@ -1,6 +1,6 @@
 country,iso_code,activities,distance_km,moving_time_h,elevation_m,first_activity_date,source_page
-Tanzania,TZA,1077,5807.3,1433.2,81255,2019-08-17,Strava GPS + point-in-polygon (Natural Earth admin-0)
-Indoor / no GPS,,898,7194.4,863.6,144,2019-08-18,Strava GPS + point-in-polygon (Natural Earth admin-0)
+Tanzania,TZA,1079,5822.3,1436.7,81319,2019-08-17,Strava GPS + point-in-polygon (Natural Earth admin-0)
+Indoor / no GPS,,902,7209.4,866.1,144,2019-08-18,Strava GPS + point-in-polygon (Natural Earth admin-0)
 Kenya,KEN,32,98.2,36.7,1625,2020-07-07,Strava GPS + point-in-polygon (Natural Earth admin-0)
 Malawi,MWI,23,49.1,20.7,586,2024-10-20,Strava GPS + point-in-polygon (Natural Earth admin-0)
 South Africa,ZAF,13,17,10.4,288,2024-04-27,Strava GPS + point-in-polygon (Natural Earth admin-0)

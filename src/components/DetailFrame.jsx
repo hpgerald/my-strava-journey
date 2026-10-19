@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
+import FieldNote from './FieldNote.jsx'
 
 // Which chapters carry a distinct atmosphere (a faint page wash + tinted
 // watermark). The rest keep the base warm-paper / orange identity.
@@ -92,6 +93,8 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
         </header>
 
         {children}
+
+        <FieldNote seed={location.pathname} />
 
         {(prev || next) && (
           <>

@@ -28,6 +28,7 @@ import { fmtInt, toNum } from '../lib/format.js'
 import { prettySport } from '../lib/slug.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
+import FieldNote from '../components/FieldNote.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -605,6 +606,10 @@ export default function Home() {
             <BarChart data={gapData} accent />
           </Figure>
         </div>
+      </Container>
+
+      <Container>
+        <FieldNote seed="/home" />
       </Container>
 
       {/* ---- The far edges: greatest-hits teaser into the best pages --- */}

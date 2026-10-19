@@ -1087,6 +1087,28 @@ text.chart-panel-title {
 .lorenz__keyitem dd { margin: 0; font-size: var(--fs-xs); color: var(--fg-muted); line-height: 1.4; }
 @media (max-width: 30rem) { .lorenz__key { grid-template-columns: 1fr; } }
 
+/* Field notes: margin lines pulled from the activity descriptions */
+.fieldnote { margin: var(--sp-8) auto; max-width: 42rem; padding: 0 var(--sp-4);
+  opacity: 0; transform: translateY(10px); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
+.fieldnote.is-in { opacity: 1; transform: none; }
+.fieldnote--center { text-align: center; }
+.fieldnote--left { text-align: left; max-width: 36rem; margin-left: 0; }
+.fieldnote__eyebrow { font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase;
+  letter-spacing: var(--tr-wide); color: var(--fg-faint); margin: 0 0 var(--sp-3); }
+.fieldnote__quote { margin: 0; border: 0; padding: 0; font-family: var(--font-display); font-weight: 600;
+  font-size: var(--fs-xl); line-height: 1.32; color: var(--fg); text-wrap: balance; }
+.fieldnote__quote::before { content: "\201C"; color: var(--accent); margin-right: 0.04em; }
+.fieldnote__quote::after { content: "\201D"; color: var(--accent); margin-left: 0.04em; }
+.fieldnote__by { margin: var(--sp-3) 0 0; font-family: var(--font-mono); font-size: var(--fs-2xs);
+  text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+.fieldnote__by::before { content: ""; display: block; width: 24px; height: 1px; margin: 0 0 var(--sp-2);
+  background: var(--accent); opacity: 0.6; }
+.fieldnote--center .fieldnote__by::before { margin-left: auto; margin-right: auto; }
+@media (max-width: 40rem) { .fieldnote__quote { font-size: var(--fs-lg); } }
+@media (prefers-reduced-motion: reduce) {
+  .fieldnote { opacity: 1 !important; transform: none !important; transition: none; }
+}
+
 /* correlogram (autocorrelation) */
 .corr__bar { transform: scaleY(0); transition: transform var(--dur) var(--ease); }
 .corr__plot.is-in .corr__bar { transform: scaleY(1); }
