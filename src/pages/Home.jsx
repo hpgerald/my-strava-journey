@@ -390,8 +390,8 @@ export default function Home() {
           <section className="sgrid" aria-labelledby="streak-title">
             <div className="sgrid__head">
               <p className="eyebrow">How the streak holds</p>
-              <h2 id="streak-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-                A streak is easier to keep than to restart.
+              <h2 id="streak-title" className="section-head__title">
+                A streak is easier to keep than to&nbsp;restart.
               </h2>
             </div>
 
@@ -445,8 +445,8 @@ export default function Home() {
             <section className="sgrid" aria-labelledby="work-title">
               <div className="sgrid__head">
                 <p className="eyebrow">Who does the work</p>
-                <h2 id="work-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-                  The busiest tenth of days carry as much as the quietest half.
+                <h2 id="work-title" className="section-head__title">
+                  The busiest tenth of days carry {pc(work.tenth)}% of the&nbsp;distance.
                 </h2>
               </div>
 
@@ -502,7 +502,7 @@ export default function Home() {
           <StorySection
             id="years-title"
             eyebrow="How each year was made"
-            title="About an hour and a half a day, every year. What changed is how it is cut."
+            title="The time per active day held. The split changed."
             statement={<>
               On a day with an activity, the time moving barely changes: between {Math.round(perDayLo)} and{' '}
               {Math.round(perDayHi)} minutes in every year. The split is what moved. In {shapeMulti.year},{' '}
@@ -553,7 +553,7 @@ export default function Home() {
         <hr className="rule" />
         <div className="closer-head">
           <p className="eyebrow">A closer look</p>
-          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Six smaller things the data shows.</h2>
+          <h2 className="section-head__title">Six smaller things the data&nbsp;shows.</h2>
         </div>
 
         {/* 1. Where in the world */}
@@ -561,7 +561,7 @@ export default function Home() {
           <StorySection
             id="where-title"
             eyebrow="1 · Where in the world"
-            title={`Nine in ten outings are at home. ${climbTop2.length === 2 ? `${climbTop2[0].region} and ${climbTop2[1].region}` : 'Two regions'} do the climbing.`}
+            title={`Two regions of Tanzania do ${pc(climbTop2E)}% of the climbing.`}
             statement={<>
               Of the {fmtInt(locN)} outings with a GPS start point, {fmtInt(tzN)} are in Tanzania, {pc(tzN / locN)}%. The
               other {fmtInt(awayN)} are spread over {awayRows.length} countries, {pc(awayTop2N / Math.max(1, awayN))}% of
@@ -603,7 +603,7 @@ export default function Home() {
         <StorySection
           id="move-title"
           eyebrow="2 · Every way to move"
-          title={`Walking is the most common outing${walkLeadYear ? `, and has been since ${walkLeadYear}` : ''}.`}
+          title={walkLeadYear ? `Walks have outnumbered runs since ${walkLeadYear}.` : 'Walking is the most common outing.'}
           statement={<>
             Of {fmtInt(activityLog.length)} outings, {fmtInt(mixN.walk)} are walks and {fmtInt(mixN.run)} are runs. Trail
             runs and hikes add {fmtInt(mixN.trail)}. Everything off the feet is {pc(mixN.other / mixTot)}%.
@@ -658,7 +658,7 @@ export default function Home() {
               { value: hourShare(21, 24), label: 'after 9pm', tone: 'rest' },
             ],
           }}
-          left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={hours} unit="activities" /> }}
+          left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={hours} unit="activities" max={400} /> }}
           right={{
             title: 'Every outing, by day of the week',
             node: (
@@ -667,7 +667,7 @@ export default function Home() {
                   label: d.slice(0, 3), short: d.slice(0, 1), value: weekN[i], display: fmtInt(weekN[i]),
                   tone: weekN[i] === weekMax ? 'big' : weekN[i] === weekMin ? 'quiet' : 'mid',
                 }))}
-                max={weekMax * 1.12} ticks={[0, 100, 200, 300]} tickFmt={(v) => v} H={468}
+                max={weekMax * 1.12} ticks={[0, 100, 200, 300]} tickFmt={(v) => v} H={400}
                 xCap="day of the week &rarr;" yCap="outings &uarr;"
                 aria={`Outings by weekday: ${WEEK.map((d, i) => `${d} ${weekN[i]}`).join(', ')}.`}
               />
@@ -860,8 +860,8 @@ export default function Home() {
           <section className="sgrid" aria-labelledby="edges-title">
           <div className="sgrid__head">
             <p className="eyebrow">The far edges</p>
-            <h2 id="edges-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-              The records hiding in the data.
+            <h2 id="edges-title" className="section-head__title">
+              The records hiding in the&nbsp;data.
             </h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -911,7 +911,7 @@ export default function Home() {
         <section className="sgrid" aria-labelledby="explore-title">
           <div className="sgrid__head">
             <p className="eyebrow">Still unfinished</p>
-            <h2 id="explore-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+            <h2 id="explore-title" className="section-head__title">
               {cap(NUMWORD[menuItems.length] || String(menuItems.length))} ways in.
             </h2>
           </div>

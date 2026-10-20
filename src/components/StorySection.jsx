@@ -5,12 +5,15 @@ import OddsRow from './OddsRow.jsx'
 // full-width statement with the numbers, a four-cell number row, two figures side
 // by side at equal size with a note under each, anything extra (children), then
 // the source line. Everything sits on the shared four-column grid.
+// keep the last two words together so a wrapped headline never ends on one word
+const tie = (t) => (typeof t === 'string' ? t.replace(/ (\S+)$/, '\u00A0$1') : t)
+
 export default function StorySection({ id, eyebrow, title, statement, odds, left, right, leftNote, rightNote, source, children }) {
   return (
     <section className="sgrid" aria-labelledby={id}>
       <div className="sgrid__head">
         <p className="eyebrow">{eyebrow}</p>
-        <h2 id={id} className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>{title}</h2>
+        <h2 id={id} className="section-head__title">{tie(title)}</h2>
       </div>
 
       <Reveal as="p" className="sgrid__statement">{statement}</Reveal>

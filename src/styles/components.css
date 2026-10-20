@@ -403,7 +403,7 @@ a.stat:focus-visible { background: var(--ink); color: var(--paper); }
 /* ---- Footer ------------------------------------------------------------ */
 .footer {
   border-top: var(--rule-heavy) solid var(--ink);
-  margin-top: var(--sp-9);
+  margin-top: var(--sp-7);
   padding-block: var(--sp-6) var(--sp-7);
 }
 .footer__grid {
@@ -1055,7 +1055,7 @@ text.chart-panel-title {
 
 .beat__callouts {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap);
-  margin-top: var(--sp-6); padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); align-items: start;
+  margin-top: var(--sp-5); padding-top: var(--sp-4); border-top: 1px solid var(--rule-faint); align-items: start;
 }
 .beat__co { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .beat__callouts.is-in .beat__co { opacity: 1; transform: none; }
@@ -1070,7 +1070,7 @@ text.chart-panel-title {
 
 /* the statement: one full-width line of thought, lines balanced so none hangs */
 .hero__statement {
-  margin: 0; padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint);
+  margin: 0; padding-top: var(--sp-4); border-top: 1px solid var(--rule-faint);
   font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.55rem); line-height: 1.45; color: var(--fg);
   text-wrap: pretty;
 }
@@ -1184,8 +1184,10 @@ text.chart-panel-title {
 .tmx__note strong { color: var(--accent-ink); }
 
 /* ---- Section grid (shared with the hero's four column lines) ---------- */
-.sgrid { display: grid; gap: var(--sp-6); padding-block: var(--sp-7); }
-.sgrid__head .section-head__title { margin: var(--sp-2) 0 0; text-wrap: balance; }
+.sgrid { display: grid; gap: var(--sp-5); padding-block: var(--sp-6); }
+.sgrid__head .section-head__title, .closer-head .section-head__title {
+  margin: var(--sp-2) 0 0; font-size: clamp(1.65rem, 1.05rem + 2.75vw, 3rem); line-height: 1.06; text-wrap: pretty;
+}
 .sgrid > .source { margin: 0; }
 /* inside a tinted band the band owns the breathing room, so the grid adds none */
 .bleed:has(> .container > .sgrid) { padding-block: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
@@ -1199,9 +1201,9 @@ text.chart-panel-title {
 }
 
 /* four-cell odds row */
-.odds { padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); }
+.odds { padding-top: var(--sp-4); border-top: 1px solid var(--rule-faint); }
 .odds__title {
-  margin: 0 0 var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
+  margin: 0 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
   text-transform: uppercase; color: var(--fg-muted); font-weight: 600;
 }
 .odds__row {
@@ -1218,15 +1220,15 @@ text.chart-panel-title {
 
 /* chart + grid side by side, equal height, notes aligned underneath */
 .sgrid__pair {
-  padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint);
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-4) var(--grid-gap);
+  padding-top: var(--sp-4); border-top: 1px solid var(--rule-faint);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-3) var(--grid-gap);
   grid-template-areas: "chart chart mx mx" "cnote cnote mnote mnote"; align-items: stretch;
 }
 .sgrid__fig { margin: 0; display: flex; flex-direction: column; min-width: 0; }
 .sgrid__fig--chart { grid-area: chart; }
 .sgrid__fig--mx { grid-area: mx; }
 .sgrid__figtitle {
-  margin: 0 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
+  margin: 0 0 var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
   text-transform: uppercase; color: var(--fg-muted); font-weight: 600;
 }
 .sgrid__fig--mx .tmx { flex: 1; display: flex; flex-direction: column; }
@@ -1250,12 +1252,11 @@ text.chart-panel-title {
 .sgrid__chart { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .sgrid__chart > * { width: 100%; }
 .odds__u { font-size: 0.5em; font-weight: 700; margin-left: 0.08em; letter-spacing: 0; }
-.closer-head { padding-block: var(--sp-7) 0; }
-.closer-head .section-head__title { margin: var(--sp-2) 0 0; text-wrap: balance; }
-.closer-head + .sgrid { padding-top: var(--sp-6); }
+.closer-head { padding-block: var(--sp-6) 0; }
+.closer-head + .sgrid { padding-top: var(--sp-5); }
 
 /* year cards: one per year on the four-column grid, each opens the year */
-.ycards { padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); }
+.ycards { padding-top: var(--sp-4); border-top: 1px solid var(--rule-faint); }
 .ycards__row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-4) var(--grid-gap); }
 .ycards__cell { display: flex; opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 .ycards.is-in .ycards__cell { opacity: 1; transform: none; }
@@ -1387,7 +1388,7 @@ text.chart-panel-title {
 .fieldnote--center .fieldnote__by::before { margin-left: auto; margin-right: auto; }
 @media (max-width: 40rem) { .fieldnote__quote { font-size: var(--fs-lg); } }
 /* wide: a full-width row on the section grid, left-aligned like the statements */
-.fieldnote--wide { max-width: none; margin: 0; padding: var(--sp-7) 0; text-align: left; border-top: 1px solid var(--rule); }
+.fieldnote--wide { max-width: none; margin: 0; padding: var(--sp-6) 0; text-align: left; border-top: 1px solid var(--rule); }
 .fieldnote--wide .fieldnote__quote { font-size: clamp(1.6rem, 1rem + 2.6vw, 2.9rem); line-height: 1.12; text-wrap: balance; }
 @media (max-width: 40rem) { .fieldnote--wide { padding: var(--sp-6) 0; } .fieldnote--wide .fieldnote__quote { font-size: 1.6rem; } }
 @media (prefers-reduced-motion: reduce) {
@@ -2609,7 +2610,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 
 /* ---- Phones: one calmer scale for the whole landing page ---------------- */
 @media (max-width: 40rem) {
-  .sgrid { gap: var(--sp-5); padding-block: var(--sp-6); }
+  .sgrid { gap: var(--sp-4); padding-block: var(--sp-5); }
   .sgrid__head .section-head__title, .closer-head .section-head__title,
   h2[style*="fs-2xl"] { font-size: clamp(1.65rem, 1.1rem + 2.8vw, 2.05rem) !important; line-height: 1.08; text-wrap: balance; }
   .bleed > .container > .section-head:first-child { padding-top: 0; }
@@ -2621,15 +2622,15 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .odds__n { font-size: 2.05rem; }
   .odds__c { font-size: var(--fs-xs); }
   .sgrid__pair { padding-top: var(--sp-4); row-gap: var(--sp-3); }
-  .sgrid__fig--mx { margin-top: var(--sp-5); }
+  .sgrid__fig--mx { margin-top: var(--sp-4); }
   .sgrid__note { font-size: var(--fs-xs); line-height: 1.55; }
-  .closer-head { padding-top: var(--sp-6); }
+  .closer-head { padding-top: var(--sp-5); }
   .ycards__row { row-gap: var(--sp-3); }
   .ycard { padding-top: var(--sp-3); gap: var(--sp-1); }
   .ycard__year { font-size: var(--fs-lg); }
   .ycard__line { font-size: var(--fs-xs); }
   .fieldnote { margin: var(--sp-6) auto; }
-  .fieldnote--wide { margin: 0; }
+  .fieldnote--wide { margin: 0; padding: var(--sp-5) 0; }
   .bleed { padding-block: var(--sp-6); }
   .index--compact { gap: var(--sp-2); }
   .index--compact .index__link { padding: var(--sp-3) var(--sp-4); }

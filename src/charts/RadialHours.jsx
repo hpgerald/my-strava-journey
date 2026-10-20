@@ -30,10 +30,10 @@ const hourLabel = (i) => {
   return `${h}${ap}`
 }
 
-export default function RadialHours({ counts, unit = 'activities' }) {
+export default function RadialHours({ counts, unit = 'activities', max: maxSize = 468 }) {
   const [ref, w] = useWidth(400)
   const [hi, setHi] = useState(null)
-  const size = Math.max(300, Math.min(w, 468))
+  const size = Math.max(300, Math.min(w, maxSize))
   const cx = size / 2
   const cy = size / 2
   const pad = 30
