@@ -1,6 +1,5 @@
 import Layout from '../components/Layout.jsx'
 import Container from '../components/Container.jsx'
-import StatCard from '../components/StatCard.jsx'
 import IndexHub from '../components/IndexHub.jsx'
 import Figure from '../charts/Figure.jsx'
 import DotGrid from '../charts/DotGrid.jsx'
@@ -10,7 +9,6 @@ import RadialHours from '../charts/RadialHours.jsx'
 import GeoBubbles from '../charts/GeoBubbles.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
-import ContourField from '../charts/ContourField.jsx'
 import SwitchStep from '../charts/SwitchStep.jsx'
 import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
@@ -19,6 +17,7 @@ import EveryDayField from '../charts/EveryDayField.jsx'
 import HabitMomentum from '../charts/HabitMomentum.jsx'
 import TransitionMatrix from '../charts/TransitionMatrix.jsx'
 import LorenzCurve from '../charts/LorenzCurve.jsx'
+import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { lorenz, topShare } from '../lib/stats.js'
 import { useEffect, useMemo } from 'react'
@@ -29,6 +28,19 @@ import { prettySport } from '../lib/slug.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
+import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
+
+// One "in other terms" figure: fades up and counts to its value on arrival.
+function HeroFact({ val, dec = 0, label, delay = 0 }) {
+  const [ref, inView] = useInView({ threshold: 0.2, rootMargin: '0px' })
+  const v = useCountUp(val, inView, { dur: 1500, decimals: dec })
+  return (
+    <li ref={ref} className={`funfacts__item${inView ? ' is-in' : ''}`} style={{ transitionDelay: `${delay}ms` }}>
+      <span className="funfacts__num">{dec ? v.toFixed(dec) : Math.round(v).toLocaleString()}</span>
+      <span className="funfacts__lbl">{label}</span>
+    </li>
+  )
+}
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -124,11 +136,11 @@ export default function Home() {
   // personal reframes for the "put another way" row
   const funv = (needle) => toNum((fun.find((f) => (f.comparison || '').toLowerCase().includes(needle)) || {}).value)
   const funFacts = [
-    { num: fmtInt(funv('marathon')), suffix: '', label: 'marathons of distance' },
-    { num: String(monthStreak), suffix: '', label: 'months without a gap' },
-    { num: String(halfCount), suffix: '', label: 'times past the half-marathon' },
-    { num: cadence ? cadence.toFixed(2) : '', suffix: '', label: 'activities a day on average' },
-  ].filter((f) => f.num && f.num !== 'NaN' && f.num !== '0')
+    { val: Math.round(funv('marathon') || 0), dec: 0, label: 'marathons of distance' },
+    { val: monthStreak, dec: 0, label: 'months without a gap' },
+    { val: halfCount, dec: 0, label: 'times past the half-marathon' },
+    { val: cadence || 0, dec: 2, label: 'activities a day on average' },
+  ].filter((f) => Number.isFinite(f.val) && f.val > 0)
 
   // ---- Derived series for the front-page charts ----
   const hours = Array.from({ length: 24 }, () => 0)
@@ -288,60 +300,34 @@ export default function Home() {
     <Layout>
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
-        <section className="hero">
-          <div className="hero__atlas" aria-hidden="true">
-            <ContourField />
-          </div>
-          <div className="hero__plate" aria-hidden="true" />
+        <section className="hero" aria-labelledby="hero-title">
+          <h1 id="hero-title" className="visually-hidden">
+            {years || 7} years, {fmtInt(activities)} activities, one habit.
+          </h1>
+
+          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
+
           <div className="hero__main">
-            <p className="atlas-cap">
-              <span className="atlas-cap__mark">Plate 01</span>
-              <span className="atlas-cap__rule" aria-hidden="true" />
-              <span>
-                {years ? `${years} years` : 'Seven years'} · {meta.coverage_start?.slice(0, 4) || '2019'}
-                &ndash;{meta.coverage_end?.slice(0, 4) || '2026'} · Strava
-              </span>
-            </p>
-            <h1
-              className="display hero__head"
-              aria-label={`${years || 7} years, ${fmtInt(activities)} activities, one habit.`}
-            >
-              <span aria-hidden="true">
-                <span className="hero__anchor">{years || 7} years.</span>
-                <span className="hero__slot">{fmtInt(activities)} activities.</span>
-                <span className="hero__anchor">One habit.</span>
-              </span>
-            </h1>
-            <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
+            <Reveal as="p" className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
               The record is built from days too small to notice. The usual outing is {Math.round(medFootKm)} km,
               about an hour, a walk or an easy run. What makes it add up is how often it happens: something on{' '}
               {pctActiveDays}% of all days across {years || 7} years, and a streak {fmtInt(curStreak)} days deep as you read this.
-            </p>
-            <p className="measure hero__lede" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-4)' }}>
+            </Reveal>
+            <Reveal as="p" className="measure hero__lede" delay={140} style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-4)' }}>
               2019 started late, almost all treadmill runs. 2020 went quiet for close to a year. 2021 caught,
               nearly ten times the activity. 2022 was the busiest, and held the one full marathon. 2023 climbed
               the most. 2024 reached the most countries, {ctryMost} of them. 2025 had the steepest day, almost two
               vertical kilometres. 2026 is not finished, and has not missed a day. Showing up daily adds up.
-            </p>
-            <div className="hero__extra">
-              <p className="eyebrow">In other terms</p>
-              <ul className="funfacts">
-                {funFacts.map((f, i) => (
-                  <li key={i}>
-                    <span className="funfacts__num">
-                      {f.num}
-                      {f.suffix ? <span className="funfacts__suffix">{f.suffix}</span> : null}
-                    </span>
-                    <span className="funfacts__lbl">{f.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </Reveal>
           </div>
-          <div className="hero__cards" aria-label="Headline figures">
-            <StatCard value={fmtInt(km)} unit="km" label="Distance on foot" note="Running, walking and hiking. Close to a third of the way around the equator." />
-            <StatCard value={fmtInt(elevation)} unit="m" label="Vertical climbed" note="Nine and a half Everests of climbing, most of it on walks." />
-            <StatCard value={fmtInt(streak)} unit="days" label="Longest active streak" note="Most days in a row without a gap. Still going." />
+
+          <div className="hero__extra">
+            <Reveal as="p" className="eyebrow">In other terms</Reveal>
+            <ul className="funfacts">
+              {funFacts.map((f, i) => (
+                <HeroFact key={i} val={f.val} dec={f.dec} label={f.label} delay={i * 120} />
+              ))}
+            </ul>
           </div>
         </section>
       </Container>

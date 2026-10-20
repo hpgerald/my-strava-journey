@@ -10,7 +10,7 @@ const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
 let total = 0
 for (const r of ROUTES) {
   await page.goto(BASE + r, { waitUntil: 'networkidle' })
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(4000) // let entrance animations settle before auditing
   await page.evaluate(AXE)
   const res = await page.evaluate(async () => {
     const r = await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } })

@@ -940,13 +940,7 @@ text.chart-panel-title {
   align-items: stretch;
 }
 @media (min-width: 60rem) {
-  .hero {
-    grid-template-columns: minmax(0, 1.72fr) minmax(14rem, 1fr);
-    gap: var(--sp-7);
-    align-items: center;
-    min-height: calc(100dvh - 3.4rem);   /* fill the screen below the sticky nav */
-    align-content: center;
-  }
+  .hero { gap: var(--sp-6); align-content: start; }
 }
 .hero__cards { display: flex; flex-direction: column; gap: var(--sp-4); }
 .hero__cards .stat { min-height: 0; padding: var(--sp-4); }  /* compact, natural height */
@@ -976,6 +970,108 @@ text.chart-panel-title {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero__rot { animation: none; }
+}
+
+/* ---- Hero heartbeat: the whole record as one band of days -------------- */
+/* Choreography (once, on load): key fades in, the band draws left to right in
+   time order, the year labels follow it, the gorge label lands as the wipe
+   passes the silence, the streak label and the live pulse arrive as it reaches
+   today, then the numbers count up. A light sweep keeps crossing the streak.
+   Reduced motion shows the finished state with no movement. */
+.beat { width: 100%; }
+.beat__key {
+  font-size: var(--fs-sm); color: var(--fg-muted); margin: 0 0 var(--sp-4); max-width: 62ch;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.beat__stage.is-in .beat__key { opacity: 1; transform: none; }
+
+.beat__plot { position: relative; width: 100%; }
+.beat__plot svg { display: block; width: 100%; height: 190px; overflow: visible; }
+.beat__plot--empty { height: calc(190px + 1.15rem + var(--sp-2)); }
+.beat__grid { opacity: 0; transition: opacity 1s var(--ease) 0.2s; }
+.beat__stage.is-in .beat__grid { opacity: 1; }
+.beat__bars { clip-path: inset(0 100% 0 0); transition: clip-path 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.25s; }
+.beat__stage.is-in .beat__bars { clip-path: inset(0 0 0 0); }
+.beat__base { transform-origin: 0 0; transform: scaleX(0); transition: transform 2.6s cubic-bezier(0.65, 0, 0.35, 1) 0.25s; }
+.beat__stage.is-in .beat__base { transform: scaleX(1); }
+
+.beat__tag {
+  position: absolute; transform: translate(-50%, 6px); font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: 0.02em; color: var(--fg-faint); white-space: nowrap; pointer-events: none; opacity: 0;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.beat__tag--gap { top: 18%; transition-delay: 1.15s; }
+.beat__tag--streak { top: 0; right: 0; left: auto; transform: translateY(6px); text-align: right; color: var(--accent-ink); transition-delay: 2.7s; }
+.beat__stage.is-in .beat__tag--gap { opacity: 1; transform: translate(-50%, 0); }
+.beat__stage.is-in .beat__tag--streak { opacity: 1; transform: none; }
+.beat__tagnum { font-weight: 700; }
+
+/* live pulse on the latest day */
+.beat__pulse {
+  position: absolute; right: 0; bottom: 2px; width: 10px; height: 10px; margin: 0 -5px -5px 0;
+  border-radius: 50%; background: var(--accent); pointer-events: none;
+  opacity: 0; transform: scale(0.4); transition: opacity 0.4s var(--ease) 2.75s, transform 0.5s var(--ease) 2.75s;
+}
+.beat__pulse::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--accent); opacity: 0;
+}
+.beat__stage.is-in .beat__pulse { opacity: 1; transform: none; }
+.beat__stage.is-in .beat__pulse::after { animation: beatRing 1.9s var(--ease) 3s infinite; }
+@keyframes beatRing { 0% { transform: scale(1); opacity: 0.75; } 100% { transform: scale(2.4); opacity: 0; } }
+
+.beat__hit { position: absolute; inset: 0; cursor: crosshair; }
+.beat__read {
+  position: absolute; bottom: calc(100% + 5px); transform: translateX(-50%); background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-size: var(--fs-2xs); padding: 3px 7px; border-radius: 3px; white-space: nowrap;
+  pointer-events: none; z-index: 2; animation: beatReadIn 0.18s var(--ease);
+}
+@keyframes beatReadIn { from { opacity: 0; transform: translate(-50%, 4px); } to { opacity: 1; transform: translateX(-50%); } }
+
+.beat__axis { position: relative; height: 1.15rem; margin-top: var(--sp-2); }
+.beat__axis > span {
+  position: absolute; transform: translate(-50%, 6px); font-family: var(--font-mono); font-size: var(--fs-2xs);
+  color: var(--fg-faint); letter-spacing: 0.04em; opacity: 0; transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.beat__stage.is-in .beat__axis > span { opacity: 1; transform: translate(-50%, 0); }
+.beat__yshort { display: none; }
+
+.beat__callouts { display: flex; flex-wrap: wrap; gap: clamp(1.25rem, 4vw, 3.25rem); margin-top: var(--sp-5); }
+.beat__co { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.beat__callouts.is-in .beat__co { opacity: 1; transform: none; }
+.beat__callouts.is-in .beat__co:nth-child(2) { transition-delay: 0.15s; }
+.beat__callouts.is-in .beat__co:nth-child(3) { transition-delay: 0.3s; }
+.beat__n { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 1rem + 2.6vw, 2.9rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.beat__u { font-size: 0.42em; color: var(--fg-muted); font-weight: 700; margin-left: 0.15em; }
+.beat__l { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); margin-top: var(--sp-2); font-weight: 600; }
+.beat__s { font-size: var(--fs-xs); color: var(--fg-faint); margin-top: 2px; }
+.beat__co--accent .beat__l { color: var(--accent-ink); }
+
+/* narration and the "in other terms" row under the chart */
+.hero__main { margin-top: 0; }
+.funfacts__item { opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.funfacts__item.is-in { opacity: 1; transform: none; }
+
+@media (max-width: 40rem) {
+  .beat__plot svg { height: 130px; }
+  .beat__plot--empty { height: calc(130px + 1.15rem + var(--sp-2)); }
+  .beat__s { display: none; }
+  .beat__callouts { gap: 1.1rem 1.9rem; }
+  .beat__yfull { display: none; }
+  .beat__tag--gap { text-align: center; line-height: 1.25; }
+  .beat__tag2 { display: block; }
+  .beat__yshort { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .beat__key, .beat__grid, .beat__tag, .beat__axis > span, .beat__co, .beat__pulse, .funfacts__item {
+    opacity: 1 !important; transition: none !important;
+  }
+  .beat__key, .beat__co, .funfacts__item, .beat__pulse { transform: none !important; }
+  .beat__tag--gap, .beat__axis > span { transform: translate(-50%, 0) !important; }
+  .beat__tag--streak { transform: none !important; }
+  .beat__bars { clip-path: none !important; transition: none !important; }
+  .beat__base { transform: none !important; transition: none !important; }
+  .beat__pulse::after, .beat__read { animation: none !important; }
 }
 
 /* heat strip: quietest-month sub line */
