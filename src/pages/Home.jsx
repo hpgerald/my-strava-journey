@@ -29,6 +29,7 @@ import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
 import HeroYears from '../components/HeroYears.jsx'
+import OddsRow from '../components/OddsRow.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
@@ -212,6 +213,15 @@ export default function Home() {
   const mAfter = momentum ? Math.round(momentum.origin * 100) : 82
   const mDeep = momentum && momentum.stick.length ? Math.round(momentum.stick[momentum.stick.length - 1].p * 100) : 99
   const mRest = momentum && momentum.rebound.length ? Math.round(momentum.rebound[momentum.rebound.length - 1].p * 100) : 33
+  // waypoints on the two curves, and what the two daily odds predict long-run
+  const pc = (v) => Math.round((v || 0) * 100)
+  const stickAt = (L) => (momentum ? momentum.stick.find((s) => s.L === L) || momentum.stick[momentum.stick.length - 1] : null)
+  const offAt = (g) => (momentum ? momentum.rebound.find((r) => r.g === g) || momentum.rebound[momentum.rebound.length - 1] : null)
+  const mWeek = stickAt(7)
+  const mThreeWk = stickAt(21)
+  const mOneOff = offAt(1)
+  const mFiveOff = momentum ? momentum.rebound[momentum.rebound.length - 1] : null
+  const mSteady = momentum ? momentum.after.p01 / (1 - momentum.after.p11 + momentum.after.p01) : 0
 
   // one dot per activity, in chronological order, tagged with its year
   const items = activityLog
@@ -323,29 +333,58 @@ export default function Home() {
         </section>
       </Container>
 
-      {/* ===== The physics of the habit: momentum + transition matrix ===== */}
-      {momentum && (
+      {/* ===== How the streak holds: momentum + today/tomorrow grid ===== */}
+      {momentum && mWeek && mOneOff && mFiveOff && (
         <Container>
           <hr className="rule" />
-          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
-            <div className="section-head">
+          <section className="sgrid" aria-labelledby="streak-title">
+            <div className="sgrid__head">
               <p className="eyebrow">How the streak holds</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>A streak keeps itself going.</h2>
-              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                The habit feeds itself. A day out makes the next day more likely; a few days off make the next one easy to skip. Once a month of training is on the board, the odds the next day is active climb to {mDeep}%. Let it lapse and they fall to {mRest}%. On the left is how the odds move. On the right is the engine, today quietly setting tomorrow.
+              <h2 id="streak-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+                A streak is easier to keep than to restart.
+              </h2>
+            </div>
+
+            <Reveal as="p" className="sgrid__statement">
+              Every day out makes the next one more likely, and every day off makes coming back harder. Move today and
+              there is an {mAfter}% chance you move tomorrow. Keep going for a week and it is {pc(mWeek.p)}%; after three
+              weeks, {pc(mThreeWk.p)}%. Stop for {['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days
+              and it falls to {pc(mFiveOff.p)}%.
+            </Reveal>
+
+            <OddsRow
+              title="Chance the next day is active"
+              items={[
+                { value: mFiveOff.p, label: `after ${['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days off`, tone: 'rest' },
+                { value: mOneOff.p, label: 'after one day off', tone: 'rest' },
+                { value: momentum.origin, label: 'if you moved today', tone: 'move' },
+                { value: mWeek.p, label: 'after a week on a roll', tone: 'move' },
+              ]}
+            />
+
+            <div className="sgrid__pair">
+              <figure className="sgrid__fig sgrid__fig--chart">
+                <figcaption className="sgrid__figtitle">The odds, day by day</figcaption>
+                <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
+              </figure>
+              <figure className="sgrid__fig sgrid__fig--mx">
+                <figcaption className="sgrid__figtitle">Given today, the chance of tomorrow</figcaption>
+                <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} />
+              </figure>
+              <p className="sgrid__note sgrid__note--chart">
+                <b>How to read it.</b> The dashed line is a day you moved. Each step right is one more day in a row; each
+                step left is one more day since you last moved. The orange line climbs and flattens near {mDeep}%. The grey
+                line drops fast: a single day off already brings the odds down to {pc(mOneOff.p)}%.
+              </p>
+              <p className="sgrid__note sgrid__note--mx">
+                <b>Why it holds.</b> Each row adds up to 100%. Those two numbers, {mAfter}% after a day out and{' '}
+                {pc(momentum.after.p01)}% after a day off, predict that {pc(mSteady)}% of days should be active in the long
+                run. Since 2021, {pc(momentum.activeFrac)}% were. Before the habit caught, a day out led to another only{' '}
+                {mBefore}% of the time.
               </p>
             </div>
-            <div className="opener2col">
-              <div>
-                <HabitMomentum stick={momentum.stick} rebound={momentum.rebound} origin={momentum.origin} />
-                <p className="source fig__source" style={{ marginTop: 'var(--sp-3)' }}>Source: Activity Log &middot; daily active/rest series since the 2021 switch</p>
-              </div>
-              <div>
-                <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>Today &rarr; tomorrow</p>
-                <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} beforeP11={momentum.before.p11} activeFrac={momentum.activeFrac} />
-              </div>
-            </div>
-          </div>
+            <p className="source">Source: Activity Log &middot; every day marked active or rest, measured since the habit caught in 2021</p>
+          </section>
         </Container>
       )}
 

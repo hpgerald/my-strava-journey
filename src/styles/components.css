@@ -1,3 +1,5 @@
+:root { --grid-gap: clamp(1rem, 3vw, 2.5rem); }
+
 /* ============================================================================
    components.css  ·  Base elements, layout primitives and components.
    Hover / active / focus = invert to solid ink. No colour anywhere.
@@ -934,7 +936,6 @@ text.chart-panel-title {
 /* ---- Animated hero: headline left, key figures stacked right -----------
    Sized and centred to sit inside a single viewport (no scroll to see it). */
 .hero {
-  --hero-gap: clamp(1rem, 3vw, 2.5rem);
   padding-block: clamp(0.75rem, 2vh, 1.5rem);
   display: grid;
   gap: var(--sp-5);
@@ -982,7 +983,7 @@ text.chart-panel-title {
 .beat { width: 100%; }
 .beat__head {
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
-  gap: var(--sp-2) var(--hero-gap); margin-bottom: var(--sp-4);
+  gap: var(--sp-2) var(--grid-gap); margin-bottom: var(--sp-4);
 }
 .beat__legend {
   display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); list-style: none; margin: 0; padding: 0;
@@ -1053,7 +1054,7 @@ text.chart-panel-title {
 .beat__yshort { display: none; }
 
 .beat__callouts {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--hero-gap);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap);
   margin-top: var(--sp-6); padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); align-items: start;
 }
 .beat__co { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
@@ -1077,7 +1078,7 @@ text.chart-panel-title {
 /* the years: eight equal cells on the four-column grid */
 .hero__years {
   list-style: none; margin: 0; padding: var(--sp-5) 0 0; border-top: 1px solid var(--rule-faint);
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-6) var(--hero-gap);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-6) var(--grid-gap);
 }
 .hero__yr { opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 .hero__years.is-in .hero__yr { opacity: 1; transform: none; }
@@ -1111,7 +1112,7 @@ text.chart-panel-title {
 .hero__story p { margin: 0 0 var(--sp-4); font-size: var(--fs-md); line-height: 1.6; }
 .hero__story p:last-child { margin-bottom: 0; }
 @media (min-width: 60rem) {
-  .hero__story { column-count: 2; column-gap: var(--hero-gap); }
+  .hero__story { column-count: 2; column-gap: var(--grid-gap); }
 }
 
 @media (max-width: 40rem) {
@@ -1177,7 +1178,11 @@ text.chart-panel-title {
 .hmom__plot.is-in .hmom__area { opacity: 1; }
 .hmom__dot, .hmom__onum, .hmom__end, .hmom__todaylbl { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
 .hmom__plot.is-in .hmom__dot, .hmom__plot.is-in .hmom__onum, .hmom__plot.is-in .hmom__end, .hmom__plot.is-in .hmom__todaylbl { opacity: 1; transition-delay: 1s; }
-.hmom__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.hmom__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.hmom__tick { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.hmom__halo { paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.hmom__mark { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.hmom__plot.is-in .hmom__mark { opacity: 1; transition-delay: 1.25s; }
 .hmom__todaylbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); }
 .hmom__onum { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--ink); font-variant-numeric: tabular-nums; }
 .hmom__end { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); }
@@ -1196,14 +1201,69 @@ text.chart-panel-title {
 /* transition matrix (Markov) */
 .tmx__grid { display: grid; grid-template-columns: minmax(96px, auto) 1fr 1fr; gap: 5px; align-items: stretch; }
 .tmx__corner { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-faint); align-self: end; padding-bottom: var(--sp-1); text-transform: uppercase; letter-spacing: var(--tr-wide); }
-.tmx__colhd { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-wide); text-align: center; align-self: end; padding-bottom: var(--sp-1); }
-.tmx__rowhd { font-size: var(--fs-sm); color: var(--ink); align-self: center; padding-right: var(--sp-2); }
+.tmx__colhd { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); text-transform: uppercase; letter-spacing: var(--tr-wide); text-align: center; align-self: end; padding-bottom: var(--sp-1); line-height: 1.3; }
+.tmx__rowhd { font-size: var(--fs-sm); color: var(--ink); align-self: center; padding-right: var(--sp-3); line-height: 1.3; }
 .tmx__cell { display: flex; align-items: center; justify-content: center; min-height: 64px; border-radius: 4px;
   opacity: 0; transform: scale(0.92); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .tmx.is-in .tmx__cell { opacity: 1; transform: none; }
 .tmx__cell b { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; font-variant-numeric: tabular-nums; }
 .tmx__note { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.5; margin: var(--sp-4) 0 0; }
 .tmx__note strong { color: var(--accent-ink); }
+
+/* ---- Section grid (shared with the hero's four column lines) ---------- */
+.sgrid { display: grid; gap: var(--sp-6); padding-block: var(--sp-7); }
+.sgrid__head .section-head__title { margin: var(--sp-2) 0 0; }
+.sgrid__statement {
+  margin: 0; font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.55rem); line-height: 1.45; color: var(--fg); text-wrap: pretty;
+}
+
+/* four-cell odds row */
+.odds { padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); }
+.odds__title {
+  margin: 0 0 var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
+  text-transform: uppercase; color: var(--fg-muted); font-weight: 600;
+}
+.odds__row {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap);
+}
+.odds__cell { display: flex; flex-direction: column; gap: var(--sp-2); opacity: 0; transform: translateY(12px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.odds.is-in .odds__cell { opacity: 1; transform: none; }
+.odds__n { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 1rem + 2.6vw, 2.9rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.odds__n--move { color: var(--accent); }
+.odds__n--rest { color: var(--grey-70); }
+.odds__c { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.4; text-wrap: pretty; }
+
+/* chart + grid side by side, equal height, notes aligned underneath */
+.sgrid__pair {
+  padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-4) var(--grid-gap);
+  grid-template-areas: "chart chart mx mx" "cnote cnote mnote mnote"; align-items: stretch;
+}
+.sgrid__fig { margin: 0; display: flex; flex-direction: column; min-width: 0; }
+.sgrid__fig--chart { grid-area: chart; }
+.sgrid__fig--mx { grid-area: mx; }
+.sgrid__figtitle {
+  margin: 0 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide);
+  text-transform: uppercase; color: var(--fg-muted); font-weight: 600;
+}
+.sgrid__fig--mx .tmx { flex: 1; display: flex; flex-direction: column; }
+.sgrid__fig--mx .tmx__grid { flex: 1; grid-template-rows: auto 1fr 1fr; gap: 6px; }
+.sgrid__fig--mx .tmx__cell { min-height: 72px; }
+.sgrid__fig--mx .tmx__cell b { font-size: clamp(1.6rem, 1rem + 1.8vw, 2.4rem); }
+.sgrid__note { margin: 0; font-size: var(--fs-sm); line-height: 1.55; color: var(--fg-muted); text-wrap: pretty; }
+.sgrid__note b { color: var(--fg); font-weight: 600; }
+.sgrid__note--chart { grid-area: cnote; }
+.sgrid__note--mx { grid-area: mnote; }
+@media (max-width: 59.999rem) {
+  .odds__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sgrid__pair { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--sp-4); }
+  .sgrid__fig--mx { margin-top: var(--sp-4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .odds__cell { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
 
 /* Lorenz curve */
 .lorenz__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); }
@@ -1297,7 +1357,7 @@ text.chart-panel-title {
   .edf__cell { opacity: 1 !important; }
   .adds__ring { transition: none !important; }
   .hmom__line { stroke-dashoffset: 0 !important; }
-  .hmom__area, .hmom__dot, .hmom__onum, .hmom__end, .hmom__todaylbl { opacity: 1 !important; }
+  .hmom__area, .hmom__dot, .hmom__onum, .hmom__end, .hmom__todaylbl, .hmom__mark { opacity: 1 !important; }
 }
 
 /* ---- Home: the opening "even week" wow band ----------------------- */
