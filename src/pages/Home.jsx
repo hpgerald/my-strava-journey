@@ -2,18 +2,13 @@ import Layout from '../components/Layout.jsx'
 import Container from '../components/Container.jsx'
 import IndexHub from '../components/IndexHub.jsx'
 import Figure from '../charts/Figure.jsx'
-import DotGrid from '../charts/DotGrid.jsx'
-import BarChart from '../charts/BarChart.jsx'
 import HeatStrip from '../charts/HeatStrip.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import GeoBubbles from '../charts/GeoBubbles.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
-import SwitchStep from '../charts/SwitchStep.jsx'
-import SwitchReveal from '../charts/SwitchReveal.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
 // WeekLevel (even-week band) retired from the home opener; still available for Rhythm.
-import EveryDayField from '../charts/EveryDayField.jsx'
 import HabitMomentum from '../charts/HabitMomentum.jsx'
 import TransitionMatrix from '../charts/TransitionMatrix.jsx'
 import LorenzCurve from '../charts/LorenzCurve.jsx'
@@ -48,20 +43,6 @@ function yearsBetween(a, b) {
 const FOOT_HOME = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
 const MONTHS_SHORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-// Round a set of counts to integer percentages that sum to exactly 100
-// (largest-remainder method), so a breakdown never reads 101%.
-function pctsTo100(counts) {
-  const total = counts.reduce((a, b) => a + b, 0) || 1
-  const raw = counts.map((c) => (c / total) * 100)
-  const out = raw.map(Math.floor)
-  let left = 100 - out.reduce((a, b) => a + b, 0)
-  const order = raw
-    .map((v, i) => ({ i, frac: v - Math.floor(v) }))
-    .sort((a, b) => b.frac - a.frac)
-  for (let k = 0; k < left; k++) out[order[k % order.length].i] += 1
-  return out
-}
 
 export default function Home() {
   useEffect(() => {
@@ -138,42 +119,11 @@ export default function Home() {
   }
   const footFlipData = FOOT_ORDER.map((k) => ({ key: k, label: FOOT_NAME[k], dist: footAgg[k].dist, elev: footAgg[k].elev }))
 
-  // the switch as a rate: activities per calendar month before vs from July 2021
-  const switchRate = (() => {
-    const SW = '2021-07'
-    const ym = (s) => Number(s.slice(0, 4)) * 12 + Number(s.slice(5, 7))
-    const months = monthlyTotals.map((mm) => mm.month).filter(Boolean).sort()
-    if (!months.length) return null
-    let before = 0
-    let after = 0
-    for (const mm of monthlyTotals) {
-      const n = toNum(mm.activities) || 0
-      if (mm.month < SW) before += n
-      else after += n
-    }
-    const bSpan = ym('2021-06') - ym(months[0]) + 1
-    const aSpan = ym(months[months.length - 1]) - ym(SW) + 1
-    return { before: before / bSpan, after: after / aSpan }
-  })()
-
   // seasonality: activities per calendar month
   const monthCells = MONTHS_FULL.map((m, i) => ({ short: MONTHS_SHORT[i], label: m, value: months[i] }))
 
-  // consistency: how soon the next active day comes, and share of days active
+  // share of all calendar days with an activity
   const sortedDays = [...daySet].sort()
-  let gNext = 0, gTwo = 0, gMore = 0
-  for (let i = 1; i < sortedDays.length; i++) {
-    const diff = Math.round((Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1])) / 86400000)
-    if (diff === 1) gNext += 1
-    else if (diff === 2) gTwo += 1
-    else gMore += 1
-  }
-  const gapPcts = pctsTo100([gNext, gTwo, gMore]) // integer percentages summing to exactly 100
-  const gapData = [
-    { label: 'The next day', value: gNext, display: `${gapPcts[0]}%` },
-    { label: 'Two days later', value: gTwo, display: `${gapPcts[1]}%` },
-    { label: 'Three or more', value: gMore, display: `${gapPcts[2]}%` },
-  ]
   const activeDays = sortedDays.length
   const spanDays = sortedDays.length > 1
     ? Math.round((Date.parse(sortedDays[sortedDays.length - 1]) - Date.parse(sortedDays[0])) / 86400000) + 1
@@ -223,7 +173,6 @@ export default function Home() {
     return { start: new Date(startMs).toISOString().slice(0, 10), end: edLast }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityLog, edLast])
-  const edTotalDays = (edFirst && edLast) ? Math.round((Date.parse(edLast) - Date.parse(edFirst)) / DAY) + 1 : 0
   // C. habit momentum: the Markov transition curves (momentum vs rust)
   const momentum = useMemo(
     () => (edFirst ? computeHabitMomentum(daySet, edFirst, edLast, '2021-07-01', 30) : null),
@@ -255,7 +204,6 @@ export default function Home() {
     .filter((d) => Number.isFinite(d.t) && d.year)
     .sort((a, b) => a.t - b.t)
   const gridYears = [...new Set(items.map((d) => d.year))].sort((a, b) => a - b)
-  const yearCounts = gridYears.map((y) => [String(y), fmtInt(items.filter((d) => d.year === y).length)])
 
   // indoor share by year, for the "off the treadmill" figure's table fallback
   const trainerTrue = (v) => { const s = String(v).trim().toLowerCase(); return s === '1' || s === 'true' || s === 'yes' }
@@ -466,30 +414,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* ===== Every single day: the active-day field ===== */}
-      {edFirst && (
-        <Container>
-          <hr className="rule" />
-          <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
-            <div className="section-head">
-              <p className="eyebrow">Every single day</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-                Active <span style={{ color: 'var(--accent)' }}>{fmtInt(activeDays)}</span> of {fmtInt(edTotalDays)} days.
-              </h2>
-              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 var(--sp-5)' }}>
-                More than half of every single day since the first run carried an activity. One square per day, lit when something was logged. The long dark band is the 353-day silence. The bright run on the end is the streak, still going. Showing up daily adds up, and here is what it adds up to.
-              </p>
-            </div>
-            <EveryDayField firstISO={edFirst} lastISO={edLast} activeSet={daySet} streakStartISO={edStreak.start} streakEndISO={edStreak.end} />
-            <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
-              <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> rest day</span>
-              <span><i className="chart-swatch" style={{ background: 'var(--accent)' }} /> active</span>
-              <span><i className="chart-swatch" style={{ background: 'var(--accent-ink)' }} /> current streak</span>
-            </div>
-          </div>
-        </Container>
-      )}
-
       {/* ---- Seven years, seven characters: the per-year narrative ------ */}
       {yearSummaries.length > 0 && (
         <Container>
@@ -509,64 +433,6 @@ export default function Home() {
           </div>
         </Container>
       )}
-
-      {/* ---- The signature image: every activity, one dot -------------- */}
-      <Container>
-        <hr className="rule" />
-        <div className="dotfig" style={{ paddingBlock: 'var(--sp-6)' }}>
-          <Figure
-            title="Every activity, one dot"
-            note={`The habit did not build slowly; it switched on. The first two years are nearly empty, a couple of dots a month. Then 2021 jumps straight to over three hundred. What happens next is the real point: it stops climbing and holds near three hundred a year, four years running. The jump lit the habit. The flat years are the habit refusing to fade.`}
-            source="Activity Log"
-            tableCaption="Activities by year"
-            columns={['Year', 'Activities']}
-            rows={yearCounts}
-          >
-            <DotGrid items={items} years={gridYears} />
-          </Figure>
-        </div>
-      </Container>
-
-      {/* ---- The Switch: the narrative climax, full-bleed -------------- */}
-      <div className="bleed bleed--switch">
-        <Container>
-          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>When did this become a habit?</p>
-          <Figure
-            title="The switch"
-            note="There is an exact moment the hobby became a habit. For two years the record sits near empty, a few entries a month, sometimes none. Then one month it turns over: two activities become fifty-eight, almost overnight, and the calendar never goes blank again. The data does not say what caused it, only that from here on there is no going back. Drag the marker to move through the months."
-            source="Monthly Trends"
-            tableCaption="Activities per month"
-            columns={['Month', 'Activities']}
-            rows={monthlyTotals.map((mm) => [mm.month, mm.activities])}
-          >
-            <SwitchReveal rows={monthlyTotals} switchMonth="2021-07" />
-          </Figure>
-          {switchRate && (
-            <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingTop: 'var(--sp-6)' }}>
-              <Figure
-                n="01"
-                title="A hobby, then a habit"
-                note="Before the switch it ran a couple of times a month, the pace of a passing interest. After, it settled near thirty a month and stayed. Eleven times as often, and it never slipped back."
-                source="Monthly Trends"
-                tableCaption="Activities per month, before the 2021 switch versus since"
-                columns={['Era', 'Activities / month']}
-                rows={[['Before Jul 2021', switchRate.before.toFixed(1)], ['Since', switchRate.after.toFixed(1)]]}
-              >
-                <SwitchStep before={switchRate.before} after={switchRate.after} />
-              </Figure>
-              <div>
-                <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>The multiplier</p>
-                <p style={{ fontSize: 'var(--fs-lg)', fontWeight: 700, lineHeight: 1.3, margin: 0 }}>
-                  Two-point-eight a month became thirty-one.
-                </p>
-                <p className="text-muted" style={{ marginTop: 'var(--sp-3)', fontSize: 'var(--fs-sm)' }}>
-                  No single week looks dramatic. Line the weeks up as a monthly rate and the jump is impossible to miss: eleven times as often, and it held. A habit is built from unremarkable days.
-                </p>
-              </div>
-            </div>
-          )}
-        </Container>
-      </div>
 
       {/* ---- The flip: distance vs climb by sport ---------------------- */}
       <Container>
@@ -597,13 +463,13 @@ export default function Home() {
         </div>
       </Container>
 
-      {/* ---- A closer look: six habit charts, three clean rows --------- */}
+      {/* ---- A closer look: five habit charts ------------------------- */}
       <Container>
         <hr className="rule" />
         <div className="section-head">
           <p className="eyebrow">A closer look</p>
           <h2 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>
-            Six smaller things the data shows.
+            Five smaller things the data shows.
           </h2>
         </div>
         <div className="grid grid--2 closer-grid" style={{ gap: 'var(--sp-8) var(--sp-7)', paddingBottom: 'var(--sp-7)' }}>
@@ -673,7 +539,7 @@ export default function Home() {
             <HeatStrip cells={monthCells} unit="activities" cellHeight={56} />
           </Figure>
 
-          {/* Row 3 — the habit of it: the move outside, then the streak */}
+          {/* Row 3 — the habit of it: the move outside, full width */}
           <Figure
             title="Off the treadmill"
             note="Year by year, the habit walked outside. Early on, nearly two in three sessions were indoors on a machine. By last year, about one in six. Each year split into indoor and outdoor, stacked to 100%."
@@ -685,16 +551,6 @@ export default function Home() {
             <IndoorOutdoor activities={activityLog} />
           </Figure>
 
-          <Figure
-            title="Rarely a day off"
-            note={`Once you go out, the next day tends to follow. Four times in five, the very next day carries something too. Over seven years, ${pctActiveDays}% of all calendar days have an activity, and a gap of three days or more turns up less than once in ten.`}
-            source="Activity Log"
-            tableCaption="Days until the next active day"
-            columns={['Gap to next active day', 'Share']}
-            rows={gapData.map((g) => [g.label, g.display])}
-          >
-            <BarChart data={gapData} accent />
-          </Figure>
         </div>
       </Container>
 

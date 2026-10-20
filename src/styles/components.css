@@ -2005,6 +2005,8 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 
 /* closer-look figures are supporting, not heroes: quieter titles and notes */
 .closer-grid > figure.fig .fig__title { font-size: var(--fs-base); }
+/* an odd one out takes the full row rather than hanging in half of it */
+.grid--2.closer-grid > figure.fig:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .closer-grid > figure.fig .fig__note { font-size: var(--fs-xs); color: var(--fg-muted); }
 
 /* ---- Home: SwitchReveal (the hero scrub) ----------------------------- */
