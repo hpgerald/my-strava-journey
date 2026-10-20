@@ -1,23 +1,31 @@
 import { Link } from 'react-router-dom'
-import { Reveal } from './Reveal.jsx'
+import { useInView } from './Reveal.jsx'
 
-// The seven years as a narrative index: each year its character and the one fact
-// that defines it, computed from the data upstream. Every row links into that
-// year's full report. Rows reveal in a stagger as they scroll in.
-// summaries: [{ year, label, line }]
-export default function YearCharacters({ summaries }) {
+// One card per year on the shared four-column grid: the year, its character and
+// the one line on how that year was made. Every card opens the year's report.
+// Cards arrive in a stagger as the row scrolls in.
+// summaries: [{ year, label, line }], quietUntil (years up to here read grey),
+//   current (the year in progress, accent)
+export default function YearCharacters({ summaries, quietUntil, current }) {
+  const [ref, inView] = useInView({ threshold: 0.15, rootMargin: '0px' })
   return (
-    <ol className="years">
-      {summaries.map((y, i) => (
-        <li key={y.year}>
-          <Reveal as={Link} to={`/numbers/${y.year}`} className="yearrow" delay={i * 45} aria-label={`${y.year}, ${y.label}: ${y.line}`}>
-            <span className="yearrow__year">{y.year}</span>
-            <span className="yearrow__label">{y.label}</span>
-            <span className="yearrow__line">{y.line}</span>
-            <span className="yearrow__arrow mono" aria-hidden="true">→</span>
-          </Reveal>
-        </li>
-      ))}
-    </ol>
+    <div ref={ref} className={`ycards${inView ? ' is-in' : ''}`}>
+      <p className="odds__title">Open a year</p>
+      <ol className="ycards__row">
+        {summaries.map((y, i) => (
+          <li key={y.year} className="ycards__cell" style={{ transitionDelay: `${i * 70}ms` }}>
+            <Link to={`/numbers/${y.year}`} className={`ycard${y.year <= quietUntil ? ' ycard--quiet' : y.year === current ? ' ycard--now' : ''}`}
+              aria-label={`${y.year}, ${y.label}: ${y.line} Open the ${y.year} report.`}>
+              <span className="ycard__top">
+                <span className="ycard__year">{y.year}</span>
+                <span className="ycard__arrow" aria-hidden="true">&rarr;</span>
+              </span>
+              <span className="ycard__label">{y.label}</span>
+              <span className="ycard__line">{y.line}</span>
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </div>
   )
 }

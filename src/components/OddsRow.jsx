@@ -1,13 +1,17 @@
 import { useInView, useCountUp } from './Reveal.jsx'
 
-// A row of four equal cells on the site grid: a percentage and the condition it
+// A row of four equal cells on the site grid: a number and the condition it
 // belongs to. `tone` colours the number like the chart it summarises
 // ('rest' grey, 'move' accent). Numbers count up as the row arrives.
-function OddsCell({ value, label, tone, delay, run }) {
-  const v = useCountUp(Math.round(value * 100), run, { dur: 1400 })
+// A cell is a share (value 0-1, shown as %) or a plain count (num + unit).
+function OddsCell({ value, num, unit, label, tone, delay, run }) {
+  const target = num != null ? Math.round(num) : Math.round(value * 100)
+  const v = useCountUp(target, run, { dur: 1400 })
   return (
     <li className="odds__cell" style={{ transitionDelay: `${delay}ms` }}>
-      <span className={`odds__n odds__n--${tone}`}>{v}%</span>
+      <span className={`odds__n odds__n--${tone}`}>
+        {Number(v).toLocaleString('en-US')}{num != null ? <span className="odds__u">{unit}</span> : '%'}
+      </span>
       <span className="odds__c">{label}</span>
     </li>
   )

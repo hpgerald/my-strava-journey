@@ -119,6 +119,31 @@ export function computeYearStats(year, acts, geo) {
     return ds.length % 2 ? ds[mid] : (ds[mid - 1] + ds[mid]) / 2
   })()
 
+  // how the year was made: outings per active day, their length, and when
+  const perDay = new Map()
+  for (const a of ya) { const d = (a.date || '').slice(0, 10); if (d) perDay.set(d, (perDay.get(d) || 0) + 1) }
+  const multiDays = [...perDay.values()].filter((v) => v > 1).length
+  const movMin = ya.reduce((s2, a) => s2 + num(a, 'moving_time_min'), 0)
+  const movSorted = ya.map((a) => num(a, 'moving_time_min')).sort((a, b) => a - b)
+  const medMovingMin = movSorted.length ? movSorted[Math.floor((movSorted.length - 1) / 2)] : 0
+  const footKmAll = footActs.reduce((s2, a) => s2 + num(a, 'distance_km'), 0)
+  const walks = ya.filter((a) => a.sport_type === 'Walk')
+  const longWalk = maxBy(walks, (a) => num(a, 'distance_km'))
+  const shape = {
+    multiShare: dates.length ? multiDays / dates.length : 0,
+    outingsPerDay: dates.length ? ya.length / dates.length : 0,
+    avgOutingMin: ya.length ? movMin / ya.length : 0,
+    minPerActiveDay: dates.length ? movMin / dates.length : 0,
+    medMovingMin,
+    weekendShare: ya.length ? ya.filter((a) => a.weekday === 'Saturday' || a.weekday === 'Sunday').length / ya.length : 0,
+    morningShare: ya.length ? ya.filter((a) => { const h = parseInt(a.hour, 10); return h >= 0 && h < 10 }).length / ya.length : 0,
+    walkShare: ya.length ? walks.length / ya.length : 0,
+    runShare: ya.length ? ya.filter((a) => a.sport_type === 'Run' || a.sport_type === 'TrailRun').length / ya.length : 0,
+    mPerKm: footKmAll ? elev / footKmAll : 0,
+    trailKm: ya.reduce((s2, a) => (a.sport_type === 'TrailRun' ? s2 + num(a, 'distance_km') : s2), 0),
+    longestWalk: longWalk ? { km: num(longWalk, 'distance_km'), min: num(longWalk, 'moving_time_min') } : null,
+  }
+
   const mk = maxBy(ya, (a) => num(a, 'kudos'))
   const mostKudos = mk ? { date: (mk.date || '').slice(0, 10), sport: prettySport(mk.sport_type), kudos: num(mk, 'kudos') } : null
 
@@ -138,6 +163,7 @@ export function computeYearStats(year, acts, geo) {
     footN: footActs.length,
     walkN: ya.filter((a) => a.sport_type === 'Walk').length,
     runN: ya.filter((a) => a.sport_type === 'Run').length,
+    ...shape,
   }
 }
 
@@ -149,22 +175,32 @@ export const YEAR_THEME = {
   2022: 'The busiest year',
   2023: 'The year of climbing',
   2024: 'The year it traveled',
-  2025: 'The year it went uphill',
+  2025: 'The year of the long walk',
   2026: 'The unbroken year',
 }
 
 // A short character + a data-driven sentence for the home page's seven-years
 // narrative. Each line is filled from that year's own numbers.
 const num0 = (v) => Math.round(v).toLocaleString()
+// how each year was made, one line per year, written to fill two lines of a card.
+// Superlatives are checked against every year so they stay true on each refresh.
+const pc0 = (v) => Math.round((v || 0) * 100)
+const top = (all, s, k) => all.every((o) => o.year === s.year || (o[k] || 0) < (s[k] || 0))
+const bottom = (all, s, k) => all.every((o) => o.year === s.year || (o[k] || 0) > (s[k] || 0))
+const most = (ok) => (ok ? ', the most of any year' : '')
 export const YEAR_CHARACTERS = {
-  2019: { label: 'The quiet start', line: (s) => `A quiet first year. ${s.n} activities, almost all runs, most on a treadmill. Barely ${num0(s.footKm)} km all year. Then the record goes silent.` },
-  2020: { label: 'The false start', line: (s) => `Only ${s.n} activities all year. A 23 km run in March, a first trip into Kenya, then after midsummer the log stops for most of a year.` },
-  2021: { label: 'The switch', line: (s) => `This is where it turns. Activities jump from 35 to ${s.n}, kudos from 30 to over eight thousand, and on more than half the active days there was more than one outing. Once it starts, it does not stop.` },
-  2022: { label: 'The peak', line: (s) => `The busiest year on record, ${s.n} activities, more than one a day. It holds the one full marathon, 42.75 km in 2 hours 57, and it is the year walking pulls level with running.` },
-  2023: { label: 'The climb', line: (s) => `The year it points uphill. ${num0(s.elev)} metres of climbing, more than any year yet. One day on Mount Hanang alone ran eight and a half hours for 1,718 metres of gain, and the year also held a 100 km race over four straight nights.` },
-  2024: { label: 'The passport', line: (s) => `The widest year on the map: ${s.countries.length} countries, as far apart as Rwanda and Saudi Arabia. It opens with a 34 km trail run in January, close to eight hours on the move.` },
-  2025: { label: 'The ascent', line: (s) => `One day in March climbs ${num0(s.highestClimb ? s.highestClimb.val : 0)} metres, almost two vertical kilometres, the most ever in a single outing. Later a single walk runs eleven hours, start to finish.` },
-  2026: { label: 'Unbroken', line: (s) => `Still going, every day so far, with more hours moving and more personal records than any year before, ${s.prs} of them. The starts have shifted earlier too: the busiest hour is now six in the morning, and almost all of it is outside.` },
+  2019: { label: 'The quiet start', line: (s, all) => `${pc0(s.weekendShare)}% of outings fell on a Saturday or Sunday${most(top(all, s, 'weekendShare'))}. ${pc0(s.runShare)}% were runs.` },
+  2020: { label: 'The false start', line: (s, all) => `${pc0(s.morningShare)}% of outings began before 10 in the morning${most(top(all, s, 'morningShare'))}. Then the log stopped.` },
+  2021: { label: 'The switch', line: (s, all) => `Two a day: ${pc0(s.multiShare)}% of active days had two or more outings${most(top(all, s, 'multiShare'))}.` },
+  2022: { label: 'The peak', line: (s, all) => `Short and often: the average outing ran ${num0(s.avgOutingMin)} minutes${bottom(all, s, 'avgOutingMin') ? ', the shortest of any year' : ''}.` },
+  2023: { label: 'The climb', line: (s, all) => `${num0(s.mPerKm)} m of climb for every km on foot${top(all, s, 'mPerKm') ? ', the steepest year' : ''}, and ${num0(s.trailKm)} km on trails.` },
+  2024: { label: 'The passport', line: (s) => `${s.countries.length} countries in one year, and half of all outings done in under ${num0(s.medMovingMin)} minutes.` },
+  2025: { label: 'The long walk', line: (s, all) => {
+    const lw = s.longestWalk
+    const lwTop = lw && all.every((o) => o.year === s.year || !o.longestWalk || o.longestWalk.km < lw.km)
+    return `Walks were ${pc0(s.walkShare)}% of outings${most(top(all, s, 'walkShare'))}${lw && lwTop ? `, and the longest walk on record, ${num0(lw.km)} km` : ''}.`
+  } },
+  2026: { label: 'Unbroken', line: (s) => `One outing a day, and longer: ${num0(s.avgOutingMin)} minutes on average. Only ${pc0(s.multiShare)}% of days doubled up.` },
 }
 
 // A longer, aggregate read of each year for the Year in Sport report hero. These
@@ -179,15 +215,16 @@ export const YEAR_REPORT = {
   2022: (s) => `Peak volume. ${s.n} activities, more than any year before or since, and the first year walking logs more outings than running. Climbing roughly doubles as the training moves outdoors, and two days in three now carry something.`,
   2023: (s) => `The year it points uphill. The activity count eases off the peak, but climbing jumps to over ${num0(s.elev)} metres, more than any year on record, and outdoor runs finally outnumber the treadmill two to one. Personal records more than double. Fewer days out, and much harder ones.`,
   2024: (s) => `The year it travels. The map reaches ${s.countries.length} countries, the widest it ever spreads, while home settles into a steady three hundred-odd activities. Foot distance dips as more of the effort goes into trails and travel than flat kilometres.`,
-  2025: (s) => `Almost all of it outdoors now, barely a quarter of sessions on a treadmill. Climbing swings back toward its high mark at over ${num0(s.elev)} metres, and the habit holds near three hundred activities for a third straight year. The pattern has settled, and it points up.`,
+  2025: (s) => `The year it walked. Walks were ${Math.round(s.walkShare * 100)}% of all outings, more than any year before, and it holds the longest walk on record${s.longestWalk ? `, ${num0(s.longestWalk.km)} km in one go` : ''}. Barely a quarter of sessions were on a treadmill, and the habit held near three hundred activities for a third straight year.`,
   2026: (s) => `The most complete year yet, and still unfinished. More hours moving and more personal records than any year before, ${s.prs} of them, with almost nothing left indoors. Distance is back over ${num0(s.footKm)} km, climbing near its peak, and the starts have crept to dawn. Every single day so far has carried something.`,
 }
 
 export function buildYearSummaries(acts, geo) {
   const years = [...new Set(acts.map((a) => Number(a.year)).filter(Boolean))].sort((a, b) => a - b)
-  return years.map((y) => {
-    const stats = computeYearStats(y, acts, geo)
+  const all = years.map((y) => computeYearStats(y, acts, geo))
+  return all.map((stats) => {
+    const y = stats.year
     const c = YEAR_CHARACTERS[y] || { label: `${y}`, line: (s) => `${s.n} activities across the year.` }
-    return { year: y, label: c.label, line: c.line(stats), stats }
+    return { year: y, label: c.label, line: c.line(stats, all), stats }
   })
 }

@@ -93,7 +93,7 @@ export default function SportTreemap({ rows }) {
               <rect x={t.x + 0.75} y={t.y + 0.75} width={Math.max(0, t.w - 1.5)} height={Math.max(0, t.h - 1.5)} rx="2"
                 fill={base} stroke="var(--paper)" strokeWidth="1.5" />
               {showName && (
-                <text x={t.x + 7} y={t.y + 17} className={`tm__name${dark ? ' tm__name--on' : ''}`}>{nm(t.sport)}</text>
+                <text x={t.x + 7} y={t.y + 17} className={`tm__name${dark ? ' tm__name--on' : ''}`}>{t.sport === OTHER && t.w < 112 ? 'Other' : nm(t.sport)}</text>
               )}
               {showN && (
                 <text x={t.x + 7} y={t.y + (showName ? 33 : 16)} className={`tm__n mono${dark ? ' tm__n--on' : ''}`}>{t.value.toLocaleString()}</text>

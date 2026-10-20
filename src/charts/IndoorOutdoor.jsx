@@ -10,7 +10,7 @@ import { linScale, linePath, areaPath } from './primitives.js'
 // props: activities (the full log, each with a `trainer` flag and a `date`)
 const truthy = (v) => { const s = String(v).trim().toLowerCase(); return s === '1' || s === 'true' || s === 'yes' }
 
-export default function IndoorOutdoor({ activities }) {
+export default function IndoorOutdoor({ activities, height, heightNarrow }) {
   const [ref, width] = useWidth(560)
   const [hover, setHover] = useState(null)
   if (!activities || !activities.length) return <div ref={ref} />
@@ -31,7 +31,7 @@ export default function IndoorOutdoor({ activities }) {
   const W = Math.max(300, width)
   const narrow = W < 520
   const m = { t: 20, r: narrow ? 40 : 52, b: 26, l: narrow ? 40 : 52 }
-  const H = narrow ? 220 : 250
+  const H = narrow ? (heightNarrow || 220) : (height || 250)
   const x = linScale([0, pts.length - 1], [m.l, W - m.r])
   const y = linScale([0, 100], [H - m.b, m.t]) // 0% bottom, 100% top; outdoor from bottom
   const outdoorTop = pts.map((p, i) => [x(i), y(100 - p.indoor)]) // waterline

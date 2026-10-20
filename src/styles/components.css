@@ -1212,7 +1212,7 @@ text.chart-panel-title {
 
 /* ---- Section grid (shared with the hero's four column lines) ---------- */
 .sgrid { display: grid; gap: var(--sp-6); padding-block: var(--sp-7); }
-.sgrid__head .section-head__title { margin: var(--sp-2) 0 0; }
+.sgrid__head .section-head__title { margin: var(--sp-2) 0 0; text-wrap: balance; }
 .sgrid > .source { margin: 0; }
 /* inside a tinted band the band owns the breathing room, so the grid adds none */
 .bleed:has(> .container > .sgrid) { padding-block: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
@@ -1271,6 +1271,99 @@ text.chart-panel-title {
 }
 @media (prefers-reduced-motion: reduce) {
   .odds__cell { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* chart slot inside a section figure: shorter charts sit centred in the shared height */
+.sgrid__chart { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.sgrid__chart > * { width: 100%; }
+.odds__u { font-size: 0.5em; font-weight: 700; margin-left: 0.08em; letter-spacing: 0; }
+.closer-head { padding-block: var(--sp-7) 0; }
+.closer-head .section-head__title { margin: var(--sp-2) 0 0; text-wrap: balance; }
+.closer-head + .sgrid { padding-top: var(--sp-6); }
+
+/* year cards: one per year on the four-column grid, each opens the year */
+.ycards { padding-top: var(--sp-5); border-top: 1px solid var(--rule-faint); }
+.ycards__row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-4) var(--grid-gap); }
+.ycards__cell { display: flex; opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.ycards.is-in .ycards__cell { opacity: 1; transform: none; }
+.ycard { flex: 1; display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-4) 0 var(--sp-2); border-top: 3px solid var(--ink);
+  color: inherit; text-decoration: none; transition: border-color var(--dur) var(--ease); }
+.ycard--quiet { border-top-color: var(--grey-35); }
+.ycard--now { border-top-color: var(--accent); }
+.ycard__top { display: flex; align-items: baseline; justify-content: space-between; }
+.ycard__year { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.ycard--quiet .ycard__year { color: var(--grey-55); }
+.ycard__arrow { font-family: var(--font-mono); color: var(--fg-faint); transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+.ycard__label { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-base); color: var(--fg); }
+.ycard__line { font-size: var(--fs-sm); line-height: 1.45; color: var(--fg-muted); text-wrap: pretty; }
+.ycard:hover, .ycard:focus-visible { border-top-color: var(--accent); }
+.ycard:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.ycard:hover .ycard__arrow, .ycard:focus-visible .ycard__arrow { transform: translateX(4px); color: var(--accent-ink); }
+@media (max-width: 59.999rem) { .ycards__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* shared chart text for the home companion charts */
+.cb__gl, .dsplit__gl, .mgrid__gl, .tl__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.cb__axis, .dsplit__axis, .mgrid__axis, .tl__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.cb__halo, .tl__halo { paint-order: stroke; stroke: var(--band-bg, var(--paper)); stroke-width: 4px; stroke-linejoin: round; }
+
+/* column bars */
+.cb__bar rect { transform: scaleY(0); transition: transform 0.8s var(--ease); transition-delay: var(--d, 0ms); }
+.cb__plot.is-in .cb__bar rect { transform: scaleY(1); }
+.cb__bar--quiet rect { fill: var(--grey-45); }
+.cb__bar--mid rect { fill: var(--ink); }
+.cb__bar--big rect { fill: var(--accent); }
+.cb__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums;
+  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 0.6s); }
+.cb__plot.is-in .cb__val { opacity: 1; }
+.cb__bar--big .cb__val { fill: var(--accent-ink); font-weight: 700; }
+.cb__reflbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); }
+
+/* a typical active day */
+.dsplit__bars { transform: scaleX(0); transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
+.dsplit__plot.is-in .dsplit__bars { transform: scaleX(1); }
+.dsplit__seg { fill: var(--ink); }
+.dsplit__seg--part { opacity: 0.55; }
+.dsplit__row--quiet .dsplit__seg { fill: var(--grey-45); }
+.dsplit__row--now .dsplit__seg { fill: var(--accent); }
+.dsplit__yr { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.dsplit__row--now .dsplit__yr { fill: var(--accent-ink); font-weight: 700; }
+.dsplit__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums;
+  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 0.7s); }
+.dsplit__plot.is-in .dsplit__val { opacity: 1; }
+.dsplit__row--now .dsplit__val { fill: var(--accent-ink); font-weight: 700; }
+
+/* month grid */
+.mgrid__cell { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.mgrid__plot.is-in .mgrid__cell { opacity: 1; }
+.mgrid__yr { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.mgrid__gl--mark { fill: var(--accent-ink); font-weight: 700; }
+.mgrid__marklbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--accent-ink); }
+
+/* paired bars */
+.pbars__bars { transform: scaleX(0); transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
+.pbars__plot.is-in .pbars__bars { transform: scaleX(1); }
+.pbars__lbl { font-size: var(--fs-xs); fill: var(--fg); }
+.pbars__keylbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; }
+.pbars__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums;
+  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 0.7s); }
+.pbars__val--b { fill: var(--accent-ink); font-weight: 700; }
+.pbars__plot.is-in .pbars__val { opacity: 1; }
+
+/* two lines */
+.tl__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); }
+.tl__plot.is-in .tl__line { stroke-dashoffset: 0; }
+.tl__dot, .tl__end, .tl__cross { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.tl__plot.is-in .tl__dot, .tl__plot.is-in .tl__end, .tl__plot.is-in .tl__cross { opacity: 1; transition-delay: 1.1s; }
+.tl__end { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.tl__end--a { fill: var(--grey-55); }
+.tl__end--b { fill: var(--accent-ink); font-weight: 700; }
+.tl__crosslbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--accent-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ycards__cell { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .cb__bar rect, .dsplit__bars, .pbars__bars { transform: none !important; transition: none !important; }
+  .cb__val, .dsplit__val, .pbars__val, .mgrid__cell, .tl__dot, .tl__end, .tl__cross { opacity: 1 !important; transition: none !important; }
+  .tl__line { stroke-dashoffset: 0 !important; transition: none !important; }
 }
 
 /* Lorenz curve */

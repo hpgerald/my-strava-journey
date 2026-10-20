@@ -1,8 +1,6 @@
 import Layout from '../components/Layout.jsx'
 import Container from '../components/Container.jsx'
 import IndexHub from '../components/IndexHub.jsx'
-import Figure from '../charts/Figure.jsx'
-import HeatStrip from '../charts/HeatStrip.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import GeoBubbles from '../charts/GeoBubbles.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
@@ -13,6 +11,12 @@ import HabitMomentum from '../charts/HabitMomentum.jsx'
 import TransitionMatrix from '../charts/TransitionMatrix.jsx'
 import LorenzCurve from '../charts/LorenzCurve.jsx'
 import DecileBars from '../charts/DecileBars.jsx'
+import StorySection from '../components/StorySection.jsx'
+import ColBars from '../charts/ColBars.jsx'
+import DaySplit from '../charts/DaySplit.jsx'
+import MonthGrid from '../charts/MonthGrid.jsx'
+import PairBars from '../charts/PairBars.jsx'
+import TwoLines from '../charts/TwoLines.jsx'
 import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { lorenz, topShare } from '../lib/stats.js'
@@ -20,7 +24,6 @@ import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, toNum } from '../lib/format.js'
-import { prettySport } from '../lib/slug.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
@@ -51,11 +54,11 @@ export default function Home() {
   const lifetime = useTable('lifetime_totals')
   const meta = useKeyed('meta', 'key', 'value')
   const countries = useTable('countries')
-  const fun = useTable('fun_journey')
   const activityLog = useTable('activities')
   const activityGeo = useTable('activity_geo')
   const monthlyTotals = useTable('monthly_totals')
   const sportBreakdown = useTable('sport_breakdown')
+  const tzRegions = useTable('tanzania_regions')
   const nav = useTable('nav_index')
 
   // per-year character narrative (shared with the Year in Sport report)
@@ -69,11 +72,7 @@ export default function Home() {
     [activityLog, geoByKey]
   )
   const bestBy = (f) => yearSummaries.reduce((m, y) => (f(y.stats) > (m ? f(m.stats) : -1) ? y : m), null)
-  const peakYr = bestBy((s) => s.n)
-  const elevYr = bestBy((s) => s.elev)
   const ctryYr = bestBy((s) => s.countries.length)
-  const latestSum = yearSummaries[yearSummaries.length - 1]
-  const streakMonths = latestSum ? Math.max(1, Math.floor(latestSum.stats.streakLen / 30.44)) : 9
 
   const life = (needle) => lifetime.find((r) => (r.metric || '').toLowerCase().includes(needle)) || {}
 
@@ -83,10 +82,6 @@ export default function Home() {
   const streak = life('longest streak').value
 
   const years = yearsBetween(meta.coverage_start, meta.coverage_end)
-  const countryCount = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS').length
-  const everests = (fun.find((f) => (f.comparison || '').includes('Everest')) || {}).value
-  const kudos = life('kudos').value
-  const hoursMoving = life('hours moving').value
 
   // consecutive calendar months with activity, for the month-streak record below
   const activeMonthsH = [...new Set(monthlyTotals.map((mm) => mm.month).filter(Boolean))].sort()
@@ -99,13 +94,10 @@ export default function Home() {
 
   // ---- Derived series for the front-page charts ----
   const hours = Array.from({ length: 24 }, () => 0)
-  const months = Array(12).fill(0)
   const daySet = new Set()
   for (const a of activityLog) {
     const h = parseInt(a.hour, 10)
     if (Number.isFinite(h) && h >= 0 && h < 24) hours[h] += 1
-    const mo = parseInt((a.date || '').slice(5, 7), 10)
-    if (mo >= 1 && mo <= 12) months[mo - 1] += 1
     const dstr = (a.date || '').slice(0, 10)
     if (dstr) daySet.add(dstr)
   }
@@ -119,8 +111,6 @@ export default function Home() {
   }
   const footFlipData = FOOT_ORDER.map((k) => ({ key: k, label: FOOT_NAME[k], dist: footAgg[k].dist, elev: footAgg[k].elev }))
 
-  // seasonality: activities per calendar month
-  const monthCells = MONTHS_FULL.map((m, i) => ({ short: MONTHS_SHORT[i], label: m, value: months[i] }))
 
   // share of all calendar days with an activity
   const sortedDays = [...daySet].sort()
@@ -205,7 +195,7 @@ export default function Home() {
     .sort((a, b) => a.t - b.t)
   const gridYears = [...new Set(items.map((d) => d.year))].sort((a, b) => a - b)
 
-  // indoor share by year, for the "off the treadmill" figure's table fallback
+  // indoor share by year, for the "off the treadmill" section
   const trainerTrue = (v) => { const s = String(v).trim().toLowerCase(); return s === '1' || s === 'true' || s === 'yes' }
   const ioAgg = {}
   for (const a of activityLog) {
@@ -215,21 +205,6 @@ export default function Home() {
     if (trainerTrue(a.trainer)) e.indoor += 1
     e.n += 1
   }
-  const indoorYearRows = Object.keys(ioAgg).sort().map((y) => [y, `${Math.round((ioAgg[y].indoor / ioAgg[y].n) * 100)}%`])
-  // geography and sport tables (from their source CSVs)
-  const geoLocated = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS')
-  const geoRows = geoLocated.map((c) => [c.country, fmtInt(c.activities)])
-  // group by display name so the hidden data table matches the chart and never
-  // names the quiet sports (they fold into one "Other activity" row)
-  const sportRows = (() => {
-    const by = new Map()
-    for (const s of sportBreakdown) {
-      if (!s.sport) continue
-      const label = prettySport(s.sport)
-      by.set(label, (by.get(label) || 0) + (toNum(s.activities) || 0))
-    }
-    return [...by.entries()].sort((a, b) => b[1] - a[1]).map(([label, n]) => [label, fmtInt(n)])
-  })()
 
   // hero: typical outing size and the current unbroken streak
   const medFootKm = (() => {
@@ -275,6 +250,136 @@ export default function Home() {
     n: items.filter((d) => d.year === y).length,
     fact: YEAR_LINE[y] && statsOf[y] ? YEAR_LINE[y](statsOf[y]) : '',
   }))
+
+  // ---- How each year was made: time per active day, cut into outings ----
+  const shapeRows = yearSummaries.map((ys) => ({
+    year: ys.year, perDay: ys.stats.minPerActiveDay, outings: ys.stats.outingsPerDay,
+    avgMin: ys.stats.avgOutingMin, multi: ys.stats.multiShare,
+  }))
+  const habitShape = shapeRows.filter((r) => r.year > quietUntil)
+  const shapeMulti = habitShape.length ? habitShape.reduce((b, r) => (r.multi > b.multi ? r : b)) : null
+  const shapeNow = shapeRows[shapeRows.length - 1]
+  const perDayLo = shapeRows.length ? Math.min(...shapeRows.map((r) => r.perDay)) : 0
+  const perDayHi = shapeRows.length ? Math.max(...shapeRows.map((r) => r.perDay)) : 0
+
+  // ---- 1. Where in the world: home against away, and where at home the climbing is ----
+  const located = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS')
+  const locN = located.reduce((t, c) => t + (toNum(c.activities) || 0), 0)
+  const tzRow = located.find((c) => c.country === 'Tanzania')
+  const tzN = tzRow ? toNum(tzRow.activities) || 0 : 0
+  const awayRows = located.filter((c) => c.country !== 'Tanzania').sort((a, b) => (toNum(b.activities) || 0) - (toNum(a.activities) || 0))
+  const awayN = locN - tzN
+  const awayTop2 = awayRows.slice(0, 2)
+  const awayTop2N = awayTop2.reduce((t, c) => t + (toNum(c.activities) || 0), 0)
+  const regTotA = tzRegions.reduce((t, r) => t + (toNum(r.activities) || 0), 0) || 1
+  const regTotE = tzRegions.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) || 1
+  const regSorted = [...tzRegions].sort((a, b) => (toNum(b.activities) || 0) - (toNum(a.activities) || 0))
+  const regShown = regSorted.slice(0, 4)
+  const regRest = regSorted.slice(4)
+  const regionRows = [
+    ...regShown.map((r) => ({ label: r.region, a: (toNum(r.activities) || 0) / regTotA, b: (toNum(r.elevation_m) || 0) / regTotE })),
+    ...(regRest.length ? [{
+      label: `${regRest.length} other regions`, short: `${regRest.length} others`,
+      a: regRest.reduce((t, r) => t + (toNum(r.activities) || 0), 0) / regTotA,
+      b: regRest.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) / regTotE,
+    }] : []),
+  ]
+  const climbTop2 = [...tzRegions].sort((a, b) => (toNum(b.elevation_m) || 0) - (toNum(a.elevation_m) || 0)).slice(0, 2)
+  const climbTop2A = climbTop2.reduce((t, r) => t + (toNum(r.activities) || 0), 0) / regTotA
+  const climbTop2E = climbTop2.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) / regTotE
+  const busiestRegion = regSorted[0]
+
+  // ---- 2. Every way to move: the mix, and walks against runs by year ----
+  const sportOf = (t) => (t === 'Walk' ? 'walk' : t === 'Run' ? 'run' : t === 'TrailRun' || t === 'Hike' ? 'trail' : 'other')
+  const mixN = { walk: 0, run: 0, trail: 0, other: 0 }
+  for (const a of activityLog) mixN[sportOf(a.sport_type)] += 1
+  const mixTot = activityLog.length || 1
+  const walkByYear = yearSummaries.map((ys) => ys.stats.walkN)
+  const runByYear = yearSummaries.map((ys) => ys.stats.runN)
+  const walkLeadIdx = (() => {
+    for (let i = 0; i < walkByYear.length; i++) {
+      if (walkByYear.slice(i).every((w, k) => w > runByYear[i + k]) && walkByYear[i] > 20) return i
+    }
+    return -1
+  })()
+  const walkLeadYear = walkLeadIdx >= 0 ? gridYears[walkLeadIdx] : null
+
+  // ---- 3. When the day gets moving: hour bands and the week ----
+  const hourShare = (lo, hi) => hours.slice(lo, hi).reduce((t, v) => t + v, 0) / (activityLog.length || 1)
+  const peakHour = hours.indexOf(Math.max(...hours))
+  const fmtHour = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
+  const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  const weekN = WEEK.map((d) => activityLog.filter((a) => a.weekday === d).length)
+  const weekMax = Math.max(...weekN), weekMin = Math.min(...weekN)
+  const weekAvg = weekN.reduce((t, v) => t + v, 0) / 7
+
+  // ---- 4. The year has a season: share of days active, by month ----
+  const DIM = (y, m) => new Date(Date.UTC(y, m + 1, 0)).getUTCDate()
+  // full calendar years after the long silence ended (the year it ended is partial)
+  const gapEndYear = (() => {
+    let best = 0, after = null
+    for (let i = 1; i < sortedDays.length; i++) {
+      const d = Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1])
+      if (d > best) { best = d; after = sortedDays[i] }
+    }
+    return after ? Number(after.slice(0, 4)) : 2021
+  })()
+  const fullYears = gridYears.filter((y) => y > gapEndYear && y < (gridYears[gridYears.length - 1] || 0))
+  const monthShare = Array.from({ length: 12 }, (_, m) => {
+    let act = 0, all = 0
+    for (const y of fullYears) {
+      const pre = `${y}-${String(m + 1).padStart(2, '0')}-`
+      act += sortedDays.filter((d) => d.startsWith(pre)).length
+      all += DIM(y, m)
+    }
+    return all ? act / all : 0
+  })
+  const fullShare = (() => {
+    let act = 0, all = 0
+    for (const y of fullYears) { act += sortedDays.filter((d) => d.startsWith(`${y}-`)).length; all += (y % 4 === 0 ? 366 : 365) }
+    return all ? act / all : 0
+  })()
+  const dipIdx = [...monthShare.keys()].sort((a, b) => monthShare[a] - monthShare[b]).slice(0, 2).sort((a, b) => a - b)
+  const bestIdx = monthShare.indexOf(Math.max(...monthShare))
+  const midShare = [...monthShare].sort((a, b) => a - b)[6]
+  const othersLo = Math.min(...monthShare.filter((_, i) => !dipIdx.includes(i) && i !== bestIdx))
+  const othersHi = Math.max(...monthShare.filter((_, i) => !dipIdx.includes(i) && i !== bestIdx))
+  const monthCellsGrid = (() => {
+    const first = sortedDays[0], last = sortedDays[sortedDays.length - 1]
+    const out = {}
+    for (const y of gridYears) {
+      out[y] = Array.from({ length: 12 }, (_, m) => {
+        const mm = `${y}-${String(m + 1).padStart(2, '0')}`
+        if (!first || mm < first.slice(0, 7) || mm > last.slice(0, 7)) return null
+        const d0 = mm === first.slice(0, 7) ? Number(first.slice(8, 10)) : 1
+        const d1 = mm === last.slice(0, 7) ? Number(last.slice(8, 10)) : DIM(y, m)
+        const act = sortedDays.filter((d) => d.startsWith(mm + '-')).length
+        return act / Math.max(1, d1 - d0 + 1)
+      })
+    }
+    return out
+  })()
+  const dipYears = fullYears.filter((y) => {
+    const yr = sortedDays.filter((d) => d.startsWith(`${y}-`)).length / (y % 4 === 0 ? 366 : 365)
+    return dipIdx.every((m) => (monthCellsGrid[y][m] ?? 1) < yr)
+  }).length
+  const MONTH_NAME = MONTHS_FULL
+
+  // ---- 5. Off the treadmill: indoor share by year and by sport ----
+  const indoorBy = { walk: [0, 0], run: [0, 0], trail: [0, 0], other: [0, 0] }
+  for (const a of activityLog) { const k = sportOf(a.sport_type); indoorBy[k][1] += 1; if (trainerTrue(a.trainer)) indoorBy[k][0] += 1 }
+  const indoorShare = (k) => (indoorBy[k][1] ? indoorBy[k][0] / indoorBy[k][1] : 0)
+  const ioYears = Object.keys(ioAgg).sort()
+  const ioFirst = ioYears.length ? ioAgg[ioYears[0]] : null
+  const ioLast = ioYears.length ? ioAgg[ioYears[ioYears.length - 1]] : null
+  const runKm = activityLog.filter((a) => a.sport_type === 'Run').reduce((t, a) => t + (toNum(a.distance_km) || 0), 0)
+  const runKmIn = activityLog.filter((a) => a.sport_type === 'Run' && trainerTrue(a.trainer)).reduce((t, a) => t + (toNum(a.distance_km) || 0), 0)
+
+  // ---- 6. Walking climbs, running runs: shares and climb per km ----
+  const flipTot = footFlipData.reduce((t, d) => ({ dist: t.dist + d.dist, elev: t.elev + d.elev }), { dist: 0, elev: 0 })
+  const flipOf = (k) => footFlipData.find((d) => d.key === k) || { dist: 0, elev: 0 }
+  const fShare = (k, f) => (flipTot[f] ? flipOf(k)[f] / flipTot[f] : 0)
+  const mPerKm = (k) => (flipOf(k).dist ? flipOf(k).elev / flipOf(k).dist : 0)
 
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
@@ -414,144 +519,362 @@ export default function Home() {
         </div>
       )}
 
-      {/* ---- Seven years, seven characters: the per-year narrative ------ */}
-      {yearSummaries.length > 0 && (
+      {/* ===== How each year was made: same time a day, cut differently ===== */}
+      {shapeRows.length > 2 && shapeMulti && (
         <Container>
           <hr className="rule" />
-          <div style={{ paddingBlock: 'var(--sp-7)' }}>
-            <div className="section-head">
-              <p className="eyebrow">No two years the same</p>
-              <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-                Seven years, seven characters.
-              </h2>
-              <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-                The habit held the whole way, but each year ran differently. Here is the one thing that
-                set each apart. Open any year for its full report.
-              </p>
-            </div>
-            <YearCharacters summaries={yearSummaries} />
-          </div>
+          <StorySection
+            id="years-title"
+            eyebrow="How each year was made"
+            title="About an hour and a half a day, every year. What changed is how it is cut."
+            statement={<>
+              On a day with an activity, the time moving barely changes: between {Math.round(perDayLo)} and{' '}
+              {Math.round(perDayHi)} minutes in every year. The split is what moved. In {shapeMulti.year},{' '}
+              {pc(shapeMulti.multi)}% of active days had two or more outings, and the average outing ran{' '}
+              {Math.round(shapeMulti.avgMin)} minutes. In {shapeNow.year} it is one outing a day: {pc(shapeNow.multi)}% of
+              days double up, and the average outing runs {Math.round(shapeNow.avgMin)} minutes.
+            </>}
+            odds={{
+              title: 'How the days were split',
+              items: [
+                { value: shapeMulti.multi, label: `of active days doubled up in ${shapeMulti.year}`, tone: 'rest' },
+                { value: shapeNow.multi, label: `of active days doubled up in ${shapeNow.year}`, tone: 'move' },
+                { num: shapeMulti.avgMin, unit: ' min', label: `the average outing in ${shapeMulti.year}`, tone: 'rest' },
+                { num: shapeNow.avgMin, unit: ' min', label: `the average outing in ${shapeNow.year}`, tone: 'move' },
+              ],
+            }}
+            left={{ title: 'A typical active day, year by year', node: <DaySplit rows={shapeRows} quietUntil={quietUntil} /> }}
+            right={{
+              title: 'Days with two or more outings',
+              node: (
+                <ColBars
+                  items={shapeRows.map((r) => ({
+                    label: String(r.year), short: `'${String(r.year).slice(2)}`, value: r.multi, display: `${pc(r.multi)}%`,
+                    tone: r.year <= quietUntil ? 'quiet' : r.year === shapeNow.year ? 'big' : 'mid',
+                  }))}
+                  max={0.6} ticks={[0, 0.2, 0.4, 0.6]} tickFmt={(v) => `${Math.round(v * 100)}%`}
+                  xCap="year &rarr;" yCap="share of active days &uarr;"
+                  aria={`Share of active days with two or more outings: ${shapeRows.map((r) => `${r.year} ${pc(r.multi)}%`).join(', ')}.`}
+                />
+              ),
+            }}
+            leftNote={<>
+              <b>How to read it.</b> Each row is one year. The bar is the minutes moving on an average active day, and each
+              block inside it is one average outing. Short blocks side by side mean days of doubles. One long block means
+              a single long outing.
+            </>}
+            rightNote={<>
+              <b>Why it matters.</b> The time given to it each day held steady from the first year to now. What the habit
+              changed was the shape of the day: from two shorter outings to one longer one. Open any year below for its
+              full report.
+            </>}
+            source="Activity Log · moving time and outings per active day, by year"
+          >
+            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={shapeNow.year} />
+          </StorySection>
         </Container>
       )}
 
-      {/* ---- The flip: distance vs climb by sport ---------------------- */}
-      <Container>
-        <div className="grid grid--2" style={{ alignItems: 'center', gap: 'var(--sp-6) var(--sp-8)', paddingBlock: 'var(--sp-7)' }}>
-          <Figure
-            title="Walking climbs, running runs"
-            note="Running is a wide band for distance and a thin one for climb. Walking is the reverse. Distance on the left, climb on the right, one ribbon per foot sport. Watch running move from one side to the other."
-            source="Activity Log"
-            tableCaption="Share of distance and share of elevation by foot sport"
-            columns={['Sport', 'Distance km', 'Climb m']}
-            rows={footFlipData.map((d) => [d.label, fmtInt(d.dist), fmtInt(d.elev)])}
-          >
-            <FootFlip items={footFlipData} />
-          </Figure>
-          <div>
-            <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>The surprise</p>
-            <h2 className="display" style={{ fontSize: 'var(--fs-xl)', margin: '0 0 var(--sp-3)', lineHeight: 1.08 }}>
-              Running owns the distance. Walking owns the vertical.
-            </h2>
-            <p className="measure text-muted" style={{ margin: 0 }}>
-              Here is the thing most people get backwards. Running is 63% of the kilometres but only 13% of the
-              climb; it stays quick and flat, mostly on a treadmill. The metres come from somewhere else. Switch to
-              elevation and it flips: walking and the trails carry three-quarters of every vertical metre. A single
-              trail run covers little ground and a third of all the climbing. Home is flat. The height is earned
-              slowly, uphill, on foot.
-            </p>
-          </div>
-        </div>
-      </Container>
-
-      {/* ---- A closer look: five habit charts ------------------------- */}
+      {/* ===== A closer look: six smaller things, each on the section recipe ===== */}
       <Container>
         <hr className="rule" />
-        <div className="section-head">
+        <div className="closer-head">
           <p className="eyebrow">A closer look</p>
-          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>
-            Five smaller things the data shows.
-          </h2>
+          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>Six smaller things the data shows.</h2>
         </div>
-        <div className="grid grid--2 closer-grid" style={{ gap: 'var(--sp-8) var(--sp-7)', paddingBottom: 'var(--sp-7)' }}>
-          {/* Row 1 — the range of it: where, then what */}
-          <Figure
-            title="Where in the world"
-            note={`This is a story told from home. More than nine in ten activities happened in Tanzania; the rest is travel, thin across ${geoLocated.length - 1} other countries, a few each, down to a single run in the farthest. Every activity a GPS fix could place, grouped by country.`}
-            source="Strava GPS + point-in-polygon"
-            tableCaption="Located activities by country"
-            columns={['Country', 'Activities']}
-            rows={geoRows}
-            footer={(
-              <>
-                <p className="eyebrow">The far countries</p>
-                <p>Kenya and Malawi, the near neighbours, hold three in four of the away activities between them. After that it drops off fast: a pair in Rwanda, then a scatter of one-off stops, down to one run in 2026, the newest pin on the map.</p>
-                <p>The shape is lopsided for a reason. Nine in ten fixes fall inside Tanzania, most looped through Dodoma and Dar es Salaam. The away days are spread across three continents and seven years, and nearly all were a single trip that never came round again.</p>
-              </>
-            )}
-          >
-            <GeoBubbles rows={countries} />
-          </Figure>
 
-          <Figure
-            title="Every way to move"
-            note="Four outings in five happen on two feet. Walking and running fill almost the whole frame; each foot sport is a tile, bigger the more often it was done, and everything off the feet folds into one bucket, counted but not split out."
-            source="Strava Overview"
-            tableCaption="Activities by sport type"
-            columns={['Sport', 'Activities']}
-            rows={sportRows}
-            footer={(
-              <>
-                <p className="eyebrow">The shape of it</p>
-                <p>Set walking and running aside and the rest is barely a sixth of all outings. There are other ways of moving in the log, but the weight of it stays on the ground, on two feet.</p>
-              </>
-            )}
-          >
-            <SportTreemap rows={sportBreakdown} />
-          </Figure>
+        {/* 1. Where in the world */}
+        {locN > 0 && tzN > 0 && (
+          <StorySection
+            id="where-title"
+            eyebrow="1 · Where in the world"
+            title={`Nine in ten outings are at home. ${climbTop2.length === 2 ? `${climbTop2[0].region} and ${climbTop2[1].region}` : 'Two regions'} do the climbing.`}
+            statement={<>
+              Of the {fmtInt(locN)} outings with a GPS start point, {fmtInt(tzN)} are in Tanzania, {pc(tzN / locN)}%. The
+              other {fmtInt(awayN)} are spread over {awayRows.length} countries, {pc(awayTop2N / Math.max(1, awayN))}% of
+              them in {awayTop2.map((c) => c.country).join(' and ')}. Inside Tanzania, {busiestRegion && busiestRegion.region} has
+              the most outings, but the climbing is somewhere else: {climbTop2.map((r) => r.region).join(' and ')} hold{' '}
+              {pc(climbTop2A)}% of the outings and {pc(climbTop2E)}% of the metres climbed.
+            </>}
+            odds={{
+              title: 'Where the outings happen',
+              items: [
+                { value: tzN / locN, label: 'of located outings are in Tanzania', tone: 'move' },
+                { value: awayN / locN, label: `abroad, across ${awayRows.length} countries`, tone: 'rest' },
+                { value: climbTop2A, label: `of Tanzania's outings are in ${climbTop2.map((r) => r.region).join(' and ')}`, tone: 'rest' },
+                { value: climbTop2E, label: "of Tanzania's climbing is there", tone: 'move' },
+              ],
+            }}
+            left={{ title: 'Home against away', node: <GeoBubbles rows={countries} /> }}
+            right={{
+              title: 'Inside Tanzania: outings against climb',
+              node: <PairBars rows={regionRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
+                aria={`Tanzania regions, share of outings and share of climb: ${regionRows.map((r) => `${r.label} ${pc(r.a)}% and ${pc(r.b)}%`).join('; ')}.`} />,
+            }}
+            leftNote={<>
+              <b>How to read it.</b> Only outings with a GPS start point can be placed; treadmill sessions and other
+              indoor work cannot, so {fmtInt(activityLog.length - locN)} outings sit outside this view. The disc is
+              Tanzania. The list is every other country, with the year it was first reached.
+            </>}
+            rightNote={<>
+              <b>Why it matters.</b> Grey is each region's share of the outings in Tanzania, orange its share of the climb.
+              {busiestRegion ? ` ${busiestRegion.region} is the everyday ground, and flat by comparison.` : ''} The metres are
+              earned on trips to the mountains.
+            </>}
+            source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
+          />
+        )}
 
-          {/* Row 2 — the rhythm of it: hour of day, then time of year */}
-          <Figure
-            title="When the day gets moving"
-            note="Two windows own the day. A small group heads out near 6am; a much bigger one goes after work, with five to eight in the evening carrying the day and 6pm the single busiest hour. Every activity sorted by the hour it began."
-            source="Activity Log"
-            tableCaption="Activities by hour of day"
-            columns={['Hour', 'Activities']}
-            rows={hours.map((c, i) => [`${String(i).padStart(2, '0')}:00`, String(c)])}
-          >
-            <RadialHours counts={hours} unit="activities" />
-          </Figure>
+        {/* 2. Every way to move */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="move-title"
+          eyebrow="2 · Every way to move"
+          title={`Walking is the most common outing${walkLeadYear ? `, and has been since ${walkLeadYear}` : ''}.`}
+          statement={<>
+            Of {fmtInt(activityLog.length)} outings, {fmtInt(mixN.walk)} are walks and {fmtInt(mixN.run)} are runs. Trail
+            runs and hikes add {fmtInt(mixN.trail)}. Everything off the feet is {pc(mixN.other / mixTot)}%.
+            {walkLeadYear ? ` Walks overtook runs in ${walkLeadYear} and have stayed ahead every year since.` : ''}
+          </>}
+          odds={{
+            title: 'Share of all outings',
+            items: [
+              { value: mixN.walk / mixTot, label: 'walks', tone: 'move' },
+              { value: mixN.run / mixTot, label: 'runs', tone: 'move' },
+              { value: mixN.trail / mixTot, label: 'trail runs and hikes', tone: 'move' },
+              { value: mixN.other / mixTot, label: 'other activities, off the feet', tone: 'rest' },
+            ],
+          }}
+          left={{ title: 'Every outing, by sport', node: <SportTreemap rows={sportBreakdown} /> }}
+          right={{
+            title: 'Walks against runs, year by year',
+            node: <TwoLines years={gridYears} a={{ label: 'Run', values: runByYear }} b={{ label: 'Walk', values: walkByYear }}
+              cross={walkLeadIdx} crossLabel={walkLeadYear ? `walks lead from ${walkLeadYear}` : null}
+              aria={`Walks and runs per year. ${gridYears.map((y, i) => `${y}: ${walkByYear[i]} walks, ${runByYear[i]} runs`).join('. ')}.`} />,
+          }}
+          leftNote={<>
+            <b>How to read it.</b> Each tile is a sport, sized by how many outings it has. The four sports on foot are named;
+            everything else, from bikes to the gym, folds into one tile.
+          </>}
+          rightNote={<>
+            <b>Why it matters.</b> Running carried the first years. Walking took over once the habit set in and has
+            led since. Trail runs are counted on their own, so they are not in the run line.
+            {gridYears.length ? ` ${gridYears[gridYears.length - 1]} is still in progress.` : ''}
+          </>}
+          source="Activity Log · outings by sport type"
+        />
 
-          <Figure
-            title="The year has a season"
-            note="The training keeps the weather's calendar. July is the busiest month by far, deep in the cool dry season; February, hot and building toward the rains, is the emptiest. Seven years of months laid on top of each other."
-            source="Activity Log"
-            tableCaption="Activities by calendar month"
-            columns={['Month', 'Activities']}
-            rows={monthCells.map((m) => [m.label, fmtInt(m.value)])}
-            footer={(
-              <>
-                <p className="eyebrow">A weather habit</p>
-                <p>The long dry season runs June to October, cool and rainless on the central plateau, and those are the months that fill up here.</p>
-                <p>The thin months line up with the short rains in November and the heat around February. Seven years on, the shape barely moves.</p>
-              </>
-            )}
-          >
-            <HeatStrip cells={monthCells} unit="activities" cellHeight={56} />
-          </Figure>
+        {/* 3. When the day gets moving */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="hours-title"
+          eyebrow="3 · When the day gets moving"
+          title="Outings start at either end of the working day."
+          statement={<>
+            Sort every outing by the hour it began. {pc(hourShare(16, 21))}% start between 4 and 9 in the evening, with{' '}
+            {fmtHour(peakHour)} the busiest hour. Another {pc(hourShare(0, 10))}% start before 10 in the morning. The middle of
+            the day, 10am to 4pm, holds just {pc(hourShare(10, 16))}%. The week is flatter: the quietest day still has{' '}
+            {pc(weekMin / weekMax)}% of the busiest day's outings.
+          </>}
+          odds={{
+            title: 'When outings start',
+            items: [
+              { value: hourShare(0, 10), label: 'before 10 in the morning', tone: 'move' },
+              { value: hourShare(10, 16), label: 'between 10am and 4pm', tone: 'rest' },
+              { value: hourShare(16, 21), label: 'between 4 and 9pm', tone: 'move' },
+              { value: hourShare(21, 24), label: 'after 9pm', tone: 'rest' },
+            ],
+          }}
+          left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={hours} unit="activities" /> }}
+          right={{
+            title: 'Every outing, by day of the week',
+            node: (
+              <ColBars
+                items={WEEK.map((d, i) => ({
+                  label: d.slice(0, 3), short: d.slice(0, 1), value: weekN[i], display: fmtInt(weekN[i]),
+                  tone: weekN[i] === weekMax ? 'big' : weekN[i] === weekMin ? 'quiet' : 'mid',
+                }))}
+                max={weekMax * 1.12} ticks={[0, 100, 200, 300]} tickFmt={(v) => v} H={468}
+                xCap="day of the week &rarr;" yCap="outings &uarr;"
+                aria={`Outings by weekday: ${WEEK.map((d, i) => `${d} ${weekN[i]}`).join(', ')}.`}
+              />
+            ),
+          }}
+          leftNote={<>
+            <b>How to read it.</b> Midnight is at the top and the hours run clockwise. Each spoke is one hour; the longer and
+            darker it is, the more outings started then. The two bulges are early morning and evening.
+          </>}
+          rightNote={<>
+            <b>Why it matters.</b> {WEEK[weekN.indexOf(weekMax)]} is the busiest day and {WEEK[weekN.indexOf(weekMin)]} the
+            quietest, but the gap is small. Outings are fitted around the working day, morning or evening, on every day of
+            the week.
+          </>}
+          source="Activity Log · start hour and weekday of every outing"
+        />
 
-          {/* Row 3 — the habit of it: the move outside, full width */}
-          <Figure
-            title="Off the treadmill"
-            note="Year by year, the habit walked outside. Early on, nearly two in three sessions were indoors on a machine. By last year, about one in six. Each year split into indoor and outdoor, stacked to 100%."
-            source="Activity Log"
-            tableCaption="Indoor share of activities by year"
-            columns={['Year', 'Indoor share']}
-            rows={indoorYearRows}
-          >
-            <IndoorOutdoor activities={activityLog} />
-          </Figure>
+        {/* 4. The year has a season */}
+        {fullYears.length > 1 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="season-title"
+              eyebrow="4 · The year has a season"
+              title={`${MONTH_NAME[dipIdx[0]]} and ${MONTH_NAME[dipIdx[1]]} are the thin months.`}
+              statement={<>
+                Take the {fullYears.length === 4 ? 'four' : fullYears.length} full years since the habit caught,{' '}
+                {fullYears[0]} to {fullYears[fullYears.length - 1]}, and count the days with an activity in each month.
+                Across the year it is {pc(fullShare)}%. {MONTH_NAME[bestIdx]} is the strongest month at {pc(monthShare[bestIdx])}%.{' '}
+                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} are the weakest, {pc(monthShare[dipIdx[0]])}% and{' '}
+                {pc(monthShare[dipIdx[1]])}%. Every other month sits between {pc(othersLo)}% and {pc(othersHi)}%.
+              </>}
+              odds={{
+                title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
+                items: [
+                  { value: monthShare[bestIdx], label: `in ${MONTH_NAME[bestIdx]}, the strongest month`, tone: 'rest' },
+                  { value: midShare, label: 'in a typical month', tone: 'rest' },
+                  { value: monthShare[dipIdx[0]], label: `in ${MONTH_NAME[dipIdx[0]]}`, tone: 'move' },
+                  { value: monthShare[dipIdx[1]], label: `in ${MONTH_NAME[dipIdx[1]]}`, tone: 'move' },
+                ],
+              }}
+              left={{
+                title: 'Share of days active, by month',
+                node: (
+                  <ColBars
+                    items={monthShare.map((v, i) => ({
+                      label: MONTHS_SHORT[i], short: MONTHS_SHORT[i].slice(0, 1), value: v, display: `${pc(v)}`,
+                      tone: dipIdx.includes(i) ? 'big' : 'quiet',
+                    }))}
+                    max={1} ticks={[0, 0.25, 0.5, 0.75, 1]} tickFmt={(v) => `${Math.round(v * 100)}%`}
+                    refLine={{ value: fullShare, label: `whole year · ${pc(fullShare)}%`, short: `year ${pc(fullShare)}%` }}
+                    xCap={`month, ${fullYears[0]} to ${fullYears[fullYears.length - 1]} →`} yCap="share of days active ↑"
+                    aria={`Share of days active by month, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}: ${monthShare.map((v, i) => `${MONTH_NAME[i]} ${pc(v)}%`).join(', ')}.`}
+                  />
+                ),
+              }}
+              right={{
+                title: 'Every month of the record',
+                node: <MonthGrid years={gridYears} cells={monthCellsGrid} mark={dipIdx}
+                  markLabel={`${MONTH_NAME[dipIdx[0]].slice(0, 3)} and ${MONTH_NAME[dipIdx[1]].slice(0, 3)}`} />,
+              }}
+              leftNote={<>
+                <b>How to read it.</b> Each bar is the share of that month's days with at least one activity, added up over
+                the full years. The dashed line is the whole year. Orange marks the two weakest months.
+              </>}
+              rightNote={<>
+                <b>Why it matters.</b> The dip is in {dipYears === fullYears.length ? 'every one' : `${dipYears}`} of the{' '}
+                {fullYears.length === 4 ? 'four' : fullYears.length} full years: both months fall below that year's own share.
+                The data does not say why. In {gridYears[gridYears.length - 1]} the streak has filled them too.
+              </>}
+              source="Activity Log · days with at least one activity, by month"
+            />
+          </>
+        )}
 
-        </div>
+        {/* 5. Off the treadmill */}
+        {ioFirst && ioLast && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="indoor-title"
+              eyebrow="5 · Off the treadmill"
+              title="The treadmill is a running habit, and it is fading."
+              statement={<>
+                In {ioYears[0]}, {pc(ioFirst.indoor / ioFirst.n)}% of sessions were indoors. So far in{' '}
+                {ioYears[ioYears.length - 1]} it is {pc(ioLast.indoor / ioLast.n)}%. Nearly all of the indoor time is running:{' '}
+                {pc(indoorShare('run'))}% of runs were on a treadmill, against {pc(indoorShare('walk'))}% of walks. Of the{' '}
+                {fmtInt(runKm)} km run, {fmtInt(runKmIn)} km were indoors.
+              </>}
+              odds={{
+                title: 'Share of sessions indoors',
+                items: [
+                  { value: ioFirst.indoor / ioFirst.n, label: `of sessions in ${ioYears[0]}`, tone: 'rest' },
+                  { value: ioLast.indoor / ioLast.n, label: `of sessions in ${ioYears[ioYears.length - 1]}`, tone: 'move' },
+                  { value: indoorShare('run'), label: 'of all runs', tone: 'rest' },
+                  { value: indoorShare('walk'), label: 'of all walks', tone: 'move' },
+                ],
+              }}
+              left={{ title: 'Indoors and outdoors, year by year', node: <IndoorOutdoor activities={activityLog} height={360} heightNarrow={300} /> }}
+              right={{
+                title: 'Share indoors, by sport',
+                node: (
+                  <ColBars
+                    items={[
+                      { label: 'Run', value: indoorShare('run'), display: `${pc(indoorShare('run'))}%`, tone: 'big' },
+                      { label: 'Other', value: indoorShare('other'), display: `${pc(indoorShare('other'))}%`, tone: 'mid' },
+                      { label: 'Walk', value: indoorShare('walk'), display: `${pc(indoorShare('walk'))}%`, tone: 'quiet' },
+                      { label: 'Trail & hike', short: 'Trail', value: indoorShare('trail'), display: `${pc(indoorShare('trail'))}%`, tone: 'quiet' },
+                    ]}
+                    max={1} ticks={[0, 0.25, 0.5, 0.75, 1]} tickFmt={(v) => `${Math.round(v * 100)}%`}
+                    xCap="sport &rarr;" yCap="share of sessions indoors &uarr;"
+                    aria={`Share of sessions indoors: runs ${pc(indoorShare('run'))}%, other activities ${pc(indoorShare('other'))}%, walks ${pc(indoorShare('walk'))}%, trail runs and hikes ${pc(indoorShare('trail'))}%.`}
+                  />
+                ),
+              }}
+              leftNote={<>
+                <b>How to read it.</b> Each year is split into indoor and outdoor sessions, stacked to 100%. The orange line is
+                the waterline: outdoors below it, indoors above. Indoor means Strava marked it as a trainer session: a treadmill, a
+                bike stand or the gym.
+              </>}
+              rightNote={<>
+                <b>Why it matters.</b> Walks, trail runs and hikes happen outside. Running is the one that moved indoors, so
+                the fall in indoor share is the running moving outside, onto roads and trails.
+              </>}
+              source="Activity Log · trainer flag on each session"
+            />
+          </>
+        )}
+
+        {/* 6. Walking climbs, running runs */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="flip-title"
+          eyebrow="6 · Walking climbs, running runs"
+          title="Running owns the distance. Walking owns the vertical."
+          statement={<>
+            Running is {pc(fShare('Run', 'dist'))}% of the kilometres on foot and only {pc(fShare('Run', 'elev'))}% of the
+            climb, because most of it is flat, on a treadmill. Walking is {pc(fShare('Walk', 'dist'))}% of the kilometres
+            and {pc(fShare('Walk', 'elev'))}% of the climb. Trail runs and hikes are{' '}
+            {pc(fShare('TrailRun', 'dist') + fShare('Hike', 'dist'))}% of the distance and carry{' '}
+            {pc(fShare('TrailRun', 'elev') + fShare('Hike', 'elev'))}% of the climb.
+          </>}
+          odds={{
+            title: 'Share of distance and climb on foot',
+            items: [
+              { value: fShare('Run', 'dist'), label: 'of the distance is running', tone: 'move' },
+              { value: fShare('Run', 'elev'), label: 'of the climb is running', tone: 'rest' },
+              { value: fShare('Walk', 'elev'), label: 'of the climb is walking', tone: 'move' },
+              { value: fShare('TrailRun', 'elev') + fShare('Hike', 'elev'), label: 'of the climb is trail runs and hikes', tone: 'move' },
+            ],
+          }}
+          left={{ title: 'Distance against climb, by sport', node: <FootFlip items={footFlipData} /> }}
+          right={{
+            title: 'Metres climbed per kilometre',
+            node: (
+              <ColBars
+                items={[
+                  { label: 'Run', value: mPerKm('Run'), display: mPerKm('Run').toFixed(1), tone: 'quiet' },
+                  { label: 'Walk', value: mPerKm('Walk'), display: mPerKm('Walk').toFixed(1), tone: 'mid' },
+                  { label: 'Trail run', short: 'Trail', value: mPerKm('TrailRun'), display: mPerKm('TrailRun').toFixed(1), tone: 'big' },
+                  { label: 'Hike', value: mPerKm('Hike'), display: mPerKm('Hike').toFixed(1), tone: 'big' },
+                ]}
+                max={Math.ceil(mPerKm('Hike') / 20) * 20 || 100} ticks={[0, 20, 40, 60, 80, 100].filter((t) => t <= (Math.ceil(mPerKm('Hike') / 20) * 20 || 100))}
+                tickFmt={(v) => v}
+                xCap="sport &rarr;" yCap="metres climbed per km &uarr;"
+                aria={`Metres climbed per kilometre: run ${mPerKm('Run').toFixed(1)}, walk ${mPerKm('Walk').toFixed(1)}, trail run ${mPerKm('TrailRun').toFixed(1)}, hike ${mPerKm('Hike').toFixed(1)}.`}
+              />
+            ),
+          }}
+          leftNote={<>
+            <b>How to read it.</b> The left column splits all the distance on foot by sport, the right column splits all the
+            climb. Each ribbon joins one sport's two shares. Running is thick on the left and thin on the right.
+          </>}
+          rightNote={<>
+            <b>Why it matters.</b> A kilometre of hiking climbs {Math.round(mPerKm('Hike'))} m, a trail run{' '}
+            {Math.round(mPerKm('TrailRun'))} m, a walk {Math.round(mPerKm('Walk'))} m and a run {mPerKm('Run').toFixed(1)} m.
+            The height on this record is earned slowly, uphill, on foot.
+          </>}
+          source="Activity Log · distance and climb on foot (run, walk, trail run, hike)"
+        />
       </Container>
 
       <Container>
