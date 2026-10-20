@@ -29,19 +29,7 @@ import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
 import HeroYears from '../components/HeroYears.jsx'
-import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
-
-// One "in other terms" figure: fades up and counts to its value on arrival.
-function HeroFact({ val, dec = 0, label, delay = 0 }) {
-  const [ref, inView] = useInView({ threshold: 0.2, rootMargin: '0px' })
-  const v = useCountUp(val, inView, { dur: 1500, decimals: dec })
-  return (
-    <li ref={ref} className={`funfacts__item${inView ? ' is-in' : ''}`} style={{ transitionDelay: `${delay}ms` }}>
-      <span className="funfacts__num">{dec ? v.toFixed(dec) : Math.round(v).toLocaleString()}</span>
-      <span className="funfacts__lbl">{label}</span>
-    </li>
-  )
-}
+import { Reveal } from '../components/Reveal.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -117,8 +105,7 @@ export default function Home() {
   const kudos = life('kudos').value
   const hoursMoving = life('hours moving').value
 
-  // ---- unique, personal reframes (computed, not clichéd comparisons) ----
-  const halfCount = activityLog.filter((a) => FOOT_HOME.has(a.sport_type) && (toNum(a.distance_km) || 0) >= 21.0975).length
+  // consecutive calendar months with activity, for the month-streak record below
   const activeMonthsH = [...new Set(monthlyTotals.map((mm) => mm.month).filter(Boolean))].sort()
   let monthStreak = 0
   if (activeMonthsH.length) {
@@ -126,22 +113,6 @@ export default function Home() {
     let cur = activeMonthsH[activeMonthsH.length - 1]
     while (set.has(cur)) { monthStreak += 1; let y = +cur.slice(0, 4), mo = +cur.slice(5, 7) - 1; if (mo < 1) { mo = 12; y -= 1 } cur = `${y}-${String(mo).padStart(2, '0')}` }
   }
-  const spanDaysMeta = meta.coverage_start && meta.coverage_end
-    ? Math.max(1, Math.round((Date.parse(meta.coverage_end) - Date.parse(meta.coverage_start)) / 86400000))
-    : 1
-  const cadence = activityLog.length ? activityLog.length / spanDaysMeta : 0
-
-  // the rotating headline metrics: the numbers NOT already shown in the three
-  // cards (distance, vertical, streak live there), so the headline never mid-counts
-  // a figure the reader is also reading solid beside it.
-  // personal reframes for the "put another way" row
-  const funv = (needle) => toNum((fun.find((f) => (f.comparison || '').toLowerCase().includes(needle)) || {}).value)
-  const funFacts = [
-    { val: Math.round(funv('marathon') || 0), dec: 0, label: 'marathons of distance' },
-    { val: monthStreak, dec: 0, label: 'months without a gap' },
-    { val: halfCount, dec: 0, label: 'times past the half-marathon' },
-    { val: cadence || 0, dec: 2, label: 'activities a day on average' },
-  ].filter((f) => Number.isFinite(f.val) && f.val > 0)
 
   // ---- Derived series for the front-page charts ----
   const hours = Array.from({ length: 24 }, () => 0)
@@ -301,17 +272,30 @@ export default function Home() {
     }
     return before ? Number(before.slice(0, 4)) : 2020
   })()
+  // one line per year, written to fill two lines of its cell; figures come from
+  // that year's own stats so they stay true on every refresh
+  const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+  const statsOf = Object.fromEntries(yearSummaries.map((ys) => [ys.year, ys.stats]))
   const YEAR_LINE = {
-    2019: 'Started late, almost all treadmill runs.',
-    2020: 'Went quiet for close to a year.',
-    2021: 'Caught, nearly ten times the activity.',
-    2022: 'The busiest, and held the one full marathon.',
-    2023: 'Climbed the most.',
-    2024: `Reached the most countries, ${ctryMost} of them.`,
-    2025: 'Had the steepest day, almost two vertical kilometres.',
-    2026: 'Not finished, and has not missed a day.',
+    2019: (s) => `Started in August, mostly indoors: ${n0(s.footKm)} km in under five months.`,
+    2020: (s) => `Went quiet for close to a year. Just ${n0(s.footKm)} km, less than the year before.`,
+    2021: (s) => `Caught, nearly ten times the activity, and a ${s.streakLen}-day streak.`,
+    2022: () => 'The busiest year, and the one marathon: 42.7 km in 2 hours 57.',
+    2023: (s) => `Climbed the most: ${n0(s.elev)} m, more than twice the height of Everest.`,
+    2024: (s) => `Reached the most countries, ${s.countries.length} of them, from Rwanda to Saudi Arabia.`,
+    2025: (s) => `Had the steepest day: ${n0(s.highestClimb && s.highestClimb.val)} m in one outing, close to two vertical km.`,
+    2026: (s) => {
+      const elapsed = Math.round((Date.parse(s.endISO) - Date.UTC(2026, 0, 1)) / 86400000) + 1
+      return s.activeDays >= elapsed
+        ? `Not finished, and every one of its ${s.activeDays} days so far has an activity.`
+        : `Not finished: ${s.activeDays} active days so far, the year still being written.`
+    },
   }
-  const heroYears = gridYears.map((y) => ({ y, n: items.filter((d) => d.year === y).length, fact: YEAR_LINE[y] || '' }))
+  const heroYears = gridYears.map((y) => ({
+    y,
+    n: items.filter((d) => d.year === y).length,
+    fact: YEAR_LINE[y] && statsOf[y] ? YEAR_LINE[y](statsOf[y]) : '',
+  }))
 
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
@@ -336,15 +320,6 @@ export default function Home() {
           </Reveal>
 
           <HeroYears years={heroYears} quietUntil={quietUntil} />
-
-          <div className="hero__extra">
-            <Reveal as="p" className="eyebrow">In other terms</Reveal>
-            <ul className="funfacts">
-              {funFacts.map((f, i) => (
-                <HeroFact key={i} val={f.val} dec={f.dec} label={f.label} delay={i * 120} />
-              ))}
-            </ul>
-          </div>
         </section>
       </Container>
 
