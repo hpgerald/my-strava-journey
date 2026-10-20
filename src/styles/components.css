@@ -881,7 +881,7 @@ text.chart-panel-title {
 .radial__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); margin-top: 3px; }
 
 /* ---- Compact index (Home exit): a card grid, not one long column ------- */
-.index--compact { border-top: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-3); }
+.index--compact { border-top: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-4) var(--grid-gap); }
 @media (min-width: 40rem) { .index--compact { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 64rem) { .index--compact { grid-template-columns: repeat(3, 1fr); } }
 .index--compact .index__item { border: 1px solid var(--rule-faint); border-top: 2px solid var(--rule); border-radius: 4px; }
@@ -1386,6 +1386,10 @@ text.chart-panel-title {
   background: var(--accent); opacity: 0.6; }
 .fieldnote--center .fieldnote__by::before { margin-left: auto; margin-right: auto; }
 @media (max-width: 40rem) { .fieldnote__quote { font-size: var(--fs-lg); } }
+/* wide: a full-width row on the section grid, left-aligned like the statements */
+.fieldnote--wide { max-width: none; margin: 0; padding: var(--sp-7) 0; text-align: left; border-top: 1px solid var(--rule); }
+.fieldnote--wide .fieldnote__quote { font-size: clamp(1.6rem, 1rem + 2.6vw, 2.9rem); line-height: 1.12; text-wrap: balance; }
+@media (max-width: 40rem) { .fieldnote--wide { padding: var(--sp-6) 0; } .fieldnote--wide .fieldnote__quote { font-size: 1.6rem; } }
 @media (prefers-reduced-motion: reduce) {
   .fieldnote { opacity: 1 !important; transform: none !important; transition: none; }
 }
@@ -1463,9 +1467,9 @@ text.chart-panel-title {
 @media (prefers-reduced-motion: reduce) { .wklvl__bar { transform: none !important; } }
 
 /* ---- Home: the far-edges teaser cards ----------------------------- */
-.edges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); grid-template-columns: 1fr; }
-@media (min-width: 40rem) { .edges { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 62rem) { .edges { grid-template-columns: repeat(4, 1fr); } }
+.edges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4) var(--grid-gap); grid-template-columns: 1fr; }
+@media (min-width: 40rem) { .edges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 62rem) { .edges { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .edgecard {
   display: flex; flex-direction: column; gap: var(--sp-2); height: 100%;
   padding: var(--sp-5); background: var(--paper); text-decoration: none;
@@ -2625,6 +2629,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .ycard__year { font-size: var(--fs-lg); }
   .ycard__line { font-size: var(--fs-xs); }
   .fieldnote { margin: var(--sp-6) auto; }
+  .fieldnote--wide { margin: 0; }
   .bleed { padding-block: var(--sp-6); }
   .index--compact { gap: var(--sp-2); }
   .index--compact .index__link { padding: var(--sp-3) var(--sp-4); }

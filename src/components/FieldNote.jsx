@@ -4,6 +4,7 @@ import { useInView } from './Reveal.jsx'
 // A quiet margin note drawn from Gerald's own activity descriptions. One is
 // picked per page from a stable seed, so each page carries a different line.
 // `seed` is usually the route path; `offset` lets a long page place a second.
+// align: 'center', 'left', or 'wide' (a full-width row on the section grid).
 export default function FieldNote({ seed, offset = 0, align = 'center' }) {
   const [root, inView] = useInView()
   const note = pickFieldNote(seed, offset)

@@ -851,21 +851,23 @@ export default function Home() {
       </Container>
 
       <Container>
-        <FieldNote seed="/home" />
+        <FieldNote seed="/home" align="wide" />
       </Container>
 
       {/* ---- The far edges: greatest-hits teaser into the best pages --- */}
       <div className="bleed bleed--edges">
         <Container>
-          <div className="section-head" style={{ paddingBottom: 'var(--sp-5)' }}>
+          <section className="sgrid" aria-labelledby="edges-title">
+          <div className="sgrid__head">
             <p className="eyebrow">The far edges</p>
-            <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+            <h2 id="edges-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
               The records hiding in the data.
             </h2>
-            <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-              Seven years turned these up on their own, no plan required. A few worth pulling out, each one opens its full story.
-            </p>
           </div>
+          <Reveal as="p" className="sgrid__statement">
+            Seven years turned these up on their own, no plan required. Four worth pulling out, and each one opens its
+            full story.
+          </Reveal>
           <ul className="edges">
             <li><Link className="edgecard" to="/goals#marathon">
               <span className="edgecard__stat">2:56:44</span>
@@ -900,23 +902,25 @@ export default function Home() {
               </span>
             </Link></li>
           </ul>
+          </section>
         </Container>
       </div>
 
       {/* ---- The quiet close, then the full index -------------------- */}
       <Container>
-        <div style={{ paddingBlock: 'var(--sp-7)' }}>
-          <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Still unfinished</p>
-          <p className="measure" style={{ fontSize: 'var(--fs-lg)', lineHeight: 1.4, margin: '0 0 var(--sp-7)' }}>
-            The record is dense enough now to look permanent. It is still made one ordinary day at a
-            time, and tomorrow is the next one.
-          </p>
-          <p className="eyebrow" style={{ marginBottom: 'var(--sp-1)' }}>Explore</p>
-          <h2 className="display" style={{ fontSize: 'var(--fs-2xl)', margin: '0 0 var(--sp-5)' }}>
-            {cap(NUMWORD[menuItems.length] || String(menuItems.length))} ways in.
-          </h2>
+        <section className="sgrid" aria-labelledby="explore-title">
+          <div className="sgrid__head">
+            <p className="eyebrow">Still unfinished</p>
+            <h2 id="explore-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+              {cap(NUMWORD[menuItems.length] || String(menuItems.length))} ways in.
+            </h2>
+          </div>
+          <Reveal as="p" className="sgrid__statement">
+            The record is dense enough now to look permanent. It is still made one ordinary day at a time, and tomorrow is
+            the next one. Every page below opens one part of it.
+          </Reveal>
           <IndexHub items={menuItems} compact />
-        </div>
+        </section>
       </Container>
     </Layout>
   )
