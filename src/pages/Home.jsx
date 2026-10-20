@@ -17,6 +17,7 @@ import EveryDayField from '../charts/EveryDayField.jsx'
 import HabitMomentum from '../charts/HabitMomentum.jsx'
 import TransitionMatrix from '../charts/TransitionMatrix.jsx'
 import LorenzCurve from '../charts/LorenzCurve.jsx'
+import DecileBars from '../charts/DecileBars.jsx'
 import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { lorenz, topShare } from '../lib/stats.js'
@@ -190,8 +191,28 @@ export default function Home() {
     return Object.values(m).filter((v) => v > 0)
   }, [activityLog])
   const lorenzData = useMemo(() => lorenz(dailyFootKm), [dailyFootKm])
-  const top10Share = Math.round(topShare(dailyFootKm, 0.1) * 100)
-  const top20Share = Math.round(topShare(dailyFootKm, 0.2) * 100)
+  // the slices the section quotes, all from the same lined-up days
+  const work = useMemo(() => {
+    const v = dailyFootKm.slice().sort((a, b) => a - b)
+    const n = v.length
+    if (!n) return null
+    const total = v.reduce((a, b) => a + b, 0) || 1
+    const shares = Array(10).fill(0)
+    v.forEach((d, i) => { shares[Math.min(9, Math.floor((i * 10) / n))] += d / total })
+    const k10 = Math.max(1, Math.round(n * 0.1))
+    const k1 = Math.max(1, Math.round(n * 0.01))
+    const big = v.filter((d) => d >= 10)
+    return {
+      n, total, shares,
+      half: shares.slice(0, 5).reduce((a, b) => a + b, 0),
+      fifth: topShare(v, 0.2),
+      tenth: topShare(v, 0.1),
+      tenthFrom: v[n - k10],
+      k1, one: topShare(v, 0.01),
+      bigN: big.length,
+      bigShare: big.reduce((a, b) => a + b, 0) / total,
+    }
+  }, [dailyFootKm])
   // B. every-day field: the ongoing streak range, for the highlight band
   const edFirst = sortedDays[0]
   const edLast = sortedDays[sortedDays.length - 1]
@@ -388,23 +409,59 @@ export default function Home() {
         </Container>
       )}
 
-      {/* ===== Who does the work: Lorenz curve of distance concentration ===== */}
-      {dailyFootKm.length > 20 && (
+      {/* ===== Who does the work: how the distance spreads across days ===== */}
+      {work && work.n > 20 && (
         <div className="bleed bleed--level">
           <Container>
-            <div className="opener" style={{ paddingBlock: 'var(--sp-7)' }}>
-              <div className="opener2col opener2col--text">
-                <div className="section-head" style={{ margin: 0 }}>
-                  <p className="eyebrow">Who does the work</p>
-                  <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>The big days pull more than their weight.</h2>
-                  <p className="measure text-muted" style={{ margin: 'var(--sp-3) 0 0' }}>
-                    A few big days carry a lot of the distance, but no small handful carries the whole record. Line every active day up from shortest to longest and stack the distance: the busiest tenth of days hold about {top10Share}% of all the ground, the top fifth hold {top20Share}%. The gap between the real curve and the straight "every day equal" line is the Gini coefficient, a single number for how uneven something is, where 0 is perfectly even and 1 is one day doing everything. Here it is {lorenzData.gini.toFixed(2)}, a real lean on the big days, well short of a record built on a few heroics.
-                  </p>
-                </div>
-                <LorenzCurve points={lorenzData.points} gini={lorenzData.gini} markP={0.9} unitLabel="distance on foot" />
+            <section className="sgrid" aria-labelledby="work-title">
+              <div className="sgrid__head">
+                <p className="eyebrow">Who does the work</p>
+                <h2 id="work-title" className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
+                  The busiest tenth of days carry as much as the quietest half.
+                </h2>
               </div>
-              <p className="source fig__source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log &middot; daily foot distance, {dailyFootKm.length} active days</p>
-            </div>
+
+              <Reveal as="p" className="sgrid__statement">
+                Line up all {fmtInt(work.n)} days on foot from shortest to longest. The busiest tenth, every day over{' '}
+                {Math.floor(work.tenthFrom)} km, carry {pc(work.tenth)}% of the {fmtInt(work.total)} km. That is as much as
+                the quietest half put together. The big days matter, yet no handful of them makes the record: the{' '}
+                {work.k1} biggest days of all carry under {Math.ceil(work.one * 100)}%.
+              </Reveal>
+
+              <OddsRow
+                title="Share of all distance on foot"
+                items={[
+                  { value: work.half, label: 'the quietest half of days', tone: 'rest' },
+                  { value: work.fifth, label: 'the busiest fifth of days', tone: 'move' },
+                  { value: work.tenth, label: 'the busiest tenth of days', tone: 'move' },
+                  { value: work.one, label: `the ${work.k1} biggest days`, tone: 'move' },
+                ]}
+              />
+
+              <div className="sgrid__pair">
+                <figure className="sgrid__fig sgrid__fig--chart">
+                  <figcaption className="sgrid__figtitle">Every day, added up</figcaption>
+                  <LorenzCurve points={lorenzData.points} gini={lorenzData.gini} markP={0.9} />
+                </figure>
+                <figure className="sgrid__fig sgrid__fig--mx">
+                  <figcaption className="sgrid__figtitle">Each tenth of days, by its share</figcaption>
+                  <DecileBars shares={work.shares} />
+                </figure>
+                <p className="sgrid__note sgrid__note--chart">
+                  <b>How to read it.</b> Days run left to right from shortest to longest, and the line adds up their
+                  distance as it goes. If every day were the same length it would follow the dashed diagonal. The shaded
+                  gap is the Gini coefficient, one number for how uneven a split is: 0 means every day equal, 1 means a
+                  single day did everything. Here it is {lorenzData.gini.toFixed(2)}.
+                </p>
+                <p className="sgrid__note sgrid__note--mx">
+                  <b>Why it matters.</b> In an even record each tenth would carry 10%. The shortest tenth carries{' '}
+                  {(work.shares[0] * 100).toFixed(1)}%, the longest {(work.shares[9] * 100).toFixed(1)}%. Days of 10 km or
+                  more are {fmtInt(work.bigN)} of the {fmtInt(work.n)}, {work.bigN < work.n / 2 ? 'under half' : `${pc(work.bigN / work.n)}%`}, and they carry {pc(work.bigShare)}% of
+                  the distance. The short days keep the habit; the long ones build the kilometres.
+                </p>
+              </div>
+              <p className="source">Source: Activity Log &middot; daily distance on foot (run, walk, trail run, hike), {fmtInt(work.n)} days</p>
+            </section>
           </Container>
         </div>
       )}

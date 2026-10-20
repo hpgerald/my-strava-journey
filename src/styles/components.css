@@ -1143,7 +1143,7 @@ text.chart-panel-title {
 .bleed { padding-block: var(--sp-7); }
 .bleed--switch { background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-block: 1px solid var(--rule-faint); }
 .bleed--edges { background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-block: 1px solid var(--rule-faint); }
-.bleed--level { background: color-mix(in srgb, var(--accent) 6%, var(--paper)); border-block: 1px solid var(--rule-faint); }
+.bleed--level { --band-bg: color-mix(in srgb, var(--accent) 6%, var(--paper)); background: var(--band-bg); border-block: 1px solid var(--rule-faint); }
 
 /* ---- Home opener candidates (journey arc / every-day field / adds-up) ---- */
 .jarc__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); }
@@ -1273,16 +1273,26 @@ text.chart-panel-title {
 .lorenz__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
 .lorenz__gini { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--accent-ink); }
 .lorenz__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
-.lorenz__key { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2) var(--sp-4); margin: var(--sp-4) 0 0; }
-.lorenz__keyitem { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: var(--sp-2); align-items: center; }
-.lorenz__swatch { grid-row: 1 / 3; width: 22px; height: 12px; align-self: center; }
-.lorenz__swatch--eq { height: 0; border-top: 2px dashed color-mix(in srgb, var(--ink) 55%, transparent); }
-.lorenz__swatch--curve { height: 0; border-top: 3px solid var(--accent); border-radius: 2px; }
-.lorenz__swatch--gap { background: color-mix(in srgb, var(--accent) 14%, var(--paper)); border-radius: 2px; }
-.lorenz__swatch--mark { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-ink); justify-self: center; }
-.lorenz__keyitem dt { font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg); }
-.lorenz__keyitem dd { margin: 0; font-size: var(--fs-xs); color: var(--fg-muted); line-height: 1.4; }
-@media (max-width: 30rem) { .lorenz__key { grid-template-columns: 1fr; } }
+.lorenz__halo, .dec__halo { paint-order: stroke; stroke: var(--band-bg, var(--paper)); stroke-width: 4px; stroke-linejoin: round; }
+.lorenz__lbl { opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.lorenz__plot.is-in .lorenz__lbl { opacity: 1; transition-delay: 1.1s; }
+.lorenz__eq { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); }
+.lorenz__rec { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--accent-ink); }
+.lorenz__mk { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--accent-ink); }
+
+/* decile bars: each tenth of days by its share of the distance */
+.dec__bar rect { transform: scaleY(0); transition: transform 0.8s var(--ease); transition-delay: var(--d, 0ms); }
+.dec__plot.is-in .dec__bar rect { transform: scaleY(1); }
+.dec__bar--quiet rect { fill: var(--grey-45); }
+.dec__bar--mid rect { fill: var(--ink); }
+.dec__bar--big rect { fill: var(--accent); }
+.dec__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums;
+  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 0.6s); }
+.dec__plot.is-in .dec__val { opacity: 1; }
+.dec__bar--big .dec__val { fill: var(--accent-ink); font-weight: 700; }
+.dec__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.dec__evenlbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); }
+.dec__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
 
 /* Field notes: margin lines pulled from the activity descriptions */
 .fieldnote { margin: var(--sp-8) auto; max-width: 42rem; padding: 0 var(--sp-4);
@@ -1343,6 +1353,8 @@ text.chart-panel-title {
   .tmx__cell { opacity: 1 !important; transform: none !important; }
   .lorenz__line { stroke-dashoffset: 0 !important; }
   .lorenz__area { opacity: 1 !important; }
+  .lorenz__lbl, .dec__val { opacity: 1 !important; transition: none !important; }
+  .dec__bar rect { transform: none !important; transition: none !important; }
   .corr__bar { transform: scaleY(1) !important; }
   .corr__mark { opacity: 1 !important; }
   .ranksize__dot { opacity: 1 !important; }
