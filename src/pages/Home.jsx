@@ -28,6 +28,7 @@ import { prettySport } from '../lib/slug.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
+import HeroYears from '../components/HeroYears.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 
 // One "in other terms" figure: fades up and counts to its value on arrival.
@@ -291,6 +292,26 @@ export default function Home() {
     ? Math.round((Date.parse(edStreak.end) - Date.parse(edStreak.start)) / DAY) + 1
     : toNum(streak)
   const ctryMost = ctryYr ? ctryYr.stats.countries.length : 6
+  // the last year before the long silence (its bars are grey on the band)
+  const quietUntil = (() => {
+    let best = 0, before = null
+    for (let i = 1; i < sortedDays.length; i++) {
+      const d = Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1])
+      if (d > best) { best = d; before = sortedDays[i - 1] }
+    }
+    return before ? Number(before.slice(0, 4)) : 2020
+  })()
+  const YEAR_LINE = {
+    2019: 'Started late, almost all treadmill runs.',
+    2020: 'Went quiet for close to a year.',
+    2021: 'Caught, nearly ten times the activity.',
+    2022: 'The busiest, and held the one full marathon.',
+    2023: 'Climbed the most.',
+    2024: `Reached the most countries, ${ctryMost} of them.`,
+    2025: 'Had the steepest day, almost two vertical kilometres.',
+    2026: 'Not finished, and has not missed a day.',
+  }
+  const heroYears = gridYears.map((y) => ({ y, n: items.filter((d) => d.year === y).length, fact: YEAR_LINE[y] || '' }))
 
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
@@ -307,19 +328,14 @@ export default function Home() {
 
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
 
-          <div className="hero__main">
-            <Reveal as="p" className="measure hero__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              The record is built from days too small to notice. The usual outing is {Math.round(medFootKm)} km,
-              about an hour, a walk or an easy run. What makes it add up is how often it happens: something on{' '}
-              {pctActiveDays}% of all days across {years || 7} years, and a streak {fmtInt(curStreak)} days deep as you read this.
-            </Reveal>
-            <Reveal as="p" className="measure hero__lede" delay={140} style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-4)' }}>
-              2019 started late, almost all treadmill runs. 2020 went quiet for close to a year. 2021 caught,
-              nearly ten times the activity. 2022 was the busiest, and held the one full marathon. 2023 climbed
-              the most. 2024 reached the most countries, {ctryMost} of them. 2025 had the steepest day, almost two
-              vertical kilometres. 2026 is not finished, and has not missed a day. Showing up daily adds up.
-            </Reveal>
-          </div>
+          <Reveal as="p" className="hero__statement">
+            The record is built from days too small to notice. The usual outing is {Math.round(medFootKm)} km,
+            about an hour, a walk or an easy run. What makes it add up is how often it happens: something on{' '}
+            {pctActiveDays}% of all days across {years || 7} years, and a streak {fmtInt(curStreak)} days deep as you
+            read this. Showing up daily adds up.
+          </Reveal>
+
+          <HeroYears years={heroYears} quietUntil={quietUntil} />
 
           <div className="hero__extra">
             <Reveal as="p" className="eyebrow">In other terms</Reveal>

@@ -53,6 +53,7 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
     for (let k = 0; k < bounds.length - 1; k++) segs.push({ y: y0 + k, mid: (bounds[k] + bounds[k + 1]) / 2 })
     return {
       first, span, series, maxC: Math.max(...series), streakLen, streakStart: span - streakLen,
+      activeDays: series.filter((c) => c > 0).length,
       gap, resume: gap.start + gap.len, grid: bounds.slice(1, -1), segs,
     }
   }, [activities])
@@ -72,6 +73,7 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
   const play = useArmed(inView)
   const playCo = useArmed(coIn)
 
+  const actN = useCountUp(activities.length, playCo, { dur: 2700 })
   const kmN = useCountUp(Math.round(toNum(km) || 0), playCo, { dur: 2700 })
   const elevN = useCountUp(Math.round(toNum(elevation) || 0), playCo, { dur: 2700 })
   const streakN = useCountUp(Math.round(toNum(streak) || (model ? model.streakLen : 0)), playCo, { dur: 2700 })
@@ -80,14 +82,14 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
     return (
       <div ref={ref} className="beat">
         <div ref={stage} className="beat__stage">
-          <p className="beat__key">&nbsp;</p>
+          <div className="beat__head"><p className="beat__key">&nbsp;</p></div>
           <div className="beat__plot beat__plot--empty" />
         </div>
         <div ref={coRef} className="beat__callouts" />
       </div>
     )
   }
-  const { first, span, series, maxC, streakLen, streakStart, gap, resume, grid, segs } = model
+  const { first, span, series, maxC, streakLen, streakStart, gap, resume, grid, segs, activeDays } = model
 
   const W = Math.max(320, width)
   const H = 190
@@ -124,9 +126,16 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
   return (
     <div ref={ref} className="beat">
       <div ref={stage} className={`beat__stage${play ? ' is-in' : ''}`}>
-        <p className="beat__key">
-          Every day from {startLabel} to now, one line each. Taller lines are busier days.
-        </p>
+        <div className="beat__head">
+          <p className="beat__key">
+            Every day from {startLabel} to now, one line each. Taller lines are busier days.
+          </p>
+          <ul className="beat__legend" aria-label="Colour key">
+            <li><i className="beat__sw beat__sw--quiet" aria-hidden="true" />Before the silence</li>
+            <li><i className="beat__sw beat__sw--habit" aria-hidden="true" />The habit</li>
+            <li><i className="beat__sw beat__sw--streak" aria-hidden="true" />Current streak</li>
+          </ul>
+        </div>
 
         <div className="beat__plot">
           <svg width="100%" height={H} viewBox={`0 0 ${span} ${H}`} preserveAspectRatio="none" role="img"
@@ -186,6 +195,11 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
       </div>
 
       <div ref={coRef} className={`beat__callouts${playCo ? ' is-in' : ''}`}>
+        <div className="beat__co">
+          <div className="beat__n">{fmtInt(actN)}</div>
+          <div className="beat__l">Activities</div>
+          <div className="beat__s">on {fmtInt(activeDays)} separate days</div>
+        </div>
         <div className="beat__co">
           <div className="beat__n">{fmtInt(kmN)}<span className="beat__u">km</span></div>
           <div className="beat__l">On foot</div>
