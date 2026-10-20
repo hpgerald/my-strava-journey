@@ -1075,36 +1075,9 @@ text.chart-panel-title {
   text-wrap: pretty;
 }
 
-/* the years: eight equal cells on the four-column grid */
-.hero__years {
-  list-style: none; margin: 0; padding: var(--sp-5) 0 0; border-top: 1px solid var(--rule-faint);
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-6) var(--grid-gap);
-}
-.hero__yr { opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
-.hero__years.is-in .hero__yr { opacity: 1; transform: none; }
-.hero__yrlink { display: flex; flex-direction: column; gap: var(--sp-2); height: 100%; color: inherit; text-decoration: none; }
-.hero__yrhead { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); }
-.hero__yrnum { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); line-height: 1; transition: color var(--dur) var(--ease); }
-.hero__yrcount { font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.hero__yrbar { position: relative; display: block; height: 4px; background: var(--grey-06); overflow: hidden; }
-.hero__yrfill {
-  position: absolute; inset: 0; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0);
-  transition: transform 1.2s var(--ease);
-}
-.hero__years.is-in .hero__yrfill { transform: scaleX(var(--w)); }
-.hero__yrfill--quiet { background: var(--grey-25); }
-.hero__yrfill--now { background: var(--accent); }
-.hero__yrfact { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.45; text-wrap: pretty; }
-.hero__yrlink:hover .hero__yrnum, .hero__yrlink:focus-visible .hero__yrnum { color: var(--accent-ink); }
-.hero__yrlink:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
-@media (prefers-reduced-motion: reduce) {
-  .hero__yr { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .hero__yrfill { transform: scaleX(var(--w)) !important; transition: none !important; }
-}
-
 /* below 60rem every row drops to the same two columns */
 @media (max-width: 59.999rem) {
-  .beat__callouts, .hero__years { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .beat__callouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* narration and the "in other terms" row under the chart */

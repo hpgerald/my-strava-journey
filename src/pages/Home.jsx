@@ -27,7 +27,6 @@ import { fmtInt, toNum } from '../lib/format.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
-import HeroYears from '../components/HeroYears.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 
@@ -226,31 +225,6 @@ export default function Home() {
     }
     return before ? Number(before.slice(0, 4)) : 2020
   })()
-  // one line per year, written to fill two lines of its cell; figures come from
-  // that year's own stats so they stay true on every refresh
-  const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
-  const statsOf = Object.fromEntries(yearSummaries.map((ys) => [ys.year, ys.stats]))
-  const YEAR_LINE = {
-    2019: (s) => `Started in August, mostly indoors: ${n0(s.footKm)} km in under five months.`,
-    2020: (s) => `Went quiet for close to a year. Just ${n0(s.footKm)} km, less than the year before.`,
-    2021: (s) => `Caught, nearly ten times the activity, and a ${s.streakLen}-day streak.`,
-    2022: () => 'The busiest year, and the one marathon: 42.7 km in 2 hours 57.',
-    2023: (s) => `Climbed the most: ${n0(s.elev)} m, more than twice the height of Everest.`,
-    2024: (s) => `Reached the most countries, ${s.countries.length} of them, from Rwanda to Saudi Arabia.`,
-    2025: (s) => `Had the steepest day: ${n0(s.highestClimb && s.highestClimb.val)} m in one outing, close to two vertical km.`,
-    2026: (s) => {
-      const elapsed = Math.round((Date.parse(s.endISO) - Date.UTC(2026, 0, 1)) / 86400000) + 1
-      return s.activeDays >= elapsed
-        ? `Not finished, and every one of its ${s.activeDays} days so far has an activity.`
-        : `Not finished: ${s.activeDays} active days so far, the year still being written.`
-    },
-  }
-  const heroYears = gridYears.map((y) => ({
-    y,
-    n: items.filter((d) => d.year === y).length,
-    fact: YEAR_LINE[y] && statsOf[y] ? YEAR_LINE[y](statsOf[y]) : '',
-  }))
-
   // ---- How each year was made: time per active day, cut into outings ----
   const shapeRows = yearSummaries.map((ys) => ({
     year: ys.year, perDay: ys.stats.minPerActiveDay, outings: ys.stats.outingsPerDay,
@@ -403,7 +377,9 @@ export default function Home() {
             read this. Showing up daily adds up.
           </Reveal>
 
-          <HeroYears years={heroYears} quietUntil={quietUntil} />
+          {yearSummaries.length > 0 && (
+            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
+          )}
         </section>
       </Container>
 
@@ -565,13 +541,10 @@ export default function Home() {
             </>}
             rightNote={<>
               <b>Why it matters.</b> The time given to it each day held steady from the first year to now. What the habit
-              changed was the shape of the day: from two shorter outings to one longer one. Open any year below for its
-              full report.
+              changed was the shape of the day: from two shorter outings to one longer one.
             </>}
             source="Activity Log · moving time and outings per active day, by year"
-          >
-            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={shapeNow.year} />
-          </StorySection>
+          />
         </Container>
       )}
 
