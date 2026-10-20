@@ -2602,3 +2602,37 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 .prints__val { font-size: var(--fs-sm); font-weight: 700; fill: var(--ink); }
 .prints__unit { fill: var(--fg-muted); font-weight: 400; }
 .prints__key { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
+
+/* ---- Phones: one calmer scale for the whole landing page ---------------- */
+@media (max-width: 40rem) {
+  .sgrid { gap: var(--sp-5); padding-block: var(--sp-6); }
+  .sgrid__head .section-head__title, .closer-head .section-head__title,
+  h2[style*="fs-2xl"] { font-size: clamp(1.65rem, 1.1rem + 2.8vw, 2.05rem) !important; line-height: 1.08; text-wrap: balance; }
+  .bleed > .container > .section-head:first-child { padding-top: 0; }
+  .sgrid__statement { font-size: 1.0625rem; line-height: 1.5; }
+  .hero__statement { font-size: 1.125rem; line-height: 1.48; }
+  .odds { padding-top: var(--sp-4); }
+  .odds__title, .sgrid__figtitle { margin-bottom: var(--sp-3); }
+  .odds__row { row-gap: var(--sp-4); }
+  .odds__n { font-size: 2.05rem; }
+  .odds__c { font-size: var(--fs-xs); }
+  .sgrid__pair { padding-top: var(--sp-4); row-gap: var(--sp-3); }
+  .sgrid__fig--mx { margin-top: var(--sp-5); }
+  .sgrid__note { font-size: var(--fs-xs); line-height: 1.55; }
+  .closer-head { padding-top: var(--sp-6); }
+  .ycards__row { row-gap: var(--sp-3); }
+  .ycard { padding-top: var(--sp-3); gap: var(--sp-1); }
+  .ycard__year { font-size: var(--fs-lg); }
+  .ycard__line { font-size: var(--fs-xs); }
+  .fieldnote { margin: var(--sp-6) auto; }
+  .bleed { padding-block: var(--sp-6); }
+  .index--compact { gap: var(--sp-2); }
+  .index--compact .index__link { padding: var(--sp-3) var(--sp-4); }
+  .footer { margin-top: var(--sp-7); }
+  .edges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+  .edgecard { padding: var(--sp-3) var(--sp-3) var(--sp-2); border-radius: 4px; }
+  .edgecard__stat { font-size: var(--fs-xl); }
+  .edgecard__lbl { font-size: var(--fs-xs); }
+  .edgecard__foot { padding-top: var(--sp-2); }
+  .edgecard__arrow { font-size: var(--fs-md); }
+}

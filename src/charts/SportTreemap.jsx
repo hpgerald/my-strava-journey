@@ -85,7 +85,7 @@ export default function SportTreemap({ rows }) {
           const base = foot
             ? (hover === i ? 'var(--accent)' : 'color-mix(in srgb, var(--accent) 34%, var(--paper))')
             : (hover === i ? 'var(--grey-45)' : 'var(--grey-15)')
-          const showName = t.w >= 58 && t.h >= 34
+          const showName = t.w >= 38 && t.h >= 34
           const showN = t.w >= 40 && t.h >= 22
           const dark = foot && hover === i
           return (
@@ -93,7 +93,7 @@ export default function SportTreemap({ rows }) {
               <rect x={t.x + 0.75} y={t.y + 0.75} width={Math.max(0, t.w - 1.5)} height={Math.max(0, t.h - 1.5)} rx="2"
                 fill={base} stroke="var(--paper)" strokeWidth="1.5" />
               {showName && (
-                <text x={t.x + 7} y={t.y + 17} className={`tm__name${dark ? ' tm__name--on' : ''}`}>{t.sport === OTHER && t.w < 112 ? 'Other' : nm(t.sport)}</text>
+                <text x={t.x + 7} y={t.y + 17} className={`tm__name${dark ? ' tm__name--on' : ''}`}>{t.sport === OTHER && t.w < 112 ? 'Other' : t.sport === 'TrailRun' && t.w < 80 ? 'Trail' : nm(t.sport)}</text>
               )}
               {showN && (
                 <text x={t.x + 7} y={t.y + (showName ? 33 : 16)} className={`tm__n mono${dark ? ' tm__n--on' : ''}`}>{t.value.toLocaleString()}</text>

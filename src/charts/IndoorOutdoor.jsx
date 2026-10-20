@@ -56,7 +56,7 @@ export default function IndoorOutdoor({ activities, height, heightNarrow }) {
         {/* endpoint indoor-share callouts */}
         <g>
           <circle cx={x(0)} cy={y(100 - first.indoor)} r="3.5" fill="var(--accent)" />
-          <text x={x(0)} y={y(100 - first.indoor) - 9} textAnchor="start" className="io__call">{first.indoor}% indoor</text>
+          <text x={x(0)} y={y(100 - first.indoor) + (narrow ? 18 : -9)} textAnchor="start" className="io__call">{first.indoor}% indoor</text>
           <circle cx={x(pts.length - 1)} cy={y(100 - last.indoor)} r="3.5" fill="var(--accent)" />
           <text x={x(pts.length - 1)} y={y(100 - last.indoor) - 9} textAnchor="end" className="io__call">{last.indoor}%</text>
         </g>

@@ -55,13 +55,13 @@ export default function LorenzCurve({ points, gini, markP = 0.9 }) {
           <circle className="lorenz__lbl" cx={x(markP)} cy={y(markL)} r="4.5" fill="var(--accent-ink)" stroke="var(--paper)" strokeWidth="1.5" />
 
           {/* direct labels */}
-          <text className="lorenz__lbl lorenz__eq lorenz__halo" x={x(ep) - 6} y={y(ep) - 12} textAnchor="end">if every day were equal</text>
+          <text className="lorenz__lbl lorenz__eq lorenz__halo" x={x(ep) - 6} y={y(ep) - 12} textAnchor="end">{W < 340 ? 'every day equal' : 'if every day were equal'}</text>
           <text className="lorenz__lbl lorenz__gini lorenz__halo" x={x(gp)} y={y((gp + lAt(gp)) / 2) + 6} textAnchor="middle">Gini {gini.toFixed(2)}</text>
           <text className="lorenz__lbl lorenz__rec lorenz__halo" x={x(cp) + 8} y={y(lAt(cp)) + (narrow ? 24 : 20)} textAnchor="start">the real record</text>
           <text className="lorenz__lbl lorenz__mk lorenz__halo" x={x(markP) - 10} y={y(markL) - 2} textAnchor="end">busiest tenth</text>
           <text className="lorenz__lbl lorenz__mk lorenz__halo" x={x(markP) - 10} y={y(markL) + 14} textAnchor="end">{pc(topShare)} of the distance</text>
 
-          <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="lorenz__axis">share of active days, shortest to longest &rarr;</text>
+          <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="lorenz__axis">{W < 340 ? 'active days, shortest to longest' : 'share of active days, shortest to longest'} &rarr;</text>
           <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="lorenz__axis">share of distance &uarr;</text>
         </svg>
       </div>

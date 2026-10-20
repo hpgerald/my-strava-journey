@@ -909,7 +909,7 @@ export default function Home() {
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Still unfinished</p>
           <p className="measure" style={{ fontSize: 'var(--fs-lg)', lineHeight: 1.4, margin: '0 0 var(--sp-7)' }}>
             The record is dense enough now to look permanent. It is still made one ordinary day at a
-            time, and the last dot is only ever the most recent.
+            time, and tomorrow is the next one.
           </p>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-1)' }}>Explore</p>
           <h2 className="display" style={{ fontSize: 'var(--fs-2xl)', margin: '0 0 var(--sp-5)' }}>

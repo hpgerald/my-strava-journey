@@ -18,7 +18,7 @@ export default function HabitMomentum({ stick, rebound, origin }) {
   const W = Math.max(300, width)
   const narrow = W < 520
   const H = narrow ? 300 : 360
-  const m = { t: 30, r: 14, b: 44, l: 40 }
+  const m = { t: 30, r: 14, b: 44, l: 46 }
   const maxL = stick[stick.length - 1].L
   const maxG = rebound[rebound.length - 1].g
   const cx = m.l + (W - m.l - m.r) * 0.4
