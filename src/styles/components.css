@@ -1213,6 +1213,14 @@ text.chart-panel-title {
 /* ---- Section grid (shared with the hero's four column lines) ---------- */
 .sgrid { display: grid; gap: var(--sp-6); padding-block: var(--sp-7); }
 .sgrid__head .section-head__title { margin: var(--sp-2) 0 0; }
+.sgrid > .source { margin: 0; }
+/* inside a tinted band the band owns the breathing room, so the grid adds none */
+.bleed:has(> .container > .sgrid) { padding-block: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
+.bleed > .container > .sgrid { padding-block: 0; }
+/* the band's own border already closes it, so a rule straight after it is a double line */
+.bleed + .container > .rule:first-child { display: none; }
+/* an opener already pads itself, so its heading block adds no second top gap */
+.opener > .section-head:first-child { padding-top: 0; }
 .sgrid__statement {
   margin: 0; font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.55rem); line-height: 1.45; color: var(--fg); text-wrap: pretty;
 }
