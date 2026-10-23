@@ -6,7 +6,7 @@ import { linScale, linePath } from './primitives.js'
 // second line takes the lead marked. Used for walks against runs.
 // props: years [n], a {label, values}, b {label, values} (b is the accent line),
 //   cross (index of the first year b leads, or -1), aria
-export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria }) {
+export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yCap = 'outings a year' }) {
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!years || years.length < 2) return <div ref={ref} />
@@ -16,11 +16,12 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria }) 
   const H = narrow ? 300 : 360
   const m = { t: 30, r: narrow ? 52 : 64, b: 44, l: 40 }
   const max = Math.max(...a.values, ...b.values)
-  const top = Math.ceil(max / 50) * 50
+  const step = max > 1000 ? 500 : max > 200 ? 100 : 50
+  const top = Math.ceil(max / step) * step
   const x = linScale([0, years.length - 1], [m.l + 6, W - m.r])
   const y = linScale([0, top], [H - m.b, m.t])
   const ticks = []
-  for (let t = 0; t <= top; t += top > 200 ? 100 : 50) ticks.push(t)
+  for (let t = 0; t <= top; t += step) ticks.push(t)
   const pa = a.values.map((v, i) => [x(i), y(v)])
   const pb = b.values.map((v, i) => [x(i), y(v)])
   const li = years.length - 1
@@ -35,7 +36,7 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria }) 
           {ticks.map((t) => (
             <g key={t}>
               <line x1={m.l} y1={y(t)} x2={W - m.r} y2={y(t)} stroke={t === 0 ? 'var(--ink)' : 'var(--rule-faint)'} strokeWidth="1" />
-              <text x={m.l - 8} y={y(t) + 4} textAnchor="end" className="tl__gl">{t}</text>
+              <text x={m.l - 8} y={y(t) + 4} textAnchor="end" className="tl__gl">{t.toLocaleString('en-US')}</text>
             </g>
           ))}
           {years.map((yr, i) => (
@@ -44,7 +45,7 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria }) 
           {cross >= 0 && (
             <g className="tl__cross">
               <line x1={x(cross)} y1={m.t} x2={x(cross)} y2={H - m.b} stroke="var(--accent-ink)" strokeWidth="1" strokeDasharray="2 2" />
-              {crossLabel && <text x={x(cross) + 6} y={m.t + 10} textAnchor="start" className="tl__crosslbl tl__halo">{crossLabel}</text>}
+              {crossLabel && <text x={x(cross) > W * 0.7 ? x(cross) - 6 : x(cross) + 6} y={m.t + 10} textAnchor={x(cross) > W * 0.7 ? 'end' : 'start'} className="tl__crosslbl tl__halo">{crossLabel}</text>}
             </g>
           )}
           <path className="tl__line" d={linePath(pa)} pathLength="1" fill="none" stroke="var(--grey-55)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -53,7 +54,7 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria }) 
           {pb.map(([cx, cy], i) => <circle key={'b' + i} className="tl__dot" cx={cx} cy={cy} r="3.5" fill="var(--accent)" />)}
           <text x={x(li) + 8} y={ya} className="tl__end tl__end--a">{a.label}</text>
           <text x={x(li) + 8} y={yb} className="tl__end tl__end--b">{b.label}</text>
-          <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="tl__axis">outings a year &uarr;</text>
+          <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="tl__axis">{yCap} &uarr;</text>
           <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="tl__axis">year &rarr;</text>
         </svg>
       </div>

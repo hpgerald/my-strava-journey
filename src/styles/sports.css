@@ -1,0 +1,168 @@
+/* ==========================================================================
+   sports.css  ·  The Sports page: the four sports on foot.
+   One colour per way of moving, used by every chart on the page.
+   ========================================================================== */
+:root {
+  --m-tread: #f98f5e;
+  --m-road: var(--accent);
+  --m-trail: var(--accent-ink);
+  --m-walk: var(--grey-85);
+  --m-hike: var(--grey-45);
+  /* the four sports (Run covers treadmill and outdoors) */
+  --m-Run: var(--accent);
+  --m-Walk: var(--grey-85);
+  --m-TrailRun: var(--accent-ink);
+  --m-Hike: var(--grey-45);
+}
+.mfill--tread { fill: var(--m-tread); background: var(--m-tread); }
+.mfill--road { fill: var(--m-road); background: var(--m-road); }
+.mfill--trail { fill: var(--m-trail); background: var(--m-trail); }
+.mfill--walk { fill: var(--m-walk); background: var(--m-walk); }
+.mfill--hike { fill: var(--m-hike); background: var(--m-hike); }
+.mfill--Run { fill: var(--m-Run); background: var(--m-Run); }
+.mfill--Walk { fill: var(--m-Walk); background: var(--m-Walk); }
+.mfill--TrailRun { fill: var(--m-TrailRun); background: var(--m-TrailRun); }
+.mfill--Hike { fill: var(--m-Hike); background: var(--m-Hike); }
+.mfill--ink { fill: var(--ink); background: var(--ink); }
+.mfill--quiet { fill: var(--grey-25); background: var(--grey-25); }
+.mstroke--tread { stroke: var(--m-tread); }
+.mstroke--road { stroke: var(--m-road); }
+.mstroke--trail { stroke: var(--m-trail); }
+.mstroke--walk { stroke: var(--m-walk); }
+.mstroke--hike { stroke: var(--m-hike); }
+
+.msw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.msw--tread { background: var(--m-tread); }
+.msw--road { background: var(--m-road); }
+.msw--trail { background: var(--m-trail); }
+.msw--walk { background: var(--m-walk); }
+.msw--hike { background: transparent; box-shadow: inset 0 0 0 2px var(--m-hike); }
+.msw--Run { background: var(--m-Run); }
+.msw--Walk { background: var(--m-Walk); }
+.msw--TrailRun { background: var(--m-TrailRun); }
+.msw--Hike { background: var(--m-Hike); }
+.msw--quiet { background: var(--grey-25); }
+
+/* ---- the foot map (hero) ---- */
+.fmap { width: 100%; }
+.fmap__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-2) var(--grid-gap); margin-bottom: var(--sp-3); }
+.fmap__key { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); max-width: 40rem; }
+.fmap__legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); color: var(--fg-muted); }
+.fmap__legend li { display: inline-flex; align-items: center; gap: 6px; }
+.fmap__ln { font-family: var(--font-mono); color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.fmap__plot { position: relative; width: 100%; }
+.fmap__under, .fmap__canvas, .fmap__over { position: absolute; left: 0; top: 0; display: block; }
+.fmap__over { pointer-events: none; }
+.fmap__hit { position: absolute; inset: 0; cursor: crosshair; }
+.fmap__tick { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.fmap__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.fmap__floor { fill: var(--grey-03); }
+.fmap__floorl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.fmap__lt { font-size: var(--fs-xs); font-weight: 700; fill: var(--fg); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.fmap__ls { font-size: var(--fs-2xs); fill: var(--fg-muted); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; font-variant-numeric: tabular-nums; }
+.fmap__lab { opacity: 0; transition: opacity 0.7s var(--ease); }
+.fmap__stage.is-in .fmap__lab { opacity: 1; transition-delay: calc(2.6s + var(--d, 0ms)); }
+
+/* ---- share rows ---- */
+.srow { width: 100%; }
+.srow__key { list-style: none; margin: 0 0 var(--sp-3); padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); color: var(--fg-muted); }
+.srow__key li { display: inline-flex; align-items: center; gap: 6px; }
+.srow__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+.srow__row { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'lbl tot' 'bar bar'; gap: 4px var(--sp-2); }
+.srow__lbl { grid-area: lbl; font-size: var(--fs-sm); font-weight: 600; }
+.srow__tot { grid-area: tot; font-size: var(--fs-xs); color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.srow__bar { grid-area: bar; display: flex; height: 30px; border-radius: 3px; overflow: hidden; background: var(--grey-06);
+  clip-path: inset(0 100% 0 0); transition: clip-path 1s var(--ease); transition-delay: var(--d, 0ms); }
+.srow.is-in .srow__bar { clip-path: inset(0 0 0 0); }
+.srow__seg { display: flex; align-items: center; justify-content: center; min-width: 0; box-shadow: inset -1px 0 0 var(--paper); }
+.srow__pc { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; color: var(--paper); font-variant-numeric: tabular-nums; }
+.srow__seg.mfill--hike .srow__pc, .srow__seg.mfill--Hike .srow__pc, .srow__seg.mfill--tread .srow__pc, .srow__seg.mfill--Run .srow__pc, .srow__seg.mfill--road .srow__pc { color: var(--ink); }
+
+/* ---- stacked columns ---- */
+.scol { width: 100%; }
+.scol__key { margin-bottom: var(--sp-2); }
+.scol__col { transform: scaleY(0); transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
+.scol__plot.is-in .scol__col { transform: scaleY(1); }
+.scol__col rect { shape-rendering: crispEdges; }
+.scol__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* ---- ridgelines ---- */
+.ridge { width: 100%; }
+.ridge__row { opacity: 0; transform: translateY(-8px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); transition-delay: var(--d, 0ms); }
+.ridge__plot.is-in .ridge__row { opacity: 1; transform: none; }
+.ridge__a { fill-opacity: 0.85; }
+.ridge__a.mfill--walk { fill-opacity: 0.75; }
+.ridge__l { stroke: var(--paper); stroke-width: 1.25; }
+.ridge__lbl { font-size: var(--fs-xs); font-weight: 600; fill: var(--fg); }
+.ridge__note { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); }
+.ridge__med { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; fill: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* ---- range columns ---- */
+.rcol__c { opacity: 0; transition: opacity 0.6s var(--ease); transition-delay: var(--d, 0ms); }
+.rcol.is-in .rcol__c { opacity: 1; }
+.rcol__band { fill: var(--grey-15); }
+.rcol__med { stroke: var(--ink); stroke-width: 3; }
+.rcol__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums; }
+.rcol__c.is-best .rcol__band { fill: var(--accent-soft); }
+.rcol__c.is-best .rcol__med { stroke: var(--accent); }
+.rcol__c.is-best .rcol__val { fill: var(--accent-ink); font-weight: 700; }
+
+/* ---- gradients ---- */
+.grades { width: 100%; }
+.grades__l { stroke-width: 3.5; stroke-linecap: round; fill: none; stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.2s var(--ease); transition-delay: var(--d, 0ms); }
+.grades__plot.is-in .grades__l { stroke-dashoffset: 0; }
+.grades__dot, .grades__lt, .grades__ls, .grades__lead { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 1s); }
+.grades__plot.is-in .grades__dot, .grades__plot.is-in .grades__lt, .grades__plot.is-in .grades__ls, .grades__plot.is-in .grades__lead { opacity: 1; }
+.grades__lt { font-size: var(--fs-xs); font-weight: 700; fill: var(--fg); }
+.grades__ls { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+
+/* ---- horizontal bars ---- */
+.hb { --hb-l: 9.5rem; --hb-max: 0.78; width: 100%; }
+.hb__refk { margin: 0 0 var(--sp-2); display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+.hb__refsw { width: 22px; border-top: 1.5px dashed var(--ink); opacity: 0.6; }
+.hb__wrap { position: relative; }
+.hb__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+.hb__ref { left: calc(var(--hb-l) + var(--sp-2) + (100% - var(--hb-l) - var(--sp-2)) * var(--v) * var(--hb-max)); position: absolute; top: -4px; bottom: -4px; border-left: 1.5px dashed var(--ink); opacity: 0.6; z-index: 1; }
+.hb__row { display: grid; grid-template-columns: var(--hb-l) 1fr; align-items: center; gap: var(--sp-2); }
+.hb__lbl { font-size: var(--fs-sm); font-weight: 600; line-height: 1.2; }
+.hb__sub { display: block; font-weight: 400; font-size: var(--fs-2xs); color: var(--fg-faint); font-family: var(--font-mono); margin-top: 2px; }
+.hb__track { position: relative; height: 26px; }
+.hb__bar { width: calc(100% * var(--v) * var(--hb-max)); position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
+.hb.is-in .hb__bar { transform: scaleX(1); }
+.hb__val { left: calc(100% * var(--v) * var(--hb-max)); position: absolute; top: 50%; transform: translate(8px, -50%); font-size: var(--fs-xs); white-space: nowrap; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.6s); font-variant-numeric: tabular-nums; }
+.hb.is-in .hb__val { opacity: 1; }
+
+/* ---- fit scatter ---- */
+.fsc__dot { fill-opacity: 0.55; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.fsc.is-in .fsc__dot { opacity: 1; }
+.fsc__fit { stroke: var(--ink); stroke-width: 2.5; stroke-dashoffset: var(--len); transition: stroke-dashoffset 1s var(--ease) 1s; }
+.fsc.is-in .fsc__fit { stroke-dashoffset: 0; }
+.fsc__r { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; fill: var(--fg); opacity: 0; transition: opacity 0.5s var(--ease) 1.8s; }
+.fsc.is-in .fsc__r { opacity: 1; }
+
+/* ---- the sport cards at the close ---- */
+.sp-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); }
+.sp-card a { display: block; height: 100%; padding: var(--sp-3) 0 0; border-top: 3px solid var(--ink); color: inherit; text-decoration: none; }
+.sp-card--Run a { border-top-color: var(--m-Run); }
+.sp-card--TrailRun a { border-top-color: var(--m-TrailRun); }
+.sp-card--Hike a { border-top-color: var(--m-Hike); }
+.sp-card__k { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.sp-card__v { margin: 4px 0 0; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1.05; }
+.sp-card__u { font-family: var(--font-body, inherit); font-weight: 600; font-size: var(--fs-sm); color: var(--fg-muted); }
+.sp-card__l { margin: 4px 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
+.sp-card__go { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); font-weight: 700; color: var(--accent-ink); }
+.sp-card a:hover .sp-card__go, .sp-card a:focus-visible .sp-card__go { text-decoration: underline; }
+.sp-other { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
+
+@media (max-width: 60rem) {
+  .sp-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 30rem) {
+  .hb { --hb-l: 6.6rem; --hb-max: 0.6; }
+  .hb__lbl { font-size: var(--fs-xs); }
+  .srow__bar { height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .srow__bar, .scol__col, .ridge__row, .rcol__c, .grades__l, .grades__dot, .grades__lt, .grades__ls, .grades__lead,
+  .hb__bar, .hb__val, .fsc__dot, .fsc__fit, .fsc__r, .fmap__lab { transition: none !important; opacity: 1 !important; transform: none !important; clip-path: none !important; stroke-dashoffset: 0 !important; }
+}

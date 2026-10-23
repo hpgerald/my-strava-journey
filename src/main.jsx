@@ -8,6 +8,7 @@ import '@fontsource-variable/inter'
 import './styles/tokens.css'
 import './styles/components.css'
 import './styles/yearinsport.css'
+import './styles/sports.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
