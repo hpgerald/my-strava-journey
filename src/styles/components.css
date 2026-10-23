@@ -874,6 +874,8 @@ text.chart-panel-title {
   display: flex; flex-direction: column; align-items: center; text-align: center;
   pointer-events: none; width: 8rem;
 }
+.radial__center .radial__big { font-size: var(--rfs, var(--fs-xl)); }
+.radial__center .radial__lbl { font-size: var(--fs-2xs); line-height: 1.25; }
 .radial__big {
   font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl);
   line-height: 1; letter-spacing: var(--tr-tight); font-feature-settings: 'tnum' 1;
@@ -1313,15 +1315,28 @@ text.chart-panel-title {
 .mgrid__gl--mark { fill: var(--accent-ink); font-weight: 700; }
 .mgrid__marklbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--accent-ink); }
 
-/* paired bars */
-.pbars__bars { transform: scaleX(0); transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
-.pbars__plot.is-in .pbars__bars { transform: scaleX(1); }
-.pbars__lbl { font-size: var(--fs-xs); fill: var(--fg); }
-.pbars__keylbl { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; }
+/* paired shares as dumbbells, sorted by the gap */
+.pbars__bar { transform: scaleX(0); transition: transform 0.9s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.25s); }
+.pbars__plot.is-in .pbars__bar { transform: scaleX(1); }
+.pbars__dot { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.pbars__dot--b { transition-delay: calc(var(--d, 0ms) + 0.9s); }
+.pbars__plot.is-in .pbars__dot { opacity: 1; }
+.pbars__lbl { font-size: var(--fs-sm); fill: var(--fg); font-weight: 500; }
+.pbars__lbl--sm { font-size: var(--fs-xs); }
+.pbars__row.is-up .pbars__lbl { font-weight: 700; }
+.pbars__key { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; }
+.pbars__key--b { fill: var(--accent-ink); font-weight: 700; }
+.pbars__gl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
 .pbars__val { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums;
-  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 0.7s); }
+  opacity: 0; transition: opacity var(--dur) var(--ease); transition-delay: calc(var(--d, 0ms) + 1s); }
 .pbars__val--b { fill: var(--accent-ink); font-weight: 700; }
 .pbars__plot.is-in .pbars__val { opacity: 1; }
+.pbars__gap { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--grey-55); font-variant-numeric: tabular-nums; }
+.pbars__gap--up { fill: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .pbars__bar { transform: none !important; transition: none !important; }
+  .pbars__dot, .pbars__val { opacity: 1 !important; transition: none !important; }
+}
 
 /* two lines */
 .tl__line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); }

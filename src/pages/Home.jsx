@@ -580,7 +580,7 @@ export default function Home() {
             }}
             left={{ title: 'Home against away', node: <GeoBubbles rows={countries} /> }}
             right={{
-              title: 'Inside Tanzania: outings against climb',
+              title: 'Inside Tanzania: share of outings and of climb',
               node: <PairBars rows={regionRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                 aria={`Tanzania regions, share of outings and share of climb: ${regionRows.map((r) => `${r.label} ${pc(r.a)}% and ${pc(r.b)}%`).join('; ')}.`} />,
             }}
@@ -590,7 +590,7 @@ export default function Home() {
               Tanzania. The list is every other country, with the year it was first reached.
             </>}
             rightNote={<>
-              <b>Why it matters.</b> Grey is each region's share of the outings in Tanzania, orange its share of the climb.
+              <b>Why it matters.</b> Each row is a region. The grey ring is its share of the outings in Tanzania, the orange dot its share of the climb, and the number on the right is the gap in percentage points. Rows run from the biggest climb surplus to the biggest shortfall.
               {busiestRegion ? ` ${busiestRegion.region} is the everyday ground, and flat by comparison.` : ''} The metres are
               earned on trips to the mountains.
             </>}

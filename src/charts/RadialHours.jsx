@@ -38,7 +38,8 @@ export default function RadialHours({ counts, unit = 'activities', max: maxSize 
   const cy = size / 2
   const pad = 30
   const rOuter = size / 2 - pad
-  const rInner = rOuter * 0.34
+  // a wide hole so the total in the middle never touches the spokes
+  const rInner = rOuter * 0.44
   const max = Math.max(1, ...counts)
   const total = counts.reduce((a, b) => a + b, 0)
   // thin spokes with a small gap so each hour reads on its own
@@ -92,7 +93,7 @@ export default function RadialHours({ counts, unit = 'activities', max: maxSize 
           )
         })}
       </svg>
-      <div className="radial__center">
+      <div className="radial__center" style={{ width: rInner * 1.7, '--rfs': `${Math.min(40, (rInner * 1.45) / (0.62 * Math.max(4, String(total.toLocaleString()).length)))}px` }}>
         {hi == null ? (
           <>
             <span className="radial__big mono">{total.toLocaleString()}</span>
