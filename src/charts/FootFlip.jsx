@@ -12,13 +12,13 @@ export default function FootFlip({ items }) {
   const [hover, setHover] = useState(null)
   if (!items || !items.length) return <div ref={ref} />
 
-  const W = Math.max(320, width)
+  const W = Math.max(280, width)
   const H = 300
   const m = { t: 34, b: 22 }
   const ih = H - m.t - m.b
   const barW = 22
   const leftX = W * 0.28
-  const rightX = W * 0.72
+  const rightX = W * (W < 360 ? 0.66 : 0.72)
   const gap = 3
 
   const dTot = items.reduce((s, d) => s + d.dist, 0) || 1

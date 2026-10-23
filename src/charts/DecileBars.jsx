@@ -17,12 +17,14 @@ export default function DecileBars({ shares }) {
   const narrow = W < 520
   const H = narrow ? 300 : 360
   const m = { t: 30, r: 14, b: 44, l: 40 }
-  const top = Math.max(0.25, Math.ceil(Math.max(...shares) * 20) / 20)
+  // headroom above the tallest bar so its value never meets the key line
+  const top = Math.max(0.25, Math.ceil(Math.max(...shares) * 1.12 * 20) / 20)
   const y = linScale([0, top], [H - m.b, m.t])
   const slot = (W - m.l - m.r) / 10
   const bw = slot * (narrow ? 0.72 : 0.64)
   const bx = (i) => m.l + slot * i + (slot - bw) / 2
-  const ticks = [0, 0.05, 0.1, 0.15, 0.2, 0.25].filter((t) => t <= top + 1e-9)
+  const step = top > 0.4 ? 0.1 : 0.05
+  const ticks = Array.from({ length: Math.round(top / step) + 1 }, (_, i) => +(i * step).toFixed(2)).filter((t) => t <= top + 1e-9)
   const tone = (i) => (i < 5 ? 'quiet' : i < 8 ? 'mid' : 'big')
 
   return (
@@ -51,7 +53,9 @@ export default function DecileBars({ shares }) {
 
           {/* the even line drawn over the bars so it reads against every one */}
           <line className="dec__even" x1={m.l} y1={y(0.1)} x2={W - m.r} y2={y(0.1)} stroke="var(--ink)" strokeWidth="1.25" strokeDasharray="4 3" opacity="0.6" />
-          <text className="dec__evenlbl dec__halo" x={m.l + 6} y={y(0.1) - 8} textAnchor="start">{narrow ? 'every day equal · 10%' : 'if every day were equal · 10%'}</text>
+          {/* keyed at the top right, clear of every bar and value */}
+          <line x1={W - m.r - 22} y1={m.t - 18} x2={W - m.r} y2={m.t - 18} stroke="var(--ink)" strokeWidth="1.25" strokeDasharray="4 3" opacity="0.6" />
+          <text className="dec__evenlbl" x={W - m.r - 28} y={m.t - 14} textAnchor="end">{narrow ? 'even · 10%' : 'if every day were equal · 10%'}</text>
 
           <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="dec__axis">each tenth of days, shortest to longest &rarr;</text>
           <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="dec__axis">share of distance &uarr;</text>

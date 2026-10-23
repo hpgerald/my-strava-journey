@@ -50,7 +50,7 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria })
           {grid.map((g) => (
             <g key={g}>
               <line x1={x(g)} y1={m.t - 12} x2={x(g)} y2={H - m.b} stroke={g === 0 ? 'var(--ink)' : 'var(--rule-faint)'} strokeWidth="1" />
-              <text x={x(g)} y={m.t - 18} textAnchor="middle" className="pbars__gl">{pc(g)}</text>
+              {(x(0.1) - x(0) >= 34 || Math.round(g * 10) % 2 === 0) && <text x={x(g)} y={m.t - 18} textAnchor="middle" className="pbars__gl">{pc(g)}</text>}
             </g>
           ))}
 

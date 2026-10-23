@@ -1,70 +1,64 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
-import Figure from '../charts/Figure.jsx'
+import StorySection from '../components/StorySection.jsx'
+import OddsRow from '../components/OddsRow.jsx'
+import OutingSky from '../charts/OutingSky.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import YearMonths from '../charts/YearMonths.jsx'
-import YearMix from '../charts/YearMix.jsx'
-import YearStreak from '../charts/YearStreak.jsx'
+import YearProgress from '../charts/YearProgress.jsx'
+import YearCalendar from '../charts/YearCalendar.jsx'
 import YearRank from '../charts/YearRank.jsx'
 import YearMoment from '../charts/YearMoment.jsx'
-import YearProgress from '../charts/YearProgress.jsx'
-import YearWeekdays from '../charts/YearWeekdays.jsx'
 import YearDistances from '../charts/YearDistances.jsx'
 import YearVsPrev from '../charts/YearVsPrev.jsx'
-import EverestLedger from '../charts/EverestLedger.jsx'
+import SportTreemap from '../charts/SportTreemap.jsx'
+import FootFlip from '../charts/FootFlip.jsx'
+import ColBars from '../charts/ColBars.jsx'
+import DecileBars from '../charts/DecileBars.jsx'
+import TransitionMatrix from '../charts/TransitionMatrix.jsx'
+import TailOutlier from '../charts/TailOutlier.jsx'
+import GeoBubbles from '../charts/GeoBubbles.jsx'
+import PairBars from '../charts/PairBars.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { computeYearStats, YEAR_THEME, YEAR_REPORT } from '../lib/yearStats.js'
+import { buildYearReport } from '../lib/yearReport.js'
 import { fmtInt } from '../lib/format.js'
 
 const MONTH_L = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH_F = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const EVEREST = 8849
+const DAR_DODOMA_KM = 450 // Dar es Salaam to Dodoma by road, one way
+const pc = (v) => Math.round((v || 0) * 100)
+const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+const fmtMonth = (iso) => (iso ? `${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
+const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); return h ? `${h} h ${m} min` : `${m} min` }
+const ORD = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
+const WORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+const word = (n) => WORD[n] || String(n)
+const chg = (cur, prv) => (prv > 0 ? (cur - prv) / prv : null)
+const chgTxt = (c) => (c == null ? '' : c >= 0 ? `up ${pc(c)}%` : `down ${pc(-c)}%`)
+const more = (c, up, down) => (c == null ? 'no comparable' : c >= 0 ? `${pc(c)}% ${up}` : `${pc(-c)}% ${down}`)
 
-function fmtMonth(iso) {
-  if (!iso) return ''
-  const m = parseInt(iso.slice(5, 7), 10)
-  return `${MONTH_L[m - 1]} ${iso.slice(0, 4)}`
-}
-
-function HeroStat({ value, unit, label, decimals = 0 }) {
+// one record card on the four-column grid
+function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, text = null, tone }) {
   const [ref, inView] = useInView()
   const v = useCountUp(value, inView, { decimals, dur: 1100 })
   return (
-    <div ref={ref} className="yis-hero__stat">
-      <span className="yis-hero__num">
-        {v.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
-        {unit ? <span className="yis-hero__unit">{unit}</span> : null}
-      </span>
-      <span className="yis-hero__lbl">{label}</span>
-    </div>
-  )
-}
-
-function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, text = null }) {
-  const [ref, inView] = useInView()
-  const v = useCountUp(value, inView, { decimals, dur: 1000 })
-  return (
-    <div ref={ref} className="yis-rec">
-      <p className="eyebrow">{kicker}</p>
-      <p className="yis-rec__val">
-        {text != null ? text : v.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
-        {unit ? <span className="yis-rec__unit">{unit}</span> : null}
+    <li ref={ref} className={`yrec${inView ? ' is-in' : ''}${tone ? ` yrec--${tone}` : ''}`}>
+      <p className="yrec__k">{kicker}</p>
+      <p className="yrec__v">
+        {text != null ? text : v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+        {unit ? <span className="yrec__u">{unit}</span> : null}
       </p>
-      <p className="yis-rec__lbl">{label}</p>
-      {sub ? <p className="yis-rec__sub">{sub}</p> : null}
-    </div>
+      <p className="yrec__l">{label}</p>
+      {sub ? <p className="yrec__s">{sub}</p> : null}
+    </li>
   )
-}
-
-const WEEK_FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const DAR_DODOMA_KM = 450 // Dar es Salaam to Dodoma by road (A7), approx one way
-
-function hoursMin(min) {
-  const h = Math.floor(min / 60)
-  const m = Math.round(min % 60)
-  return h > 0 ? `${h} h ${m} min` : `${m} min`
 }
 
 export default function YearInSport() {
@@ -79,8 +73,6 @@ export default function YearInSport() {
   const latest = years.length ? years[years.length - 1] : 2026
   const { year: yearParam } = useParams()
   const [picked, setPicked] = useState(null)
-  // deep-link support: /numbers/2023 opens on 2023; a manual pick overrides until
-  // the URL changes again.
   useEffect(() => {
     const y = Number(yearParam)
     setPicked(years.includes(y) ? y : null)
@@ -92,67 +84,95 @@ export default function YearInSport() {
     for (const g of activityGeo) m[g.activity_key] = g
     return m
   }, [activityGeo])
+  const recordFirst = useMemo(() => activities.reduce((m, a) => (!m || a.date < m ? a.date : m), ''), [activities])
+  const recordLast = useMemo(() => activities.reduce((m, a) => (a.date > m ? a.date : m), ''), [activities])
 
-  const stats = useMemo(
-    () => (activities.length ? computeYearStats(activeYear, activities, geoByKey) : null),
-    [activeYear, activities, geoByKey]
+  const allStats = useMemo(
+    () => (activities.length ? years.map((y) => computeYearStats(y, activities, geoByKey)) : []),
+    [years, activities, geoByKey]
   )
-
-  // per-year activity totals for the cross-year rank
-  const rankSeries = useMemo(
-    () => years.map((y) => ({ year: y, value: activities.filter((a) => Number(a.year) === y).length })),
-    [years, activities]
-  )
-
-  // the year immediately before, for the head-to-head comparison
+  const s = allStats.find((x) => x.year === activeYear) || null
   const prevYear = years.includes(activeYear - 1) ? activeYear - 1 : null
-  const prevStats = useMemo(
-    () => (prevYear && activities.length ? computeYearStats(prevYear, activities, geoByKey) : null),
-    [prevYear, activities, geoByKey]
+  const ps = prevYear ? allStats.find((x) => x.year === prevYear) : null
+  const r = useMemo(
+    () => (s ? buildYearReport(activeYear, activities, geoByKey, recordFirst.slice(0, 10), recordLast.slice(0, 10)) : null),
+    [s, activeYear, activities, geoByKey, recordFirst, recordLast]
   )
+  const yearActs = useMemo(() => activities.filter((a) => Number(a.year) === activeYear), [activities, activeYear])
 
   const pickerRef = useRef(null)
   const scrollToTop = () => pickerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-
-  // arrow-key navigation across the year picker
   const onPickerKey = (e) => {
     const i = years.indexOf(activeYear)
     if (e.key === 'ArrowRight' && i < years.length - 1) { setPicked(years[i + 1]); e.preventDefault() }
     if (e.key === 'ArrowLeft' && i > 0) { setPicked(years[i - 1]); e.preventDefault() }
   }
 
-  if (!stats) {
+  if (!s || !r) {
     return <DetailFrame crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]} number="02" title="Year in Sport" subtitle="Pick a year. See the whole story." />
   }
 
-  const s = stats
-  const isPartial = activeYear === latest && s.endISO.slice(5) < '12-31'
-  const theme = YEAR_THEME[activeYear] || `${activeYear} in sport`
+  const Y = activeYear
+  const isPartial = Y === latest && s.endISO.slice(5) < '12-31'
+  const so = isPartial ? ' so far' : ''
+  const theme = YEAR_THEME[Y] || `${Y} in sport`
+
+  // ---- the months ----
+  const firstMo = r.startISO.slice(0, 4) === String(Y) ? parseInt(r.startISO.slice(5, 7), 10) - 1 : 0
+  const lastMo = parseInt(r.endISO.slice(5, 7), 10) - 1
+  const moIdx = []
+  for (let i = firstMo; i <= lastMo; i++) moIdx.push(i)
+  const moActs = moIdx.map((i) => s.monthsActivities[i])
+  const busy = moIdx[moActs.indexOf(Math.max(...moActs))]
+  const quiet = moIdx[moActs.indexOf(Math.min(...moActs))]
+  const activeMonths = moActs.filter((v) => v > 0).length
+  const perMonth = s.n / Math.max(1, moIdx.length)
   const monthsData = MONTH_L.map((label, i) => ({ m: i + 1, label, activities: s.monthsActivities[i], km: s.monthsKm[i] }))
 
-  // per-year insights the chart notes lead with, computed fresh for whichever
-  // year is picked, so each note says something true and specific about it.
-  const busyMo = s.monthsActivities.indexOf(Math.max(1, ...s.monthsActivities))
-  const busyMoN = s.monthsActivities[busyMo] || 0
-  const peakHour = s.hours24.indexOf(Math.max(1, ...s.hours24))
-  const daysElapsed = Math.max(1, Math.round((Date.parse(s.endISO) - Date.parse(`${activeYear}-01-01`)) / 86400000) + 1)
-  const pctDays = Math.round((100 * s.activeDays) / daysElapsed)
-  const [moreSport, lessSport, moreN, lessN] = s.walkN >= s.runN
-    ? ['Walking', 'running', s.walkN, s.runN]
-    : ['Running', 'walking', s.runN, s.walkN]
-  const otherN = s.n - s.footN
-  // biggest mover against the previous year, for that comparison's note
-  const moverPct = (cur, prv) => (prv > 0 ? Math.round((100 * (cur - prv)) / prv) : null)
-  let biggestMover = null
-  if (prevStats) {
-    const cands = [
-      { label: 'activity count', pct: moverPct(s.n, prevStats.n) },
-      { label: 'foot distance', pct: moverPct(s.footKm, prevStats.footKm) },
-      { label: 'climbing', pct: moverPct(s.elev, prevStats.elev) },
-      { label: 'personal records', pct: moverPct(s.prs, prevStats.prs) },
-    ].filter((c) => c.pct != null && Number.isFinite(c.pct))
-    if (cands.length) biggestMover = cands.reduce((a, b) => (Math.abs(b.pct) > Math.abs(a.pct) ? b : a))
-  }
+  // ---- the mix ----
+  const mix = { walk: 0, run: 0, trail: 0, other: 0 }
+  for (const a of yearActs) mix[a.sport_type === 'Walk' ? 'walk' : a.sport_type === 'Run' ? 'run' : a.sport_type === 'TrailRun' || a.sport_type === 'Hike' ? 'trail' : 'other'] += 1
+  const lead = mix.walk >= mix.run ? ['Walks', mix.walk, 'runs', mix.run] : ['Runs', mix.run, 'walks', mix.walk]
+  const footKmAll = r.flip.reduce((t, d) => t + d.dist, 0) || 1
+  const footElAll = r.flip.reduce((t, d) => t + d.elev, 0) || 1
+  const flipOf = (k) => r.flip.find((d) => d.key === k) || { dist: 0, elev: 0 }
+  const climber = r.flip.length ? r.flip.reduce((b, d) => (d.elev / footElAll > b.elev / footElAll ? d : b), r.flip[0]) : null
+
+  // ---- the hours ----
+  const hs = (lo, hi) => s.hours24.slice(lo, hi).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
+  const morning = hs(0, 10), midday = hs(10, 16), evening = hs(16, 21), late = hs(21, 24)
+  const peakHour = s.hours24.indexOf(Math.max(...s.hours24))
+  const fmtH = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
+  const wkMax = Math.max(...s.weekday7), wkMin = Math.min(...s.weekday7)
+
+  // ---- the days ----
+  const pctDays = r.activeShare
+  const gapsTot = Math.max(1, r.gaps.total)
+  const dTot = Math.max(1, r.multi.one + r.multi.two + r.multi.more)
+  const multiDays = r.multi.two + r.multi.more
+
+  // ---- the distances ----
+  const longestFoot = s.biggestFoot ? s.biggestFoot.val : 0
+  const meanFoot = r.tail ? r.tail.mean : 0
+
+  // ---- against the other years ----
+  const rankSeries = allStats.map((x) => ({ year: x.year, value: x.n }))
+  const rankOf = (f) => 1 + allStats.filter((x) => f(x) > f(s)).length
+  const rankN = rankOf((x) => x.n), rankKm = rankOf((x) => x.footKm), rankEl = rankOf((x) => x.elev)
+
+  // ---- records ----
+  const everests = s.elev / EVEREST
+  // sections are numbered in the order they render, so a small year with fewer
+  // sections still counts 1, 2, 3 without gaps
+  let secN = 0
+  const num = () => ++secN
+  const wkStep = wkMax > 100 ? 50 : wkMax > 40 ? 20 : wkMax > 15 ? 5 : 2
+  const wkTicks = []
+  const wkKmMax = Math.max(1, ...r.weekly.series.map((w) => w.km))
+  const wkKmStep = wkKmMax > 150 ? 50 : wkKmMax > 60 ? 25 : 10
+  const wkKmTicks = []
+  for (let t = 0; t <= wkKmMax * 1.1; t += wkKmStep) wkKmTicks.push(t)
+  for (let t = 0; t <= wkMax * 1.15; t += wkStep) wkTicks.push(t)
 
   return (
     <DetailFrame
@@ -160,288 +180,397 @@ export default function YearInSport() {
       number="02"
       title="Year in Sport"
       subtitle="Pick a year. See the whole story."
-      lede="Seven years, one at a time. Pick a year and the whole page rebuilds around it: the totals, the shape of its months, how it moved, how many days ran unbroken, its biggest efforts, and the one thing that set it apart."
+      lede="One year at a time. Pick a year and the whole report rebuilds around it: every outing, the months, the sports, the hours, the days, the distances, the maths of the habit, the biggest days and where it all happened."
       prev={prev}
       next={next}
     >
-      {/* ---- Year picker (sticky) ---- */}
       <div ref={pickerRef} className="yis-picker" role="group" aria-label="Choose a year" onKeyDown={onPickerKey}>
         {years.map((y) => (
-          <button
-            key={y}
-            type="button"
-            className={`yis-picker__yr${y === activeYear ? ' is-on' : ''}`}
-            aria-pressed={y === activeYear}
-            onClick={() => setPicked(y)}
-          >
+          <button key={y} type="button" className={`yis-picker__yr${y === Y ? ' is-on' : ''}`} aria-pressed={y === Y} onClick={() => setPicked(y)}>
             {y}
           </button>
         ))}
       </div>
 
-      {/* ---- everything below re-animates when the year changes ---- */}
-      <div key={activeYear} className="yis-report">
-        {/* Hero */}
-        <section className="yis-hero">
-          <p className="eyebrow yis-hero__kicker">Year in Sport{isPartial ? ' · still unfolding' : ''}</p>
-          <h2 className="yis-hero__year display">{activeYear}</h2>
-          <p className="yis-hero__theme">{theme}</p>
-          {YEAR_REPORT[activeYear] && (
-            <p className="yis-hero__lede measure">{YEAR_REPORT[activeYear](s)}</p>
-          )}
-          <div className="yis-hero__stats">
-            <HeroStat value={s.n} label="activities" />
-            <HeroStat value={Math.round(s.footKm)} unit="km" label="on foot" />
-            <HeroStat value={Math.round(s.hours)} unit="h" label="moving" />
-            <HeroStat value={Math.round(s.elev)} unit="m" label="climbed" />
-            <HeroStat value={Math.round(s.kudos)} label="kudos" />
-            <HeroStat value={Math.round(s.prs)} label="personal records" />
+      <div key={Y} className="yis-report">
+        {/* ===== the year in one view ===== */}
+        <section className="sgrid yis-top" aria-labelledby="yis-title">
+          <div className="sgrid__head">
+            <p className="eyebrow">{Y}{isPartial ? ' · still running' : ''}</p>
+            <h2 id="yis-title" className="section-head__title">{theme}.</h2>
           </div>
+          {YEAR_REPORT[Y] && <Reveal as="p" className="sgrid__statement">{YEAR_REPORT[Y](s)}</Reveal>}
+          <OddsRow
+            title={`${Y} in four numbers${ps ? `, against ${prevYear}` : ''}`}
+            items={[
+              { num: s.n, unit: '', label: `outings${ps ? `, ${chgTxt(chg(s.n, ps.n))}` : ''}`, tone: 'move' },
+              { num: s.footKm, unit: ' km', label: `on foot${ps ? `, ${chgTxt(chg(s.footKm, ps.footKm))}` : ''}`, tone: 'move' },
+              { num: s.elev, unit: ' m', label: `climbed${ps ? `, ${chgTxt(chg(s.elev, ps.elev))}` : ''}`, tone: 'move' },
+              { num: s.hours, unit: ' h', label: `moving${ps ? `, ${chgTxt(chg(s.hours, ps.hours))}` : ''}`, tone: 'move' },
+            ]}
+          />
+          <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} />
+          <p className="source">Source: Activity Log · every outing of {Y}, placed by date and start time</p>
         </section>
 
-        {/* The year, month by month */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title="The year, month by month"
-            note={`${busyMoN > 0 ? `${MONTH_F[busyMo]} was the busiest month of ${activeYear}, ${busyMoN} times out the door. ` : ''}Each bar is a month, taller where more was logged; the flat stretches are quiet weeks or gaps.`}
-            source="Activity Log"
-            tableCaption={`Activities by month in ${activeYear}`}
-            columns={['Month', 'Activities']}
-            rows={monthsData.map((d) => [MONTH_F[d.m - 1], fmtInt(d.activities)])}
-          >
-            <YearMonths months={monthsData} />
-          </Figure>
-        </Reveal>
+        {/* ===== 1. month by month ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="yis-months"
+          eyebrow={`${num()} · Month by month`}
+          title={`${MONTH_F[busy]} was the busiest month of ${Y}.`}
+          statement={<>
+            {activeMonths === moIdx.length ? `Every month${so} had an outing.` : `${word(activeMonths)[0].toUpperCase() + word(activeMonths).slice(1)} of the ${word(moIdx.length)} months${so} had an outing.`}{' '}
+            {MONTH_F[busy]} led with {s.monthsActivities[busy]} outings and {n0(s.monthsKm[busy])} km on foot.{' '}
+            {MONTH_F[quiet]} was the quietest, with {s.monthsActivities[quiet]}. The kilometres added up to {n0(s.footKm)}{so},
+            about {n0(s.footKm / Math.max(1, moIdx.length))} a month.
+          </>}
+          odds={{
+            title: `${Y} by the month`,
+            items: [
+              { num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}, the busiest`, tone: 'move' },
+              { num: s.monthsActivities[quiet], unit: '', label: `in ${MONTH_F[quiet]}, the quietest`, tone: 'rest' },
+              { num: perMonth, unit: '', label: 'outings in an average month', tone: 'move' },
+              { num: s.footKm / Math.max(1, moIdx.length), unit: ' km', label: 'on foot in an average month', tone: 'move' },
+            ],
+          }}
+          left={{ title: 'Outings, month by month', node: <YearMonths months={monthsData} /> }}
+          right={{ title: 'The kilometres adding up', node: <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} /> }}
+          leftNote={<><b>How to read it.</b> One bar per month, taller and darker where more outings were logged. The labelled bar is the busiest month.</>}
+          rightNote={<><b>Why it matters.</b> The line adds up every kilometre on foot as the months pass. Steep stretches are busy weeks, flat ones are quiet weeks or gaps.</>}
+          source="Activity Log · outings and distance on foot, by month"
+        />
 
-        {/* How the kilometres added up */}
-        {s.footKm > 0 && s.lastActiveMonth >= 1 && (
-          <Reveal as="section" className="yis-sec">
-            <Figure
-              title="How the kilometres added up"
-              note={`Every foot kilometre of ${activeYear}, stacked up as the months pass. The line jumps where long outings landed close together and flattens through the quiet weeks, finishing the year at ${Math.round(s.footKm).toLocaleString()} km.`}
-              source="Activity Log"
-              tableCaption={`Cumulative foot kilometres by month end in ${activeYear}`}
-              columns={['Through', 'Cumulative km']}
-              rows={s.cumByMonth.filter((d) => d.inRange).map((d) => [MONTH_F[d.m - 1], fmtInt(d.cum)])}
-            >
-              <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} />
-            </Figure>
-          </Reveal>
+        {/* ===== 2. how it moved ===== */}
+        {s.n >= 10 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="yis-mix"
+              eyebrow={`${num()} · How it moved`}
+              title={`${lead[0]} led ${Y}: ${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
+              statement={<>
+                Of the {fmtInt(s.n)} outings{so}, {mix.walk} were walks, {mix.run} runs and {mix.trail} trail runs or hikes;
+                {' '}{mix.other} were off the feet. On foot, running covered {pc(flipOf('Run').dist / footKmAll)}% of the distance
+                {climber ? ` and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} carried the most climb, ${pc(climber.elev / footElAll)}% of it.` : '.'}
+              </>}
+              odds={{
+                title: 'Share of all outings',
+                items: [
+                  { value: mix.walk / s.n, label: 'walks', tone: 'move' },
+                  { value: mix.run / s.n, label: 'runs', tone: 'move' },
+                  { value: mix.trail / s.n, label: 'trail runs and hikes', tone: 'move' },
+                  { value: mix.other / s.n, label: 'other activities, off the feet', tone: 'rest' },
+                ],
+              }}
+              left={{ title: 'Every outing, by sport', node: <SportTreemap rows={r.sportRows} /> }}
+              right={{ title: 'Distance against climb, on foot', node: r.flip.length >= 2 ? <FootFlip items={r.flip} /> : <p className="yis-empty">Only one sport on foot this year.</p> }}
+              leftNote={<><b>How to read it.</b> Each tile is a sport, sized by how many outings it had. Everything off the feet folds into one tile.</>}
+              rightNote={<><b>Why it matters.</b> The left column splits the distance on foot by sport, the right column splits the climb. A sport that is thin on the left and thick on the right climbs far more than it covers.</>}
+              source="Activity Log · outings by sport, distance and climb on foot"
+            />
+          </>
         )}
 
-        {/* How it moved */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title="How the year moved"
-            note={`${moreN > 0 ? `${moreSport} led ${activeYear}, ${moreN} outings against ${lessSport}'s ${lessN}${otherN > 0 ? `, with ${otherN} of everything else` : ''}. ` : ''}Each kind of activity, counted by how often it happened. Anything not on foot folds in below.`}
-            source="Activity Log"
-            tableCaption={`Activities by type in ${activeYear}`}
-            columns={['Type', 'Activities']}
-            rows={s.mix.map((d) => [d.label, fmtInt(d.n)])}
-          >
-            <YearMix mix={s.mix} />
-          </Figure>
-        </Reveal>
-
-        {/* The shape of the week */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title="The shape of the week"
-            note={`${
-              Math.max(...s.weekday7) - Math.min(...s.weekday7) <= Math.max(2, Math.round(s.n * 0.03))
-                ? 'The seven columns stand almost level: the habit ran every day of the week about the same. '
-                : `${WEEK_FULL[s.peakWeekdayIdx]} carried the most, ${s.weekday7[s.peakWeekdayIdx]} of them. `
-            }Every ${activeYear} activity sorted by the weekday it fell on.`}
-            source="Activity Log"
-            tableCaption={`Activities by weekday in ${activeYear}`}
-            columns={['Weekday', 'Activities']}
-            rows={WEEK_FULL.map((d, i) => [d, fmtInt(s.weekday7[i])])}
-          >
-            <YearWeekdays counts={s.weekday7} />
-          </Figure>
-        </Reveal>
-
-        {/* When the days happened */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title="When the day got moving"
-            note={`${peakHour >= 0 ? `In ${activeYear} the single busiest hour was ${peakHour}:00${peakHour <= 9 ? ', out the door before the day had properly begun' : peakHour >= 16 ? ', most of the movement waiting until the working day was done' : ''}. ` : ''}Every activity on a 24-hour clock by the hour it began; the longer the spoke, the more started then.`}
-            source="Activity Log"
-            tableCaption={`Activities by hour of day in ${activeYear}`}
-            columns={['Hour', 'Activities']}
-            rows={s.hours24.map((c, i) => [`${String(i).padStart(2, '0')}:00`, String(c)])}
-          >
-            <RadialHours counts={s.hours24} unit="activities" />
-          </Figure>
-        </Reveal>
-
-        {/* The typical outing */}
-        {s.footN >= 20 && (
-          <Reveal as="section" className="yis-sec">
-            <Figure
-              title="The typical outing"
-              note={`Every walk, run and hike of ${activeYear} sorted by distance. The median outing, the middle one with half shorter and half longer, came to ${s.medianFoot.toFixed(1)} km${
-                s.peakBins.length ? `, and it kept coming back to around ${s.peakBins.slice().sort((a, b) => a - b).join(' and ')} km` : ''
-              }. Anything past 25 km folds into the last bar.`}
-              source="Activity Log"
-              tableCaption={`Foot outings by distance in ${activeYear}`}
-              columns={['Distance', 'Outings']}
-              rows={s.footBins.filter((b) => b.count > 0).map((b) => [`${b.km}${b.cap ? '+' : ''} km`, fmtInt(b.count)])}
-            >
-              <YearDistances bins={s.footBins} peaks={s.peakBins} />
-            </Figure>
-          </Reveal>
+        {/* ===== 3. when it happened ===== */}
+        {s.n >= 10 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="yis-hours"
+              eyebrow={`${num()} · When it happened`}
+              title={evening >= morning ? `${pc(evening)}% of outings started between 4 and 9pm.` : `${pc(morning)}% of outings started before 10am.`}
+              statement={<>
+                The busiest hour of {Y} was {fmtH(peakHour)}. {pc(morning)}% of outings started before 10 in the morning, {pc(midday)}%
+                between 10am and 4pm and {pc(evening)}% between 4 and 9pm. {WEEK[s.weekday7.indexOf(wkMax)]} was the busiest day of the
+                week with {wkMax}, {WEEK[s.weekday7.indexOf(wkMin)]} the quietest with {wkMin}.
+              </>}
+              odds={{
+                title: 'When outings started',
+                items: [
+                  { value: morning, label: 'before 10am', tone: 'move' },
+                  { value: midday, label: 'between 10am and 4pm', tone: 'rest' },
+                  { value: evening, label: 'between 4 and 9pm', tone: 'move' },
+                  { value: late, label: 'after 9pm', tone: 'rest' },
+                ],
+              }}
+              left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={s.hours24} unit="activities" max={400} /> }}
+              right={{
+                title: 'Every outing, by day of the week',
+                node: (
+                  <ColBars
+                    items={WEEK.map((d, i) => ({ label: d.slice(0, 3), short: d.slice(0, 1), value: s.weekday7[i], display: String(s.weekday7[i]), tone: s.weekday7[i] === wkMax ? 'big' : s.weekday7[i] === wkMin ? 'quiet' : 'mid' }))}
+                    max={wkMax * 1.15} ticks={wkTicks} xCap="day of the week &rarr;" yCap="outings &uarr;" H={400}
+                    aria={`Outings by weekday in ${Y}: ${WEEK.map((d, i) => `${d} ${s.weekday7[i]}`).join(', ')}.`}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> Midnight is at the top and the hours run clockwise. The longer and darker a spoke, the more outings started in that hour.</>}
+              rightNote={<><b>Why it matters.</b> The orange bar is the busiest day, the grey one the quietest. A flat row of bars means the habit did not depend on the weekend.</>}
+              source="Activity Log · start hour and weekday of every outing"
+            />
+          </>
         )}
 
-        {/* Consistency / streak */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title={`Every day of ${activeYear}`}
-            note={`Something carried ${pctDays}% of ${activeYear}, ${fmtInt(s.activeDays)} days in all, spread across ${s.weeksActive} ${
-              isPartial ? `of the ${s.weeksElapsed} weeks so far` : 'different weeks'
-            }. The longest unbroken run reached ${s.streakLen} days${s.streakStartISO ? `, starting back in ${fmtMonth(s.streakStartISO)}` : ''}.`}
-            source="Activity Log"
-            tableCaption={`Consistency in ${activeYear}`}
-            columns={['Measure', 'Value']}
-            rows={[['Active days', fmtInt(s.activeDays)], ['Weeks with activity', isPartial ? `${s.weeksActive} of ${s.weeksElapsed}` : String(s.weeksActive)], ['Longest streak', `${s.streakLen} days`]]}
-          >
-            <YearStreak activeSet={s.activeSet} year={activeYear} endISO={s.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} />
-          </Figure>
-        </Reveal>
-
-        {/* Biggest efforts */}
-        {(s.biggestFoot || s.highestClimb || s.hardest) && (
-          <Reveal as="section" className="yis-sec">
-            <div className="section-head"><p className="eyebrow">The far edges of {activeYear}</p>
-              <h3 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>The biggest efforts.</h3></div>
-            <div className="yis-recs">
-              {s.biggestFoot && s.biggestFoot.val > 0 && (
-                <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} unit="km" decimals={1} label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} />
-              )}
-              {s.longestTime && s.longestTime.val > 0 && (
-                <RecordCard kicker="Longest outing" text={hoursMin(s.longestTime.val)} label="moving, start to finish" sub={fmtMonth(s.longestTime.date)} />
-              )}
-              {s.highestClimb && s.highestClimb.val > 0 && (
-                <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of vertical in a day" sub={fmtMonth(s.highestClimb.date)} />
-              )}
-              {s.hardest && s.hardest.val > 0 && (
-                <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative-effort score" sub={fmtMonth(s.hardest.date)} />
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* Breakthroughs: PRs, achievements, the most-cheered day */}
-        {(s.prs > 0 || s.achievements >= 10) && (
-          <Reveal as="section" className="yis-sec">
-            <div className="section-head"><p className="eyebrow">Breakthroughs</p>
-              <h3 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>Records set, crowns earned.</h3></div>
-            <div className="yis-recs">
-              {s.prs > 0 && (
-                <RecordCard kicker="Personal records" value={Math.round(s.prs)} label="segment bests beaten" sub={`${activeYear}`} />
-              )}
-              {s.achievements > 0 && (
-                <RecordCard kicker="Achievements" value={Math.round(s.achievements)} label="crowns and cups collected" sub={`${activeYear}`} />
-              )}
-              {s.mostKudos && s.mostKudos.kudos > 0 && (
-                <RecordCard kicker="Most cheered" value={Math.round(s.mostKudos.kudos)} label={`kudos on one ${s.mostKudos.sport.toLowerCase()}`} sub={fmtMonth(s.mostKudos.date)} />
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* In real terms: what the year's totals add up to */}
-        {s.footKm >= 100 && (
-          <Reveal as="section" className="yis-sec">
-            <div className="section-head"><p className="eyebrow">In real terms</p>
-              <h3 className="section-head__title" style={{ fontSize: 'var(--fs-lg)' }}>What {activeYear} adds up to.</h3></div>
-            {s.elev >= 800 && (
-              <div style={{ margin: 'var(--sp-4) 0 var(--sp-5)' }}>
-                <EverestLedger meters={s.elev} />
-              </div>
-            )}
-            <div className="yis-recs">
-              <RecordCard kicker="On foot" text={`${(s.footKm / DAR_DODOMA_KM).toFixed(1)}×`} label="the road from Dar es Salaam to Dodoma" sub={`${Math.round(s.footKm).toLocaleString()} km walked and run`} />
-              <RecordCard kicker="Energy" value={Math.round(s.calories)} label="calories burned across the year" />
-              <RecordCard kicker="Time" value={Math.round(s.hours)} unit="h" label="spent moving, all told" sub={`about ${Math.round(s.hours / Math.max(1, s.weeksElapsed || 52))} h a week`} />
-            </div>
-          </Reveal>
-        )}
-
-        {/* Where (only when the year reached beyond home) */}
-        {s.countries.length > 1 && (
-          <Reveal as="section" className="yis-sec">
-            <Figure
-              title={`Where ${activeYear} happened`}
-              note={`Where the year's activities landed, by country. ${activeYear} touched ${s.countries.length} countries, home and away.`}
-              source="Strava GPS + point-in-polygon"
-              tableCaption={`Located activities by country in ${activeYear}`}
-              columns={['Country', 'Activities']}
-              rows={s.countries.map((c) => [c.country, fmtInt(c.n)])}
-            >
-              <YearMix mix={s.countries.map((c) => ({ label: c.country, n: c.n, foot: true }))} />
-            </Figure>
-          </Reveal>
-        )}
-
-        {/* Against last year */}
-        {prevStats && s.n >= 50 && (
-          <Reveal as="section" className="yis-sec">
-            <Figure
-              title={`${activeYear} against ${prevYear}`}
-              note={`${biggestMover ? `The biggest swing from ${prevYear} is ${biggestMover.label}, ${biggestMover.pct >= 0 ? 'up' : 'down'} ${Math.abs(biggestMover.pct)}%. ` : ''}Here is ${activeYear} set beside the year before it, measure by measure.${
-                isPartial ? ` ${activeYear} is still unfolding, so these totals run against a full ${prevYear}, and the gaps will narrow as the year fills out.` : ''
-              }`}
-              source="Activity Log"
-              tableCaption={`${activeYear} compared with ${prevYear}`}
-              columns={['Measure', `${activeYear}`, `${prevYear}`]}
-              rows={[
-                ['Activities', fmtInt(s.n), fmtInt(prevStats.n)],
-                ['Kilometres on foot', fmtInt(s.footKm), fmtInt(prevStats.footKm)],
-                ['Hours moving', fmtInt(s.hours), fmtInt(prevStats.hours)],
-                ['Metres climbed', fmtInt(s.elev), fmtInt(prevStats.elev)],
-                ['Kudos', fmtInt(s.kudos), fmtInt(prevStats.kudos)],
-                ['Personal records', fmtInt(s.prs), fmtInt(prevStats.prs)],
-              ]}
-            >
-              <YearVsPrev
-                prevYear={prevYear}
-                rows={[
-                  { label: 'Activities', cur: s.n, prev: prevStats.n },
-                  { label: 'Km on foot', cur: Math.round(s.footKm), prev: Math.round(prevStats.footKm), unit: 'km' },
-                  { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(prevStats.hours), unit: 'h' },
-                  { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(prevStats.elev), unit: 'm' },
-                  { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(prevStats.kudos) },
-                  { label: 'Personal records', cur: Math.round(s.prs), prev: Math.round(prevStats.prs) },
+        {/* ===== 4. every day of the year ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="yis-days"
+          eyebrow={`${num()} · Every day of the year`}
+          title={`Something happened on ${pc(pctDays)}% of the days${so}.`}
+          statement={<>
+            {fmtInt(s.activeDays)} of {fmtInt(r.span)} days{so} had at least one outing, across {s.weeksActive} different weeks.
+            The longest run of days in a row was {s.streakLen}{s.streakStartISO ? `, from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ''}.
+            {r.restDays === 0 ? ' There was not one day off.' : r.longGap.len >= 2 ? ` The longest break was ${r.longGap.len} days, ending ${fmtDay(r.longGap.to)}.` : ' There was never more than one day off in a row.'}
+            {r.restDays === 0
+              ? ` Of those days, ${pc(multiDays / Math.max(1, s.activeDays))}% held two outings or more.`
+              : r.gaps.total ? ` After an outing, the next one came the very next day ${pc(r.gaps.next / gapsTot)}% of the time.` : ''}
+          </>}
+          odds={{
+            title: `The days of ${Y}`,
+            items: [
+              { num: s.activeDays, unit: ' days', label: `with an outing, of ${fmtInt(r.span)}`, tone: 'move' },
+              { num: s.streakLen, unit: ' days', label: 'the longest run in a row', tone: 'move' },
+              { num: r.longGap.len, unit: ' days', label: 'the longest break', tone: 'rest' },
+              r.restDays === 0
+                ? { value: multiDays / Math.max(1, s.activeDays), label: 'of days held two outings or more', tone: 'move' }
+                : { value: r.gaps.total ? r.gaps.next / gapsTot : 0, label: 'of outings followed the very next day', tone: 'move' },
+            ],
+          }}
+          left={{ title: `Every day of ${Y}`, node: <YearCalendar activeSet={s.activeSet} year={Y} endISO={r.endISO} firstISO={r.startISO} streak={{ startISO: s.streakStartISO, endISO: s.streakEndISO }} /> }}
+          right={r.restDays === 0 ? {
+            title: 'How many outings each day held',
+            node: (
+              <ColBars
+                items={[
+                  { label: 'One', value: r.multi.one / dTot, display: `${pc(r.multi.one / dTot)}%`, tone: 'big' },
+                  { label: 'Two', value: r.multi.two / dTot, display: `${pc(r.multi.two / dTot)}%`, tone: 'mid' },
+                  { label: 'Three or more', short: '3+', value: r.multi.more / dTot, display: `${pc(r.multi.more / dTot)}%`, tone: 'quiet' },
                 ]}
+                max={1.12} ticks={[0, 0.25, 0.5, 0.75, 1]} tickFmt={(v) => `${Math.round(v * 100)}%`}
+                xCap="outings in the day &rarr;" yCap="share of days &uarr;"
+                aria={`Of the days in ${Y}, ${pc(r.multi.one / dTot)}% held one outing, ${pc(r.multi.two / dTot)}% two and ${pc(r.multi.more / dTot)}% three or more.`}
               />
-            </Figure>
-          </Reveal>
+            ),
+          } : {
+            title: 'How soon the next outing came',
+            node: (
+              <ColBars
+                items={[
+                  { label: 'Next day', value: r.gaps.next / gapsTot, display: `${pc(r.gaps.next / gapsTot)}%`, tone: 'big' },
+                  { label: 'Two days', value: r.gaps.two / gapsTot, display: `${pc(r.gaps.two / gapsTot)}%`, tone: 'mid' },
+                  { label: 'Three or more', short: '3+', value: r.gaps.more / gapsTot, display: `${pc(r.gaps.more / gapsTot)}%`, tone: 'quiet' },
+                ]}
+                max={1.12} ticks={[0, 0.25, 0.5, 0.75, 1]} tickFmt={(v) => `${Math.round(v * 100)}%`}
+                xCap="days until the next outing &rarr;" yCap="share of gaps &uarr;"
+                aria={`After an outing day, the next came the next day ${pc(r.gaps.next / gapsTot)}% of the time, two days later ${pc(r.gaps.two / gapsTot)}%, three or more ${pc(r.gaps.more / gapsTot)}%.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> Twelve months, one square per day, Monday first. Orange days had an outing, deep orange marks the longest run of days in a row, and the number beside each month counts its days out.</>}
+          rightNote={r.restDays === 0
+            ? <><b>Why it matters.</b> With no gaps to measure, the question becomes how full each day was. Each bar is a share of the {fmtInt(s.activeDays)} days.</>
+            : <><b>Why it matters.</b> Each bar is a share of the gaps between outing days. The taller the first bar, the less often a rest day turned into two.</>}
+          source="Activity Log · days with at least one outing"
+        />
+
+        {/* ===== 5. the typical outing ===== */}
+        {s.footN >= 20 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="yis-dist"
+              eyebrow={`${num()} · The typical outing`}
+              title={`The usual outing on foot was ${s.medianFoot.toFixed(1)} km.`}
+              statement={<>
+                Half of the {fmtInt(s.footN)} outings on foot were shorter than {s.medianFoot.toFixed(1)} km and half were longer; that
+                middle value is the median. The average was {meanFoot.toFixed(1)} km, pulled up by the long days, and the longest was{' '}
+                {longestFoot.toFixed(1)} km{s.biggestFoot ? ` in ${fmtMonth(s.biggestFoot.date)}` : ''}.
+                {r.top10 != null ? ` The busiest tenth of days carried ${pc(r.top10)}% of the distance.` : ''}
+              </>}
+              odds={{
+                title: 'Distance on foot',
+                items: [
+                  { num: s.medianFoot, dec: 1, unit: ' km', label: 'the median outing', tone: 'move' },
+                  { num: meanFoot, dec: 1, unit: ' km', label: 'the average outing', tone: 'rest' },
+                  { num: longestFoot, dec: 1, unit: ' km', label: 'the longest', tone: 'move' },
+                  { value: r.top10 || 0, label: 'of the distance on the busiest tenth of days', tone: 'move' },
+                ],
+              }}
+              left={{ title: 'Every outing on foot, by distance', node: <YearDistances bins={s.footBins} peaks={s.peakBins} /> }}
+              right={{ title: 'Each tenth of days, by its share', node: r.deciles ? <DecileBars shares={r.deciles} /> : <p className="yis-empty">Too few days on foot to split into tenths.</p> }}
+              leftNote={<><b>How to read it.</b> Each bar is a distance band, one kilometre wide; the taller it is, the more outings fell in it. Anything past 25 km folds into the last bar.</>}
+              rightNote={<><b>Why it matters.</b> Days on foot are lined up from shortest to longest and cut into ten equal groups. In an even year each would carry 10% of the distance.</>}
+              source="Activity Log · distance on foot (run, walk, trail run, hike)"
+            />
+          </>
         )}
 
-        {/* The signature moment */}
-        <section className="yis-sec yis-sec--moment">
-          <YearMoment year={activeYear} stats={s} />
+        {/* ===== 6. the maths of the year ===== */}
+        {r.tail && s.activeDays >= 40 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="yis-maths"
+              eyebrow={`${num()} · The maths of ${Y}`}
+              title={r.restDays === 0 ? `Not one rest day in ${Y}${so}.` : `A day out led to another ${pc(r.p11)}% of the time.`}
+              statement={<>
+                {r.restDays === 0
+                  ? `Mark every day of ${Y} as active or rest: there is no rest day to mark${so}, so every day out has led to another.`
+                  : `Mark every day of ${Y} as active or rest. After an active day the next one was active ${pc(r.p11)}% of the time; after a rest day, only ${pc(r.p01)}%. That gap is the habit's memory.`} Weekly distance swung by {pc(r.weekly.cv)}% around its own average,
+                {r.weekly.cv < 0.6 ? ' a steady year' : r.weekly.cv < 1 ? ' an uneven year' : ' a year of big swings'}. The longest outing,{' '}
+                {r.tail.mark.toFixed(1)} km, sat {r.tail.z.toFixed(1)} standard deviations above the average.
+              </>}
+              odds={{
+                title: 'Four numbers that describe the year',
+                items: [
+                  { value: r.p11, label: 'chance of moving the day after moving', tone: 'move' },
+                  r.restDays === 0
+                    ? { num: 0, unit: ' days', label: `of rest${so}`, tone: 'rest' }
+                    : { value: r.p01, label: 'chance of moving the day after resting', tone: 'rest' },
+                  { num: r.gini || 0, dec: 2, unit: '', label: 'Gini of daily distance (0 even, 1 one day did it all)', tone: 'rest' },
+                  { num: r.tail.z, dec: 1, unit: ' sd', label: 'how far out the longest outing sat', tone: 'move' },
+                ],
+              }}
+              left={r.restDays === 0 ? {
+                title: 'Distance on foot, week by week',
+                node: (
+                  <ColBars
+                    items={r.weekly.series.map((w, i) => ({ label: "", short: "", value: w.km, display: '', tone: w.km >= r.weekly.mean ? 'big' : 'quiet' }))}
+                    max={wkKmMax * 1.1} ticks={wkKmTicks}
+                    tickFmt={(v) => v} refLine={{ value: r.weekly.mean, label: `average week · ${Math.round(r.weekly.mean)} km`, short: `avg ${Math.round(r.weekly.mean)} km` }}
+                    xCap="week of the year &rarr;" yCap="km on foot &uarr;"
+                    aria={`Distance on foot per week in ${Y}; the average week was ${Math.round(r.weekly.mean)} km.`}
+                  />
+                ),
+              } : { title: 'Given today, the chance of tomorrow', node: <TransitionMatrix p11={r.p11} p01={r.p01} /> }}
+              right={{ title: 'The longest outing against all the others', node: <TailOutlier values={r.tail.values} mark={r.tail.mark} mean={r.tail.mean} sd={r.tail.sd} z={r.tail.z} pct={r.tail.pct} unit="km" markLabel="the longest" /> }}
+              leftNote={r.restDays === 0
+                ? <><b>How to read it.</b> One bar per week. Orange weeks beat the average week, grey ones fell short of it. With no rest days to count, the weekly distance is where the year's ups and downs show.</>
+                : <><b>How to read it.</b> Each row adds up to 100%. The top left cell is the engine of the habit: how often a day out led to another. The bigger it is against the cell below it, the stronger the habit.</>}
+              rightNote={<><b>Why it matters.</b> The bars are every outing on foot, by distance. The grey band is one standard deviation either side of the average, the typical distance from it. The orange mark is the longest outing, counted in those deviations.</>}
+              source="Activity Log · daily active series, weekly and per-outing distance on foot"
+            />
+          </>
+        )}
+
+        {/* ===== 7. the far edges ===== */}
+        <hr className="rule rule--faint" />
+        <section className="sgrid" aria-labelledby="yis-edges">
+          <div className="sgrid__head">
+            <p className="eyebrow">{num()} · The far edges</p>
+            <h2 id="yis-edges" className="section-head__title">The biggest days of {Y}.</h2>
+          </div>
+          <Reveal as="p" className="sgrid__statement">
+            {s.biggestFoot ? `The furthest outing on foot was ${s.biggestFoot.val.toFixed(1)} km in ${fmtMonth(s.biggestFoot.date)}. ` : ''}
+            {s.highestClimb && s.highestClimb.val > 0 ? `The most climbed in a day was ${n0(s.highestClimb.val)} m. ` : ''}
+            {s.prs > 0 ? `${fmtInt(s.prs)} personal records fell, and ` : ''}{everests >= 0.2 ? `the climbing added up to ${everests.toFixed(1)} times the height of Everest.` : `the climbing added up to ${n0(s.elev)} m.`}
+          </Reveal>
+          <ul className="yrecs">
+            {s.biggestFoot && s.biggestFoot.val > 0 && <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} decimals={1} unit="km" label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} tone="hot" />}
+            {s.longestTime && s.longestTime.val > 0 && <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} />}
+            {s.highestClimb && s.highestClimb.val > 0 && <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of climb in one outing" sub={fmtMonth(s.highestClimb.date)} />}
+            {s.hardest && s.hardest.val > 0 && <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative effort, Strava's score for how hard it was" sub={fmtMonth(s.hardest.date)} />}
+            <RecordCard kicker="Personal records" value={Math.round(s.prs)} label="segment bests beaten" sub={`${Y}`} tone="hot" />
+            <RecordCard kicker="Most cheered" value={s.mostKudos ? s.mostKudos.kudos : 0} label={s.mostKudos ? `kudos on one ${s.mostKudos.sport.toLowerCase()}` : 'kudos on one outing'} sub={s.mostKudos ? fmtMonth(s.mostKudos.date) : ''} />
+            <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
+            <RecordCard kicker="Road trips" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma" sub={`${n0(s.footKm)} km on foot`} />
+          </ul>
+          <p className="source">Source: Activity Log · per-outing distance, time, climb, effort, kudos and records</p>
         </section>
 
-        {/* Against the other years */}
-        <Reveal as="section" className="yis-sec">
-          <Figure
-            title="Against the other years"
-            note={`Where ${activeYear} lands against every other year by activity count. The orange bar is ${activeYear}; the rest are there for scale.`}
-            source="Activity Log"
-            tableCaption="Activities per year"
-            columns={['Year', 'Activities']}
-            rows={rankSeries.map((d) => [String(d.year), fmtInt(d.value)])}
-          >
-            <YearRank series={rankSeries} selected={activeYear} fmt={(v) => fmtInt(v)} />
-          </Figure>
-        </Reveal>
+        {/* ===== 8. where it happened ===== */}
+        {r.located >= 15 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="yis-where"
+              eyebrow={`${num()} · Where it happened`}
+              title={r.countries.length > 1 ? `${word(r.countries.length)[0].toUpperCase() + word(r.countries.length).slice(1)} countries in ${Y}.` : `All of ${Y} happened in Tanzania.`}
+              statement={<>
+                {fmtInt(r.located)} outings had a GPS start point. {r.countries.length > 1 ? `They reached ${r.countries.length} countries. ` : ''}
+                {r.regRows ? `Inside Tanzania, ${r.regRows[0].label} had the most outings, ${pc(r.regRows[0].a)}% of them.` : ''}
+                {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` The most climbing came in ${c.label}, ${pc(c.b)}% of the year's metres.` })() : ''}
+              </>}
+              odds={{
+                title: 'Where the outings were',
+                items: [
+                  { num: r.located, unit: '', label: 'outings with a GPS start point', tone: 'move' },
+                  { num: r.countries.length, unit: '', label: r.countries.length === 1 ? 'country' : 'countries', tone: 'move' },
+                  { num: r.regionCount, unit: '', label: r.regionCount === 1 ? 'region of Tanzania' : 'regions of Tanzania', tone: 'rest' },
+                  { value: r.regRows ? r.regRows[0].a : 1, label: `of outings in ${r.regRows ? r.regRows[0].label : 'one place'}`, tone: 'move' },
+                ],
+              }}
+              left={{ title: 'Home against away', node: <GeoBubbles rows={r.countries} /> }}
+              right={{
+                title: 'Inside Tanzania: share of outings and of climb',
+                node: r.regRows ? <PairBars rows={r.regRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
+                  aria={`Tanzania regions in ${Y}: ${r.regRows.map((x) => `${x.label} ${pc(x.a)}% of outings, ${pc(x.b)}% of climb`).join('; ')}.`} /> : <p className="yis-empty">Only one region this year.</p>,
+              }}
+              leftNote={<><b>How to read it.</b> Only outings with a GPS start point can be placed; treadmill sessions cannot. The disc is Tanzania, the list is every other country reached.</>}
+              rightNote={<><b>Why it matters.</b> Each row is a region: the grey ring is its share of the outings, the orange dot its share of the climb. Rows run from the biggest climb surplus to the biggest shortfall.</>}
+              source="Strava GPS start points · countries and Tanzania regions"
+            />
+          </>
+        )}
 
-        {/* CTA */}
+        {/* ===== 9. against the other years ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="yis-rank"
+          eyebrow={`${num()} · Against the other years`}
+          title={`${Y} ranks ${ORD[rankN - 1]} of ${years.length} years for outings.`}
+          statement={<>
+            By outings {Y} is {ORD[rankN - 1]}, by distance on foot {ORD[rankKm - 1]}, and by climb {ORD[rankEl - 1]} of the {word(years.length)} years.
+            {ps ? ` Against ${prevYear} it had ${more(chg(s.n, ps.n), 'more', 'fewer')} outings, ${more(chg(s.footKm, ps.footKm), 'more', 'less')} distance and ${more(chg(s.elev, ps.elev), 'more', 'less')} climb.` : ' It is the first year, so there is nothing before it to compare.'}
+            {isPartial ? ` ${Y} is still running, so it is measured against full years.` : ''}
+          </>}
+          odds={{
+            title: ps ? `${Y} against ${prevYear}` : `${Y} among the years`,
+            items: ps ? [
+              { value: chg(s.n, ps.n) || 0, sign: true, label: 'outings', tone: (chg(s.n, ps.n) || 0) >= 0 ? 'move' : 'rest' },
+              { value: chg(s.footKm, ps.footKm) || 0, sign: true, label: 'distance on foot', tone: (chg(s.footKm, ps.footKm) || 0) >= 0 ? 'move' : 'rest' },
+              { value: chg(s.elev, ps.elev) || 0, sign: true, label: 'metres climbed', tone: (chg(s.elev, ps.elev) || 0) >= 0 ? 'move' : 'rest' },
+              { value: chg(s.prs, ps.prs) || 0, sign: true, label: 'personal records', tone: (chg(s.prs, ps.prs) || 0) >= 0 ? 'move' : 'rest' },
+            ] : [
+              { num: rankN, unit: '', label: 'rank by outings', tone: 'move' },
+              { num: rankKm, unit: '', label: 'rank by distance', tone: 'move' },
+              { num: rankEl, unit: '', label: 'rank by climb', tone: 'move' },
+              { num: years.length, unit: '', label: 'years on record', tone: 'rest' },
+            ],
+          }}
+          left={{ title: 'Outings, year by year', node: <YearRank series={rankSeries} selected={Y} fmt={(v) => fmtInt(v)} /> }}
+          right={{
+            title: ps ? `${Y} beside ${prevYear}` : 'The first year',
+            node: ps ? (
+              <YearVsPrev prevYear={prevYear} rows={[
+                { label: 'Activities', cur: s.n, prev: ps.n },
+                { label: 'Km on foot', cur: Math.round(s.footKm), prev: Math.round(ps.footKm), unit: 'km' },
+                { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(ps.hours), unit: 'h' },
+                { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(ps.elev), unit: 'm' },
+                { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos) },
+                { label: 'Personal records', cur: Math.round(s.prs), prev: Math.round(ps.prs) },
+              ]} />
+            ) : <p className="yis-empty">{Y} is where the record starts.</p>,
+          }}
+          leftNote={<><b>How to read it.</b> One bar per year by number of outings. The orange bar is {Y}.</>}
+          rightNote={<><b>Why it matters.</b> {ps ? `Each pair sets ${Y} beside ${prevYear}, measure by measure, so the changes above can be seen at their real size.` : 'With no year before it, this one sets the baseline every later year is measured against.'}</>}
+          source="Activity Log · yearly totals"
+        />
+
+        {/* ===== the signature moment ===== */}
+        <hr className="rule rule--faint" />
+        <section className="yis-sec yis-sec--moment">
+          <YearMoment year={Y} stats={s} />
+        </section>
+
         <Reveal as="section" className="yis-cta">
-          <p>That was {activeYear}.</p>
-          <button type="button" className="yis-cta__btn" onClick={scrollToTop}>Pick another year ↑</button>
+          <p>That was {Y}.</p>
+          <div className="yis-cta__row">
+            {years.includes(Y - 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y - 1); scrollToTop() }}>&larr; {Y - 1}</button>}
+            <button type="button" className="yis-cta__btn" onClick={scrollToTop}>Pick another year &uarr;</button>
+            {years.includes(Y + 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y + 1); scrollToTop() }}>{Y + 1} &rarr;</button>}
+          </div>
         </Reveal>
       </div>
     </DetailFrame>

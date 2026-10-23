@@ -37,7 +37,7 @@ export default function ColBars({ items, max, ticks = [], tickFmt = (v) => v, re
           {!ticks.includes(0) && <line x1={m.l} y1={y(0)} x2={W - m.r} y2={y(0)} stroke="var(--ink)" strokeWidth="1" />}
 
           {items.map((d, i) => (
-            <g key={d.label} className={`cb__bar cb__bar--${d.tone || 'quiet'}`} style={{ '--d': `${i * 60}ms` }}>
+            <g key={`${d.label}-${i}`} className={`cb__bar cb__bar--${d.tone || 'quiet'}`} style={{ '--d': `${i * 60}ms` }}>
               <rect x={bx(i)} y={y(d.value)} width={bw} height={Math.max(0, y(0) - y(d.value))} rx="2"
                 style={{ transformOrigin: `0 ${y(0)}px` }} />
               <text x={bx(i) + bw / 2} y={y(d.value) - 7} textAnchor="middle" className="cb__val">{d.display}</text>
@@ -49,15 +49,15 @@ export default function ColBars({ items, max, ticks = [], tickFmt = (v) => v, re
             <g className="cb__ref">
               <line x1={m.l} y1={y(refLine.value)} x2={W - m.r} y2={y(refLine.value)} stroke="var(--ink)" strokeWidth="1.25" strokeDasharray="4 3" opacity="0.6" />
               {/* keyed at the top right, clear of every bar and value */}
-              <line x1={W - m.r - 22} y1={m.t - 18} x2={W - m.r} y2={m.t - 18} stroke="var(--ink)" strokeWidth="1.25" strokeDasharray="4 3" opacity="0.6" />
-              <text className="cb__reflbl" x={W - m.r - 28} y={m.t - 14} textAnchor="end">
+              <line x1={W - m.r - 22} y1={m.t - 22} x2={W - m.r} y2={m.t - 22} stroke="var(--ink)" strokeWidth="1.25" strokeDasharray="4 3" opacity="0.6" />
+              <text className="cb__reflbl" x={W - m.r - 28} y={m.t - 18} textAnchor="end">
                 {narrow && refLine.short ? refLine.short : refLine.label}
               </text>
             </g>
           )}
 
           {xCap && <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="cb__axis">{xCap}</text>}
-          {yCap && <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="cb__axis">{yCap}</text>}
+          {yCap && <text x={m.l - 8} y={m.t - 18} textAnchor="start" className="cb__axis">{yCap}</text>}
         </svg>
       </div>
     </div>

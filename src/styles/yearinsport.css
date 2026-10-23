@@ -195,3 +195,40 @@
   .yprog__area, .yprog__dot { opacity: 1 !important; }
   .yweek__bar, .ydist__bar, .yvp__bar { transform: none !important; }
 }
+
+/* ---- the rebuilt report: section-grid rows, record cards, small helpers ---- */
+.yis-report { padding-top: 0; }
+.yis-report > .sgrid:first-child { padding-top: var(--sp-5); }
+.yis-top .sky { margin-top: var(--sp-2); }
+.yis-empty { margin: 0; font-size: var(--fs-sm); color: var(--fg-faint); text-align: center; }
+.yrecs { list-style: none; margin: 0; padding: var(--sp-4) 0 0; border-top: 1px solid var(--rule-faint);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-4) var(--grid-gap); }
+.yrec { margin: 0; padding-top: var(--sp-3); border-top: 3px solid var(--ink); display: flex; flex-direction: column; gap: var(--sp-1);
+  opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.yrec.is-in { opacity: 1; transform: none; }
+.yrec--hot { border-top-color: var(--accent); }
+.yrec__k { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); font-weight: 600; }
+.yrec__v { margin: var(--sp-1) 0 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.8rem, 1rem + 2.4vw, 2.7rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.yrec__u { font-size: 0.45em; font-weight: 700; color: var(--fg-muted); margin-left: 0.15em; }
+.yrec__l { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--fg); line-height: 1.35; text-wrap: pretty; }
+.yrec__s { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-faint); }
+@media (max-width: 59.999rem) { .yrecs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.yis-cta { padding: var(--sp-6) 0 var(--sp-5); }
+.yis-cta__row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3); }
+.sky__future { fill: var(--grey-03); }
+@media (prefers-reduced-motion: reduce) { .yrec { opacity: 1 !important; transform: none !important; transition: none !important; } }
+/* ---- wall calendar of the year (YearCalendar) ---- */
+.ycal__month { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.ycal__plot.is-in .ycal__month { opacity: 1; }
+.ycal__mname { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; fill: var(--fg-muted); font-weight: 600; }
+.ycal__mn { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.ycal__d { fill: var(--grey-10); }
+.ycal__d.is-on { fill: color-mix(in srgb, var(--accent) 62%, var(--paper)); }
+.ycal__d.is-streak { fill: var(--accent); }
+.ycal__d.is-future { fill: none; stroke: var(--rule-faint); stroke-width: 1; }
+.ycal__key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: var(--sp-3) 0 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.ycal__sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--grey-10); margin-left: 6px; }
+.ycal__sw:first-child { margin-left: 0; }
+.ycal__sw.is-on { background: color-mix(in srgb, var(--accent) 62%, var(--paper)); }
+.ycal__sw.is-streak { background: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .ycal__month { opacity: 1 !important; transition: none !important; } }

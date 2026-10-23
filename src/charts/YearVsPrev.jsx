@@ -3,7 +3,8 @@ import { useInView } from '../components/Reveal.jsx'
 // This year against the one before it. For each measure, two bars on a shared
 // scale (this year in accent, last year in grey) and the change as a percentage.
 // A partial current year is compared to a full prior year, so the note upstream
-// says so. rows: [{ label, cur, prev, unit, decimals }]; prevYear: number.
+// says so. Bars stop at 70% of the track so the number beside each always fits.
+// rows: [{ label, cur, prev, unit, decimals }]; prevYear: number.
 function fmt(v, decimals = 0) {
   return Number(v).toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
 }
@@ -25,11 +26,11 @@ export default function YearVsPrev({ rows, prevYear }) {
               <span className="yvp__lbl">{r.label}</span>
               <span className="yvp__bars">
                 <span className="yvp__barwrap">
-                  <span className="yvp__bar yvp__bar--cur" style={{ width: `${(r.cur / max) * 100}%`, transitionDelay: `${i * 70}ms` }} />
+                  <span className="yvp__bar yvp__bar--cur" style={{ width: `${(r.cur / max) * 70}%`, transitionDelay: `${i * 70}ms` }} />
                   <b className="yvp__num mono">{fmt(r.cur, r.decimals)}{r.unit ? <span className="yvp__u"> {r.unit}</span> : null}</b>
                 </span>
                 <span className="yvp__barwrap yvp__barwrap--prev">
-                  <span className="yvp__bar yvp__bar--prev" style={{ width: `${(r.prev / max) * 100}%`, transitionDelay: `${i * 70 + 40}ms` }} />
+                  <span className="yvp__bar yvp__bar--prev" style={{ width: `${(r.prev / max) * 70}%`, transitionDelay: `${i * 70 + 40}ms` }} />
                   <b className="yvp__num yvp__num--prev mono">{fmt(r.prev, r.decimals)}</b>
                 </span>
               </span>

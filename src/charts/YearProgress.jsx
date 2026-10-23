@@ -20,7 +20,7 @@ export default function YearProgress({ cum, lastMonth = 11, total = 0 }) {
   const W = Math.max(300, width)
   const narrow = W < 520
   const H = narrow ? 210 : 250
-  const m = { t: 20, r: 16, b: 28, l: narrow ? 34 : 44 }
+  const m = { t: 20, r: 16, b: 28, l: narrow ? 42 : 46 }
   const last = Math.max(0, Math.min(11, lastMonth))
   const peak = Math.max(1, ...cum.map((d) => d.cum))
   const { max, ticks } = niceTicks(peak, 4)
