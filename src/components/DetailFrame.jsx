@@ -6,7 +6,7 @@ import FieldNote from './FieldNote.jsx'
 
 // Which chapters carry a distinct atmosphere (a faint page wash + tinted
 // watermark). The rest keep the base warm-paper / orange identity.
-const CHAPTER_ATMO = { '/where': 'where', '/rhythm': 'rhythm', '/gear': 'gear' }
+const CHAPTER_ATMO = { '/where': 'where', '/gear': 'gear' }
 
 // One frame for every detail page: breadcrumb, big header, content, prev/next paging.
 // `number` shows the 01..09 index for top-level sections; omit it for sub-item pages.

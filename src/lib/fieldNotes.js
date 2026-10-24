@@ -60,7 +60,7 @@ function hash(str) {
 // each a distinct note, so no two of these pages ever show the same line.
 const ORDER = [
   '/', '/numbers', '/sports', '/records', '/where',
-  '/rhythm', '/gear', '/timeline', '/goals', '/what-it-means', '/home',
+  '/gear', '/timeline', '/goals', '/what-it-means', '/home',
 ]
 
 // A fixed shuffle of the note indices (seeded LCG Fisher-Yates), so positions

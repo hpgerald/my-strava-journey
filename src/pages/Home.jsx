@@ -6,7 +6,7 @@ import GeoBubbles from '../charts/GeoBubbles.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
-// WeekLevel (even-week band) retired from the home opener; still available for Rhythm.
+// WeekLevel (even-week band) retired from the home opener; kept in charts/
 import HabitMomentum from '../charts/HabitMomentum.jsx'
 import TransitionMatrix from '../charts/TransitionMatrix.jsx'
 import LorenzCurve from '../charts/LorenzCurve.jsx'

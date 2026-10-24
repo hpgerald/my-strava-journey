@@ -8,7 +8,6 @@ const STATIC = {
   '/sports': 'Sports',
   '/records': 'Records',
   '/where': 'Where',
-  '/rhythm': 'Rhythm',
   '/gear': 'Gear',
   '/timeline': 'Timeline',
   '/what-it-means': 'What It Means',

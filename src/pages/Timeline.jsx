@@ -20,7 +20,7 @@ export default function Timeline() {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Timeline' }]}
-      number="08"
+      number="07"
       title="Timeline"
       subtitle="In order. First upload to now."
       lede={`Seven years in the order they happened. It opens with a scatter of entries that could easily have faded out, goes silent for 353 straight days, then starts and does not stop. The round-number milestones, the standout days, the borders crossed, all laid in a line, so you can watch a hobby turn into something that looks permanent.`}

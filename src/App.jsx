@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import TitleManager from './components/TitleManager.jsx'
 import Home from './pages/Home.jsx'
@@ -8,7 +8,6 @@ import SportDetail from './pages/SportDetail.jsx'
 import Records from './pages/Records.jsx'
 import Where from './pages/Where.jsx'
 import PlaceDetail from './pages/PlaceDetail.jsx'
-import Rhythm from './pages/Rhythm.jsx'
 import Gear from './pages/Gear.jsx'
 import Timeline from './pages/Timeline.jsx'
 import Goals from './pages/Goals.jsx'
@@ -35,7 +34,7 @@ export default function App() {
         <Route path="/records" element={<Records />} />
         <Route path="/where" element={<Where />} />
         <Route path="/where/:placeId" element={<PlaceDetail />} />
-        <Route path="/rhythm" element={<Rhythm />} />
+        <Route path="/rhythm" element={<Navigate to="/" replace />} />
         <Route path="/gear" element={<Gear />} />
 
         {/* Timeline + What it means (Phase 7) */}

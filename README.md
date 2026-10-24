@@ -52,14 +52,13 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | --- | --- | --- |
 | 01 | **The Journey** (home) | The headline totals, an animated count-up, one dot for every activity, the July 2021 "switch" that turned a hobby into a habit, and how running owns the distance while walking owns the vertical. |
 | 02 | **Year in Sport** | Pick any year, 2019 through today, and the page rebuilds itself into an animated report of it: headline totals that count up, the shape of the months, how the year moved, every day drawn as a streak calendar, the biggest efforts, where it happened, and a signature "moment" unique to that year. |
-| 03 | **Sports** | What the training is made of, as a mirrored distance-versus-days split and a sport-personality scatter, plus a deep dive into the foot data: pace and distance spreads, the treadmill-to-road shift, steepness, time of day and weekend trails. |
-| 04 | **Records** | The far edges: a wall of the furthest, highest and hardest efforts, the total climb drawn as a stack of Everests, the calories burned read back as plates of food, and the shape of an ordinary training day. |
-| 05 | **Where** | Choropleth maps of the countries and Tanzanian regions the activities started in, worked out from each activity's GPS start point. |
-| 06 | **Rhythm** | When the training happens: a three-year-plus week streak, a consistency calendar, the day streak as one unbroken thread, a weekday-by-time-of-day heatmap, effort as a rising-and-ebbing tide by year, and training zones. |
-| 07 | **Gear** | Eleven pairs of shoes as a rotation timeline, how far each carried, road-versus-trail use, and lifetime odometer against logged distance. |
-| 08 | **Timeline** | The story in order over a seven-year activity pulse: milestones, records and international debuts. |
-| 09 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year as activity-style progress rings, with a pace notch on the year in progress. |
-| 10 | **What It Means** | The numbers read back as an athlete would read them, for different training goals. |
+| 03 | **Sports** | A deep dive into the four sports on foot, with the treadmill kept apart from the road: every outing mapped by pace and climb, who does what, the mix by year, the treadmill's round numbers, pace, the walks growing longer, the long days, climb, hours and weekends, doubles, effort and kudos, and the maths of the feet. |
+| 04 | **Records** | Every record on foot and how it got there: the distance and climbing records as staircases, the longest outings, the biggest days, weeks and months, milestones, firsts, the Kilimanjaro Half year by year, personal records, streaks, where the big climbs started, and how often a record breaks against chance. |
+| 05 | **Where** | The Africa and Tanzania maps, shaded from each outing's GPS start, with the country ledger, flat home regions against steep ones, the busiest region by year, the map growing, trips abroad, the outings with no place, and how widely the outings spread. |
+| 06 | **Gear** | Eleven pairs of shoes as a rotation timeline, how far each carried, road-versus-trail use, and lifetime odometer against logged distance. |
+| 07 | **Timeline** | The story in order over a seven-year activity pulse: milestones, records and international debuts. |
+| 08 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year as activity-style progress rings, with a pace notch on the year in progress. |
+| 09 | **What It Means** | The numbers read back as an athlete would read them, for different training goals. |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
 

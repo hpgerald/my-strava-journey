@@ -118,7 +118,7 @@ export default function Gear() {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Gear' }]}
-      number="07"
+      number="06"
       title="Gear"
       subtitle="Eleven pairs, and how they were worn."
       lede={`Eleven pairs, and rarely two doing the real work at once. One lead pair carries the load until it wears out, then hands straight to the next within a day, a clean ${cleanHandoffs} handoffs out of ${handoffs.length}. One pair alone covered over a thousand kilometres. Some were worn through in a single season, others kept going for years, and each still shows its job in how fast and how steep it ran.`}
