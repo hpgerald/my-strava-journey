@@ -1,0 +1,64 @@
+/* ==========================================================================
+   where.css  ·  The Where page: the two maps, the country ledger, regions.
+   ========================================================================== */
+:root {
+  --m-r0: var(--ink);
+  --m-r1: var(--accent);
+  --m-r2: var(--accent-ink);
+  --m-r3: #f98f5e;
+  --m-rO: var(--grey-25);
+}
+.mfill--r0 { fill: var(--m-r0); background: var(--m-r0); }
+.mfill--r1 { fill: var(--m-r1); background: var(--m-r1); }
+.mfill--r2 { fill: var(--m-r2); background: var(--m-r2); }
+.mfill--r3 { fill: var(--m-r3); background: var(--m-r3); }
+.mfill--rO { fill: var(--m-rO); background: var(--m-rO); }
+.msw--r0 { background: var(--m-r0); }
+.msw--r1 { background: var(--m-r1); }
+.msw--r2 { background: var(--m-r2); }
+.msw--r3 { background: var(--m-r3); }
+.msw--rO { background: var(--m-rO); }
+
+/* ---- the maps ---- */
+.pmap { width: 100%; }
+.pmap__btns { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: 0 0 var(--sp-3); }
+.pmap__btn { font: inherit; font-size: var(--fs-xs); font-weight: 600; padding: 6px 12px; border: 1px solid var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.pmap__btn.is-on { background: var(--ink); color: var(--paper); }
+.pmap__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pmap__shape { fill: var(--grey-06); stroke: var(--paper); stroke-width: 0.6; transition: fill 0.7s var(--ease); transition-delay: var(--d, 0ms); }
+.pmap.is-in .pmap__shape.is-on { fill: var(--fill); }
+.pmap__shape.is-hover { stroke: var(--ink); stroke-width: 1.4; }
+.pmap__lab { opacity: 0; transition: opacity 0.6s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.5s); pointer-events: none; }
+.pmap.is-in .pmap__lab { opacity: 1; }
+.pmap__ln { font-size: var(--fs-2xs); font-weight: 700; }
+.pmap__lab.is-out text { paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.pmap__lv { font-family: var(--font-mono); font-size: var(--fs-2xs); font-variant-numeric: tabular-nums; }
+.pmap__key { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.pmap__ramp { width: 120px; height: 10px; display: inline-block; }
+.pmap__none { width: 12px; height: 10px; display: inline-block; background: var(--grey-06); border: 1px solid var(--grey-25); margin-left: var(--sp-2); }
+
+/* ---- Africa: the map beside the country ledger ---- */
+.wh-africa { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--grid-gap); align-items: start; margin: 0 0 var(--sp-3); }
+.wh-africa .sgrid__fig { margin: 0; }
+.wh-ledger { list-style: none; margin: 0 0 var(--sp-4); padding: 0; border-top: 1px solid var(--ink); }
+.wh-ledger__row { display: grid; grid-template-columns: 6rem 1fr; gap: var(--sp-3); padding: var(--sp-3) 0; border-bottom: 1px solid var(--rule-faint); align-items: baseline;
+  opacity: 0; transform: translateY(6px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.wh-ledger.is-in .wh-ledger__row { opacity: 1; transform: none; }
+.wh-ledger__n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); color: var(--accent); text-align: right; line-height: 1; }
+.wh-ledger__row:first-child .wh-ledger__n { color: var(--accent-ink); }
+.wh-ledger__c { display: grid; gap: 2px; }
+.wh-ledger__c b { font-size: var(--fs-md); }
+.wh-ledger__c small { font-size: var(--fs-xs); color: var(--fg-muted); }
+
+/* ---- Tanzania: the map at full width ---- */
+.wh-tzmap { margin: 0 0 var(--sp-5); }
+
+.wh-cards__name { font-size: var(--fs-lg); }
+
+@media (max-width: 60rem) {
+  .wh-africa { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pmap__shape, .pmap__lab, .wh-ledger__row { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .pmap__shape.is-on { fill: var(--fill); }
+}

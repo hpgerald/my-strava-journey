@@ -10,6 +10,7 @@ import './styles/components.css'
 import './styles/yearinsport.css'
 import './styles/sports.css'
 import './styles/records.css'
+import './styles/where.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
