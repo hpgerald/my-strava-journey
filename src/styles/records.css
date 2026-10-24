@@ -1,0 +1,53 @@
+/* ==========================================================================
+   records.css  ·  The Records page: staircases, milestones, firsts, chance.
+   Colours per way of moving come from sports.css (--m-*).
+   ========================================================================== */
+
+/* ---- record staircase ---- */
+.rst__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-2) var(--grid-gap); margin-bottom: var(--sp-2); }
+.rst__key { margin: 0; font-size: var(--fs-sm); color: var(--fg-muted); max-width: 40rem; }
+.rst { width: 100%; }
+.rst__plot { position: relative; width: 100%; }
+.rst__under, .rst__canvas, .rst__over { position: absolute; left: 0; top: 0; display: block; }
+.rst__over { pointer-events: none; }
+.rst__hit { position: absolute; inset: 0; cursor: crosshair; }
+.rst__tick { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.rst__axis { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-faint); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.rst__stair { stroke: var(--ink); stroke-width: 2.25; stroke-linejoin: round; stroke-dashoffset: var(--len); transition: stroke-dashoffset 2.2s var(--ease) 1s; }
+.rst__stage.is-in .rst__stair { stroke-dashoffset: 0; }
+.rst__rec { fill: var(--paper); stroke: var(--ink); stroke-width: 1.75; opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: var(--d, 1.6s); }
+.rst__rec.is-now { fill: var(--accent); stroke: var(--accent-ink); }
+.rst__stage.is-in .rst__rec { opacity: 1; }
+.rst__note { opacity: 0; transition: opacity 0.6s var(--ease) 3s; }
+.rst__stage.is-in .rst__note { opacity: 1; }
+.rst__nt { font-size: var(--fs-xs); font-weight: 700; fill: var(--fg); }
+.rst__ns { font-size: var(--fs-2xs); fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+
+/* ---- cumulative line ---- */
+.cuml__area { fill: var(--accent-soft); opacity: 0; transition: opacity 0.8s var(--ease) 0.9s; }
+.cuml.is-in .cuml__area { opacity: 0.8; }
+.cuml__line { stroke: var(--accent); stroke-width: 2.5; stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.6s var(--ease); }
+.cuml.is-in .cuml__line { stroke-dashoffset: 0; }
+.cuml__mark { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 1s); }
+.cuml.is-in .cuml__mark { opacity: 1; }
+.cuml__dot { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.cuml__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--fg); font-variant-numeric: tabular-nums; }
+
+/* ---- records against chance ---- */
+.chr__key { margin: 0 0 var(--sp-3); display: flex; align-items: center; gap: 8px; justify-content: flex-end; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+.chr__barsw { width: 16px; height: 10px; background: var(--ink); border-radius: 2px; }
+.chr__ring { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); margin-left: var(--sp-2); }
+.chr__mark { position: absolute; top: 50%; left: calc(100% * var(--v) * var(--hb-max)); width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--paper); z-index: 1;
+  opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.9s); }
+.chr.is-in .chr__mark { opacity: 1; }
+.chr .hb__val { transform: translate(14px, -50%); }
+.chr__exp { color: var(--fg-faint); font-weight: 400; }
+
+/* ---- firsts, as bars from the first outing ---- */
+.rc-firsts { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rst__stair, .rst__rec, .rst__note, .cuml__area, .cuml__line, .cuml__mark, .chr__mark { transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
+}
+.rc-firsts .hb { --hb-l: 16rem; }
+@media (max-width: 40rem) { .rc-firsts .hb { --hb-l: 8.5rem; } }

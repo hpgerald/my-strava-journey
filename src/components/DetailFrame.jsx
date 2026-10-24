@@ -94,11 +94,11 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 
         {children}
 
-        <FieldNote seed={location.pathname} />
+        <FieldNote seed={location.pathname} align="wide" />
 
         {(prev || next) && (
           <>
-            <hr className="rule" style={{ marginTop: 'var(--sp-8)' }} />
+            <hr className="rule" style={{ marginTop: 0 }} />
             <nav aria-label="Pagination" className="prevnext">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
                 <PagingLink item={prev} dir="prev" />

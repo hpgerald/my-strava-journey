@@ -1,351 +1,653 @@
+import { useMemo } from 'react'
 import DetailFrame from '../components/DetailFrame.jsx'
-import StatCard from '../components/StatCard.jsx'
-import Figure from '../charts/Figure.jsx'
-import MotionClock from '../charts/MotionClock.jsx'
-import CaloriePlates from '../charts/CaloriePlates.jsx'
-import RecordWall from '../charts/RecordWall.jsx'
-import AscentProfile from '../charts/AscentProfile.jsx'
-import OrdinaryDay from '../charts/OrdinaryDay.jsx'
-import TailOutlier from '../charts/TailOutlier.jsx'
+import StorySection from '../components/StorySection.jsx'
+import OddsRow from '../components/OddsRow.jsx'
+import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
+import RecordStairs from '../charts/RecordStairs.jsx'
+import CumLine from '../charts/CumLine.jsx'
+import ChanceRows from '../charts/ChanceRows.jsx'
+import HBars from '../charts/HBars.jsx'
+import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { prettySport } from '../lib/slug.js'
-import { fmtInt, fmtNum, toNum } from '../lib/format.js'
-
-const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-const EVEREST = 8849 // metres, sea level to summit
-const KILI = 5895 // Kilimanjaro summit, metres
+import { buildRecordReport } from '../lib/recordReport.js'
+import { MODE_NAME } from '../lib/footReport.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const parseDay = (s) => new Date(`${(s || '').slice(0, 10)}T00:00:00Z`)
-const fmtFull = (s) => {
-  const d = parseDay(s)
-  return `${d.getUTCDate()} ${MON[d.getUTCMonth()]} ${d.getUTCFullYear()}`
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const EVEREST = 8849
+const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+const k1 = (v) => (v || 0).toFixed(1)
+const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtMon = (iso) => (iso ? `${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); return h ? `${h} h ${m} min` : `${m} min` }
+const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen']
+const word = (n) => WORD[n] || String(n)
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
+const ORD = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth']
+const ordS = (k) => `${k}${k % 10 === 1 && k !== 11 ? 'st' : k % 10 === 2 && k !== 12 ? 'nd' : k % 10 === 3 && k !== 13 ? 'rd' : 'th'}`
+const lower = (k) => MODE_NAME[k].toLowerCase()
+const tOf = (iso) => Date.parse(iso + 'T12:00:00Z')
+const an = (w) => (/^[aeiou]/i.test(w) ? `an ${w}` : `a ${w}`)
+
+// one record card on the four-column grid
+function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone }) {
+  const [ref, inView] = useInView()
+  const v = useCountUp(value, inView, { decimals, dur: 1100 })
+  return (
+    <li ref={ref} className={`yrec${inView ? ' is-in' : ''}${tone ? ` yrec--${tone}` : ''}`}>
+      <p className="yrec__k">{kicker}</p>
+      <p className="yrec__v">
+        {v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+        {unit ? <span className="yrec__u">{unit}</span> : null}
+      </p>
+      <p className="yrec__l">{label}</p>
+      {sub ? <p className="yrec__s">{sub}</p> : null}
+    </li>
+  )
 }
-const fmtMon = (s) => {
-  const d = parseDay(s)
-  return `${MON[d.getUTCMonth()]} ${d.getUTCFullYear()}`
-}
-const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 86400000)
 
 export default function Records() {
   const activities = useTable('activities')
+  const activityGeo = useTable('activity_geo')
+  const kili = useTable('kili_half')
   const { prev, next } = useSectionPaging('/records')
+  const geo = useMemo(() => Object.fromEntries(activityGeo.map((g) => [g.activity_key, g])), [activityGeo])
+  const R = useMemo(() => (activities.length ? buildRecordReport(activities, geo, kili) : null), [activities, geo, kili])
 
-  const foot = activities.filter((a) => FOOT.has(a.sport_type))
-  const maxBy = (rows, key) =>
-    rows.reduce((best, a) => (toNum(a[key]) > (toNum(best?.[key]) || -Infinity) ? a : best), null)
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Records' }], number: '04', title: 'Records', subtitle: 'The far edges. Longest, highest, hardest.', prev, next }
+  if (!R || !R.n) return <DetailFrame {...frame} />
 
-  // ---- all-time bests ----
-  const furthestRun = maxBy(activities.filter((a) => a.sport_type === 'Run'), 'distance_km')
-  const biggestClimb = maxBy(foot, 'elevation_gain_m')
-  // Longest single outing, restricted to genuine outdoor efforts: indoor entries
-  // and stuck-timer artifacts (trainer flag, no elevation) are excluded so the
-  // record reflects a real day out rather than a paused clock left running.
-  const outdoorEfforts = foot.filter((a) => a.trainer !== 'Yes' && toNum(a.elevation_gain_m) > 0)
-  const longestOut = maxBy(outdoorEfforts, 'moving_time_min')
-  const hottest = maxBy(foot, 'relative_effort')
-  const mostCal = maxBy(foot, 'calories')
-  const mostKudos = maxBy(activities, 'kudos')
+  let secN = 0
+  const num = () => ++secN
+  const endT = tOf(R.lastISO)
 
-  // ---- longest active streak (consecutive calendar days with an activity) ----
-  const days = [...new Set(activities.map((a) => (a.date || '').slice(0, 10)).filter(Boolean))].sort()
-  let streak = { len: 0, start: null, end: null }
-  let cur = 0
-  let runStart = days[0]
-  let prevD = null
-  for (const ds of days) {
-    if (prevD && daysBetween(prevD, ds) === 1) cur += 1
-    else {
-      cur = 1
-      runStart = ds
-    }
-    if (cur > streak.len) streak = { len: cur, start: runStart, end: ds }
-    prevD = ds
-  }
-  const spanDays = daysBetween(days[0], days[days.length - 1]) + 1
-  const activePct = Math.round((days.length / spanDays) * 100)
+  // ---- the distance record ----
+  const dP = R.distProg, dNow = dP[dP.length - 1]
+  const nearest = R.foot.filter((f) => f.t > dNow.t).reduce((b, f) => (!b || f.km > b.km ? f : b), null)
+  const firstOver = (k) => dP.find((r) => r.km >= k)
+  const distNotes = [
+    firstOver(10) && { t: firstOver(10).t, v: firstOver(10).km, title: 'First 10 km', sub: fmtMon(firstOver(10).date) },
+    firstOver(21.0975) && { t: firstOver(21.0975).t, v: firstOver(21.0975).km, title: 'First half', sub: fmtMon(firstOver(21.0975).date) },
+    firstOver(30) && { t: firstOver(30).t, v: firstOver(30).km, title: 'First 30 km', sub: fmtMon(firstOver(30).date) },
+    { t: dNow.t, v: dNow.km, title: dNow.km >= 42.195 ? 'The marathon' : 'The record', sub: `${k1(dNow.km)} km, ${fmtMon(dNow.date)}` },
+  ].filter(Boolean)
+  const footPts = R.foot.map((f) => ({ t: f.t, v: f.km, mode: f.mode }))
 
-  const records = [
-    {
-      value: fmtNum(furthestRun?.distance_km, 1),
-      unit: 'km',
-      title: 'Furthest run',
-      detail: 'A full marathon distance, run without leaving the treadmill',
-      date: fmtFull(furthestRun?.date),
-    },
-    {
-      value: fmtInt(biggestClimb?.elevation_gain_m),
-      unit: 'm up',
-      title: 'Biggest climb',
-      detail: 'Highest elevation gain in a single activity',
-      date: fmtFull(biggestClimb?.date),
-    },
-    {
-      value: fmtNum(toNum(longestOut?.moving_time_min) / 60, 1),
-      unit: 'hours',
-      title: 'Longest day out',
-      detail: `${fmtInt(longestOut?.elevation_gain_m)} m of climbing on Mount Hanang`,
-      date: fmtFull(longestOut?.date),
-    },
-    {
-      value: fmtInt(streak.len),
-      unit: 'days',
-      title: 'Longest active streak',
-      detail: `Something logged every day, ${activePct}% of all days active`,
-      date: `${fmtMon(streak.start)} to ${fmtMon(streak.end)}`,
-    },
-    {
-      value: fmtInt(hottest?.relative_effort),
-      unit: 'effort',
-      title: 'Hardest single effort',
-      detail: 'Highest relative effort Strava has scored',
-      date: fmtFull(hottest?.date),
-    },
-    {
-      value: fmtInt(mostKudos?.kudos),
-      unit: 'kudos',
-      title: 'Most-cheered activity',
-      detail: 'Most kudos received on a single activity',
-      date: fmtFull(mostKudos?.date),
-    },
+  // ---- the longest outings ----
+  const treadOver30 = R.over30.filter((f) => f.mode === 'tread')
+  const outOver30 = R.over30.filter((f) => f.mode !== 'tread').sort((a, b) => b.km - a.km)
+  const longestWalk = R.foot.filter((f) => f.sport === 'Walk').reduce((b, f) => (!b || f.km > b.km ? f : b), null)
+
+  // ---- the climb record ----
+  const cP = R.climbProg, cNow = cP[cP.length - 1]
+  const walkLed = (() => { let i = 0; while (i < cP.length && cP[i].sport === 'Walk') i++; return i })()
+  const firstClimb = (k) => cP.find((r) => r.elev >= k)
+  const climbNotes = [
+    firstClimb(500) && { t: firstClimb(500).t, v: firstClimb(500).elev, title: `First ${n0(firstClimb(500).elev)} m`, sub: `a walk, ${fmtMon(firstClimb(500).date)}` },
+    firstClimb(1000) && { t: firstClimb(1000).t, v: firstClimb(1000).elev, title: `First ${n0(firstClimb(1000).elev)} m`, sub: `a ${firstClimb(1000).sport === 'Hike' ? 'hike' : lower(firstClimb(1000).mode)}, ${fmtMon(firstClimb(1000).date)}` },
+    { t: cNow.t, v: cNow.elev, title: 'The record', sub: `${n0(cNow.elev)} m, ${fmtMon(cNow.date)}` },
+  ].filter(Boolean)
+  const climbPts = R.foot.filter((f) => f.elev > 0).map((f) => ({ t: f.t, v: f.elev, mode: f.mode }))
+  const bigDayClimb = R.topDaysClimb[0]
+
+  // ---- weeks and months ----
+  const wk = R.topWeeksKm[0], moKm = R.topMonthsKm[0], moEl = R.topMonthsClimb[0]
+  const sameYearKm = R.topMonthsKm.filter((m) => m.month.slice(0, 4) === moKm.month.slice(0, 4)).length
+
+  // ---- milestones ----
+  const lastKm = R.kmMiles[R.kmMiles.length - 1], prevKm = R.kmMiles[R.kmMiles.length - 2]
+  const totalKm = R.cum[R.cum.length - 1].km, totalEl = R.cum[R.cum.length - 1].elev
+  const ev = R.everests, evLast = ev[ev.length - 1]
+  const kmTicks = []
+  for (let t = 0; t <= totalKm * 1.04; t += totalKm > 10000 ? 2500 : 1000) kmTicks.push(t)
+
+  // ---- firsts ----
+  const firstItems = R.firsts.map((x) => ({
+    t: x.f.t, date: x.f.date, title: x.label, key: x.f.mode,
+    sub: x.label.includes('climbed') ? `${n0(x.f.elev)} m, ${x.f.sport === 'Hike' ? 'hike' : lower(x.f.mode)}` : x.label.includes('abroad') ? `a ${lower(x.f.mode)}` : `${k1(x.f.km)} km, ${lower(x.f.mode)}`,
+  }))
+  const dayOf = (iso) => Math.round((tOf(iso) - tOf(R.firstISO)) / 86400000) + 1
+
+  // ---- the same race ----
+  const race = R.race
+  const raceFaster = race.length > 1 && race.every((r, i) => !i || r.min < race[i - 1].min)
+  const raceSaved = race.length > 1 ? race[0].min - race[race.length - 1].min : 0
+  const racePrsSame = race.length > 1 && race.every((r) => r.prs != null && r.prs === race[0].prs)
+  const raceTopKudos = race.reduce((b, r) => (!b || r.kudos > b.kudos ? r : b), null)
+  const raceIsTopKudos = raceTopKudos && R.topKudos[0] && R.topKudos[0].date === raceTopKudos.date
+
+  // ---- personal records ----
+  const prBest = R.prByYear.reduce((b, y) => (y.prs > b.prs ? y : b), R.prByYear[0])
+  const prLast = R.prByYear[R.prByYear.length - 1]
+  const lastYear = Number(R.lastISO.slice(0, 4))
+  const so = R.lastISO.slice(5) < '12-31' ? ' so far' : ''
+  const prMax = Math.max(...R.prByYear.map((y) => y.prs))
+  const prTicks = []; for (let t = 0; t <= prMax * 1.1; t += prMax > 60 ? 25 : 10) prTicks.push(t)
+
+  // ---- streaks ----
+  const S = R.streaks
+  const streakRows = [
+    { key: 'road', label: 'Any outing', sub: 'days in a row', value: S.any.len, display: `${S.any.len} days` },
+    { key: 'walk', label: 'On foot', sub: 'run, walk, trail or hike', value: S.foot.len, display: `${S.foot.len} days` },
+    { key: 'tread', label: 'Running', sub: 'run or trail run', value: S.run.len, display: `${S.run.len} days` },
+    { key: 'quiet', label: 'Walking', sub: 'a walk every day', value: S.walk.len, display: `${S.walk.len} days` },
   ]
 
-  // ---- aggregate tape measure ----
-  // the ordinary day: a humble counterweight to the extremes above
-  const med = (arr) => { const s = [...arr].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0 }
-  const ordMedKm = med(foot.map((a) => toNum(a.distance_km)).filter((v) => v > 0))
-  const ordMedMin = med(foot.map((a) => toNum(a.moving_time_min)).filter((v) => v > 0))
-  const hourCount = {}
-  for (const a of activities) { const h = parseInt(a.hour, 10); if (h >= 0 && h < 24) hourCount[h] = (hourCount[h] || 0) + 1 }
-  const ordHour = Number(Object.keys(hourCount).reduce((b, h) => (hourCount[h] > (hourCount[b] || 0) ? h : b), '18'))
-  const dayCount = {}
-  for (const a of activities) { const d = (a.date || '').slice(0, 10); if (d) dayCount[d] = (dayCount[d] || 0) + 1 }
-  const dayVals = Object.values(dayCount)
-  const ordDoublesPct = Math.round((100 * dayVals.filter((c) => c >= 2).length) / (dayVals.length || 1))
+  // ---- where ----
+  const regs = R.regions.slice(0, 6)
+  const regTop = Object.entries(R.top20Regions).sort((a, b) => b[1] - a[1])
+  const top20N = Object.values(R.top20Regions).reduce((s, v) => s + v, 0)
 
-  // ---- how far out the furthest run sits in its own distribution ----
-  const runDist = activities.filter((a) => a.sport_type === 'Run').map((a) => toNum(a.distance_km)).filter((v) => v > 0)
-  const tail = (() => {
-    const n = runDist.length
-    if (n < 30) return null
-    const mean = runDist.reduce((s, v) => s + v, 0) / n
-    const sd = Math.sqrt(runDist.reduce((s, v) => s + (v - mean) * (v - mean), 0) / n)
-    const mark = Math.max(...runDist)
-    const z = sd ? (mark - mean) / sd : 0
-    const below = runDist.filter((v) => v < mark).length
-    const pctNum = (100 * below) / n
-    const pct = `${pctNum.toFixed(pctNum >= 99.9 ? 2 : 1)}th percentile`
-    return { values: runDist, mean, sd, mark, z, pct, n }
-  })()
-
-  const totalDist = foot.reduce((s, a) => s + (toNum(a.distance_km) || 0), 0)
-  const totalElev = foot.reduce((s, a) => s + (toNum(a.elevation_gain_m) || 0), 0)
-  const totalHours = foot.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
-
-  // ---- time in motion (all sports): moving vs elapsed ----
-  const movingHours = activities.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
-  const elapsedHours = activities.reduce((s, a) => s + (toNum(a.elapsed_time_min) || 0), 0) / 60
-
-  // ---- total energy burned ----
-  const totalKcal = activities.reduce((s, a) => s + (toNum(a.calories) || 0), 0)
-
-  // ---- PRs per outing, by year (records come in bursts) ----
-  const prAgg = {}
-  for (const a of activities) {
-    if (!a.year) continue
-    const p = (prAgg[a.year] = prAgg[a.year] || { pr: 0, n: 0 })
-    p.pr += toNum(a.prs) || 0
-    p.n += 1
-  }
-  const prByYear = Object.keys(prAgg).sort().map((y) => ({ year: y, rate: prAgg[y].pr / prAgg[y].n, total: Math.round(prAgg[y].pr) }))
-
-  // ---- cumulative distance milestones ----
-  const chron = [...foot].sort((a, b) => (a.date < b.date ? -1 : 1))
-  const marks = [1000, 2500, 5000, 7500, 10000]
-  const hit = {}
-  let cum = 0
-  for (const a of chron) {
-    const prevC = cum
-    cum += toNum(a.distance_km) || 0
-    for (const m of marks) if (prevC < m && m <= cum && !hit[m]) hit[m] = a.date
-  }
-  const ladder = marks
-    .filter((m) => hit[m])
-    .map((m) => ({
-      km: `${fmtInt(m)} km`,
-      date: fmtMon(hit[m]),
-      tFrac: daysBetween(days[0], hit[m]) / spanDays,
-    }))
-
-  // ---- furthest in each discipline ----
-  const furthest = ['Run', 'TrailRun', 'Walk', 'Hike']
-    .map((sp) => {
-      const a = maxBy(activities.filter((x) => x.sport_type === sp), 'distance_km')
-      const names = { Run: 'Run', TrailRun: 'Trail run', Walk: 'Walk', Hike: 'Hike' }
-      return a
-        ? { label: names[sp], value: toNum(a.distance_km), display: fmtNum(a.distance_km, 1), unit: 'km', sub: `· ${fmtMon(a.date)}` }
-        : null
-    })
-    .filter(Boolean)
-    .sort((a, b) => b.value - a.value)
-
-  // ---- most-loved activities, identified only by sport and month ----
-  const loved = [...activities]
-    .filter((a) => toNum(a.kudos) > 0)
-    .sort((a, b) => toNum(b.kudos) - toNum(a.kudos))
-    .slice(0, 6)
-    .map((a) => ({
-      label: `${prettySport(a.sport_type)} · ${fmtMon(a.date)}`,
-      value: toNum(a.kudos),
-      display: fmtInt(a.kudos),
-      unit: 'kudos',
-    }))
+  // ---- the maths ----
+  const SR = R.sportRecords
+  const chanceRows = [
+    { key: 'road', label: 'Distance, all', sub: `${n0(R.n)} outings`, actual: dP.length, expected: R.expected },
+    { key: 'trail', label: 'Climb, all', sub: `${n0(R.climbN)} outings`, actual: cP.length, expected: R.climbExpected },
+    { key: 'tread', label: 'Runs', sub: `${n0(SR.Run.n)} outings`, actual: SR.Run.broken, expected: SR.Run.expected },
+    { key: 'walk', label: 'Walks', sub: `${n0(SR.Walk.n)} outings`, actual: SR.Walk.broken, expected: SR.Walk.expected },
+    { key: 'trail', label: 'Trail runs', sub: `${SR.TrailRun.n} outings`, actual: SR.TrailRun.broken, expected: SR.TrailRun.expected },
+    { key: 'hike', label: 'Hikes', sub: `${SR.Hike.n} outings`, actual: SR.Hike.broken, expected: SR.Hike.expected },
+  ]
+  const pEarly = 1 - R.distStanding.outingsSince / R.n
+  const stoodMax = Math.max(...R.distStood.map((s) => s.days))
+  const stoodPrev = R.distStood.filter((s) => !s.standing).reduce((b, s) => (s.days > b.days ? s : b), { days: 0 })
+  const stoodTicks = []; for (let t = 0; t <= stoodMax * 1.08; t += stoodMax > 1200 ? 500 : 200) stoodTicks.push(t)
 
   return (
     <DetailFrame
-      crumbs={[{ label: 'Home', to: '/' }, { label: 'Records' }]}
-      number="04"
-      title="Records"
-      subtitle="The far edges. Longest, highest, hardest."
-      lede="A full marathon, run start to finish without stepping off a treadmill. A single day that gained close to two vertical kilometres. Enough total climb to summit Everest nine times over. A streak months long and still unbroken. This chapter leaves the averages behind for the far edges, the days that sit well past everything typical."
-      prev={prev}
-      next={next}
+      {...frame}
+      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the firsts, the streaks, the same race run four times, and the maths of how often a record should break."
     >
-      {/* The record wall */}
-      <section style={{ paddingTop: 'var(--sp-6)' }}>
-        <RecordWall records={records} />
-        <p className="source" style={{ marginTop: 'var(--sp-4)' }}>Source: Activity Log</p>
-      </section>
-
-      {/* How far out the record sits */}
-      {tail && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            n="01"
-            title="A record is not a little better than usual"
-            note={`A record is not a good day; it is a day so far out it should barely happen. Every run ever logged, sorted by distance, makes a crowd near the average of ${tail.mean.toFixed(1)} km. "Standard deviation" is just the typical distance a run sits from that average, about ${tail.sd.toFixed(1)} km here, and almost every run falls within one or two of them, the shaded band. The one full marathon stands alone in the empty tail: ${tail.mark.toFixed(1)} km is ${tail.z.toFixed(1)} standard deviations out, further than ${tail.pct} of all ${tail.n} runs. That distance is what makes it a record.`}
-            source="Activity Log"
-            tableCaption="Run distance distribution and where the record falls"
-            columns={['Measure', 'Value']}
-            rows={[
-              ['Average run', `${tail.mean.toFixed(1)} km`],
-              ['Standard deviation', `${tail.sd.toFixed(1)} km`],
-              ['The furthest run', `${tail.mark.toFixed(1)} km`],
-              ['Distance out', `${tail.z.toFixed(1)} sd · ${tail.pct}`],
+      <div className="yis-report">
+        {/* ===== the distance record ===== */}
+        <section className="sgrid yis-top" aria-labelledby="rc-title">
+          <div className="sgrid__head">
+            <p className="eyebrow">The distance record</p>
+            <h2 id="rc-title" className="section-head__title">
+              The distance record broke {dP.length} times. It has stood since {fmtMonth(dNow.date)}.
+            </h2>
+          </div>
+          <Reveal as="p" className="sgrid__statement">
+            Every outing on foot chased the longest one before it. The first record was a {k1(dP[0].km)} km {lower(dP[0].mode)} on day one;
+            {firstOver(10) ? ` 10 km came on day ${dayOf(firstOver(10).date)},` : ''}
+            {firstOver(21.0975) ? ` a half marathon in ${fmtMonth(firstOver(21.0975).date)},` : ''}
+            {firstOver(30) ? ` 30 km in ${fmtMonth(firstOver(30).date)}` : ''} and {k1(dNow.km)} km on a {lower(dNow.mode).replace(' run', '')} on {fmtDay(dNow.date)}.
+            {nearest ? ` In the ${n0(R.distStanding.outingsSince)} outings since, the nearest has been ${k1(nearest.km)} km, ${an(lower(nearest.mode))}.` : ''}
+          </Reveal>
+          <OddsRow
+            title="The longest outing on foot"
+            items={[
+              { num: dP.length, unit: '', label: 'times the record broke', tone: 'move' },
+              { num: dNow.km, dec: 1, unit: ' km', label: 'the record now', tone: 'move' },
+              { num: R.distStanding.days, unit: ' days', label: 'it has stood', tone: 'rest' },
+              { num: R.distStanding.outingsSince, unit: '', label: 'outings since, none longer', tone: 'rest' },
             ]}
-          >
-            <TailOutlier values={tail.values} mark={tail.mark} mean={tail.mean} sd={tail.sd} z={tail.z} pct={tail.pct} unit="km" markLabel="the marathon" />
-          </Figure>
+          />
+          <div className="rst__head">
+            <p className="rst__key">Every outing on foot, one dot each, by date and distance. The black line is the record of the day: flat while it stands, a step up when it breaks.</p>
+            <ul className="fmap__legend" aria-label="Colour key">
+              {['tread', 'road', 'trail', 'walk', 'hike'].map((k) => <li key={k}><i className={`msw msw--${k}`} aria-hidden="true" />{MODE_NAME[k]}</li>)}
+            </ul>
+          </div>
+          <RecordStairs
+            points={footPts} records={dP.map((r) => ({ t: r.t, v: r.km }))} endT={endT} notes={distNotes}
+            yMax={45} yTicks={[0, 10, 20, 30, 40]} yFmt={(v) => `${v} km`} valFmt={(v) => `${k1(v)} km`} alive tall
+            aria={`Every outing on foot by date and distance, with the distance record as a staircase. It broke ${dP.length} times: ${dP.map((r) => `${k1(r.km)} km on ${fmtDay(r.date)}`).join(', ')}.`}
+          />
+          <p className="source">Source: Activity Log · distance of every run, walk, trail run and hike</p>
         </section>
-      )}
 
-      {/* Time in motion */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="02"
-          title={`${fmtInt(movingHours / 24)} days in motion`}
-          note="Add up every moving minute ever logged and it comes to more than three months of pure motion, day and night without a pause. Beside it runs the dead time, the share of the recorded clock spent paused, stopped at a junction, or standing still between efforts."
-          source="Activity Log"
-          tableCaption="Total moving time against elapsed time"
-          columns={['Measure', 'Hours']}
-          rows={[
-            ['Moving time', fmtInt(movingHours)],
-            ['Elapsed (clock) time', fmtInt(elapsedHours)],
-            ['Paused / dead time', fmtInt(elapsedHours - movingHours)],
-          ]}
-        >
-          <MotionClock movingHours={movingHours} elapsedHours={elapsedHours} />
-        </Figure>
-      </section>
+        {/* ===== 1. the longest outings ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-long"
+          eyebrow={`${num()} · The longest outings`}
+          title={`${cap(word(R.over30.length))} outings went past 30 km. ${cap(word(treadOver30.length))} were on a treadmill.`}
+          statement={<>
+            {n0(R.halfUp.length)} outings reached a half marathon (21.1 km) and {word(R.over30.length)} went past 30 km. The {word(treadOver30.length)} treadmill
+            ones came between {fmtMon(treadOver30[0]?.date)} and {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. Since then the long days have been outside:{' '}
+            {outOver30.map((f) => `${/^(8|11\.|18\.)/.test(k1(f.km)) ? 'an' : 'a'} ${k1(f.km)} km ${lower(f.mode)}${f.elev >= 300 ? ` with ${n0(f.elev)} m of climb` : ''}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+            The biggest day on foot after the marathon was {fmtDay(R.topDaysKm[1].date)}: {word(R.topDaysKm[1].n)} outings for {k1(R.topDaysKm[1].km)} km.
+          </>}
+          odds={{
+            title: 'Long outings on foot',
+            items: [
+              { num: R.halfUp.length, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
+              { num: R.over30.length, unit: '', label: 'outings past 30 km', tone: 'move' },
+              { num: treadOver30.length, unit: '', label: 'of those on a treadmill', tone: 'rest' },
+              { num: longestWalk ? longestWalk.km : 0, dec: 1, unit: ' km', label: 'the longest walk', tone: 'move' },
+            ],
+          }}
+          left={{
+            title: 'The ten longest outings',
+            node: (
+              <HBars
+                aria={`The ten longest outings: ${R.longest.map((f) => `${k1(f.km)} km, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
+                rows={R.longest.map((f) => ({ key: f.mode, label: fmtDay(f.date), sub: `${lower(f.mode)}${f.elev > 0 ? ` · ${n0(f.elev)} m up` : ''}`, value: f.km, display: `${k1(f.km)} km` }))}
+              />
+            ),
+          }}
+          right={{
+            title: 'The biggest days on foot',
+            node: (
+              <HBars
+                aria={`The days with the most distance on foot: ${R.topDaysKm.map((d) => `${fmtDay(d.date)}, ${k1(d.km)} km over ${d.n} outings`).join('; ')}.`}
+                rows={R.topDaysKm.map((d, i) => ({ key: i ? 'quiet' : 'road', label: fmtDay(d.date), sub: `${d.n} outing${d.n > 1 ? 's' : ''} · ${hm(d.min)}`, value: d.km, display: `${k1(d.km)} km` }))}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> The ten longest single outings, coloured by how they were done. Light orange is the treadmill.</>}
+          rightNote={<><b>Why it matters.</b> A day can beat a single outing by adding them up. Only the marathon did it in one go.</>}
+          source="Activity Log · distance of single outings and of whole days on foot"
+        />
 
-      {/* The climb ledger */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <hr className="rule" />
-        <div className="section-head">
-          <p className="eyebrow">The vertical ledger</p>
-          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-2xl)' }}>
-            {fmtInt(totalElev)} metres, straight up.
-          </h2>
-          <p className="detail-head__lede" style={{ marginTop: 'var(--sp-3)' }}>
-            Add up every hill, trail and set of stairs taken on foot and the climbing alone reaches{' '}
-            {fmtInt(totalElev)} metres. That is Everest, sea to summit, more than nine times over, or Kilimanjaro
-            fourteen times. The biggest single day gained {fmtInt(biggestClimb?.elevation_gain_m)} metres at once,
-            nearly two vertical kilometres in one hike. Almost none of it came from running.
-          </p>
-        </div>
-        <Figure
-          n="03"
-          title="Total climb, on foot, as a range of Everests"
-          note="Every metre ever climbed on foot, stacked into a mountain range nine Everests high. One summit drawn for each Everest's worth of ascent, with Kilimanjaro marked for scale; the last summit is the leftover metres."
-          source="Activity Log"
-          tableCaption="Total foot elevation gain against Everest and Kilimanjaro"
-          columns={['Measure', 'Value']}
-          rows={[
-            ['Total climb on foot', `${fmtInt(totalElev)} m`],
-            ['Height of Everest', `${fmtInt(EVEREST)} m`],
-            ['Everests climbed', fmtNum(totalElev / EVEREST, 1)],
-            ['Kilimanjaros climbed', fmtNum(totalElev / KILI, 1)],
-          ]}
-        >
-          <AscentProfile meters={totalElev} everest={EVEREST} kili={KILI} />
-        </Figure>
-      </section>
+        {/* ===== 2. the climb ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-climb"
+          eyebrow={`${num()} · The climb`}
+          title={`The climbing record broke ${cP.length} times, from ${n0(cP[0].elev)} m to ${n0(cNow.elev)} m.`}
+          statement={<>
+            The first {word(walkLed)} climbing records were all walks, up to {n0(cP[walkLed - 1].elev)} m in {fmtMonth(cP[walkLed - 1].date)}. Then the hikes took over:{' '}
+            {cP.slice(walkLed).map((r) => `${n0(r.elev)} m in ${fmtMonth(r.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+            The biggest day of climbing put {word(bigDayClimb.n)} outings together for {n0(bigDayClimb.elev)} m on {fmtDay(bigDayClimb.date)}, more than any single outing.
+          </>}
+          odds={{
+            title: 'The biggest climb on foot',
+            items: [
+              { num: cP.length, unit: '', label: 'times the record broke', tone: 'move' },
+              { num: cNow.elev, unit: ' m', label: 'the record now', tone: 'move' },
+              { num: R.climbStanding.days, unit: ' days', label: 'it has stood', tone: 'rest' },
+              { num: bigDayClimb.elev, unit: ' m', label: `in one day, ${fmtDay(bigDayClimb.date)}`, tone: 'move' },
+            ],
+          }}
+          left={{
+            title: 'The climbing record over time, in metres up',
+            node: (
+              <RecordStairs
+                points={climbPts} records={cP.map((r) => ({ t: r.t, v: r.elev }))} endT={endT} notes={climbNotes}
+                yMax={2200} sqrt yTicks={[0, 100, 500, 1000, 2000]} yFmt={(v) => n0(v)} valFmt={(v) => `${n0(v)} m up`}
+                aria={`Every outing with climb, by date and metres up, with the climbing record as a staircase. It broke ${cP.length} times, last ${n0(cNow.elev)} metres on ${fmtDay(cNow.date)}.`}
+              />
+            ),
+          }}
+          right={{
+            title: 'The eight biggest climbs',
+            node: (
+              <HBars
+                aria={`The biggest single climbs: ${R.climbs.slice(0, 8).map((f) => `${n0(f.elev)} metres, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
+                rows={R.climbs.slice(0, 8).map((f) => ({ key: f.mode, label: fmtDay(f.date), sub: `${f.sport === 'Hike' ? 'hike' : lower(f.mode)}${f.region ? ` · ${f.region}` : ''}`, value: f.elev, display: `${n0(f.elev)} m` }))}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> One dot per outing that climbed, higher for more metres. The scale is stretched near the floor so the small climbs can be seen.</>}
+          rightNote={<><b>Why it matters.</b> The biggest single climbs, with the region they started in. Hikes hold the top three; trail runs fill the rest.</>}
+          source="Activity Log · elevation gain of single outings on foot; start region from Strava GPS"
+        />
 
-      {/* Energy burned, as food */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="04"
-          title="Fuel: the burn, in plates of ugali"
-          note="Seven years of moving burned over a million and a half calories. Put in food, that is about two thousand eight hundred plates of ugali; put in rest, close to a thousand days of what a body burns just staying alive. Strava totals the calories on every activity."
-          source="Activity Log"
-          tableCaption="Total calories burned and food equivalent"
-          columns={['Measure', 'Value']}
-          rows={[
-            ['Total calories', `${fmtInt(totalKcal)} kcal`],
-            ['Plates of ugali (~600 kcal)', fmtInt(totalKcal / 600)],
-            ['Days of resting energy (~2000 kcal)', fmtInt(totalKcal / 2000)],
-          ]}
-        >
-          <CaloriePlates kcal={totalKcal} kcalPerPlate={600} />
-        </Figure>
-      </section>
+        {/* ===== 3. weeks and months ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-months"
+          eyebrow={`${num()} · The biggest weeks and months`}
+          title={`The biggest month for climbing was ${fmtMonth(moEl.month)}, with ${n0(moEl.elev)} m.`}
+          statement={<>
+            By distance, the biggest week began on {fmtDay(wk.start)}: {n0(wk.km)} km from {word(wk.n)} outings. The biggest month was {fmtMonth(moKm.month)} with {n0(moKm.km)} km,
+            and {sameYearKm === R.topMonthsKm.length ? `all ${word(sameYearKm)}` : word(sameYearKm)} of the {word(R.topMonthsKm.length)} biggest months for distance came in {moKm.month.slice(0, 4)}.
+            Climbing peaked elsewhere: {fmtMonth(moEl.month)} gained {n0(moEl.elev)} m, {Math.round((moEl.elev / EVEREST) * 100)}% of an Everest in a single month, from only {n0(moEl.km)} km.
+          </>}
+          odds={{
+            title: 'The biggest stretches',
+            items: [
+              { num: wk.km, unit: ' km', label: `in the week of ${fmtDay(wk.start)}`, tone: 'move' },
+              { num: moKm.km, unit: ' km', label: `in ${fmtMonth(moKm.month)}`, tone: 'move' },
+              { num: moEl.elev, unit: ' m', label: `climbed in ${fmtMonth(moEl.month)}`, tone: 'move' },
+              { value: moEl.elev / EVEREST, label: 'of an Everest in that month', tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'The biggest weeks by distance',
+            node: (
+              <HBars
+                aria={`The biggest weeks by distance on foot: ${R.topWeeksKm.map((w) => `week of ${fmtDay(w.start)}, ${n0(w.km)} km`).join('; ')}.`}
+                rows={R.topWeeksKm.map((w, i) => ({ key: i ? 'quiet' : 'road', label: `Week of ${fmtDay(w.start)}`, sub: `${w.n} outings`, value: w.km, display: `${n0(w.km)} km` }))}
+              />
+            ),
+          }}
+          right={{
+            title: 'The biggest months by climb',
+            node: (
+              <HBars
+                aria={`The biggest months by climb on foot: ${R.topMonthsClimb.map((m) => `${fmtMonth(m.month)}, ${n0(m.elev)} metres`).join('; ')}.`}
+                rows={R.topMonthsClimb.map((m, i) => ({ key: i ? 'quiet' : 'trail', label: fmtMonth(m.month), sub: `${n0(m.km)} km · ${m.n} outings`, value: m.elev, display: `${n0(m.elev)} m` }))}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> Weeks run Monday to Sunday. Each bar is the distance on foot in that week, the top week in orange.</>}
+          rightNote={<><b>Why it matters.</b> The months that climbed most were rarely the months that went furthest. Climb came from the mountains, distance from the treadmill.</>}
+          source="Activity Log · distance and climb on foot by week and by month"
+        />
 
-      {/* The ordinary day: counterweight to the records */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <hr className="rule" />
-        <div className="section-head">
-          <p className="eyebrow">And yet, most days</p>
-          <h2 className="section-head__title" style={{ fontSize: 'var(--fs-xl)' }}>
-            The ordinary day did the work.
-          </h2>
-        </div>
-        <Figure
-          n="05"
-          title="A usual outing, where it usually falls"
-          note={`The records above are rare by definition; the kilometres came from the opposite. Almost all of the ${fmtInt(totalDist)} km were built from days like this one, a single short outing run or walked in the early evening. The median foot outing is ${fmtNum(ordMedKm, 1)} km and about ${Math.round(ordMedMin)} minutes, and on ${ordDoublesPct}% of active days there is a second. Something is better than nothing, logged enough times, becomes everything.`}
-          source="Activity Log"
-          tableCaption="The typical outing and active day"
-          columns={['Measure', 'Value']}
-          rows={[
-            ['Median outing', `${fmtNum(ordMedKm, 1)} km`],
-            ['Typical duration', `${Math.round(ordMedMin)} min`],
-            ['Most common start', `${ordHour}:00`],
-            ['Active days with two or more', `${ordDoublesPct}%`],
-          ]}
-        >
-          <OrdinaryDay medKm={ordMedKm} medMin={ordMedMin} hour={ordHour} doublesPct={ordDoublesPct} />
-        </Figure>
-      </section>
+        {/* ===== 4. milestones ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-miles"
+          eyebrow={`${num()} · Milestones`}
+          title={`The first 1,000 km took ${n0(R.kmMiles[0].days)} days. The last ${n0(lastKm.mark - prevKm.mark)} took ${n0(lastKm.days)}.`}
+          statement={<>
+            The distance on foot passed 1,000 km on {fmtDay(R.kmMiles[0].date)} and {n0(R.kmMiles[1].mark)} km {n0(R.kmMiles[1].days)} days later.
+            {R.kmMiles.find((k) => k.mark === 10000) ? ` It reached 10,000 km on ${fmtDay(R.kmMiles.find((k) => k.mark === 10000).date)}.` : ''}
+            {' '}The climb is counted in Everests, 8,849 m each: the first took {n0(ev[0].days)} days, the {ORD[evLast.k] || ordS(evLast.k)} {n0(evLast.days)}.
+            The totals stand at {n0(totalKm)} km and {k1(totalEl / EVEREST)} Everests.
+          </>}
+          odds={{
+            title: 'The running totals',
+            items: [
+              { num: totalKm, unit: ' km', label: 'on foot in all', tone: 'move' },
+              { num: totalEl / EVEREST, dec: 1, unit: '', label: 'Everests climbed', tone: 'move' },
+              { num: ev[0].days, unit: ' days', label: 'for the first Everest', tone: 'rest' },
+              { num: evLast.days, unit: ' days', label: `for the ${ORD[evLast.k] || ordS(evLast.k)}`, tone: 'move' },
+            ],
+          }}
+          left={{
+            title: 'Kilometres on foot, adding up',
+            node: (
+              <CumLine
+                series={R.cum.map((c) => ({ t: c.t, v: c.km }))}
+                marks={R.kmMiles.map((k) => ({ t: tOf(k.date), v: k.mark, label: `${n0(k.mark)} km` }))}
+                yTicks={kmTicks} yFmt={(v) => n0(v)} yCap="km ↑"
+                aria={`Total kilometres on foot over time. Milestones: ${R.kmMiles.map((k) => `${n0(k.mark)} km on ${fmtDay(k.date)}`).join(', ')}.`}
+              />
+            ),
+          }}
+          right={{
+            title: 'Days to climb each Everest',
+            node: (
+              <ColBars
+                items={ev.map((e, i) => ({ label: ordS(e.k), value: e.days, display: n0(e.days), tone: i === ev.length - 1 ? 'big' : i === 0 ? 'quiet' : 'mid' }))}
+                ticks={[0, 250, 500, 750, 1000].filter((t) => t <= Math.max(...ev.map((e) => e.days)) * 1.1)} tickFmt={(v) => n0(v)} yCap="days &uarr;" xCap="each Everest of 8,849 m &rarr;"
+                aria={`Days taken to climb each Everest's height on foot: ${ev.map((e) => `${ordS(e.k)} ${e.days} days`).join(', ')}.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> The line adds every kilometre on foot in order. Each dot is a milestone, dropped to the date it was passed.</>}
+          rightNote={<><b>Why it matters.</b> One bar per Everest of climb. The first took years; the latest took {n0(evLast.days)} days.</>}
+          source="Activity Log · running totals of distance and climb on foot"
+        />
 
-      {/* Tape measure footer stats */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <div className="grid grid--3">
-          <StatCard value={fmtInt(totalDist)} unit=" km" label="Covered on foot, all time" source="Activity Log" />
-          <StatCard value={fmtInt(Math.round(totalHours))} unit=" h" label="Spent moving on foot" source="Activity Log" />
-          <StatCard value={fmtInt(days.length)} label={`Days active, ${activePct}% of the span`} source="Activity Log" />
-        </div>
-      </section>
+        {/* ===== 5. firsts ===== */}
+        <hr className="rule rule--faint" />
+        <section className="sgrid" aria-labelledby="rc-firsts">
+          <div className="sgrid__head">
+            <p className="eyebrow">{num()} · Firsts</p>
+            <h2 id="rc-firsts" className="section-head__title">{cap(word(firstItems.length))} firsts, from a 10 km on day {dayOf(firstItems[0].date)} to a {k1(R.firsts[R.firsts.length - 1].f.km)} km {lower(R.firsts[R.firsts.length - 1].f.mode)} in {R.firsts[R.firsts.length - 1].f.date.slice(0, 4)}.</h2>
+          </div>
+          <Reveal as="p" className="sgrid__statement">
+            {R.firsts.map((x) => `${x.label.replace('First', 'the first')} in ${fmtMon(x.f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
+            The treadmill gave the early ones; the mountains, the trails and other countries gave the later ones.
+          </Reveal>
+          <figure className="sgrid__fig rc-firsts">
+            <figcaption className="sgrid__figtitle">How long each first took, from the first outing</figcaption>
+            <HBars
+              aria={`Firsts on foot: ${firstItems.map((x) => `${x.title}, ${fmtDay(x.date)}`).join('; ')}.`}
+              rows={firstItems.map((x) => ({ key: x.key, label: x.title, sub: `${x.sub} · day ${n0(dayOf(x.date))}`, value: dayOf(x.date), display: fmtMon(x.date) }))}
+            />
+          </figure>
+          <p className="source">Source: Activity Log · the first outing on foot to pass each mark</p>
+        </section>
+
+        {/* ===== 6. the same race ===== */}
+        {race.length > 1 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="rc-race"
+              eyebrow={`${num()} · The same race, ${word(race.length)} times`}
+              title={raceFaster ? 'The Kilimanjaro Half got quicker every year.' : `The Kilimanjaro Half, run ${word(race.length)} times.`}
+              statement={<>
+                The same half marathon, {word(race.length)} editions on record. Moving time went {race.map((r) => `${hm(r.min)} in ${r.year}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}:
+                {' '}{n0(raceSaved)} minutes quicker from the first to the last.
+                {racePrsSame ? ` Each edition set ${race[0].prs} personal records on the course’s timed segments.` : ''}
+                {raceIsTopKudos ? ` The ${raceTopKudos.year} edition drew ${raceTopKudos.kudos} kudos, the most of any outing on record.` : ''}
+              </>}
+              odds={{
+                title: 'Four editions of one race',
+                items: [
+                  { num: race.length, unit: '', label: 'editions run', tone: 'move' },
+                  { num: raceSaved, unit: ' min', label: `quicker in ${race[race.length - 1].year} than in ${race[0].year}`, tone: 'move' },
+                  { num: race[0].prs || 0, unit: '', label: racePrsSame ? 'personal records at each edition' : `personal records in ${race[0].year}`, tone: 'move' },
+                  { num: raceTopKudos.kudos, unit: '', label: `kudos in ${raceTopKudos.year}`, tone: 'rest' },
+                ],
+              }}
+              left={{
+                title: 'Moving time, edition by edition',
+                node: (
+                  <HBars
+                    aria={`Moving time at each edition: ${race.map((r) => `${r.year} ${hm(r.min)}`).join(', ')}.`}
+                    rows={race.map((r, i) => ({ key: i === race.length - 1 ? 'road' : 'quiet', label: String(r.year), sub: `${k1(r.km)} km · ${n0(r.elev)} m up`, value: r.min, display: hm(r.min) }))}
+                  />
+                ),
+              }}
+              right={{
+                title: 'Kudos, edition by edition',
+                node: (
+                  <HBars
+                    aria={`Kudos at each edition: ${race.map((r) => `${r.year} ${r.kudos}`).join(', ')}.`}
+                    rows={race.map((r) => ({ key: r === raceTopKudos ? 'road' : 'quiet', label: String(r.year), sub: r.prs != null ? `${r.prs} personal records` : '', value: r.kudos, display: n0(r.kudos) }))}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> Minutes moving at each edition, shortest is best. The latest is in orange.</>}
+              rightNote={<><b>Why it matters.</b> The race draws the biggest crowd of any outing. The figure under each year is the personal records it set.</>}
+              source="Activity Log · Kilimanjaro Half Marathon editions, moving time and kudos"
+            />
+          </>
+        )}
+
+        {/* ===== 7. personal records ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-prs"
+          eyebrow={`${num()} · Personal records`}
+          title={prBest.year === lastYear ? `${lastYear} has set ${prLast.prs} personal records, the most of any year.` : `${prBest.year} set ${prBest.prs} personal records, the most of any year.`}
+          statement={<>
+            A personal record here is a Strava segment best: a timed stretch of road or trail where an outing beat every earlier effort on it.
+            {' '}{n0(R.prTotal)} have fallen on foot, across {n0(R.prOutings)} outings. Treadmill runs set almost none, because segments need GPS.
+            {' '}{R.prByYear.filter((y) => y.prs > 0).map((y) => `${y.year}${y.year === lastYear ? so : ''} ${y.prs}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+            {' '}{lastYear}{so} runs at {prLast.rate.toFixed(2)} per outing, the highest rate yet.
+          </>}
+          odds={{
+            title: 'Segment bests on foot',
+            items: [
+              { num: R.prTotal, unit: '', label: 'personal records in all', tone: 'move' },
+              { num: R.prOutings, unit: '', label: 'outings that set at least one', tone: 'rest' },
+              { num: prLast.prs, unit: '', label: `in ${lastYear}${so}`, tone: 'move' },
+              { num: prLast.rate, dec: 2, unit: '', label: `per outing in ${lastYear}`, tone: 'move' },
+            ],
+          }}
+          left={{
+            title: 'Personal records, year by year',
+            node: (
+              <ColBars
+                items={R.prByYear.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.prs, display: String(y.prs), tone: y.year === prBest.year ? 'big' : y.prs ? 'mid' : 'quiet' }))}
+                ticks={prTicks} yCap="records &uarr;"
+                aria={`Personal records each year: ${R.prByYear.map((y) => `${y.year} ${y.prs}`).join(', ')}.`}
+              />
+            ),
+          }}
+          right={{
+            title: 'Personal records per outing',
+            node: (
+              <ColBars
+                items={R.prByYear.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.rate, display: y.rate.toFixed(2), tone: y.year === lastYear ? 'big' : y.rate ? 'mid' : 'quiet' }))}
+                ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5].filter((t) => t <= Math.max(...R.prByYear.map((y) => y.rate)) * 1.15)} tickFmt={(v) => v.toFixed(1)} yCap="per outing &uarr;"
+                aria={`Personal records per outing each year: ${R.prByYear.map((y) => `${y.year} ${y.rate.toFixed(2)}`).join(', ')}.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> Every personal record set on foot, counted by year. The tallest year is in orange.</>}
+          rightNote={<><b>Why it matters.</b> Divided by the outings in each year, the rate shows how often an outing beat the past. It is highest now.</>}
+          source="Activity Log · personal records (Strava segment bests) on runs, walks, trail runs and hikes"
+        />
+
+        {/* ===== 8. streaks ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-streaks"
+          eyebrow={`${num()} · Streaks`}
+          title={S.any.current === S.any.len ? `${n0(S.any.len)} days in a row, and still going.` : `${n0(S.any.len)} days in a row, the longest streak.`}
+          statement={<>
+            The longest run of days with an outing began on {fmtDay(S.any.startISO)}{S.any.current === S.any.len ? ` and has not missed a day since: ${n0(S.any.len)} days to ${fmtDay(S.any.endISO)}` : ` and lasted ${n0(S.any.len)} days`}.
+            {' '}Counted in weeks, {n0(S.week.len)} in a row have had at least one outing{S.week.current === S.week.len ? `, every week since ${fmtDay(S.week.startISO)}` : ''}.
+            {' '}On foot alone the best is {n0(S.foot.len)} days; running alone {S.run.len}, walking alone {S.walk.len}.
+            {' '}The opposite record belongs to the early years: {n0(S.longGap.len)} days without a single outing, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}.
+          </>}
+          odds={{
+            title: 'In a row',
+            items: [
+              { num: S.any.len, unit: ' days', label: S.any.current === S.any.len ? 'with an outing, still going' : 'with an outing, the best', tone: 'move' },
+              { num: S.week.len, unit: ' weeks', label: 'with at least one outing', tone: 'move' },
+              { num: S.run.len, unit: ' days', label: 'running in a row', tone: 'move' },
+              { num: S.longGap.len, unit: ' days', label: 'without one, the longest gap', tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'The eight longest runs of days',
+            node: (
+              <HBars
+                aria={`The longest runs of consecutive days with an outing: ${S.top.map((s) => `${s.len} days from ${fmtDay(s.startISO)}`).join('; ')}.`}
+                rows={S.top.map((s) => ({ key: s.current ? 'road' : 'quiet', label: fmtMon(s.startISO), sub: `to ${fmtDay(s.endISO)}${s.current ? ', still going' : ''}`, value: s.len, display: `${s.len} days` }))}
+              />
+            ),
+          }}
+          right={{
+            title: 'The best streak of each kind',
+            node: (
+              <HBars
+                aria={`Longest streaks in days: ${streakRows.map((r) => `${r.label} ${r.value}`).join(', ')}.`}
+                rows={streakRows}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> Each bar is an unbroken run of days with at least one outing of any kind. The one still going is in orange.</>}
+          rightNote={<><b>Why it matters.</b> No single sport keeps the streak alive. It holds because the days mix runs, walks and the rest.</>}
+          source="Activity Log · consecutive days and weeks with an outing (weeks run Monday to Sunday)"
+        />
+
+        {/* ===== 9. where ===== */}
+        {regs.length >= 3 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="rc-where"
+              eyebrow={`${num()} · Where the records were set`}
+              title={`${regTop[0][0]} holds ${word(regTop[0][1])} of the ${top20N} biggest climbs.`}
+              statement={<>
+                Of the {top20N} biggest single climbs on foot, {regTop.map(([k, v]) => `${v} started in ${k}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+                {' '}The biggest climb in each region: {regs.map((f) => `${f.region} ${n0(f.elev)} m`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+              </>}
+              odds={{
+                title: 'Climbs by region of Tanzania',
+                items: [
+                  { num: regTop[0][1], unit: '', label: `of the top ${top20N} climbs in ${regTop[0][0]}`, tone: 'move' },
+                  { num: regs[0].elev, unit: ' m', label: `the biggest, in ${regs[0].region}`, tone: 'move' },
+                  { num: regs[1].elev, unit: ' m', label: `the biggest in ${regs[1].region}`, tone: 'rest' },
+                  { num: regs[2].elev, unit: ' m', label: `the biggest in ${regs[2].region}`, tone: 'rest' },
+                ],
+              }}
+              left={{
+                title: 'The biggest climb in each region',
+                node: (
+                  <HBars
+                    aria={`Biggest single climb by region: ${regs.map((f) => `${f.region} ${n0(f.elev)} metres`).join(', ')}.`}
+                    rows={regs.map((f) => ({ key: f.mode, label: f.region, sub: `${f.sport === 'Hike' ? 'hike' : lower(f.mode)} · ${fmtMon(f.date)}`, value: f.elev, display: `${n0(f.elev)} m` }))}
+                  />
+                ),
+              }}
+              right={{
+                title: `Where the ${top20N} biggest climbs started`,
+                node: (
+                  <ColBars
+                    items={regTop.map(([k, v], i) => ({ label: k, value: v, display: String(v), tone: i ? 'mid' : 'big' }))}
+                    ticks={[0, 5, 10, 15].filter((t) => t <= regTop[0][1] * 1.2)} yCap="climbs &uarr;"
+                    aria={`Of the ${top20N} biggest climbs: ${regTop.map(([k, v]) => `${k} ${v}`).join(', ')}.`}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> The single biggest climb that started in each region of Tanzania, coloured by how it was done.</>}
+              rightNote={<><b>Why it matters.</b> The big climbs cluster in a few mountain regions. The rest of the map is flat by comparison.</>}
+              source="Activity Log and Strava GPS start points · Tanzania regions"
+            />
+          </>
+        )}
+
+        {/* ===== 10. the maths of records ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="rc-maths"
+          eyebrow={`${num()} · The maths of records`}
+          title={`The distance record broke ${dP.length} times. Chance would give ${k1(R.expected)}.`}
+          statement={<>
+            If the same outings came in a random order, a record would break about ln(n) + 0.58 times, where n is the number of outings: early on almost anything is a record,
+            later almost nothing is. For {n0(R.n)} outings that is {k1(R.expected)}. The distance record broke {dP.length} times, {k1(dP.length / R.expected)} times as often;
+            runs alone broke theirs {SR.Run.broken} times against {k1(SR.Run.expected)}. Walks broke theirs {SR.Walk.broken} times against {k1(SR.Walk.expected)}, about what chance gives:
+            the walks did not chase distance. The present record has stood for {n0(R.distStanding.outingsSince)} outings; in a random order the longest outing would sit this early {Math.round(pEarly * 100)}% of the time.
+          </>}
+          odds={{
+            title: 'Records against chance',
+            items: [
+              { num: dP.length, unit: '', label: 'times the distance record broke', tone: 'move' },
+              { num: R.expected, dec: 1, unit: '', label: 'times chance would give', tone: 'rest' },
+              { num: SR.Run.broken / SR.Run.expected, dec: 1, unit: '×', label: 'chance, for runs alone', tone: 'move' },
+              { value: pEarly, label: 'chance the record would stand this long', tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'Times each record broke, against chance',
+            node: (
+              <ChanceRows
+                rows={chanceRows}
+                aria={`Times each record broke against the number expected by chance: ${chanceRows.map((r) => `${r.label} ${r.actual} against ${r.expected.toFixed(1)}`).join(', ')}.`}
+              />
+            ),
+          }}
+          right={{
+            title: 'How long each distance record stood',
+            node: (
+              <ColBars
+                items={R.distStood.map((s, i) => ({ label: String(i + 1), value: Math.max(s.days, 0.5), display: s.standing || s.days >= 400 ? n0(s.days) : '', tone: s.standing ? 'big' : s.days > 100 ? 'mid' : 'quiet' }))}
+                ticks={stoodTicks} tickFmt={(v) => n0(v)} yCap="days stood &uarr;" xCap="each record, in order &rarr;"
+                aria={`Days each distance record stood: ${R.distStood.map((s) => `${k1(s.km)} km ${s.days} days${s.standing ? ', still standing' : ''}`).join('; ')}.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> The bar is how many times a record broke. The ring is how many times it would break on average if the same outings were shuffled.</>}
+          rightNote={<><b>Why it matters.</b> Most records lasted days. The longest-lived before the present one stood {n0(stoodPrev.days)} days, from {fmtMon(stoodPrev.date)}; the last, in orange, is still standing.</>}
+          source="Activity Log · record counts against the harmonic expectation for a random order"
+        />
+
+        {/* ===== 11. the hall of fame ===== */}
+        <hr className="rule rule--faint" />
+        <section className="sgrid" aria-labelledby="rc-edges">
+          <div className="sgrid__head">
+            <p className="eyebrow">{num()} · The record book</p>
+            <h2 id="rc-edges" className="section-head__title">Every record on foot, on one page.</h2>
+          </div>
+          <ul className="yrecs">
+            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" />
+            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" />
+            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" />
+            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" />
+            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} />
+            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} />
+            <RecordCard kicker="Most kudos" value={R.topKudos[0].kudos} label={`on ${an(lower(R.topKudos[0].mode))} of ${k1(R.topKudos[0].km)} km`} sub={fmtDay(R.topKudos[0].date)} />
+            <RecordCard kicker="Most records in one outing" value={R.topPr[0].prs} label={`personal records${R.topPr.filter((f) => f.prs === R.topPr[0].prs).length > 1 ? `, ${word(R.topPr.filter((f) => f.prs === R.topPr[0].prs).length)} times over` : ''}`} sub={`latest ${fmtDay(R.topPr[0].date)}`} />
+          </ul>
+          <p className="source">Source: Activity Log · single outings, days, weeks and months on foot</p>
+        </section>
+      </div>
     </DetailFrame>
   )
 }

@@ -9,6 +9,7 @@ import './styles/tokens.css'
 import './styles/components.css'
 import './styles/yearinsport.css'
 import './styles/sports.css'
+import './styles/records.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

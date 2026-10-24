@@ -1,9 +1,10 @@
 import { useInView } from '../components/Reveal.jsx'
 
 // Plain horizontal bars, one per row, coloured by the row's key and growing from
-// the left in turn. The longest stops short of the edge so its value fits. The value sits at the bar's end and an optional second line
-// under the label adds context. An optional dashed reference (an even share, an
-// average) runs down the whole list and is keyed above it.
+// the left in turn. The longest stops short of the edge so its value fits. The
+// value sits at the bar's end and an optional second line under the label adds
+// context. An optional dashed reference (an even share, an average) runs down
+// the whole list and is keyed above it.
 // props: rows [{ key, label, value, display, sub? }], max?, refLine { value, label }, aria
 export default function HBars({ rows, max, refLine, aria }) {
   const [root, inView] = useInView()

@@ -1350,7 +1350,7 @@ text.chart-panel-title {
 @media (max-width: 40rem) { .fieldnote__quote { font-size: var(--fs-lg); } }
 /* wide: a full-width row on the section grid, left-aligned like the statements */
 .fieldnote--wide { max-width: none; margin: 0; padding: var(--sp-6) 0; text-align: left; border-top: 1px solid var(--rule); }
-.fieldnote--wide .fieldnote__quote { font-size: clamp(1.6rem, 1rem + 2.6vw, 2.9rem); line-height: 1.12; text-wrap: balance; }
+.fieldnote--wide .fieldnote__quote { font-size: clamp(1.6rem, 1rem + 2.6vw, 2.9rem); line-height: 1.12; text-wrap: pretty; max-width: none; }
 @media (max-width: 40rem) { .fieldnote--wide { padding: var(--sp-6) 0; } .fieldnote--wide .fieldnote__quote { font-size: 1.6rem; } }
 @media (prefers-reduced-motion: reduce) {
   .fieldnote { opacity: 1 !important; transform: none !important; transition: none; }
