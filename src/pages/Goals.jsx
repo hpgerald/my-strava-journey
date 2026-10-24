@@ -212,7 +212,7 @@ export default function Goals() {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Goals' }]}
-      number="08"
+      number="07"
       title="Goals"
       subtitle="The targets, year by year."
       lede={`The same three marks every year: a thousand kilometres walked, a thousand run, and twenty-four thousand metres climbed on foot. The rings fill as the year does${inProgress ? `, and for ${latest}, still unfolding, a notch shows where today's pace would put you by December` : ''}. A closed ring is a year that cleared the bar. Under the targets set out loud sit the quiet ones nobody announced: a race run faster every single year, fifty trips to one headland, and not a single calendar month missed in over five years.`}

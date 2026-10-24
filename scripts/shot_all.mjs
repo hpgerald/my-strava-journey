@@ -5,7 +5,7 @@ const BASE = 'http://localhost:4173/#'
 const PAGES = [
   ['home', '/'], ['numbers', '/numbers'], ['sports', '/sports'],
   ['sport-run', '/sports/run'], ['records', '/records'], ['where', '/where'],
-  ['gear', '/gear'], ['timeline', '/timeline'],
+  ['timeline', '/timeline'],
   ['what-it-means', '/what-it-means'],
 ]
 const OUT = '/home/claude/shots'

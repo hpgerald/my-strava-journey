@@ -1,0 +1,64 @@
+/* ==========================================================================
+   timeline.css  ·  The Timeline page: the chronicle and the event rail.
+   ========================================================================== */
+
+/* ---- the chronicle ---- */
+.chron { width: 100%; margin: var(--sp-2) 0 0; }
+.chron__band { fill: var(--grey-03); }
+.chron__yr { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.chron__rule { stroke: var(--rule-faint); }
+.chron__lt { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.chron__lt--n { fill: var(--fg-faint); }
+.chron__m { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0s); }
+.chron.is-in .chron__m { opacity: 1; }
+.chron__bar, .chron__shoe, .chron__streak, .chron__gap { transform-box: fill-box; transform-origin: left center; }
+.chron__dia { fill: var(--ink); }
+.chron__ml { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--fg); font-variant-numeric: tabular-nums; }
+.chron__tick { stroke: var(--ink); stroke-width: 1.5; }
+.chron__dot { stroke: var(--paper); stroke-width: 1.5; }
+.chron__stalk { stroke: var(--rule); }
+.chron__el { font-size: var(--fs-2xs); fill: var(--fg); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.chron__el--gap { fill: var(--fg-muted); }
+.chron__reg { stroke: var(--grey-55); stroke-width: 2; }
+.chron__shoe { fill: var(--grey-35); }
+.chron__shoe.is-now { fill: var(--ink); }
+.chron__sl { font-size: 10px; fill: var(--ink); font-weight: 600; pointer-events: none; }
+.chron__shoe.is-now + .chron__sl { fill: var(--paper); }
+.chron__streak { fill: var(--accent); }
+.chron__streak.is-now { fill: var(--accent-ink); }
+.chron__gap { fill: var(--grey-15); stroke: var(--grey-35); stroke-dasharray: 3 2; }
+.chron__tex { fill: var(--grey-25); }
+.chron__cursor { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.5; pointer-events: none; }
+.chron__key { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); font-size: var(--fs-xs); color: var(--fg-muted); }
+.chron__key li { display: inline-flex; align-items: center; gap: 5px; }
+.chron__kdia { width: 9px; height: 9px; background: var(--ink); transform: rotate(45deg); display: inline-block; margin-right: 3px; }
+.chron__kshoe { width: 22px; height: 9px; border-radius: 2px; background: var(--grey-35); display: inline-block; }
+.chron__kstreak { width: 22px; height: 9px; border-radius: 2px; background: var(--accent); display: inline-block; }
+.chron__kgap { width: 22px; height: 9px; background: var(--grey-15); border: 1px dashed var(--grey-35); display: inline-block; }
+
+/* ---- the event rail ---- */
+.msw--ink { background: var(--ink); width: 9px; height: 9px; border-radius: 0; transform: rotate(45deg); }
+.trail { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.trail__year { display: grid; grid-template-columns: 7rem 1fr; gap: var(--grid-gap); padding: var(--sp-4) 0; border-bottom: 1px solid var(--rule-faint); }
+.trail__y { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem, 1.4rem + 2vw, 3rem); line-height: 1; color: var(--ink); }
+.trail__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3) var(--grid-gap); }
+.trail__ev { display: grid; grid-template-columns: 3.4rem 1fr; gap: var(--sp-2); opacity: 0; transform: translateY(6px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.trail__year.is-in .trail__ev { opacity: 1; transform: none; }
+.trail__date { font-size: var(--fs-xs); color: var(--fg-faint); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.trail__body { display: grid; gap: 2px; }
+.trail__kind { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.trail__t { font-size: var(--fs-sm); line-height: 1.3; }
+.trail__s { font-size: var(--fs-xs); color: var(--fg-muted); }
+.trail__ev.is-now .trail__t { color: var(--accent-ink); }
+.trail__ev.is-gap .trail__t { color: var(--fg-muted); }
+
+@media (max-width: 60rem) {
+  .trail__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 40rem) {
+  .trail__year { grid-template-columns: 1fr; gap: var(--sp-2); }
+  .trail__list { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chron__m, .trail__ev { transition: none !important; opacity: 1 !important; transform: none !important; }
+}

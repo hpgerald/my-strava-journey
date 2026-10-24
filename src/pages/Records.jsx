@@ -103,11 +103,6 @@ export default function Records() {
   const kmTicks = []
   for (let t = 0; t <= totalKm * 1.04; t += totalKm > 10000 ? 2500 : 1000) kmTicks.push(t)
 
-  // ---- firsts ----
-  const firstItems = R.firsts.map((x) => ({
-    t: x.f.t, date: x.f.date, title: x.label, key: x.f.mode,
-    sub: x.label.includes('climbed') ? `${n0(x.f.elev)} m, ${x.f.sport === 'Hike' ? 'hike' : lower(x.f.mode)}` : x.label.includes('abroad') ? `a ${lower(x.f.mode)}` : `${k1(x.f.km)} km, ${lower(x.f.mode)}`,
-  }))
   const dayOf = (iso) => Math.round((tOf(iso) - tOf(R.firstISO)) / 86400000) + 1
 
   // ---- the same race ----
@@ -158,7 +153,7 @@ export default function Records() {
   return (
     <DetailFrame
       {...frame}
-      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the firsts, the streaks, the same race run four times, and the maths of how often a record should break."
+      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the streaks, the same race run four times, and the maths of how often a record should break."
     >
       <div className="yis-report">
         {/* ===== the distance record ===== */}
@@ -376,27 +371,6 @@ export default function Records() {
           rightNote={<><b>Why it matters.</b> One bar per Everest of climb. The first took years; the latest took {n0(evLast.days)} days.</>}
           source="Activity Log · running totals of distance and climb on foot"
         />
-
-        {/* ===== 5. firsts ===== */}
-        <hr className="rule rule--faint" />
-        <section className="sgrid" aria-labelledby="rc-firsts">
-          <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Firsts</p>
-            <h2 id="rc-firsts" className="section-head__title">{cap(word(firstItems.length))} firsts, from a 10 km on day {dayOf(firstItems[0].date)} to a {k1(R.firsts[R.firsts.length - 1].f.km)} km {lower(R.firsts[R.firsts.length - 1].f.mode)} in {R.firsts[R.firsts.length - 1].f.date.slice(0, 4)}.</h2>
-          </div>
-          <Reveal as="p" className="sgrid__statement">
-            {R.firsts.map((x) => `${x.label.replace('First', 'the first')} in ${fmtMon(x.f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
-            The treadmill gave the early ones; the mountains, the trails and other countries gave the later ones.
-          </Reveal>
-          <figure className="sgrid__fig rc-firsts">
-            <figcaption className="sgrid__figtitle">How long each first took, from the first outing</figcaption>
-            <HBars
-              aria={`Firsts on foot: ${firstItems.map((x) => `${x.title}, ${fmtDay(x.date)}`).join('; ')}.`}
-              rows={firstItems.map((x) => ({ key: x.key, label: x.title, sub: `${x.sub} · day ${n0(dayOf(x.date))}`, value: dayOf(x.date), display: fmtMon(x.date) }))}
-            />
-          </figure>
-          <p className="source">Source: Activity Log · the first outing on foot to pass each mark</p>
-        </section>
 
         {/* ===== 6. the same race ===== */}
         {race.length > 1 && (

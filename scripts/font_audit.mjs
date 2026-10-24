@@ -2,7 +2,7 @@ import { chromium } from 'playwright-core'
 
 const BASE = 'http://localhost:4173/#'
 const ROUTES = ['/', '/numbers', '/sports', '/sports/run', '/records', '/where',
-  '/gear', '/timeline', '/what-it-means', '/about', '/design']
+  '/timeline', '/what-it-means', '/about', '/design']
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' })
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })

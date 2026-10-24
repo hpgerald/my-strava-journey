@@ -136,10 +136,9 @@ nav=[
  ["03","Sports","What the work is made of.","/sports","section","authored"],
  ["04","Records","The far edges. Longest, highest, hardest.","/records","section","authored"],
  ["05","Where","Seven countries. Seventeen regions.","/where","geography","authored"],
- ["06","Gear","The shoes that did the miles.","/gear","section","authored"],
- ["07","Timeline","In order. First upload to now.","/timeline","timeline","authored"],
- ["08","Goals","The targets, year by year.","/goals","dashboard","authored"],
- ["09","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
+ ["06","Timeline","In order. First upload to now.","/timeline","timeline","authored"],
+ ["07","Goals","The targets, year by year.","/goals","dashboard","authored"],
+ ["08","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)
 

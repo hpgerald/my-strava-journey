@@ -97,7 +97,7 @@ export default function WhatItMeans() {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'What It Means' }]}
-      number="09"
+      number="08"
       title="What It Means"
       subtitle="What the numbers say to you."
       lede="Seven years of a record, read back. Four things it shows plainly, and one it only hints at. Dotted words carry plain definitions; hover, tap or tab."

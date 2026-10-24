@@ -8,7 +8,6 @@ import SportDetail from './pages/SportDetail.jsx'
 import Records from './pages/Records.jsx'
 import Where from './pages/Where.jsx'
 import PlaceDetail from './pages/PlaceDetail.jsx'
-import Gear from './pages/Gear.jsx'
 import Timeline from './pages/Timeline.jsx'
 import Goals from './pages/Goals.jsx'
 import WhatItMeans from './pages/WhatItMeans.jsx'
@@ -35,7 +34,7 @@ export default function App() {
         <Route path="/where" element={<Where />} />
         <Route path="/where/:placeId" element={<PlaceDetail />} />
         <Route path="/rhythm" element={<Navigate to="/" replace />} />
-        <Route path="/gear" element={<Gear />} />
+        <Route path="/gear" element={<Navigate to="/" replace />} />
 
         {/* Timeline + What it means (Phase 7) */}
         <Route path="/timeline" element={<Timeline />} />

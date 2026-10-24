@@ -1,6 +1,6 @@
 import { chromium } from 'playwright-core'
 const BASE = 'http://localhost:4173/#'
-const PAGES = [['m-sports', '/sports'], ['m-gear', '/gear'], ['m-numbers', '/numbers'], ['m-wim', '/what-it-means']]
+const PAGES = [['m-sports', '/sports'], ['m-numbers', '/numbers'], ['m-wim', '/what-it-means']]
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' })
 const page = await browser.newPage({ viewport: { width: 360, height: 800 } })
 let maxScroll = 0
