@@ -75,7 +75,21 @@ function permutation(n, seed) {
   }
   return arr
 }
-const PERM = permutation(FIELD_NOTES.length, 0x9e3779b9)
+// A page can be pinned to the note that suits it best, and a note can be
+// retired from rotation without reshuffling every other page.
+const PINNED = { '/what-it-means': 'Break the long challenges into increments' }
+const RETIRED = ['Just did the math']
+const find = (start) => FIELD_NOTES.findIndex((f) => f.text.startsWith(start))
+const PERM = (() => {
+  const p = permutation(FIELD_NOTES.length, 0x9e3779b9)
+  for (const [route, start] of Object.entries(PINNED)) {
+    const slot = ORDER.indexOf(route), at = p.indexOf(find(start))
+    if (slot >= 0 && at >= 0) { const t = p[slot]; p[slot] = p[at]; p[at] = t }
+  }
+  const out = RETIRED.map(find).filter((i) => i >= 0)
+  return [...p.filter((i) => !out.includes(i)), ...out]
+})()
+const ACTIVE = FIELD_NOTES.length - RETIRED.length
 
 // The first ORDER.length permutation slots are reserved for the primary pages.
 // Secondary pages (individual years, sports, places, the about/data pages) draw
@@ -86,7 +100,7 @@ const RESERVED = ORDER.length
 // `offset` lets a single page place more than one distinct note. Known primary
 // routes get a guaranteed-distinct note; any other seed draws from the reserve.
 export function pickFieldNote(seed, offset = 0) {
-  const n = FIELD_NOTES.length
+  const n = ACTIVE
   const pos = ORDER.indexOf(String(seed))
   if (pos >= 0) return FIELD_NOTES[PERM[(pos + offset) % RESERVED]]
   const span = n - RESERVED

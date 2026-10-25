@@ -57,7 +57,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | 05 | **Where** | The Africa and Tanzania maps, shaded from each outing's GPS start, with the country ledger, flat home regions against steep ones, the busiest region by year, the map growing, trips abroad, the outings with no place, and how widely the outings spread. |
 | 06 | **Timeline** | The whole record as one chronicle: milestones every 250 outings, the firsts on foot, trips abroad and new regions, every pair of shoes, the streaks and silences, the pace of the habit, and every moment written out year by year. |
 | 07 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year: each year raced against the calendar, the rings year by year, the odds that the open climbing ring closes (a resampling of the year's days), the Kilimanjaro Half with all editions raced at once, the fifty trips to Ras Kilomoni as a tally, the unbroken run of months, and a goal book. |
-| 08 | **What It Means** | The numbers read back as an athlete would read them, for different training goals. |
+| 08 | **What It Means** | The record read back as lessons, in the first person: what the habit costs in time (a clock per year), counting days before kilometres, the small days that kept it going, the weekly floor, how long days arrive in blocks, and the two levers of a yearly total. |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
 

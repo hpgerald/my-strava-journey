@@ -1,0 +1,90 @@
+/* ==========================================================================
+   meaning.css  ·  What It Means: the record read back as lessons.
+   ========================================================================== */
+
+/* ---- a day as a clock ---- */
+.dclock { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-3); }
+.dclock__y { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; opacity: 0; transform: translateY(6px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.dclock.is-in .dclock__y { opacity: 1; transform: none; }
+.dclock__svg { width: 100%; max-width: 132px; display: block; }
+.dclock__face { fill: var(--paper); stroke: var(--grey-25); stroke-width: 1.5; }
+.dclock__tick { stroke: var(--grey-35); stroke-width: 1.25; }
+.dclock__wedge { fill: none; stroke-width: 44; stroke: var(--ink); stroke-dasharray: 0 1; transition: stroke-dasharray 1.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.2s); }
+.dclock.is-in .dclock__wedge { stroke-dasharray: var(--f) 1; }
+.dclock__y.is-now .dclock__wedge { stroke: var(--accent); }
+.dclock__y.is-quiet .dclock__wedge { stroke: var(--grey-45); }
+.dclock__hub { fill: var(--ink); }
+.dclock__v { margin: var(--sp-1) 0 0; font-size: var(--fs-xs); color: var(--fg-muted); }
+.dclock__v b { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
+.dclock__y.is-now .dclock__v b { color: var(--accent-ink); }
+.dclock__l { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); text-transform: uppercase; }
+@media (max-width: 60rem) { .dclock { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* ---- two paths ---- */
+.tpath__band { fill: var(--accent-mute); opacity: 0; transition: opacity 0.8s var(--ease) 1.2s; }
+.tpath.is-in .tpath__band { opacity: 1; }
+.tpath__a, .tpath__b { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); }
+.tpath.is-in .tpath__a, .tpath.is-in .tpath__b { stroke-dashoffset: 0; }
+.tpath__a { stroke: var(--ink); }
+.tpath__b { stroke: var(--accent); }
+.tpath__pt { opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: var(--d, 0ms); }
+.tpath.is-in .tpath__pt { opacity: 1; }
+.tpath__da { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+.tpath__db { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.tpath__va, .tpath__vb { font-family: var(--font-mono); font-size: 10px; font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.tpath__va { fill: var(--ink); }
+.tpath__vb { fill: var(--accent-ink); }
+.tpath__la, .tpath__lb { font-size: var(--fs-2xs); font-weight: 700; }
+.tpath__la { fill: var(--ink); }
+.tpath__lb { fill: var(--accent-ink); }
+
+/* ---- a pile of days ---- */
+.dpile__col rect { fill: var(--grey-55); opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: var(--d, 0ms); }
+.dpile__col.is-small rect { fill: var(--accent); }
+.dpile.is-in .dpile__col rect { opacity: 1; }
+
+/* ---- weekly strips ---- */
+.wstrip__low { fill: var(--grey-03); }
+.wstrip__band { fill: var(--grey-10); }
+.wstrip__dot { fill: var(--grey-55); fill-opacity: 0.75; }
+.wstrip__med { stroke: var(--ink); stroke-width: 2.5; }
+.wstrip__row.is-now .wstrip__band { fill: var(--accent-soft); }
+.wstrip__row.is-now .wstrip__dot { fill: var(--accent); fill-opacity: 0.9; }
+.wstrip__row.is-now .wstrip__med { stroke: var(--accent-ink); }
+.wstrip__row { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.wstrip.is-in .wstrip__row { opacity: 1; }
+
+/* ---- what came next ---- */
+.ngrid__cells { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 3px; }
+.ngrid__c { display: block; aspect-ratio: 1; border-radius: 2px; opacity: 0; transition: opacity 0.3s var(--ease); transition-delay: var(--d, 0ms); }
+.ngrid.is-in .ngrid__c, .ngrid__key .ngrid__c { opacity: 1; }
+.ngrid__c.is-run { background: var(--accent); }
+.ngrid__c.is-walk { background: var(--m-walk); }
+.ngrid__c.is-rest { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--grey-45); }
+.ngrid__c.is-other { background: var(--grey-35); }
+.ngrid__key { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); font-size: var(--fs-xs); color: var(--fg-muted); }
+.ngrid__key li { display: inline-flex; align-items: center; gap: 6px; }
+.ngrid__key .ngrid__c { width: 12px; height: 12px; }
+.ngrid__key b { color: var(--ink); }
+.ngrid__n { color: var(--fg-muted); }
+@media (max-width: 30rem) { .ngrid__cells { grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 2px; } }
+
+/* ---- the maths of a year ---- */
+.isok__iso path { fill: none; stroke: var(--grey-35); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.isok__il { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-muted); letter-spacing: var(--tr-wide); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.isok__pt circle { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+.isok__pt.is-now circle { fill: var(--accent); }
+.isok__pl { font-size: var(--fs-2xs); font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.isok__pt.is-now .isok__pl { fill: var(--accent-ink); }
+.isok__pt { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.isok.is-in .isok__pt { opacity: 1; }
+
+/* ---- the close ---- */
+.mclose { margin: 0; font-size: var(--fs-md); line-height: 1.55; max-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dclock__y, .dclock__wedge, .tpath__band, .tpath__a, .tpath__b, .tpath__pt, .dpile__col rect, .wstrip__row, .ngrid__c, .isok__pt {
+    transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important;
+  }
+  .dclock__wedge { stroke-dasharray: var(--f) 1 !important; }
+}
