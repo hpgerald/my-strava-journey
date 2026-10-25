@@ -3,8 +3,8 @@ import { MODES } from './footReport.js'
 
 // Everything the Records page says, computed from the activity log on every
 // load: how each record moved over time, the biggest single outings, days,
-// weeks and months, the milestones, the firsts, the streaks, the same race run
-// every year, and how often a record broke against what chance would give.
+// weeks and months, the milestones, the streaks, the Kilimanjaro Half (kept for
+// the record book; its story is on Goals), and how often a record broke against what chance would give.
 // Distance and climb are on foot only (run, walk, trail run, hike).
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
 const DAY = 86400000

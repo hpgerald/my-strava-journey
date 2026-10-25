@@ -1,67 +1,92 @@
-import DetailFrame from '../components/DetailFrame.jsx'
-import Figure from '../charts/Figure.jsx'
-import GoalRings from '../charts/GoalRings.jsx'
-import RasKilomoni from '../charts/RasKilomoni.jsx'
-import KiliHalf from '../charts/KiliHalf.jsx'
-import MonthChain from '../charts/MonthChain.jsx'
-import HalfClub from '../charts/HalfClub.jsx'
-import DoubleThousand from '../charts/DoubleThousand.jsx'
-import DistanceArc from '../charts/DistanceArc.jsx'
-import CenturyMonths from '../charts/CenturyMonths.jsx'
-import DistanceExtremes from '../charts/DistanceExtremes.jsx'
-import StageRace from '../charts/StageRace.jsx'
-import GoalsField from '../charts/GoalsField.jsx'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
+import DetailFrame from '../components/DetailFrame.jsx'
+import StorySection from '../components/StorySection.jsx'
+import OddsRow from '../components/OddsRow.jsx'
+import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
+import GoalRace from '../charts/GoalRace.jsx'
+import GhostRace from '../charts/GhostRace.jsx'
+import GoalRings from '../charts/GoalRings.jsx'
+import ColBars from '../charts/ColBars.jsx'
+import { CloseDots, SimHist, StopBars, Tally, MonthBeads } from '../charts/GoalCharts.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
-import { fmtInt, fmtNum, toNum } from '../lib/format.js'
+import { buildGoalsReport, TARGETS } from '../lib/goalsReport.js'
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const longDate = (iso) => {
-  const d = new Date(iso + 'T00:00:00Z')
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`
-}
-const clock = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
-const paceOf = (min, km) => { const p = min / (km || 1); const m = Math.floor(p); const s = Math.round((p - m) * 60); return `${m}:${String(s).padStart(2, '0')}` }
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+const k1 = (v) => (v || 0).toFixed(1)
+const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtShort = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
+const fmtMon = (iso) => (iso ? `${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const doy = (y, i) => new Date(Date.UTC(y, 0, 1) + i * 86400000).toISOString().slice(0, 10)
+const clock = (min) => { const t = Math.round(min * 60); const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` }
+const hmin = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
+const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+const word = (n) => WORD[n] || String(n)
+const TIMES = ['never', 'once', 'twice']
+const times = (n) => TIMES[n] || `${word(n)} times`
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
+const list = (a) => (a.length < 2 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`)
+const RING = { walk: 'var(--g-walk)', run: 'var(--g-run)', elev: 'var(--g-elev)' }
+const unitOf = (t, v) => `${n0(v)} ${t.unit}`
 
-// The same targets are held up against every year (the choice: one fixed bar,
-// so the years can be compared on equal terms). Edit these to change the goals.
-const RUN_SET = new Set(['Run', 'TrailRun'])
-const FOOT_SET = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-const GOALS = [
-  { key: 'walk', label: 'Walk', unit: 'km', target: 1000, color: 'var(--grey-55)', note: 'walking only' },
-  { key: 'run', label: 'All runs', unit: 'km', target: 1000, color: 'var(--accent)', note: 'treadmill, road and trail' },
-  { key: 'elev', label: 'Foot elevation', unit: 'm', target: 24000, color: 'var(--ink)', note: 'walks, runs and hikes' },
-]
-
-const fmtVal = (v, unit) => `${fmtInt(v)} ${unit}`
-
-// A titled break that groups a run of figures into one movement of the page.
-function Movement({ num, eyebrow, title, lede }) {
+// one card of the goal book; `text` replaces the counted number (a race time)
+function GoalCard({ id, kicker, value = 0, text, unit, label, sub, decimals = 0, tone }) {
+  const [ref, inView] = useInView()
+  const v = useCountUp(value, inView, { decimals, dur: 1100 })
   return (
-    <header className="movement">
-      <span className="movement__num" aria-hidden="true">{num}</span>
-      <div className="movement__body">
-        <p className="movement__eyebrow">{eyebrow}</p>
-        <h2 className="movement__title">{title}</h2>
-        <p className="movement__lede">{lede}</p>
-      </div>
-    </header>
+    <li ref={ref} id={id} className={`yrec${inView ? ' is-in' : ''}${tone ? ` yrec--${tone}` : ''}`}>
+      <p className="yrec__k">{kicker}</p>
+      <p className="yrec__v">
+        {text || Number(v).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+        {unit ? <span className="yrec__u">{unit}</span> : null}
+      </p>
+      <p className="yrec__l">{label}</p>
+      {sub ? <p className="yrec__s">{sub}</p> : null}
+    </li>
+  )
+}
+
+// every year's three rings side by side
+function RingYears({ years, cur }) {
+  return (
+    <div className="gyears">
+      <ul className="gyears__grid">
+        {years.map((y) => (
+          <li key={y.year} className={`gyears__y${y === cur && y.partial ? ' is-now' : ''}`}>
+            <GoalRings
+              size={170} track={12} gap={4} centre={false}
+              pace={y.partial ? y.upTo / y.ndays : null}
+              metrics={TARGETS.map((t) => ({ key: t.key, label: `${y.year} ${t.label.toLowerCase()}`, value: y[t.key].total, target: t.target, color: RING[t.key] }))}
+            />
+            <p className="gyears__l"><b>{y.year}</b> {TARGETS.filter((t) => y[t.key].closed != null).length} of 3 closed{y.partial ? ' so far' : ''}</p>
+          </li>
+        ))}
+      </ul>
+      <ul className="chron__key gyears__key" aria-hidden="true">
+        {TARGETS.map((t, i) => <li key={t.key}><i className={`msw msw--${t.ring}`} />{['outer', 'middle', 'inner'][i]} ring, {t.label.toLowerCase()} {unitOf(t, t.target)}</li>)}
+      </ul>
+    </div>
   )
 }
 
 export default function Goals() {
   const activities = useTable('activities')
+  const kili = useTable('kili_half')
+  const profile = useTable('kili_half_profile')
   const rasKilomoni = useTable('ras_kilomoni')
   const { prev, next } = useSectionPaging('/goals')
+  const G = useMemo(() => (activities.length ? buildGoalsReport(activities, kili, profile, rasKilomoni) : null), [activities, kili, profile, rasKilomoni])
 
-  // Deep-link support: /goals#kili-half etc. scrolls to that record once the
-  // data has rendered the section (charts load from CSV after mount, so retry).
+  // deep links from the home page (/goals#kili-half and the rest) land once the
+  // data has drawn the section
   const location = useLocation()
   useEffect(() => {
     const id = location.hash ? location.hash.slice(1) : ''
-    if (!id) return
+    if (!id || !G) return
     let tries = 0
     let timer
     const go = () => {
@@ -71,475 +96,360 @@ export default function Goals() {
     }
     timer = setTimeout(go, 120)
     return () => clearTimeout(timer)
-  }, [location.hash, activities.length])
+  }, [location.hash, G])
 
-  // Ras Kilomoni: a 2026 challenge to reach one headland fifty times, numbered I..L.
-  const rk = [...rasKilomoni].sort((a, b) => Number(a.day) - Number(b.day))
-  const rkRuns = rk.filter((r) => r.sport === 'Run' || r.sport === 'TrailRun').length
-  const rkWalks = rk.length - rkRuns
-  const rkKm = rk.reduce((a, r) => a + (toNum(r.distance_km) || 0), 0)
-  const rkTarget = 50
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Goals' }], number: '07', title: 'Goals', subtitle: 'The targets, year by year.', prev, next }
+  if (!G) return <DetailFrame {...frame} />
 
-  // Kilimanjaro Half Marathon: one edition a year, and faster each time.
-  const kiliHalf = useTable('kili_half')
-  const kiliProfile = useTable('kili_half_profile')
-  const kh = [...kiliHalf].sort((a, b) => a.date.localeCompare(b.date))
-  const khFirst = kh[0]
-  const khLast = kh[kh.length - 1]
-  const khFaster = kh.length ? (toNum(khFirst.moving_min) - toNum(khLast.moving_min)) : 0
-  const khStops = (r) => Math.round(toNum(r.elapsed_min) - toNum(r.moving_min))
+  let secN = 0
+  const num = () => ++secN
+  const cur = G.cur
+  const so = cur.partial ? ' so far' : ''
+  const habit = G.byYear.filter((y) => y.year >= 2021)
+  const [W, R, E] = TARGETS
+  const closedYears = (k) => habit.filter((y) => y[k].closed != null)
+  const bestOf = (k) => G.byYear.reduce((b, y) => (y[k].total > b[k].total ? y : b), G.byYear[0])
+  const bothBefore = habit.filter((y) => y !== cur && y.walk.closed != null && y.run.closed != null).length
+  const curClosed = TARGETS.filter((t) => cur[t.key].closed != null)
+  const curOpen = TARGETS.filter((t) => cur[t.key].closed == null)
 
-  // Silent goals unearthed from the data.
-  const monthly = useTable('monthly_totals')
-  const yearlyTotals = useTable('yearly_totals')
-  const FOOT_ALL = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-  const RUN_ALL = new Set(['Run', 'TrailRun'])
-  // month streak: consecutive active months ending at the latest
-  const activeMonths = [...new Set(monthly.map((m) => m.month))].sort()
-  const nextMonth = (m) => { let y = +m.slice(0, 4), mm = +m.slice(5, 7) + 1; if (mm > 12) { mm = 1; y += 1 } return `${y}-${String(mm).padStart(2, '0')}` }
-  let monthStreak = 0
-  if (activeMonths.length) {
-    const set = new Set(activeMonths)
-    let cur = activeMonths[activeMonths.length - 1]
-    while (set.has(cur)) { monthStreak += 1; let y = +cur.slice(0, 4), mm = +cur.slice(5, 7) - 1; if (mm < 1) { mm = 12; y -= 1 } cur = `${y}-${String(mm).padStart(2, '0')}` }
-  }
-  const sparkLabel = activeMonths.length ? (() => {
-    const set = new Set(activeMonths); let cur = activeMonths[activeMonths.length - 1], prev = cur
-    while (set.has(cur)) { prev = cur; let y = +cur.slice(0, 4), mm = +cur.slice(5, 7) - 1; if (mm < 1) { mm = 12; y -= 1 } cur = `${y}-${String(mm).padStart(2, '0')}` }
-    return `${MONTHS[+prev.slice(5, 7) - 1]} ${prev.slice(0, 4)}`
-  })() : ''
-  // half-marathon club
-  const halfCount = activities.filter((a) => FOOT_ALL.has(a.sport_type) && (toNum(a.distance_km) || 0) >= 21.0975).length
-  // double thousand: latest year with both run>=1000 and walk>=1000
-  const yrAgg = {}
-  for (const a of activities) { const y = a.year; if (!y) continue; const e = (yrAgg[y] = yrAgg[y] || { run: 0, walk: 0 }); const km = toNum(a.distance_km) || 0; if (RUN_ALL.has(a.sport_type)) e.run += km; if (a.sport_type === 'Walk') e.walk += km }
-  const doubleYears = Object.keys(yrAgg).filter((y) => yrAgg[y].run >= 1000 && yrAgg[y].walk >= 1000).sort()
-  const dblYear = doubleYears[doubleYears.length - 1]
-  const topRunYear = Object.keys(yrAgg).reduce((b, y) => (yrAgg[y].run > (yrAgg[b] ? yrAgg[b].run : 0) ? y : b), Object.keys(yrAgg)[0])
-  const topRun = topRunYear ? yrAgg[topRunYear].run : 0
-  // arc peak
-  const arcPeak = [...yearlyTotals].sort((a, b) => toNum(b.distance_km) - toNum(a.distance_km))[0]
-  // century months: how many cleared 100 km, and the longest consecutive run
-  const monthSet = {}
-  for (const mm of monthly) monthSet[mm.month] = toNum(mm.distance_km)
-  const calMonths = Object.keys(monthSet).sort()
-  let centuryCount = 0, centuryBest = 0, cCur = 0
-  if (calMonths.length) {
-    const nextM = (m) => { let y = +m.slice(0, 4), mo = +m.slice(5, 7) + 1; if (mo > 12) { mo = 1; y += 1 } return `${y}-${String(mo).padStart(2, '0')}` }
-    let c = calMonths[0]
-    const end = calMonths[calMonths.length - 1]
-    while (c <= end) {
-      const over = (monthSet[c] || 0) >= 100
-      if (over) { centuryCount += 1; cCur += 1; centuryBest = Math.max(centuryBest, cCur) } else cCur = 0
-      c = nextM(c)
-    }
-  }
-  const maxMonthKm = calMonths.length ? Math.max(...Object.values(monthSet)) : 0
+  // ---- the hero headline ----
+  const heroTitle = cur.walk.closed != null && cur.run.closed != null && !bothBefore
+    ? `${cur.year} is the first year to close both 1,000 km rings. The climbing ring is at ${Math.round(cur.elev.share * 100)}%.`
+    : `${cur.year} has closed ${word(curClosed.length)} of the three rings${so}.`
 
-  // per-year totals for each tracked metric
-  const agg = {}
-  for (const a of activities) {
-    const y = a.year
-    if (!y) continue
-    const e = (agg[y] = agg[y] || { walk: 0, run: 0, elev: 0 })
-    const km = toNum(a.distance_km) || 0
-    const el = toNum(a.elevation_gain_m) || 0
-    if (a.sport_type === 'Walk') e.walk += km
-    if (RUN_SET.has(a.sport_type)) e.run += km
-    if (FOOT_SET.has(a.sport_type)) e.elev += el
-  }
-  // significant years only: a real training year, not the early dabbling
-  const years = Object.keys(agg)
-    .filter((y) => agg[y].walk + agg[y].run >= 300 || agg[y].elev >= 3000)
-    .sort()
-  const latest = years[years.length - 1]
+  // ---- the maths ----
+  const S = G.sims.elev
+  const toGo = E.target - cur.elev.total
+  const m0 = Math.max(0, Number(G.lastISO.slice(5, 7)) - 3)
+  const d0 = Math.round((Date.UTC(cur.year, m0, 1) - Date.UTC(cur.year, 0, 1)) / 86400000)
+  const recent = cur.elev.daily.slice(d0)
+  const recentRate = recent.reduce((s, v) => s + v, 0) / Math.max(1, recent.length)
+  const recentFinish = cur.elev.total + recentRate * G.daysLeft
+  const curMonths = MON.map((mm, i) => {
+    const a = Math.round((Date.UTC(cur.year, i, 1) - Date.UTC(cur.year, 0, 1)) / 86400000)
+    const b = Math.round((Date.UTC(cur.year, i + 1, 1) - Date.UTC(cur.year, 0, 1)) / 86400000)
+    return { i, label: MONTH[i], short: mm, v: cur.elev.daily.slice(a, b).reduce((s, x) => s + x, 0), partial: b > cur.upTo, started: a < cur.upTo }
+  }).filter((m) => m.started)
+  const needMonth = S ? S.needPerDay * 30.44 : 0
 
-  // pace for the year in progress (only if the latest data year is the real one)
-  const now = new Date()
-  const realYear = String(now.getUTCFullYear())
-  const inProgress = latest === realYear
-  const yStart = Date.UTC(now.getUTCFullYear(), 0, 1)
-  const yEnd = Date.UTC(now.getUTCFullYear() + 1, 0, 1)
-  const paceFrac = inProgress ? (Date.now() - yStart) / (yEnd - yStart) : null
+  // ---- the Kilimanjaro Half ----
+  const race = G.race
+  const first = race[0], last = race[race.length - 1], quick = G.quickest
+  const faster = race.length > 1 && race.every((r, i) => !i || r.moving < race[i - 1].moving)
+  const samePrs = race.length > 1 && race.every((r) => r.prs != null && r.prs === first.prs)
+  const topKudos = race.reduce((b, r) => (!b || r.kudos > b.kudos ? r : b), null)
+  const slowest = race.reduce((b, r) => (!b || r.moving > b.moving ? r : b), null)
 
-  const metricsFor = (y) => GOALS.map((g) => ({ key: g.key, label: g.label, value: agg[y][g.key], target: g.target, color: g.color }))
-  const pct = (y, k) => {
-    const g = GOALS.find((x) => x.key === k)
-    return (agg[y][k] / g.target) * 100
-  }
+  // ---- Ras Kilomoni ----
+  const rk = G.rk
+  const rkWalks = rk.filter((r) => r.sport === 'Walk').length
+  const rkKm = rk.reduce((s, r) => s + r.km, 0)
+  const rkDays = rk.length ? Math.round((Date.parse(rk[rk.length - 1].date) - Date.parse(rk[0].date)) / 86400000) + 1 : 0
+  const rkMonths = []
+  for (const r of rk) { const k = r.date.slice(0, 7); let g = rkMonths.find((x) => x.k === k); if (!g) { g = { k, n: 0, km: 0 }; rkMonths.push(g) } g.n++; g.km += r.km }
+  const rkTop = rkMonths.reduce((b, x) => (x.n > b.n ? x : b), rkMonths[0] || { n: 0 })
+  const rkLast = rk[rk.length - 1]
+  const rkOuting = rkLast ? G.outingNo(rkLast.date) : 0
 
-  // current-year status per metric: ahead/behind pace and projection
-  const status = !latest ? [] : GOALS.map((g) => {
-    const v = agg[latest][g.key]
-    const p = (v / g.target) * 100
-    const expected = paceFrac != null ? g.target * paceFrac : null
-    const delta = expected != null ? v - expected : null
-    const projection = paceFrac ? v / paceFrac : null
-    return { ...g, value: v, pct: p, expected, delta, projection, done: v >= g.target }
-  })
-
-  const closed = (y) => GOALS.filter((g) => agg[y][g.key] >= g.target).length
-
-  // ---- the goals as a constellation: a map of the whole chapter ----
-  const setStar = (k, label, short) => {
-    const s = status.find((x) => x.key === k) || {}
-    return { name: label, value: short, status: s.done ? 'closed' : 'open', mag: 0.7, detail: `${Math.round(s.pct || 0)}% of the ${label.toLowerCase()} target` }
-  }
-  const fieldGroups = [
-    { key: 'I', label: 'Set goals', stars: [
-      setStar('walk', 'Walking', '1,000'),
-      setStar('run', 'Running', '1,000'),
-      setStar('elev', 'Climbing', '24k'),
-    ] },
-    { key: 'II', label: 'Kept dates', stars: [
-      { name: 'Ras Kilomoni', value: '50', status: 'recurring', mag: 0.85, detail: 'fifty trips to one headland, met exactly' },
-      { name: 'Kilimanjaro Half', value: `${kh.length}×`, status: 'recurring', mag: 0.8, detail: `${kh.length} years running, quicker each time` },
-    ] },
-    { key: 'III', label: 'Silent goals', stars: [
-      { name: 'Every month', value: `${monthStreak}`, status: 'recurring', mag: 1, detail: `${monthStreak} months unbroken, still going` },
-      { name: 'Past the half', value: `${halfCount}`, status: 'closed', mag: 0.9, detail: `${halfCount} outings of 21.1 km or more` },
-      { name: 'Double thousand', value: dblYear || '', status: 'closed', mag: 0.7, detail: `${dblYear}: first year past 1,000 km on both feet` },
-      { name: 'Century months', value: `${centuryCount}`, status: 'recurring', mag: 0.8, detail: `${centuryCount} months over 100 km on foot` },
-      { name: 'The peak year', value: arcPeak ? Math.round(toNum(arcPeak.distance_km) / 1000) + 'k' : '', status: 'closed', mag: 0.75, detail: `${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} km on foot in one year` },
-    ] },
-    { key: 'IV', label: 'Far edges', stars: [
-      { name: 'The marathon', value: '2:56', status: 'closed', mag: 0.85, detail: 'the one full marathon, sub-three-hours' },
-      { name: 'Stage race', value: '100', status: 'closed', mag: 0.95, detail: '100 km over four straight nights' },
-    ] },
-  ]
-  const fieldRows = fieldGroups.flatMap((g) => g.stars.map((s) => [`${g.key} · ${g.label}`, s.name, s.status]))
+  // ---- the months ----
+  const empty = G.months.filter((m) => m.n === 0)
+  const lastEmpty = empty[empty.length - 1]
+  const centByYear = G.years.map((y) => ({ year: y, n: G.century.filter((m) => m.year === y).length, of: G.months.filter((m) => m.year === y).length }))
+  const centCur = centByYear[centByYear.length - 1]
+  const centTop = Math.max(...centByYear.map((c) => c.n))
+  const centPrev = Math.max(...centByYear.filter((c) => c !== centCur).map((c) => c.n))
 
   return (
     <DetailFrame
-      crumbs={[{ label: 'Home', to: '/' }, { label: 'Goals' }]}
-      number="07"
-      title="Goals"
-      subtitle="The targets, year by year."
-      lede={`The same three marks every year: a thousand kilometres walked, a thousand run, and twenty-four thousand metres climbed on foot. The rings fill as the year does${inProgress ? `, and for ${latest}, still unfolding, a notch shows where today's pace would put you by December` : ''}. A closed ring is a year that cleared the bar. Under the targets set out loud sit the quiet ones nobody announced: a race run faster every single year, fifty trips to one headland, and not a single calendar month missed in over five years.`}
-      prev={prev}
-      next={next}
+      {...frame}
+      lede="The goals, the ones met and the ones still open. Three targets held against every year, the odds that the last open ring closes this year, one race run four times, fifty trips to one headland, and a run of months that never went empty."
     >
-      {/* The whole chapter as a constellation */}
-      <section style={{ paddingTop: 'var(--sp-6)' }}>
-        <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>Everything that was chased</p>
-        <Figure
-          title="The goals, as a sky"
-          note="The brightest star is the streak that has not broken in more than five years. Every goal in this chapter is one star, grouped into the four movements below: a filled star is a goal met, a ringed star one returned to on a cycle, a hollow star still open."
-          source="Activity Log"
-          tableCaption="Every goal, its movement and its state"
-          columns={['Movement', 'Goal', 'State']}
-          rows={fieldRows}
-        >
-          <GoalsField groups={fieldGroups} />
-        </Figure>
-      </section>
-
-      {/* ===== Movement I: the goals set out loud ===== */}
-      <Movement
-        num="I"
-        eyebrow="Movement one"
-        title="The set goals"
-        lede="Three targets, chosen in advance and held up against every year on the same terms."
-      />
-
-      {/* This year, up close */}
-      {latest && (
-        <section style={{ paddingTop: 'var(--sp-6)' }}>
-          <Figure
-            n="01"
-            title={`${latest}: the year so far`}
-            note={inProgress
-              ? `Where ${latest} stands against the three targets, with the pace notch set to today. Fill past the notch means ahead of schedule; short of it means behind. The projection reads the current rate straight through to December.`
-              : `How ${latest} finished against the three targets.`}
-            source="Activity Log"
-            tableCaption={`${latest} progress against each target`}
-            columns={['Goal', 'So far', 'Target', 'Progress']}
-            rows={status.map((s) => [s.label, fmtVal(s.value, s.unit), fmtVal(s.target, s.unit), `${Math.round(s.pct)}%`])}
-          >
-            <div className="goalhero">
-              <GoalRings metrics={metricsFor(latest)} size={260} pace={paceFrac} />
-              <ul className="goalhero__list">
-                {status.map((s) => (
-                  <li key={s.key} className="goalhero__row">
-                    <span className="goalhero__dot" style={{ background: s.color }} />
-                    <div className="goalhero__main">
-                      <span className="goalhero__label">{s.label} <span className="goalhero__note">{s.note}</span></span>
-                      <span className="goalhero__nums mono">{fmtVal(s.value, s.unit)} <span className="goalhero__of">/ {fmtVal(s.target, s.unit)}</span></span>
-                    </div>
-                    <div className="goalhero__side">
-                      <span className={`goalhero__pct${s.done ? ' goalhero__pct--done' : ''}`}>{Math.round(s.pct)}%</span>
-                      {inProgress && s.delta != null && (
-                        <span className="goalhero__pace">
-                          {s.done ? 'target cleared' : `${s.delta >= 0 ? '+' : ''}${fmtInt(s.delta)} ${s.unit} vs pace`}
-                        </span>
-                      )}
-                      {inProgress && !s.done && s.projection != null && (
-                        <span className="goalhero__proj">on track for {fmtVal(s.projection, s.unit)}</span>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Figure>
-        </section>
-      )}
-
-      {/* Every year, same bar */}
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <Figure
-          n="02"
-          title="Every year against the same three rings"
-          note="Running cleared its thousand early and often. Walking and the big climbing number are the hard ones, reached only in the strongest years. One set of rings per year, the same three targets each time, so following a single colour down the years shows when each goal was met and when it fell short."
-          source="Activity Log"
-          tableCaption="Percent of each target reached, by year"
-          columns={['Year', 'Walk', 'All runs', 'Foot elevation', 'Rings closed']}
-          rows={[...years].reverse().map((y) => [y, `${Math.round(pct(y, 'walk'))}%`, `${Math.round(pct(y, 'run'))}%`, `${Math.round(pct(y, 'elev'))}%`, `${closed(y)}/3`])}
-        >
-          <div className="goalgrid">
-            {[...years].reverse().map((y) => (
-              <div key={y} className={`goalgrid__cell${y === latest ? ' goalgrid__cell--now' : ''}`}>
-                <div className="goalgrid__yr mono">{y}{y === latest && inProgress ? <span className="goalgrid__live"> so far</span> : null}</div>
-                <GoalRings metrics={metricsFor(y)} size={150} track={9} gap={5} pace={y === latest ? paceFrac : null} />
-                <ul className="goalgrid__stats">
-                  {GOALS.map((g) => (
-                    <li key={g.key}>
-                      <span className="goalgrid__sw" style={{ background: g.color }} />
-                      <span className="goalgrid__slbl">{g.label}</span>
-                      <span className="goalgrid__spct mono">{Math.round(pct(y, g.key))}%</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+      <div className="yis-report">
+        {/* ===== the race against the calendar ===== */}
+        <section className="sgrid yis-top" aria-labelledby="gl-title">
+          <div className="sgrid__head">
+            <p className="eyebrow">Three targets, every year since {habit[0].year}</p>
+            <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
-        </Figure>
-        <div className="chart-legend" style={{ marginTop: 'var(--sp-4)' }}>
-          {GOALS.map((g) => (
-            <span key={g.key}><i className="chart-swatch" style={{ background: g.color }} /> {g.label} &middot; {fmtInt(g.target)} {g.unit}</span>
-          ))}
-          <span><i className="chart-swatch" style={{ background: 'var(--grey-10)' }} /> to go</span>
-        </div>
-      </section>
-
-      {/* ===== Movement II: the recurring, named goals ===== */}
-      <Movement
-        num="II"
-        eyebrow="Movement two"
-        title="The kept dates"
-        lede="Two goals that came round again and again, a place and a race, each returned to on purpose."
-      />
-
-      {/* A different kind of goal: fifty trips to one place */}
-      {rk.length > 0 && (
-        <section style={{ paddingTop: 'var(--sp-6)' }}>
-          <Figure
-            n="03"
-            title="Fifty trips to Ras Kilomoni"
-            note={`Not every goal is a distance; some are a place. Through 2026 one headland, Ras Kilomoni, kept pulling the training back, and the trips were numbered as they went, I to L (Roman numerals, 1 to 50). The target was a clean fifty, and the wall fills exactly: ${rkWalks} reached at a walk, ${rkRuns} on the run, no more and no fewer. The bars drop each trip onto the calendar from ${longDate(rk[0].date)} to ${longDate(rk[rk.length - 1].date)}, busy weeks and long gaps and all, each bar as tall as that day was far. Trip fifty landed on the same day as the 2,000th activity of the whole record, one milestone on top of another.`}
-            source="Activity Log (named-trip series)"
-            tableCaption="Every Ras Kilomoni trip in order, with date, sport and distance"
-            columns={['Trip', 'Date', 'Sport', 'km']}
-            rows={rk.map((r) => [`Ras Kilomoni ${r.roman}`, r.date, r.sport, fmtNum(toNum(r.distance_km) || 0, 1)])}
-          >
-            <div className="figduo">
-              <ul className="ledger">
-                <li className="ledger__item"><span className="ledger__v ledger__v--accent">{rk.length} / {rkTarget}</span><span className="ledger__l">trips, target met</span></li>
-                <li className="ledger__item"><span className="ledger__v">{fmtInt(rkKm)} km</span><span className="ledger__l">covered getting there</span></li>
-                <li className="ledger__item"><span className="ledger__v">{rkWalks} &middot; {rkRuns}</span><span className="ledger__l">walks &middot; runs</span></li>
-                <li className="ledger__item"><span className="ledger__v">{longDate(rk[0].date)}</span><span className="ledger__l">first trip, to Aug 28</span></li>
-              </ul>
-              <div className="figduo__main"><RasKilomoni rows={rk} /></div>
-            </div>
-          </Figure>
-        </section>
-      )}
-
-      {/* An annual date: the Kilimanjaro Half Marathon, faster every year */}
-      {kh.length > 1 && (
-        <section id="kili-half" style={{ paddingTop: 'var(--sp-7)', scrollMarginTop: '90px' }}>
-          <Figure
-            n="04"
-            title="Four years at the Kilimanjaro Half"
-            note={`One race has come round every year since ${khFirst.year}: the Kilimanjaro Half Marathon, the same twenty-one kilometres each time, and quicker at every running. ${kh.length} editions in an unbroken row. The finish came down from ${clock(toNum(khFirst.moving_min))} in ${khFirst.year} to ${clock(toNum(khLast.moving_min))} in ${khLast.year}, ${Math.round(khFaster)} minutes off the clock, the pace easing from ${paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} to ${paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))} a kilometre, and the standing-around time shrank even faster, from ${khStops(khFirst)} minutes lost to stops in the first to ${khStops(khLast)} in the latest. The ridge up top is the real course, pulled from the GPS tracks: a 268 metre climb to the turnaround near 9 km, then a long drop home. Below it, one pace ribbon a year, each stretch coloured by how fast it was run. Read down the years and the ribbons warm as the race quickens; read across and every year drags on the climb and flies on the way down.`}
-            source="Activity Log + Strava GPS streams"
-            tableCaption="Each Kilimanjaro Half Marathon: distance, finish and pace"
-            columns={['Year', 'Date', 'km', 'Finish', 'Pace /km', 'On course']}
-            rows={kh.map((r) => [r.year, r.date, fmtNum(toNum(r.distance_km), 1), clock(toNum(r.moving_min)), paceOf(toNum(r.moving_min), toNum(r.distance_km)), clock(toNum(r.elapsed_min))])}
-          >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{kh.length} in a row</span><span className="rask__statl">years, {khFirst.year}&ndash;{khLast.year}</span></li>
-              <li className="rask__stat"><span className="rask__statv">{clock(toNum(khFirst.moving_min))} &rarr; {clock(toNum(khLast.moving_min))}</span><span className="rask__statl">finish, faster each year</span></li>
-              <li className="rask__stat"><span className="rask__statv">{paceOf(toNum(khFirst.moving_min), toNum(khFirst.distance_km))} &rarr; {paceOf(toNum(khLast.moving_min), toNum(khLast.distance_km))}</span><span className="rask__statl">min per km</span></li>
-              <li className="rask__stat"><span className="rask__statv">{Math.round(khFaster)} min</span><span className="rask__statl">off the finish vs {khFirst.year}</span></li>
-            </ul>
-            <KiliHalf rows={kh} profile={kiliProfile} />
-          </Figure>
-        </section>
-      )}
-
-      {/* ===== Movement III: the goals never set out loud ===== */}
-      <Movement
-        num="III"
-        eyebrow="Movement three"
-        title="The silent goals"
-        lede="Standards the data kept without anyone naming them: streaks held, thresholds crossed, a shape drawn over seven years."
-      />
-
-      {/* Silent goal: every month since the spark */}
-      {monthly.length > 12 && monthStreak > 6 && (
-        <section id="month-streak" style={{ paddingTop: 'var(--sp-6)', scrollMarginTop: '90px' }}>
-          <Figure
-            n="05"
-            title="Every month, unbroken"
-            note={`Some goals were never set out loud. This is one: since ${sparkLabel}, not a single calendar month has gone by without an activity, ${monthStreak} months in a row, more than five years, still running. It began with a quiet return that June and took hold the next month; the early years still show gaps, but from there the grid is solid. Each cell is a month, shaded by the ground it covered on foot.`}
-            source="Monthly Trends"
-            tableCaption="Distance on foot by month"
-            columns={['Month', 'Activities', 'km on foot']}
-            rows={[...monthly].sort((a, b) => b.month.localeCompare(a.month)).map((m) => [m.month, m.activities, fmtNum(toNum(m.distance_km), 0)])}
-          >
-            <div className="figduo">
-              <ul className="ledger">
-                <li className="ledger__item"><span className="ledger__v ledger__v--accent">{monthStreak} months</span><span className="ledger__l">unbroken, still going</span></li>
-                <li className="ledger__item"><span className="ledger__v">{sparkLabel}</span><span className="ledger__l">streak begins</span></li>
-                <li className="ledger__item"><span className="ledger__v">0</span><span className="ledger__l">missed since</span></li>
-              </ul>
-              <div className="figduo__main"><MonthChain months={monthly} /></div>
-            </div>
-          </Figure>
-        </section>
-      )}
-
-      {/* Silent goal: the half-marathon club */}
-      {halfCount > 5 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            n="06"
-            title="The road past the half"
-            note={`For most people twenty-one kilometres is a race run once and remembered forever. Here it is a habit. A running tally of every outing that went the half-marathon distance or beyond, in the order they happened: ${halfCount} of them. It climbs fast through 2021 and 2022 when the long day was almost routine, flattens through the leaner years, and climbs hard again lately. The one full marathon is marked, and the four-in-four-days of the stage race shows as a near-vertical jump.`}
-            source="Activity Log"
-            tableCaption="Outings of 21.1 km or more, by distance"
-            columns={['Count', 'Threshold']}
-            rows={[[String(halfCount), '21.1 km or more, on foot']]}
-          >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{halfCount}</span><span className="rask__statl">times past the half</span></li>
-              <li className="rask__stat"><span className="rask__statv">1</span><span className="rask__statl">full marathon</span></li>
-              <li className="rask__stat"><span className="rask__statv">4 in 4 days</span><span className="rask__statl">the stage-race jump</span></li>
-            </ul>
-            <HalfClub activities={activities} />
-          </Figure>
-        </section>
-      )}
-
-      {/* Silent goal: the double thousand */}
-      {dblYear && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            n="07"
-            title="The double thousand"
-            note={`Most years clear a thousand kilometres on one side alone, running or walking. Only ${dblYear} clears a thousand on both, ${Math.round(yrAgg[dblYear].run)} run and ${Math.round(yrAgg[dblYear].walk)} walked, the single year to span the full width. Each year reaches two ways, running to the right and walking to the left, with dashed marks at a thousand on each side.`}
-            source="Activity Log"
-            tableCaption="Running and walking distance by year"
-            columns={['Year', 'km run', 'km walked', 'Both 1,000?']}
-            rows={Object.keys(yrAgg).filter((y) => yrAgg[y].run + yrAgg[y].walk >= 200).sort().map((y) => [y, fmtInt(yrAgg[y].run), fmtInt(yrAgg[y].walk), yrAgg[y].run >= 1000 && yrAgg[y].walk >= 1000 ? 'yes' : 'no'])}
-          >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{dblYear}</span><span className="rask__statl">first double thousand</span></li>
-              <li className="rask__stat"><span className="rask__statv">{fmtInt(yrAgg[dblYear].run)} &middot; {fmtInt(yrAgg[dblYear].walk)}</span><span className="rask__statl">km run &middot; walked</span></li>
-              <li className="rask__stat"><span className="rask__statv">{fmtInt(topRun)} km</span><span className="rask__statl">biggest running year, {topRunYear}</span></li>
-            </ul>
-            <DoubleThousand activities={activities} />
-          </Figure>
-        </section>
-      )}
-
-      {/* Silent goal: the seven-year arc */}
-      {yearlyTotals.length > 3 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            n="08"
-            title="The seven-year arc"
-            note={`The whole journey in one line. Two near-empty opening years, then the habit catches and 2021 and 2022 each cover almost three thousand kilometres, ${arcPeak ? Math.round(toNum(arcPeak.distance_km)).toLocaleString('en-US') : ''} at the peak. A dip, then the climb back. The dashed line is the 2,400 kilometres set as a target in 2021, and cleared. Distance on foot only.`}
-            source="Yearly Trends"
-            tableCaption="Distance on foot by year"
-            columns={['Year', 'km on foot', 'Activities']}
-            rows={[...yearlyTotals].sort((a, b) => b.year.localeCompare(a.year)).map((r) => [r.year, fmtNum(toNum(r.distance_km), 0), r.activities])}
-          >
-            <DistanceArc years={yearlyTotals} target={2400} inProgressYear={latest} />
-          </Figure>
-        </section>
-      )}
-
-      {/* Silent goal: the century months */}
-      {monthly.length > 12 && centuryCount > 5 && (
-        <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure
-            n="09"
-            title="The century months"
-            note={`A hundred kilometres on foot in a single calendar month is a quiet standard to hold, and it has been held ${centuryCount} times. Each column is a month; the part that rises above the 100 km line is the stretch that cleared it, and the caps read across are the months that made it. The longest unbroken run reached ${centuryBest} months before a quieter one broke it.`}
-            source="Monthly Trends"
-            tableCaption="Distance on foot by month, against the 100 km line"
-            columns={['Month', 'km on foot', 'Century?']}
-            rows={[...monthly].sort((a, b) => b.month.localeCompare(a.month)).map((mm) => [mm.month, fmtNum(toNum(mm.distance_km), 0), toNum(mm.distance_km) >= 100 ? 'yes' : 'no'])}
-          >
-            <ul className="rask__stats">
-              <li className="rask__stat"><span className="rask__statv rask__statv--accent">{centuryCount} months</span><span className="rask__statl">cleared 100 km</span></li>
-              <li className="rask__stat"><span className="rask__statv">{centuryBest} in a row</span><span className="rask__statl">longest run</span></li>
-              <li className="rask__stat"><span className="rask__statv">{fmtInt(maxMonthKm)} km</span><span className="rask__statl">the biggest month</span></li>
-            </ul>
-            <CenturyMonths months={monthly} line={100} />
-          </Figure>
-        </section>
-      )}
-
-      {/* ===== Movement IV: the rare extremes ===== */}
-      <Movement
-        num="IV"
-        eyebrow="Movement four"
-        title="The far edges"
-        lede="The two efforts that stand at the outer limit of the whole record, each run exactly once."
-      />
-
-      {/* Silent goal: the lone marathon */}
-      <section id="marathon" style={{ paddingTop: 'var(--sp-6)', scrollMarginTop: '90px' }}>
-        <Figure
-          n="10"
-          title="The lone marathon"
-          note="A full 42 kilometres has been run in a single day exactly once, and it was run hard: 42.75 km in 2 hours 56, a shade over four minutes a kilometre, on a flat May morning in 2022. Twice the distance of a normal long day at well under the usual pace, and the furthest ever covered between one sunrise and the next."
-          source="Activity Log"
-          tableCaption="The one full marathon, against a normal long day"
-          columns={['Effort', 'Distance', 'Time', 'Pace']}
-          rows={[['A normal long day', '21.1 km', 'varies', 'varies'], ['The full marathon', '42.75 km', '2:56:44', '4:08/km']]}
-        >
-          <ul className="rask__stats">
-            <li className="rask__stat"><span className="rask__statv rask__statv--accent">2:56:44</span><span className="rask__statl">the only full marathon</span></li>
-            <li className="rask__stat"><span className="rask__statv">4:08 /km</span><span className="rask__statl">sub-three-hours, flat</span></li>
-            <li className="rask__stat"><span className="rask__statv">42.75 km</span><span className="rask__statl">one flat May morning, 2022</span></li>
+          <Reveal as="p" className="sgrid__statement">
+            The same three targets are held against every year: {unitOf(W, W.target)} walked, {unitOf(R, R.target)} run (treadmill, road and trail) and {unitOf(E, E.target)} climbed on foot.
+            Running has closed {times(closedYears('run').length)}, in {list(closedYears('run').map((y) => y.year))}. Walking has closed {times(closedYears('walk').length)}{closedYears('walk').length ? `, on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''}.
+            Climbing has {closedYears('elev').length ? `closed ${times(closedYears('elev').length)}` : `never closed; the best year was ${bestOf('elev').year} with ${unitOf(E, bestOf('elev').elev.total)}`}.
+            {cur.partial && curOpen.length ? ` With ${n0(G.daysLeft)} days of ${cur.year} left, climbing needs ${unitOf(E, toGo)} more.` : ''}
+          </Reveal>
+          <OddsRow
+            title={`${cur.year}${so}`}
+            items={[
+              { num: cur.walk.total, unit: ' km', label: `walked, ${Math.round(cur.walk.share * 100)}% of the target`, tone: cur.walk.closed != null ? 'move' : 'rest' },
+              { num: cur.run.total, unit: ' km', label: `run, ${Math.round(cur.run.share * 100)}% of the target`, tone: cur.run.closed != null ? 'move' : 'rest' },
+              { num: cur.elev.total, unit: ' m', label: `climbed on foot, ${Math.round(cur.elev.share * 100)}% of the target`, tone: cur.elev.closed != null ? 'move' : 'rest' },
+              { num: G.daysLeft, unit: ' days', label: `left in ${cur.year}`, tone: 'rest' },
+            ]}
+          />
+          <GoalRace
+            byYear={G.byYear} targets={TARGETS} fromYear={habit[0].year}
+            aria={`Running totals through each year against the three targets. ${TARGETS.map((t) => `${t.label}: ${habit.map((y) => `${y.year} ${unitOf(t, y[t.key].total)}`).join(', ')}`).join('. ')}.`}
+          />
+          <ul className="chron__key" aria-hidden="true">
+            <li><i className="grace__ksw is-now" />{cur.year}{so}, the dot is today</li>
+            <li><i className="grace__ksw" />earlier years</li>
+            <li><i className="grace__kgoal" />the target</li>
+            <li><i className="grace__khit" />the day it was crossed</li>
           </ul>
-          <DistanceExtremes />
-        </Figure>
-      </section>
+          <p className="source">Source: Activity Log · daily totals on foot, running total through each calendar year</p>
+        </section>
 
-      {/* The special challenge: the 100 km four-day stage race */}
-      <section id="stage-race" style={{ paddingTop: 'var(--sp-7)', scrollMarginTop: '90px' }}>
-        <Figure
-          n="11"
-          title="The 100 km stage race"
-          note="One challenge stands apart from the rest: 100 kilometres across four straight evenings in March 2023, 25 kilometres a night, back to back. The furthest ever gone, and the story is in the pacing. After two steady openers the pace dropped close to half a minute a kilometre, making the third evening the quickest of the four, then held it on the last. Ten and a half hours of moving over four nights, getting faster as it wore on."
-          source="Activity Log (named-race series)"
-          tableCaption="Each evening of the 100 km stage race"
-          columns={['Evening', 'Date', 'Distance', 'Time', 'Pace']}
-          rows={[['Day 1', 'Mar 24, 2023', '25.0 km', '2:42', '6:29/km'], ['Day 2', 'Mar 25, 2023', '25.1 km', '2:42', '6:27/km'], ['Day 3', 'Mar 26, 2023', '25.1 km', '2:30', '5:59/km'], ['Day 4', 'Mar 27, 2023', '25.1 km', '2:33', '6:06/km']]}
-        >
-          <ul className="rask__stats">
-            <li className="rask__stat"><span className="rask__statv rask__statv--accent">100 km</span><span className="rask__statl">four nights, back to back</span></li>
-            <li className="rask__stat"><span className="rask__statv">5:59 /km</span><span className="rask__statl">quickest, the third night</span></li>
-            <li className="rask__stat"><span className="rask__statv">10:27</span><span className="rask__statl">moving, in all</span></li>
+        {/* ===== 1. the rings, year by year ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="gl-rings"
+          eyebrow={`${num()} · Every year against the targets`}
+          title={`Running closed ${times(closedYears('run').length)}, walking ${times(closedYears('walk').length)}, climbing ${closedYears('elev').length ? times(closedYears('elev').length) : 'never'}.`}
+          statement={<>
+            The running ring closed on {list(closedYears('run').filter((y) => y !== cur).map((y) => `${fmtShort(doy(y.year, y.run.closed))} in ${y.year}`))}. {bestOf('run').year} ran {unitOf(R, bestOf('run').run.total)}, {(bestOf('run').run.total / R.target).toFixed(1)} times the target.
+            Then {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))} fell short, at {list(habit.filter((y) => y.run.closed == null).map((y) => unitOf(R, y.run.total)))}.
+            Walking stayed under {n0(Math.ceil(Math.max(...habit.filter((y) => y !== cur).map((y) => y.walk.total)) / 100) * 100)} km a year until {cur.year}, which crossed {unitOf(W, W.target)} on {fmtDay(doy(cur.year, cur.walk.closed ?? 0))}.
+            The climbing ring has come closest in {bestOf('elev').year}, at {Math.round(bestOf('elev').elev.share * 100)}%.
+          </>}
+          odds={{
+            title: `Rings closed, ${habit[0].year} to ${cur.year}`,
+            items: [
+              { num: closedYears('run').length, unit: '', label: `running, best ${unitOf(R, bestOf('run').run.total)} in ${bestOf('run').year}`, tone: 'move' },
+              { num: closedYears('walk').length, unit: '', label: `walking, best ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`, tone: 'move' },
+              { num: closedYears('elev').length, unit: '', label: `climbing, best ${unitOf(E, bestOf('elev').elev.total)} in ${bestOf('elev').year}`, tone: 'rest' },
+              { num: habit.filter((y) => y.walk.closed != null && y.run.closed != null).length, unit: '', label: 'years with both 1,000 km rings closed', tone: 'move' },
+            ],
+          }}
+          left={{
+            title: 'Each year as three rings',
+            node: <RingYears years={habit} cur={cur} />,
+          }}
+          right={{
+            title: 'The day each ring closed',
+            node: (
+              <CloseDots
+                rows={habit.map((y) => ({ year: y.year, ndays: y.ndays, upTo: y.upTo, marks: TARGETS.map((t) => ({ key: t.key, label: t.label, ring: t.ring, day: y[t.key].closed, share: y[t.key].share })) }))}
+                aria={`The day each target was crossed: ${habit.map((y) => `${y.year}: ${TARGETS.map((t) => (y[t.key].closed != null ? `${t.label.toLowerCase()} on ${fmtShort(doy(y.year, y[t.key].closed))}` : `${t.label.toLowerCase()} ${Math.round(y[t.key].share * 100)}%`)).join(', ')}`).join('; ')}.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> Each ring fills to its share of the target and a dot seals a closed ring. On {cur.year}, the white notch is where the year stands today.</>}
+          rightNote={<><b>Why it matters.</b> A ring on the line is the day a target fell; the earlier, the bigger the year. Targets never met are listed with their share at the row's end.</>}
+          source="Activity Log · yearly totals on foot against the three fixed targets"
+        />
+
+        {/* ===== 2. the maths of the open ring ===== */}
+        {S && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="gl-odds"
+              eyebrow={`${num()} · The maths of the open ring`}
+              title={`The climbing ring has a ${Math.round(S.hit * 100)}% chance of closing in ${cur.year}.`}
+              statement={<>
+                To close it, the last {n0(G.daysLeft)} days need {unitOf(E, toGo)}: {n0(S.needPerDay)} m a day. The year so far has averaged {n0(S.perDay)} m a day, rest days included, so the average alone says it closes {S.perDay >= S.needPerDay ? 'by a whisker' : 'just short'}.
+                To put odds on it, the rest of the year is replayed {n0(S.finals.length)} times, each time by picking {n0(G.daysLeft)} days at random from the {n0(cur.upTo)} days of {cur.year} so far and adding up their climb. {Math.round(S.hit * 100)}% of those replays pass {unitOf(E, E.target)}; the middle one finishes at {unitOf(E, S.p50)}.
+                The warning sign is the recent pace: since 1 {MONTH[m0]} it has been {n0(recentRate)} m a day, and at that rate the year ends near {unitOf(E, Math.round(recentFinish / 100) * 100)}.
+              </>}
+              odds={{
+                title: `The climb, ${cur.year}`,
+                items: [
+                  { num: toGo, unit: ' m', label: `still to climb in ${n0(G.daysLeft)} days`, tone: 'rest' },
+                  { num: S.needPerDay, unit: ' m', label: 'a day needed from here', tone: 'rest' },
+                  { num: S.perDay, unit: ' m', label: `a day so far in ${cur.year}`, tone: 'move' },
+                  { value: S.hit, label: `of ${n0(S.finals.length)} replays close the ring`, tone: 'move' },
+                ],
+              }}
+              left={{
+                title: `Where ${n0(S.finals.length)} replays of the year finish`,
+                node: (
+                  <SimHist
+                    finals={S.finals} target={E.target} unit="m"
+                    aria={`Simulated finishes for the ${cur.year} climb: 10% end below ${n0(S.p10)} m, half below ${n0(S.p50)} m and 90% below ${n0(S.p90)} m. ${Math.round(S.hit * 100)}% clear ${n0(E.target)} m.`}
+                  />
+                ),
+              }}
+              right={{
+                title: `Metres climbed each month of ${cur.year}`,
+                node: (
+                  <ColBars
+                    items={curMonths.map((m) => ({ label: m.short, short: m.short.slice(0, 1), value: m.v, display: m.v >= 1000 ? `${(m.v / 1000).toFixed(1)}k` : n0(m.v), tone: m.partial ? 'quiet' : m.v >= needMonth ? 'big' : 'mid' }))}
+                    max={Math.max(needMonth, ...curMonths.map((m) => m.v)) * 1.15}
+                    ticks={[0, 1000, 2000, 3000, 4000]} tickFmt={(v) => (v ? `${v / 1000}k` : '0')}
+                    refLine={{ value: needMonth, label: `needed a month from here, ${n0(Math.round(needMonth / 10) * 10)} m`, short: `needed, ${n0(Math.round(needMonth / 10) * 10)} m` }}
+                    yCap="metres climbed &uarr;"
+                    aria={`Metres climbed on foot each month of ${cur.year}: ${curMonths.map((m) => `${m.label} ${n0(m.v)} m`).join(', ')}. About ${n0(needMonth)} m a month is needed from here.`}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> Each bar counts the replays that finish in that 250 m band. Orange bars clear the target, the dashed line.</>}
+              rightNote={<><b>Why it matters.</b> Orange months beat the pace the ring now needs. {curMonths.filter((m) => !m.partial && m.v >= needMonth).length} of {curMonths.filter((m) => !m.partial).length} full months did; {MONTH[curMonths[curMonths.length - 1].i]}, in grey, is still going.</>}
+              source={`Activity Log · climb on foot each day of ${cur.year}, resampled ${n0(S.finals.length)} times with a fixed seed`}
+            />
+          </>
+        )}
+
+        {/* ===== 3. the Kilimanjaro Half ===== */}
+        {race.length > 1 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="kili-half"
+              eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
+              title={faster ? 'The Kilimanjaro Half got quicker every year.' : `The Kilimanjaro Half, run ${word(race.length)} times.`}
+              statement={<>
+                The same half marathon, {word(race.length)} editions on record. Moving time went {list(race.map((r) => `${hmin(r.moving)} in ${r.year}`))}, {n0(first.moving - last.moving)} minutes quicker from first to last.
+                The stops shrank faster than the running: {n0(first.stopped)} minutes standing still in {first.year}, {k1(last.stopped)} in {last.year}.
+                Raced side by side, when {quick.year} crossed the line {slowest.year} was still {k1(G.courseKm - slowest.atQuickest)} km out.
+                {samePrs ? ` Each edition set ${first.prs} personal records on the course's timed segments.` : ''} The {topKudos.year} edition drew {n0(topKudos.kudos)} kudos, {topKudos.kudos >= G.topKudos ? 'the most of any outing on record' : `the most of the ${word(race.length)}`}.
+              </>}
+              odds={{
+                title: `${cap(word(race.length))} editions of one race`,
+                items: [
+                  { num: first.moving - last.moving, unit: ' min', dec: 1, label: `quicker in ${last.year} than in ${first.year}`, tone: 'move' },
+                  { num: first.stopped - last.stopped, unit: ' min', label: `less time stopped than in ${first.year}`, tone: 'move' },
+                  { num: G.courseKm - slowest.atQuickest, unit: ' km', dec: 1, label: `${slowest.year} behind when ${quick.year} finished`, tone: 'rest' },
+                  { num: topKudos.kudos, unit: '', label: `kudos in ${topKudos.year}${topKudos.kudos >= G.topKudos ? ', the most of any outing' : `, the most of the ${word(race.length)}`}`, tone: 'move' },
+                ],
+              }}
+              left={{
+                title: `All ${word(race.length)} editions, raced at once`,
+                node: (
+                  <GhostRace
+                    race={race} courseKm={G.courseKm}
+                    aria={`The ${race.length} editions of the Kilimanjaro Half replayed together along the course profile. Moving times: ${race.map((r) => `${r.year} ${hmin(r.moving)}`).join(', ')}. When ${quick.year} finished, ${race.filter((r) => r !== quick).map((r) => `${r.year} was ${k1(G.courseKm - r.atQuickest)} km behind`).join(', ')}.`}
+                  />
+                ),
+              }}
+              right={{
+                title: 'Moving and stopped, each edition',
+                node: (
+                  <StopBars
+                    rows={race.map((r) => ({ label: String(r.year), moving: r.moving, stopped: r.stopped, now: r === last }))}
+                    aria={`Time on the course at each edition: ${race.map((r) => `${r.year} ${hmin(r.moving)} moving and ${Math.round(r.stopped)} minutes stopped`).join(', ')}.`}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> The line is the course from start to finish, drawn by its height; each dot runs it at the pace of that year, half a kilometre at a time. Ticks mark where the others were when the quickest finished.</>}
+              rightNote={<><b>Why it matters.</b> The solid bar is time moving and the hatched end is time stopped. Of the {n0(first.moving + first.stopped - last.moving - last.stopped)} minutes saved on the course, {Math.round(((first.stopped - last.stopped) / (first.moving + first.stopped - last.moving - last.stopped)) * 100)}% came off the stops.</>}
+              source="Kilimanjaro Half table and course profile · moving pace per half kilometre, elapsed and moving time per edition"
+            />
+          </>
+        )}
+
+        {/* ===== 4. Ras Kilomoni ===== */}
+        {rk.length > 0 && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="ras-kilomoni"
+              eyebrow={`${num()} · One place, ${n0(rk.length)} times`}
+              title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni in ${n0(rkDays)} days. The last made it ${n0(rkOuting)} outings.`}
+              statement={<>
+                In {rk[0].date.slice(0, 4)} the target was a place: reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times, numbering the trips {rk[0].roman} to {rkLast.roman} as they went (Roman numerals, 1 to {rk.length}).
+                It took from {fmtDay(rk[0].date)} to {fmtDay(rkLast.date)}: {rkWalks} trips at a walk and {rk.length - rkWalks} on the run, {n0(rkKm)} km in all.{' '}
+                {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} was the busiest month with {rkTop.n}. The last trip, {rkLast.roman}, brought the whole record to {n0(rkOuting)} outings.
+              </>}
+              odds={{
+                title: 'Ras Kilomoni',
+                items: [
+                  { num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
+                  { num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
+                  { num: rkKm, unit: ' km', label: `there and back, ${k1(rkKm / rk.length)} km a trip`, tone: 'move' },
+                  { num: rkOuting, unit: '', label: `outings in the record after trip ${rkLast.roman}`, tone: 'rest' },
+                ],
+              }}
+              left={{
+                title: 'Every trip, kept as a tally',
+                node: (
+                  <>
+                    <Tally visits={rk} aria={`Tally of the ${rk.length} trips to Ras Kilomoni by month: ${rkMonths.map((m) => `${fmtMon(`${m.k}-01`)} ${m.n}`).join(', ')}.`} />
+                    <p className="chr__key tally__key" aria-hidden="true"><i className="tally__ksw is-walk" />walked <i className="tally__ksw is-run" />run</p>
+                  </>
+                ),
+              }}
+              right={{
+                title: 'Trips each month',
+                node: (
+                  <ColBars
+                    items={rkMonths.map((m) => ({ label: fmtMon(`${m.k}-01`), short: MON[parseInt(m.k.slice(5, 7), 10) - 1], value: m.n, display: String(m.n), tone: m === rkTop ? 'big' : 'mid' }))}
+                    ticks={[0, 5, 10, 15]} max={rkTop.n * 1.15} yCap="trips &uarr;"
+                    aria={`Trips to Ras Kilomoni each month: ${rkMonths.map((m) => `${fmtMon(`${m.k}-01`)} ${m.n}`).join(', ')}.`}
+                  />
+                ),
+              }}
+              leftNote={<><b>How to read it.</b> One stroke per trip, counted in fives the way a tally is kept by hand: four upright, the fifth across. Orange strokes were run, grey walked.</>}
+              rightNote={<><b>Why it matters.</b> The count was steady through the first three months, then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} took {rkTop.n} trips and the target came within reach.</>}
+              source="Ras Kilomoni table · every trip with its date, sport and distance"
+            />
+          </>
+        )}
+
+        {/* ===== 5. the months ===== */}
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="month-streak"
+          eyebrow={`${num()} · The goal nobody set`}
+          title={`${n0(G.streak)} months in a row with an outing. ${n0(G.century.length)} months passed 100 km on foot.`}
+          statement={<>
+            Nobody set this one. The last calendar month without a single outing was {fmtMonth(`${lastEmpty.key}-01`)}; every month since, {n0(G.streak)} in a row, has had at least one.
+            {' '}{n0(G.century.length)} months have passed 100 km on foot, the first in {fmtMonth(`${G.century[0].key}-01`)}.
+            {centCur.n === centCur.of ? ` In ${cur.year} every month${so} has, ${word(centCur.n)} of ${word(centCur.of)}.` : ` In ${cur.year}, ${word(centCur.n)} of ${word(centCur.of)} months${so} have.`}
+          </>}
+          odds={{
+            title: 'Every calendar month',
+            items: [
+              { num: G.streak, unit: ' months', label: `in a row with an outing, since ${fmtMon(`${G.streakFrom.key}-01`)}`, tone: 'move' },
+              { num: G.century.length, unit: ' months', label: 'with 100 km or more on foot', tone: 'move' },
+              { num: centCur.n, unit: ` of ${centCur.of}`, label: `months of ${cur.year} past 100 km`, tone: 'move' },
+              { num: empty.length, unit: ' months', label: `with no outing, all before ${fmtMon(`${G.streakFrom.key}-01`)}`, tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'Every month as a bead',
+            node: (
+              <MonthBeads
+                months={G.months}
+                aria={`Distance on foot each month, ${G.months[0].key} to ${G.months[G.months.length - 1].key}. Months with no outing: ${empty.map((m) => m.key).join(', ')}. ${G.century.length} months passed 100 km.`}
+              />
+            ),
+          }}
+          right={{
+            title: 'Months past 100 km, each year',
+            node: (
+              <ColBars
+                items={centByYear.map((c) => ({ label: String(c.year), short: `'${String(c.year).slice(2)}`, value: c.n, display: String(c.n), tone: c.n === centTop ? 'big' : c.n ? 'mid' : 'quiet' }))}
+                ticks={[0, 3, 6, 9, 12]} max={13} yCap="months &uarr;"
+                aria={`Months with 100 km or more on foot each year: ${centByYear.map((c) => `${c.year} ${c.n} of ${c.of}`).join(', ')}.`}
+              />
+            ),
+          }}
+          leftNote={<><b>How to read it.</b> One string per year, one bead per month, sized by the distance on foot. Orange beads passed 100 km; an empty ring is a month with no outing.</>}
+          rightNote={<><b>Why it matters.</b> {cur.year} has {centCur.n} so far, {centCur.n > centPrev ? 'the most of any year' : centCur.n === centPrev ? `level with ${list(centByYear.filter((c) => c !== centCur && c.n === centPrev).map((c) => c.year))}` : `against ${centPrev} at best before`}. The empty rings all sit before the habit began.</>}
+          source="Activity Log · outings and distance on foot in every calendar month"
+        />
+
+        {/* ===== the goal book ===== */}
+        <hr className="rule rule--faint" />
+        <section className="sgrid" aria-labelledby="gl-book">
+          <div className="sgrid__head">
+            <p className="eyebrow">{num()} · The goal book</p>
+            <h2 id="gl-book" className="section-head__title">Every goal on foot, met or still open.</h2>
+          </div>
+          <ul className="yrecs">
+            <GoalCard kicker="Running ring" value={closedYears('run').length} unit="times" label={`closed, best ${unitOf(R, bestOf('run').run.total)}`} sub={list(closedYears('run').map((y) => y.year))} tone="hot" />
+            <GoalCard kicker="Walking ring" value={closedYears('walk').length} unit={closedYears('walk').length === 1 ? 'time' : 'times'} label={`closed, ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`} sub={closedYears('walk').length ? `on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''} tone="hot" />
+            <GoalCard kicker="Climbing ring" value={Math.round(cur.elev.share * 100)} unit="%" label={`of ${unitOf(E, E.target)} in ${cur.year}${so}`} sub={S ? `${Math.round(S.hit * 100)}% chance it closes` : ''} />
+            {G.marathon && <GoalCard id="marathon" kicker="The marathon" text={clock(G.marathon.min)} label={`${k1(G.marathon.dist)} km${G.marathon.min < 180 ? ' in under three hours' : ''}${G.marathon.trainer ? ', on the treadmill' : ''}`} sub={fmtMonth(G.marathon.date)} tone="hot" />}
+            {G.stage && <GoalCard id="stage-race" kicker="The stage race" value={G.stage.km} decimals={1} unit="km" label={`in ${word(G.stage.days.length)} days back to back, ${k1(G.stage.km / G.stage.days.length)} km a day`} sub={`${fmtShort(G.stage.days[0].date)} to ${fmtDay(G.stage.days[G.stage.days.length - 1].date)}`} />}
+            {race.length > 0 && <GoalCard kicker="Kilimanjaro Half" text={hmin(quick.moving)} label={`the quickest of ${word(race.length)}, ${n0(first.moving - last.moving)} min under ${first.year}`} sub={`${quick.year} edition`} />}
+            {rk.length > 0 && <GoalCard kicker="Ras Kilomoni" value={rk.length} unit="trips" label={`${n0(rkKm)} km, target met exactly`} sub={`${fmtShort(rk[0].date)} to ${fmtDay(rkLast.date)}`} />}
+            <GoalCard kicker="Months in a row" value={G.streak} unit="months" label="with at least one outing, still going" sub={`since ${fmtMon(`${G.streakFrom.key}-01`)}`} />
           </ul>
-          <StageRace />
-        </Figure>
-      </section>
+          <p className="source">Source: Activity Log, Kilimanjaro Half and Ras Kilomoni tables</p>
+        </section>
+      </div>
     </DetailFrame>
   )
 }

@@ -1,0 +1,120 @@
+/* ==========================================================================
+   goals.css  ·  The Goals page: the race against the calendar, the rings by
+   year, the replays of the open ring, the Kilimanjaro Half raced at once, the
+   Ras Kilomoni tally and the string of months.
+   ========================================================================== */
+
+/* ---- the race against the calendar ---- */
+.grace { width: 100%; margin: var(--sp-2) 0 0; }
+.grace__t { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--ink); }
+.grace__u { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; }
+.grace__goal { stroke: var(--ink); stroke-width: 1.25; stroke-dasharray: 5 4; }
+.grace__line { fill: none; stroke: var(--grey-35); stroke-width: 1.5; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease); transition-delay: var(--d, 0ms); }
+.grace.is-in .grace__line { stroke-dashoffset: 0; }
+.grace__y.is-now .grace__line { stroke: var(--accent); stroke-width: 3; }
+.grace__hit { fill: var(--paper); stroke: var(--grey-55); stroke-width: 1.5; opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 1.4s); }
+.grace__y.is-now .grace__hit { stroke: var(--accent-ink); stroke-width: 2.5; }
+.grace__now { fill: var(--accent); stroke: var(--paper); stroke-width: 2; opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 1.5s); }
+.grace__yl { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 1.5s); }
+.grace__yl.is-now { fill: var(--accent-ink); font-weight: 700; font-size: var(--fs-2xs); }
+.grace.is-in .grace__hit, .grace.is-in .grace__now, .grace.is-in .grace__yl { opacity: 1; }
+.grace__ksw { width: 22px; height: 0; border-top: 2px solid var(--grey-35); display: inline-block; }
+.grace__ksw.is-now { border-top: 3px solid var(--accent); }
+.grace__kgoal { width: 22px; height: 0; border-top: 1.5px dashed var(--ink); display: inline-block; }
+.grace__khit { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent-ink); background: var(--paper); display: inline-block; }
+
+/* ---- each year as three rings ---- */
+.gyears__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-3); }
+.gyears__y { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.gyears__l { margin: 0; font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.gyears__l b { color: var(--ink); font-size: var(--fs-sm); }
+.gyears__y.is-now .gyears__l b { color: var(--accent-ink); }
+.gyears__key { justify-content: flex-start; margin-top: var(--sp-4); gap: var(--sp-1) var(--sp-4); }
+@media (max-width: 30rem) { .gyears__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---- the day each ring closed ---- */
+.cdots__y { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
+.cdots__track { stroke: var(--grey-25); stroke-width: 3; stroke-linecap: round; }
+.cdots__track.is-now { stroke: var(--accent); opacity: 0.45; }
+.cdots__dot { fill: var(--paper); stroke-width: 3.5; }
+.cdots__dl { font-family: var(--font-mono); font-size: 10px; fill: var(--fg); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.cdots__open { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); letter-spacing: var(--tr-wide); }
+.cdots__row { opacity: 0; transform: translateX(-8px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.cdots.is-in .cdots__row { opacity: 1; transform: none; }
+
+/* ---- where the replays finish ---- */
+.simh__target { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.simh__tl { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--accent-ink); letter-spacing: var(--tr-wide); }
+
+/* ---- the Kilimanjaro Half, raced at once ---- */
+.ghost { width: 100%; }
+.ghost__finish { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 2 3; }
+.ghost__fl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.ghost__course { fill: none; stroke: var(--grey-25); stroke-width: 1.25; }
+.ghost__course.is-now { stroke: var(--accent); stroke-width: 1.5; opacity: 0.5; }
+.ghost__mark { stroke: var(--ink); stroke-width: 2; }
+.ghost__runner { fill: var(--grey-55); stroke: var(--paper); stroke-width: 2; }
+.ghost__runner.is-now { fill: var(--accent); }
+.ghost__rl { font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: var(--fg-muted); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.ghost__rl.is-now { fill: var(--accent-ink); font-weight: 700; }
+.ghost__clock { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); fill: var(--ink); font-variant-numeric: tabular-nums; }
+.ghost__board { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); border-top: 1px solid var(--rule-faint); padding-top: var(--sp-2); }
+.ghost__row { display: grid; gap: 2px; }
+.ghost__row:not(.is-in) .mono { color: var(--fg-muted); font-weight: 600; }
+.ghost__row b { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--fg-muted); }
+.ghost__row .mono { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
+.ghost__row.is-now .mono { color: var(--accent-ink); }
+.ghost__row small { font-size: var(--fs-2xs); color: var(--fg-muted); line-height: 1.3; }
+.ghost__replay { margin-top: var(--sp-3); }
+@media (max-width: 40rem) { .ghost__board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---- moving and stopped ---- */
+.stopb__sw { width: 16px; height: 10px; border-radius: 2px; background: repeating-linear-gradient(135deg, var(--grey-45) 0 2px, transparent 2px 4px); border: 1px solid var(--grey-45); }
+.stopb__stop { position: absolute; top: 0; bottom: 0; left: calc(100% * var(--v0) * var(--hb-max)); width: calc(100% * var(--v) * var(--hb-max)); background: repeating-linear-gradient(135deg, var(--grey-45) 0 2px, transparent 2px 4px); border: 1px solid var(--grey-45); border-left: 0; border-radius: 0 2px 2px 0; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.8s); }
+.stopb.is-in .stopb__stop { opacity: 1; }
+.stopb .hb__val { transform: translate(10px, -50%); }
+
+/* ---- the tally ---- */
+.tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-3); padding-top: var(--sp-2); }
+.tally__m { border-top: 1px solid var(--rule); padding-top: var(--sp-2); opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 0ms); }
+.tally.is-in .tally__m { opacity: 1; }
+.tally__ml { margin: 0 0 var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); display: flex; justify-content: space-between; }
+.tally__ml .mono { color: var(--ink); font-weight: 700; }
+.tally__gates { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.tally__gate { display: block; overflow: visible; }
+.tally__s { stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 50; stroke-dashoffset: 50; transition: stroke-dashoffset 0.35s var(--ease); transition-delay: var(--i, 0ms); }
+.tally.is-in .tally__s { stroke-dashoffset: 0; }
+.tally__s.is-walk { stroke: var(--m-walk); }
+.tally__s.is-run { stroke: var(--accent); }
+.tally__x { stroke-width: 3; }
+.tally__key { justify-content: flex-start; margin: var(--sp-3) 0 0; }
+.tally__ksw { width: 4px; height: 14px; border-radius: 2px; display: inline-block; }
+.tally__ksw.is-walk { background: var(--m-walk); }
+.tally__ksw.is-run { background: var(--accent); }
+@media (max-width: 30rem) { .tally { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---- every month as a bead ---- */
+.beads__string { stroke: var(--grey-25); stroke-width: 1.5; }
+.beads__b { fill: var(--ink); stroke: var(--paper); stroke-width: 1; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.3); transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); transition-delay: var(--d, 0ms); }
+.beads.is-in .beads__b { opacity: 1; transform: none; }
+.beads__b.is-big { fill: var(--accent); }
+.beads__b.is-none { fill: var(--paper); stroke: var(--grey-45); stroke-width: 1.5; stroke-dasharray: 2 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grace__line, .grace__hit, .grace__now, .grace__yl, .cdots__row, .stopb__stop, .tally__m, .tally__s, .beads__b {
+    transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ---- the three target colours ---- */
+:root { --g-walk: var(--m-walk); --g-run: var(--accent); --g-elev: var(--grey-45); }
+.mstroke--gwalk { stroke: var(--g-walk); }
+.mstroke--grun { stroke: var(--g-run); }
+.mstroke--gelev { stroke: var(--g-elev); }
+.msw--gwalk { background: var(--g-walk); }
+.msw--grun { background: var(--g-run); }
+.msw--gelev { background: var(--g-elev); }
+.stopb { --hb-max: 0.66; }
+@media (max-width: 40rem) { .stopb { --hb-max: 0.5; } }
+.tally__gate { width: 58px; height: 53px; }
+@media (max-width: 22.5rem) { .stopb .chr__exp { display: none; } }

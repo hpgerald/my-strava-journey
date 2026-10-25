@@ -6,7 +6,7 @@ import { useWidth } from './useWidth.js'
 // and, for the year in progress, a notch marks where today's pace sits so the
 // fill reads as ahead of or behind schedule. metrics: [{ key, label, value,
 // target, color }]. pace: fraction of the year elapsed (null to hide).
-export default function GoalRings({ metrics, size = 220, track = 12, gap = 7, pace = null, minStart = 0.62 }) {
+export default function GoalRings({ metrics, size = 220, track = 12, gap = 7, pace = null, minStart = 0.62, centre = true }) {
   const [ref, width] = useWidth(size)
   const [hover, setHover] = useState(null)
   if (!metrics || !metrics.length) return <div ref={ref} />
@@ -65,8 +65,8 @@ export default function GoalRings({ metrics, size = 220, track = 12, gap = 7, pa
           )
         })}
         {/* centre: rings closed out of total */}
-        <text x={c} y={c - 2} textAnchor="middle" className="grings__cnum mono">{rings.filter((m) => m.done).length}/{rings.length}</text>
-        <text x={c} y={c + 14} textAnchor="middle" className="grings__clbl">closed</text>
+        {centre && <text x={c} y={c - 2} textAnchor="middle" className="grings__cnum mono">{rings.filter((m) => m.done).length}/{rings.length}</text>}
+        {centre && <text x={c} y={c + 14} textAnchor="middle" className="grings__clbl">closed</text>}
       </svg>
     </div>
   )

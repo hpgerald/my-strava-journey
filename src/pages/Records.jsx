@@ -105,14 +105,6 @@ export default function Records() {
 
   const dayOf = (iso) => Math.round((tOf(iso) - tOf(R.firstISO)) / 86400000) + 1
 
-  // ---- the same race ----
-  const race = R.race
-  const raceFaster = race.length > 1 && race.every((r, i) => !i || r.min < race[i - 1].min)
-  const raceSaved = race.length > 1 ? race[0].min - race[race.length - 1].min : 0
-  const racePrsSame = race.length > 1 && race.every((r) => r.prs != null && r.prs === race[0].prs)
-  const raceTopKudos = race.reduce((b, r) => (!b || r.kudos > b.kudos ? r : b), null)
-  const raceIsTopKudos = raceTopKudos && R.topKudos[0] && R.topKudos[0].date === raceTopKudos.date
-
   // ---- personal records ----
   const prBest = R.prByYear.reduce((b, y) => (y.prs > b.prs ? y : b), R.prByYear[0])
   const prLast = R.prByYear[R.prByYear.length - 1]
@@ -153,7 +145,7 @@ export default function Records() {
   return (
     <DetailFrame
       {...frame}
-      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the streaks, the same race run four times, and the maths of how often a record should break."
+      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the personal records, the streaks, and the maths of how often a record should break."
     >
       <div className="yis-report">
         {/* ===== the distance record ===== */}
@@ -371,54 +363,6 @@ export default function Records() {
           rightNote={<><b>Why it matters.</b> One bar per Everest of climb. The first took years; the latest took {n0(evLast.days)} days.</>}
           source="Activity Log · running totals of distance and climb on foot"
         />
-
-        {/* ===== 6. the same race ===== */}
-        {race.length > 1 && (
-          <>
-            <hr className="rule rule--faint" />
-            <StorySection
-              id="rc-race"
-              eyebrow={`${num()} · The same race, ${word(race.length)} times`}
-              title={raceFaster ? 'The Kilimanjaro Half got quicker every year.' : `The Kilimanjaro Half, run ${word(race.length)} times.`}
-              statement={<>
-                The same half marathon, {word(race.length)} editions on record. Moving time went {race.map((r) => `${hm(r.min)} in ${r.year}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}:
-                {' '}{n0(raceSaved)} minutes quicker from the first to the last.
-                {racePrsSame ? ` Each edition set ${race[0].prs} personal records on the course’s timed segments.` : ''}
-                {raceIsTopKudos ? ` The ${raceTopKudos.year} edition drew ${raceTopKudos.kudos} kudos, the most of any outing on record.` : ''}
-              </>}
-              odds={{
-                title: 'Four editions of one race',
-                items: [
-                  { num: race.length, unit: '', label: 'editions run', tone: 'move' },
-                  { num: raceSaved, unit: ' min', label: `quicker in ${race[race.length - 1].year} than in ${race[0].year}`, tone: 'move' },
-                  { num: race[0].prs || 0, unit: '', label: racePrsSame ? 'personal records at each edition' : `personal records in ${race[0].year}`, tone: 'move' },
-                  { num: raceTopKudos.kudos, unit: '', label: `kudos in ${raceTopKudos.year}`, tone: 'rest' },
-                ],
-              }}
-              left={{
-                title: 'Moving time, edition by edition',
-                node: (
-                  <HBars
-                    aria={`Moving time at each edition: ${race.map((r) => `${r.year} ${hm(r.min)}`).join(', ')}.`}
-                    rows={race.map((r, i) => ({ key: i === race.length - 1 ? 'road' : 'quiet', label: String(r.year), sub: `${k1(r.km)} km · ${n0(r.elev)} m up`, value: r.min, display: hm(r.min) }))}
-                  />
-                ),
-              }}
-              right={{
-                title: 'Kudos, edition by edition',
-                node: (
-                  <HBars
-                    aria={`Kudos at each edition: ${race.map((r) => `${r.year} ${r.kudos}`).join(', ')}.`}
-                    rows={race.map((r) => ({ key: r === raceTopKudos ? 'road' : 'quiet', label: String(r.year), sub: r.prs != null ? `${r.prs} personal records` : '', value: r.kudos, display: n0(r.kudos) }))}
-                  />
-                ),
-              }}
-              leftNote={<><b>How to read it.</b> Minutes moving at each edition, shortest is best. The latest is in orange.</>}
-              rightNote={<><b>Why it matters.</b> The race draws the biggest crowd of any outing. The figure under each year is the personal records it set.</>}
-              source="Activity Log · Kilimanjaro Half Marathon editions, moving time and kudos"
-            />
-          </>
-        )}
 
         {/* ===== 7. personal records ===== */}
         <hr className="rule rule--faint" />
