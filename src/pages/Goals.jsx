@@ -116,7 +116,7 @@ export default function Goals() {
   // ---- the hero headline ----
   const firstBoth = cur.walk.closed != null && cur.run.closed != null && !bothBefore
   const heroTitle = firstBoth ? 'Both 1,000 km rings closed.' : `${cap(word(curClosed.length))} of three rings closed.`
-  const heroSub = `${firstBoth ? `${cur.year} is the first year to close both.` : `That is ${cur.year}${so}.`} The climbing ring is at ${Math.round(cur.elev.share * 100)}%.`
+  const heroSub = `${firstBoth ? `${cur.year} is the first year I’ve closed both.` : `That’s my ${cur.year}${so}.`} My climbing ring is at ${Math.round(cur.elev.share * 100)}%.`
 
   // ---- the maths ----
   const S = G.sims.elev
@@ -163,7 +163,7 @@ export default function Goals() {
   return (
     <DetailFrame
       {...frame}
-      lede="The goals, the ones met and the ones still open. Three targets held against every year, the odds that the last open ring closes this year, one race run four times, fifty trips to one headland, and a run of months that never went empty."
+      lede="My goals, the ones I&rsquo;ve met and the ones still open. Three targets I hold against every year, the odds that the last open ring closes this year, one race run four times, fifty trips to one headland, and a run of months that never went empty."
     >
       <div className="yis-report">
         {/* ===== the race against the calendar ===== */}
@@ -174,10 +174,10 @@ export default function Goals() {
             <p className="section-head__sub">{heroSub}</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            The same three targets are held against every year: {unitOf(W, W.target)} walked, {unitOf(R, R.target)} run (treadmill, road and trail) and {unitOf(E, E.target)} climbed on foot.
-            Running has closed {times(closedYears('run').length)}, in {list(closedYears('run').map((y) => y.year))}. Walking has closed {times(closedYears('walk').length)}{closedYears('walk').length ? `, on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''}.
-            Climbing has {closedYears('elev').length ? `closed ${times(closedYears('elev').length)}` : `never closed; the best year was ${bestOf('elev').year} with ${unitOf(E, bestOf('elev').elev.total)}`}.
-            {cur.partial && curOpen.length ? ` With ${n0(G.daysLeft)} days of ${cur.year} left, climbing needs ${unitOf(E, toGo)} more.` : ''}
+            I hold the same three targets against every year: {unitOf(W, W.target)} walked, {unitOf(R, R.target)} run (treadmill, road and trail) and {unitOf(E, E.target)} climbed on foot.
+            I&rsquo;ve closed the running ring {times(closedYears('run').length)}, in {list(closedYears('run').map((y) => y.year))}, and the walking ring {times(closedYears('walk').length)}{closedYears('walk').length ? `, on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''}.
+            The climbing ring {closedYears('elev').length ? `has closed ${times(closedYears('elev').length)}` : `has never closed; my best year was ${bestOf('elev').year} with ${unitOf(E, bestOf('elev').elev.total)}`}.
+            {cur.partial && curOpen.length ? ` With ${n0(G.daysLeft)} days of ${cur.year} left, I need ${unitOf(E, toGo)} more of climbing.` : ''}
           </Reveal>
           <OddsRow
             title={`${cur.year}${so}`}
@@ -207,12 +207,12 @@ export default function Goals() {
           id="gl-rings"
           eyebrow={`${num()} · Every year against the targets`}
           title={`Running closed ${times(closedYears('run').length)}.`}
-          sub={`Walking closed ${times(closedYears('walk').length)}. Climbing ${closedYears('elev').length ? `closed ${times(closedYears('elev').length)}` : 'never has'}.`}
+          sub={`My walking ring closed ${times(closedYears('walk').length)}. My climbing ring ${closedYears('elev').length ? `closed ${times(closedYears('elev').length)}` : 'never has'}.`}
           statement={<>
-            The running ring closed on {list(closedYears('run').filter((y) => y !== cur).map((y) => `${fmtShort(doy(y.year, y.run.closed))} in ${y.year}`))}. {bestOf('run').year} ran {unitOf(R, bestOf('run').run.total)}, {(bestOf('run').run.total / R.target).toFixed(1)} times the target.
+            My running ring closed on {list(closedYears('run').filter((y) => y !== cur).map((y) => `${fmtShort(doy(y.year, y.run.closed))} in ${y.year}`))}. In {bestOf('run').year} I ran {unitOf(R, bestOf('run').run.total)}, {(bestOf('run').run.total / R.target).toFixed(1)} times the target.
             Then {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))} fell short, at {list(habit.filter((y) => y.run.closed == null).map((y) => unitOf(R, y.run.total)))}.
-            Walking stayed under {n0(Math.ceil(Math.max(...habit.filter((y) => y !== cur).map((y) => y.walk.total)) / 100) * 100)} km a year until {cur.year}, which crossed {unitOf(W, W.target)} on {fmtDay(doy(cur.year, cur.walk.closed ?? 0))}.
-            The climbing ring has come closest in {bestOf('elev').year}, at {Math.round(bestOf('elev').elev.share * 100)}%.
+            My walking stayed under {n0(Math.ceil(Math.max(...habit.filter((y) => y !== cur).map((y) => y.walk.total)) / 100) * 100)} km a year until {cur.year}, when I crossed {unitOf(W, W.target)} on {fmtDay(doy(cur.year, cur.walk.closed ?? 0))}.
+            The climbing ring came closest in {bestOf('elev').year}, at {Math.round(bestOf('elev').elev.share * 100)}%.
           </>}
           odds={{
             title: `Rings closed, ${habit[0].year} to ${cur.year}`,
@@ -249,11 +249,11 @@ export default function Goals() {
               id="gl-odds"
               eyebrow={`${num()} · The maths of the open ring`}
               title={`Climbing: a ${Math.round(S.hit * 100)}% chance.`}
-              sub={`The odds that the climbing ring closes in ${cur.year}.`}
+              sub={`The odds that my climbing ring closes in ${cur.year}.`}
               statement={<>
-                To close it, the last {n0(G.daysLeft)} days need {unitOf(E, toGo)}: {n0(S.needPerDay)} m a day. The year so far has averaged {n0(S.perDay)} m a day, rest days included, so the average alone says it closes {S.perDay >= S.needPerDay ? 'by a whisker' : 'just short'}.
-                To put odds on it, the rest of the year is replayed {n0(S.finals.length)} times, each time by picking {n0(G.daysLeft)} days at random from the {n0(cur.upTo)} days of {cur.year} so far and adding up their climb. {Math.round(S.hit * 100)}% of those replays pass {unitOf(E, E.target)}; the middle one finishes at {unitOf(E, S.p50)}.
-                The warning sign is the recent pace: since 1 {MONTH[m0]} it has been {n0(recentRate)} m a day, and at that rate the year ends near {unitOf(E, Math.round(recentFinish / 100) * 100)}.
+                To close it, I need {unitOf(E, toGo)} in the last {n0(G.daysLeft)} days: {n0(S.needPerDay)} m a day. So far this year I&rsquo;ve averaged {n0(S.perDay)} m a day, rest days included, so the average alone says I close it {S.perDay >= S.needPerDay ? 'by a whisker' : 'just short'}.
+                To put odds on it, I replay the rest of the year {n0(S.finals.length)} times, each time picking {n0(G.daysLeft)} days at random from my {n0(cur.upTo)} days of {cur.year} so far and adding up their climb. {Math.round(S.hit * 100)}% of those replays pass {unitOf(E, E.target)}; the middle one finishes at {unitOf(E, S.p50)}.
+                The warning sign is my recent pace: since 1 {MONTH[m0]} it has been {n0(recentRate)} m a day, and at that rate my year ends near {unitOf(E, Math.round(recentFinish / 100) * 100)}.
               </>}
               odds={{
                 title: `The climb, ${cur.year}`,
@@ -287,7 +287,7 @@ export default function Goals() {
                 ),
               }}
               leftNote={<><b>How to read it.</b> Each bar counts the replays that finish in that 250 m band. Orange bars clear the target, the dashed line.</>}
-              rightNote={<><b>Why it matters.</b> Orange months beat the pace the ring now needs. {curMonths.filter((m) => !m.partial && m.v >= needMonth).length} of {curMonths.filter((m) => !m.partial).length} full months did; {MONTH[curMonths[curMonths.length - 1].i]}, in grey, is still going.</>}
+              rightNote={<><b>Why it matters.</b> Orange months beat the pace my ring now needs. {curMonths.filter((m) => !m.partial && m.v >= needMonth).length} of {curMonths.filter((m) => !m.partial).length} full months did; {MONTH[curMonths[curMonths.length - 1].i]}, in grey, is still going.</>}
               source={`Activity Log · climb on foot each day of ${cur.year}, resampled ${n0(S.finals.length)} times with a fixed seed`}
             />
           </>
@@ -301,12 +301,12 @@ export default function Goals() {
               id="kili-half"
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'Quicker every year.' : 'The Kilimanjaro Half.'}
-              sub={faster ? `The Kilimanjaro Half, ${word(race.length)} editions on record.` : `Run ${word(race.length)} times.`}
+              sub={faster ? `My Kilimanjaro Half, ${word(race.length)} times on record.` : `I’ve run it ${word(race.length)} times.`}
               statement={<>
-                The same half marathon, {word(race.length)} editions on record. Moving time went {list(race.map((r) => `${hmin(r.moving)} in ${r.year}`))}, {n0(first.moving - last.moving)} minutes quicker from first to last.
-                The stops shrank faster than the running: {n0(first.stopped)} minutes standing still in {first.year}, {k1(last.stopped)} in {last.year}.
-                Raced side by side, when {quick.year} crossed the line {slowest.year} was still {k1(G.courseKm - slowest.atQuickest)} km out.
-                {samePrs ? ` Each edition set ${first.prs} personal records on the course's timed segments.` : ''} The {topKudos.year} edition drew {n0(topKudos.kudos)} kudos, {topKudos.kudos >= G.topKudos ? 'the most of any outing on record' : `the most of the ${word(race.length)}`}.
+                The same half marathon, {word(race.length)} times on record. My moving time went {list(race.map((r) => `${hmin(r.moving)} in ${r.year}`))}, {n0(first.moving - last.moving)} minutes quicker from first to last.
+                My stops shrank faster than my running: {n0(first.stopped)} minutes standing still in {first.year}, {k1(last.stopped)} in {last.year}.
+                If I race them side by side, when my {quick.year} self crossed the line, my {slowest.year} self was still {k1(G.courseKm - slowest.atQuickest)} km out.
+                {samePrs ? ` Each time I set ${first.prs} personal records on the course’s timed segments.` : ''} The {topKudos.year} race drew {n0(topKudos.kudos)} kudos, {topKudos.kudos >= G.topKudos ? 'the most of any outing I’ve logged' : `the most of the ${word(race.length)}`}.
               </>}
               odds={{
                 title: `${cap(word(race.length))} editions of one race`,
@@ -335,7 +335,7 @@ export default function Goals() {
                   />
                 ),
               }}
-              leftNote={<><b>How to read it.</b> The line is the course from start to finish, drawn by its height; each dot runs it at the pace of that year, half a kilometre at a time. Ticks mark where the others were when the quickest finished.</>}
+              leftNote={<><b>How to read it.</b> The line is the course from start to finish, drawn by its height; each dot runs it at my pace in that year, half a kilometre at a time. Ticks mark where the others were when the quickest finished.</>}
               rightNote={<><b>Why it matters.</b> The solid bar is time moving and the hatched end is time stopped. Of the {n0(first.moving + first.stopped - last.moving - last.stopped)} minutes saved on the course, {Math.round(((first.stopped - last.stopped) / (first.moving + first.stopped - last.moving - last.stopped)) * 100)}% came off the stops.</>}
               source="Kilimanjaro Half table and course profile · moving pace per half kilometre, elapsed and moving time per edition"
             />
@@ -350,11 +350,11 @@ export default function Goals() {
               id="ras-kilomoni"
               eyebrow={`${num()} · One place, ${n0(rk.length)} times`}
               title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni.`}
-              sub={`In ${n0(rkDays)} days. The last one made it ${n0(rkOuting)} outings in the record.`}
+              sub={`In ${n0(rkDays)} days. The last one took my record to ${n0(rkOuting)} outings.`}
               statement={<>
-                In {rk[0].date.slice(0, 4)} the target was a place: reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times, numbering the trips {rk[0].roman} to {rkLast.roman} as they went (Roman numerals, 1 to {rk.length}).
-                It took from {fmtDay(rk[0].date)} to {fmtDay(rkLast.date)}: {rkWalks} trips at a walk and {rk.length - rkWalks} on the run, {n0(rkKm)} km in all.{' '}
-                {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} was the busiest month with {rkTop.n}. The last trip, {rkLast.roman}, brought the whole record to {n0(rkOuting)} outings.
+                In {rk[0].date.slice(0, 4)} my target was a place: reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times, numbering the trips {rk[0].roman} to {rkLast.roman} as I went (Roman numerals, 1 to {rk.length}).
+                It took me from {fmtDay(rk[0].date)} to {fmtDay(rkLast.date)}: {rkWalks} trips at a walk and {rk.length - rkWalks} on the run, {n0(rkKm)} km in all.{' '}
+                {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} was my busiest month with {rkTop.n}. The last trip, {rkLast.roman}, took my whole record to {n0(rkOuting)} outings.
               </>}
               odds={{
                 title: 'Ras Kilomoni',
@@ -384,8 +384,8 @@ export default function Goals() {
                   />
                 ),
               }}
-              leftNote={<><b>How to read it.</b> One stroke per trip, counted in fives the way a tally is kept by hand: four upright, the fifth across. Orange strokes were run, grey walked.</>}
-              rightNote={<><b>Why it matters.</b> The count was steady through the first three months, then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} took {rkTop.n} trips and the target came within reach.</>}
+              leftNote={<><b>How to read it.</b> One stroke per trip, counted in fives the way a tally is kept by hand: four upright, the fifth across. Orange strokes I ran, grey ones I walked.</>}
+              rightNote={<><b>Why it matters.</b> My count was steady through the first three months, then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} took {rkTop.n} trips and the target came within reach.</>}
               source="Ras Kilomoni table · every trip with its date, sport and distance"
             />
           </>
@@ -397,10 +397,10 @@ export default function Goals() {
           id="month-streak"
           eyebrow={`${num()} · The goal nobody set`}
           title={`${n0(G.streak)} months in a row.`}
-          sub={`Every one with an outing. ${n0(G.century.length)} months passed 100 km on foot.`}
+          sub={`I went out in every one of them. ${n0(G.century.length)} months passed 100 km on foot.`}
           statement={<>
-            Nobody set this one. The last calendar month without a single outing was {fmtMonth(`${lastEmpty.key}-01`)}; every month since, {n0(G.streak)} in a row, has had at least one.
-            {' '}{n0(G.century.length)} months have passed 100 km on foot, the first in {fmtMonth(`${G.century[0].key}-01`)}.
+            This one was never one of my three targets. My last calendar month without a single outing was {fmtMonth(`${lastEmpty.key}-01`)}; every month since, {n0(G.streak)} in a row, has had at least one.
+            {' '}{n0(G.century.length)} of my months have passed 100 km on foot, the first in {fmtMonth(`${G.century[0].key}-01`)}.
             {centCur.n === centCur.of ? ` In ${cur.year} every month${so} has, ${word(centCur.n)} of ${word(centCur.of)}.` : ` In ${cur.year}, ${word(centCur.n)} of ${word(centCur.of)} months${so} have.`}
           </>}
           odds={{
@@ -432,7 +432,7 @@ export default function Goals() {
             ),
           }}
           leftNote={<><b>How to read it.</b> One string per year, one bead per month, sized by the distance on foot. Orange beads passed 100 km; an empty ring is a month with no outing.</>}
-          rightNote={<><b>Why it matters.</b> {cur.year} has {centCur.n} so far, {centCur.n > centPrev ? 'the most of any year' : centCur.n === centPrev ? `level with ${list(centByYear.filter((c) => c !== centCur && c.n === centPrev).map((c) => c.year))}` : `against ${centPrev} at best before`}. The empty rings all sit before the habit began.</>}
+          rightNote={<><b>Why it matters.</b> {cur.year} has {centCur.n} so far, {centCur.n > centPrev ? 'the most of any year' : centCur.n === centPrev ? `level with ${list(centByYear.filter((c) => c !== centCur && c.n === centPrev).map((c) => c.year))}` : `against ${centPrev} at best before`}. The empty rings all sit before my habit began.</>}
           source="Activity Log · outings and distance on foot in every calendar month"
         />
 

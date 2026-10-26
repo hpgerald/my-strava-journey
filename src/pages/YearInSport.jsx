@@ -180,7 +180,7 @@ export default function YearInSport() {
       number="02"
       title="Year in Sport"
       subtitle="Pick a year. See the whole story."
-      lede="One year at a time. Pick a year and the whole report rebuilds around it: every outing, the months, the sports, the hours, the days, the distances, the maths of the habit, the biggest days and where it all happened."
+      lede="My record, one year at a time. Pick a year and the whole report rebuilds around it: every outing, the months, the sports, the hours, the days, the distances, the maths of the habit, my biggest days and where it all happened."
       prev={prev}
       next={next}
     >
@@ -220,9 +220,9 @@ export default function YearInSport() {
           eyebrow={`${num()} · Month by month`}
           title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
-            {activeMonths === moIdx.length ? `Every month${so} had an outing.` : `${word(activeMonths)[0].toUpperCase() + word(activeMonths).slice(1)} of the ${word(moIdx.length)} months${so} had an outing.`}{' '}
-            {MONTH_F[busy]} led with {s.monthsActivities[busy]} outings and {n0(s.monthsKm[busy])} km on foot.{' '}
-            {MONTH_F[quiet]} was the quietest, with {s.monthsActivities[quiet]}. The kilometres added up to {n0(s.footKm)}{so},
+            {activeMonths === moIdx.length ? `I went out in every month${so}.` : `I went out in ${word(activeMonths)} of the ${word(moIdx.length)} months${so}.`}{' '}
+            {MONTH_F[busy]} was my busiest, with {s.monthsActivities[busy]} outings and {n0(s.monthsKm[busy])} km on foot.{' '}
+            {MONTH_F[quiet]} was the quietest, with {s.monthsActivities[quiet]}. My kilometres added up to {n0(s.footKm)}{so},
             about {n0(s.footKm / Math.max(1, moIdx.length))} a month.
           </>}
           odds={{
@@ -249,10 +249,10 @@ export default function YearInSport() {
               id="yis-mix"
               eyebrow={`${num()} · How it moved`}
               title={`${lead[0]} led ${Y}.`}
-              sub={`${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
+              sub={`I logged ${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
               statement={<>
-                Of the {fmtInt(s.n)} outings{so}, {mix.walk} were walks, {mix.run} runs and {mix.trail} trail runs or hikes;
-                {' '}{mix.other} were off the feet. On foot, running covered {pc(flipOf('Run').dist / footKmAll)}% of the distance
+                Of my {fmtInt(s.n)} outings{so}, {mix.walk} were walks, {mix.run} runs and {mix.trail} trail runs or hikes, and{' '}
+                {mix.other} were off my feet. On foot, running covered {pc(flipOf('Run').dist / footKmAll)}% of my distance
                 {climber ? ` and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} carried the most climb, ${pc(climber.elev / footElAll)}% of it.` : '.'}
               </>}
               odds={{
@@ -281,10 +281,10 @@ export default function YearInSport() {
               id="yis-hours"
               eyebrow={`${num()} · When it happened`}
               title={evening >= morning ? 'The evenings led.' : 'The mornings led.'}
-              sub={evening >= morning ? `${pc(evening)}% of outings started between 4 and 9pm.` : `${pc(morning)}% of outings started before 10am.`}
+              sub={evening >= morning ? `${pc(evening)}% of my outings started between 4 and 9pm.` : `${pc(morning)}% of my outings started before 10am.`}
               statement={<>
-                The busiest hour of {Y} was {fmtH(peakHour)}. {pc(morning)}% of outings started before 10 in the morning, {pc(midday)}%
-                between 10am and 4pm and {pc(evening)}% between 4 and 9pm. {WEEK[s.weekday7.indexOf(wkMax)]} was the busiest day of the
+                My busiest hour in {Y} was {fmtH(peakHour)}. {pc(morning)}% of my outings started before 10 in the morning, {pc(midday)}%
+                between 10am and 4pm and {pc(evening)}% between 4 and 9pm. {WEEK[s.weekday7.indexOf(wkMax)]} was my busiest day of the
                 week with {wkMax}, {WEEK[s.weekday7.indexOf(wkMin)]} the quietest with {wkMin}.
               </>}
               odds={{
@@ -308,7 +308,7 @@ export default function YearInSport() {
                 ),
               }}
               leftNote={<><b>How to read it.</b> Midnight is at the top and the hours run clockwise. The longer and darker a spoke, the more outings started in that hour.</>}
-              rightNote={<><b>Why it matters.</b> The orange bar is the busiest day, the grey one the quietest. A flat row of bars means the habit did not depend on the weekend.</>}
+              rightNote={<><b>Why it matters.</b> The orange bar is the busiest day, the grey one the quietest. A flat row of bars means my habit didn&rsquo;t depend on the weekend.</>}
               source="Activity Log · start hour and weekday of every outing"
             />
           </>
@@ -321,11 +321,11 @@ export default function YearInSport() {
           eyebrow={`${num()} · Every day of the year`}
           title={`Out on ${pc(pctDays)}% of days${so}.`}
           statement={<>
-            {fmtInt(s.activeDays)} of {fmtInt(r.span)} days{so} had at least one outing, across {s.weeksActive} different weeks.
-            The longest run of days in a row was {s.streakLen}{s.streakStartISO ? `, from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ''}.
-            {r.restDays === 0 ? ' There was not one day off.' : r.longGap.len >= 2 ? ` The longest break was ${r.longGap.len} days, ending ${fmtDay(r.longGap.to)}.` : ' There was never more than one day off in a row.'}
+            I went out on {fmtInt(s.activeDays)} of {fmtInt(r.span)} days{so}, across {s.weeksActive} different weeks.
+            My longest run of days in a row was {s.streakLen}{s.streakStartISO ? `, from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ''}.
+            {r.restDays === 0 ? ' I didn’t take a single day off.' : r.longGap.len >= 2 ? ` My longest break was ${r.longGap.len} days, ending ${fmtDay(r.longGap.to)}.` : ' I never took more than one day off in a row.'}
             {r.restDays === 0
-              ? ` Of those days, ${pc(multiDays / Math.max(1, s.activeDays))}% held two outings or more.`
+              ? ` On ${pc(multiDays / Math.max(1, s.activeDays))}% of those days I went out twice or more.`
               : r.gaps.total ? ` After an outing, the next one came the very next day ${pc(r.gaps.next / gapsTot)}% of the time.` : ''}
           </>}
           odds={{
@@ -385,10 +385,10 @@ export default function YearInSport() {
               eyebrow={`${num()} · The typical outing`}
               title={`The usual outing: ${s.medianFoot.toFixed(1)} km.`}
               statement={<>
-                Half of the {fmtInt(s.footN)} outings on foot were shorter than {s.medianFoot.toFixed(1)} km and half were longer; that
-                middle value is the median. The average was {meanFoot.toFixed(1)} km, pulled up by the long days, and the longest was{' '}
+                Half of my {fmtInt(s.footN)} outings on foot were shorter than {s.medianFoot.toFixed(1)} km and half were longer; that
+                middle value is the median. The average was {meanFoot.toFixed(1)} km, pulled up by the long days, and my longest was{' '}
                 {longestFoot.toFixed(1)} km{s.biggestFoot ? ` in ${fmtMonth(s.biggestFoot.date)}` : ''}.
-                {r.top10 != null ? ` The busiest tenth of days carried ${pc(r.top10)}% of the distance.` : ''}
+                {r.top10 != null ? ` My busiest tenth of days carried ${pc(r.top10)}% of the distance.` : ''}
               </>}
               odds={{
                 title: 'Distance on foot',
@@ -419,9 +419,9 @@ export default function YearInSport() {
               sub={r.restDays === 0 ? undefined : `A day out led to another ${pc(r.p11)}% of the time.`}
               statement={<>
                 {r.restDays === 0
-                  ? `Mark every day of ${Y} as active or rest: there is no rest day to mark${so}, so every day out has led to another.`
-                  : `Mark every day of ${Y} as active or rest. After an active day the next one was active ${pc(r.p11)}% of the time; after a rest day, only ${pc(r.p01)}%. That gap is the habit's memory.`} Weekly distance swung by {pc(r.weekly.cv)}% around its own average,
-                {r.weekly.cv < 0.6 ? ' a steady year' : r.weekly.cv < 1 ? ' an uneven year' : ' a year of big swings'}. The longest outing,{' '}
+                  ? `If I mark every day of ${Y} as active or rest, there is no rest day to mark${so}: every day out has led to another.`
+                  : `If I mark every day of ${Y} as active or rest, an active day was followed by another ${pc(r.p11)}% of the time; a rest day, only ${pc(r.p01)}%. That gap is my habit’s memory.`} My weekly distance swung by {pc(r.weekly.cv)}% around its own average,
+                {r.weekly.cv < 0.6 ? ' a steady year' : r.weekly.cv < 1 ? ' an uneven year' : ' a year of big swings'}. My longest outing,{' '}
                 {r.tail.mark.toFixed(1)} km, sat {r.tail.z.toFixed(1)} standard deviations above the average.
               </>}
               odds={{
@@ -465,9 +465,9 @@ export default function YearInSport() {
             <h2 id="yis-edges" className="section-head__title">The biggest days of {Y}.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            {s.biggestFoot ? `The furthest outing on foot was ${s.biggestFoot.val.toFixed(1)} km in ${fmtMonth(s.biggestFoot.date)}. ` : ''}
-            {s.highestClimb && s.highestClimb.val > 0 ? `The most climbed in a day was ${n0(s.highestClimb.val)} m. ` : ''}
-            {s.prs > 0 ? `${fmtInt(s.prs)} personal records fell, and ` : ''}{everests >= 0.2 ? `the climbing added up to ${everests.toFixed(1)} times the height of Everest.` : `the climbing added up to ${n0(s.elev)} m.`}
+            {s.biggestFoot ? `My furthest outing on foot was ${s.biggestFoot.val.toFixed(1)} km in ${fmtMonth(s.biggestFoot.date)}. ` : ''}
+            {s.highestClimb && s.highestClimb.val > 0 ? `The most I climbed in one outing was ${n0(s.highestClimb.val)} m. ` : ''}
+            {s.prs > 0 ? `I set ${fmtInt(s.prs)} personal records, and ` : ''}{everests >= 0.2 ? `my climbing added up to ${everests.toFixed(1)} times the height of Everest.` : `my climbing added up to ${n0(s.elev)} m.`}
           </Reveal>
           <ul className="yrecs">
             {s.biggestFoot && s.biggestFoot.val > 0 && <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} decimals={1} unit="km" label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} tone="hot" />}
@@ -491,9 +491,9 @@ export default function YearInSport() {
               eyebrow={`${num()} · Where it happened`}
               title={r.countries.length > 1 ? `${word(r.countries.length)[0].toUpperCase() + word(r.countries.length).slice(1)} countries in ${Y}.` : `All of ${Y} in Tanzania.`}
               statement={<>
-                {fmtInt(r.located)} outings had a GPS start point. {r.countries.length > 1 ? `They reached ${r.countries.length} countries. ` : ''}
-                {r.regRows ? `Inside Tanzania, ${r.regRows[0].label} had the most outings, ${pc(r.regRows[0].a)}% of them.` : ''}
-                {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` The most climbing came in ${c.label}, ${pc(c.b)}% of the year's metres.` })() : ''}
+                {fmtInt(r.located)} of my outings had a GPS start point. {r.countries.length > 1 ? `They took me to ${r.countries.length} countries. ` : ''}
+                {r.regRows ? `Inside Tanzania, ${r.regRows[0].label} is where I went out most, ${pc(r.regRows[0].a)}% of the time.` : ''}
+                {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` I did my most climbing in ${c.label}, ${pc(c.b)}% of the year’s metres.` })() : ''}
               </>}
               odds={{
                 title: 'Where the outings were',
@@ -525,8 +525,8 @@ export default function YearInSport() {
           title={`${ORD[rankN - 1][0].toUpperCase() + ORD[rankN - 1].slice(1)} of ${years.length} years.`}
           sub={`${Y} ranks ${ORD[rankN - 1]} of ${years.length} years for outings.`}
           statement={<>
-            By outings {Y} is {ORD[rankN - 1]}, by distance on foot {ORD[rankKm - 1]}, and by climb {ORD[rankEl - 1]} of the {word(years.length)} years.
-            {ps ? ` Against ${prevYear} it had ${more(chg(s.n, ps.n), 'more', 'fewer')} outings, ${more(chg(s.footKm, ps.footKm), 'more', 'less')} distance and ${more(chg(s.elev, ps.elev), 'more', 'less')} climb.` : ' It is the first year, so there is nothing before it to compare.'}
+            By outings {Y} is my {ORD[rankN - 1]} year, by distance on foot my {ORD[rankKm - 1]}, and by climb my {ORD[rankEl - 1]} of {word(years.length)}.
+            {ps ? ` Against ${prevYear} I had ${more(chg(s.n, ps.n), 'more', 'fewer')} outings, ${more(chg(s.footKm, ps.footKm), 'more', 'less')} distance and ${more(chg(s.elev, ps.elev), 'more', 'less')} climb.` : ' It’s my first year, so there is nothing before it to compare.'}
             {isPartial ? ` ${Y} is still running, so it is measured against full years.` : ''}
           </>}
           odds={{
@@ -555,7 +555,7 @@ export default function YearInSport() {
                 { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos) },
                 { label: 'Personal records', cur: Math.round(s.prs), prev: Math.round(ps.prs) },
               ]} />
-            ) : <p className="yis-empty">{Y} is where the record starts.</p>,
+            ) : <p className="yis-empty">{Y} is where my record starts.</p>,
           }}
           leftNote={<><b>How to read it.</b> One bar per year by number of outings. The orange bar is {Y}.</>}
           rightNote={<><b>Why it matters.</b> {ps ? `Each pair sets ${Y} beside ${prevYear}, measure by measure, so the changes above can be seen at their real size.` : 'With no year before it, this one sets the baseline every later year is measured against.'}</>}

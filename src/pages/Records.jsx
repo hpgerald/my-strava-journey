@@ -145,7 +145,7 @@ export default function Records() {
   return (
     <DetailFrame
       {...frame}
-      lede="Every record set on foot, and how it got there. The longest outings and the biggest climbs, the days, weeks and months that went furthest, the milestones, the personal records, the streaks, and the maths of how often a record should break."
+      lede="Every record I&rsquo;ve set on foot, and how I got there. My longest outings and biggest climbs, the days, weeks and months that went furthest, the milestones, the personal records, the streaks, and the maths of how often a record should break."
     >
       <div className="yis-report">
         {/* ===== the distance record ===== */}
@@ -156,11 +156,11 @@ export default function Records() {
             <p className="section-head__sub">The longest outing on foot has stood since {fmtMonth(dNow.date)}.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Every outing on foot chased the longest one before it. The first record was a {k1(dP[0].km)} km {lower(dP[0].mode)} on day one;
-            {firstOver(10) ? ` 10 km came on day ${dayOf(firstOver(10).date)},` : ''}
+            Every outing I do on foot is up against the longest one before it. My first record was a {k1(dP[0].km)} km {lower(dP[0].mode)} on day one;
+            {firstOver(10) ? ` I reached 10 km on day ${dayOf(firstOver(10).date)},` : ''}
             {firstOver(21.0975) ? ` a half marathon in ${fmtMonth(firstOver(21.0975).date)},` : ''}
             {firstOver(30) ? ` 30 km in ${fmtMonth(firstOver(30).date)}` : ''} and {k1(dNow.km)} km on a {lower(dNow.mode).replace(' run', '')} on {fmtDay(dNow.date)}.
-            {nearest ? ` In the ${n0(R.distStanding.outingsSince)} outings since, the nearest has been ${k1(nearest.km)} km, ${an(lower(nearest.mode))}.` : ''}
+            {nearest ? ` In the ${n0(R.distStanding.outingsSince)} outings since, the nearest I’ve come is ${k1(nearest.km)} km, ${an(lower(nearest.mode))}.` : ''}
           </Reveal>
           <OddsRow
             title="The longest outing on foot"
@@ -193,10 +193,10 @@ export default function Records() {
           title={`${cap(word(R.over30.length))} outings past 30 km.`}
           sub={`${cap(word(treadOver30.length))} of them were on a treadmill.`}
           statement={<>
-            {n0(R.halfUp.length)} outings reached a half marathon (21.1 km) and {word(R.over30.length)} went past 30 km. The {word(treadOver30.length)} treadmill
-            ones came between {fmtMon(treadOver30[0]?.date)} and {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. Since then the long days have been outside:{' '}
+            {n0(R.halfUp.length)} of my outings reached a half marathon (21.1 km) and {word(R.over30.length)} went past 30 km. The {word(treadOver30.length)} on the treadmill
+            came between {fmtMon(treadOver30[0]?.date)} and {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. Since then my long days have been outside:{' '}
             {outOver30.map((f) => `${/^(8|11\.|18\.)/.test(k1(f.km)) ? 'an' : 'a'} ${k1(f.km)} km ${lower(f.mode)}${f.elev >= 300 ? ` with ${n0(f.elev)} m of climb` : ''}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            The biggest day on foot after the marathon was {fmtDay(R.topDaysKm[1].date)}: {word(R.topDaysKm[1].n)} outings for {k1(R.topDaysKm[1].km)} km.
+            My biggest day on foot after the marathon was {fmtDay(R.topDaysKm[1].date)}: {word(R.topDaysKm[1].n)} outings for {k1(R.topDaysKm[1].km)} km.
           </>}
           odds={{
             title: 'Long outings on foot',
@@ -238,9 +238,9 @@ export default function Records() {
           title={`${cP.length} climb records.`}
           sub={`The biggest climb on foot went from ${n0(cP[0].elev)} m to ${n0(cNow.elev)} m.`}
           statement={<>
-            The first {word(walkLed)} climbing records were all walks, up to {n0(cP[walkLed - 1].elev)} m in {fmtMonth(cP[walkLed - 1].date)}. Then the hikes took over:{' '}
+            My first {word(walkLed)} climbing records were all walks, up to {n0(cP[walkLed - 1].elev)} m in {fmtMonth(cP[walkLed - 1].date)}. Then the hikes took over:{' '}
             {cP.slice(walkLed).map((r) => `${n0(r.elev)} m in ${fmtMonth(r.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            The biggest day of climbing put {word(bigDayClimb.n)} outings together for {n0(bigDayClimb.elev)} m on {fmtDay(bigDayClimb.date)}, more than any single outing.
+            My biggest day of climbing put {word(bigDayClimb.n)} outings together for {n0(bigDayClimb.elev)} m on {fmtDay(bigDayClimb.date)}, more than any single outing.
           </>}
           odds={{
             title: 'The biggest climb on foot',
@@ -283,9 +283,9 @@ export default function Records() {
           title={`${fmtMonth(moEl.month)} climbed the most.`}
           sub={`${n0(moEl.elev)} m in one month, the most of any.`}
           statement={<>
-            By distance, the biggest week began on {fmtDay(wk.start)}: {n0(wk.km)} km from {word(wk.n)} outings. The biggest month was {fmtMonth(moKm.month)} with {n0(moKm.km)} km,
+            By distance, my biggest week began on {fmtDay(wk.start)}: {n0(wk.km)} km from {word(wk.n)} outings. My biggest month was {fmtMonth(moKm.month)} with {n0(moKm.km)} km,
             and {sameYearKm === R.topMonthsKm.length ? `all ${word(sameYearKm)}` : word(sameYearKm)} of the {word(R.topMonthsKm.length)} biggest months for distance came in {moKm.month.slice(0, 4)}.
-            Climbing peaked elsewhere: {fmtMonth(moEl.month)} gained {n0(moEl.elev)} m, {Math.round((moEl.elev / EVEREST) * 100)}% of an Everest in a single month, from only {n0(moEl.km)} km.
+            My climbing peaked at a different time: in {fmtMonth(moEl.month)} I gained {n0(moEl.elev)} m, {Math.round((moEl.elev / EVEREST) * 100)}% of an Everest in a single month, from only {n0(moEl.km)} km.
           </>}
           odds={{
             title: 'The biggest stretches',
@@ -315,7 +315,7 @@ export default function Records() {
             ),
           }}
           leftNote={<><b>How to read it.</b> Weeks run Monday to Sunday. Each bar is the distance on foot in that week, the top week in orange.</>}
-          rightNote={<><b>Why it matters.</b> The months that climbed most were rarely the months that went furthest. Climb came from the mountains, distance from the treadmill.</>}
+          rightNote={<><b>Why it matters.</b> The months I climbed most were rarely the months I went furthest. My climb came from the mountains, my distance from the treadmill.</>}
           source="Activity Log · distance and climb on foot by week and by month"
         />
 
@@ -327,10 +327,10 @@ export default function Records() {
           title="The kilometres came faster."
           sub={`The first 1,000 km took ${n0(R.kmMiles[0].days)} days. The last ${n0(lastKm.mark - prevKm.mark)} took ${n0(lastKm.days)}.`}
           statement={<>
-            The distance on foot passed 1,000 km on {fmtDay(R.kmMiles[0].date)} and {n0(R.kmMiles[1].mark)} km {n0(R.kmMiles[1].days)} days later.
-            {R.kmMiles.find((k) => k.mark === 10000) ? ` It reached 10,000 km on ${fmtDay(R.kmMiles.find((k) => k.mark === 10000).date)}.` : ''}
-            {' '}The climb is counted in Everests, 8,849 m each: the first took {n0(ev[0].days)} days, the {ORD[evLast.k] || ordS(evLast.k)} {n0(evLast.days)}.
-            The totals stand at {n0(totalKm)} km and {k1(totalEl / EVEREST)} Everests.
+            I passed 1,000 km on foot on {fmtDay(R.kmMiles[0].date)} and {n0(R.kmMiles[1].mark)} km {n0(R.kmMiles[1].days)} days later.
+            {R.kmMiles.find((k) => k.mark === 10000) ? ` I reached 10,000 km on ${fmtDay(R.kmMiles.find((k) => k.mark === 10000).date)}.` : ''}
+            {' '}I count my climb in Everests, 8,849 m each: the first took {n0(ev[0].days)} days, the {ORD[evLast.k] || ordS(evLast.k)} {n0(evLast.days)}.
+            My totals stand at {n0(totalKm)} km and {k1(totalEl / EVEREST)} Everests.
           </>}
           odds={{
             title: 'The running totals',
@@ -375,10 +375,10 @@ export default function Records() {
           title={prBest.year === lastYear ? `${n0(prLast.prs)} personal records in ${lastYear}.` : `${n0(prBest.prs)} personal records in ${prBest.year}.`}
           sub={prBest.year === lastYear ? 'The most of any year, with the year still running.' : 'The most of any year.'}
           statement={<>
-            A personal record here is a Strava segment best: a timed stretch of road or trail where an outing beat every earlier effort on it.
-            {' '}{n0(R.prTotal)} have fallen on foot, across {n0(R.prOutings)} outings. Treadmill runs set almost none, because segments need GPS.
+            A personal record here is a Strava segment best: a timed stretch of road or trail where I beat every earlier effort of mine on it.
+            {' '}I&rsquo;ve set {n0(R.prTotal)} on foot, across {n0(R.prOutings)} outings. My treadmill runs set almost none, because segments need GPS.
             {' '}{R.prByYear.filter((y) => y.prs > 0).map((y) => `${y.year}${y.year === lastYear ? so : ''} ${y.prs}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            {' '}{lastYear}{so} runs at {prLast.rate.toFixed(2)} per outing, the highest rate yet.
+            {' '}In {lastYear}{so} I&rsquo;m setting {prLast.rate.toFixed(2)} per outing, my highest rate yet.
           </>}
           odds={{
             title: 'Segment bests on foot',
@@ -410,7 +410,7 @@ export default function Records() {
             ),
           }}
           leftNote={<><b>How to read it.</b> Every personal record set on foot, counted by year. The tallest year is in orange.</>}
-          rightNote={<><b>Why it matters.</b> Divided by the outings in each year, the rate shows how often an outing beat the past. It is highest now.</>}
+          rightNote={<><b>Why it matters.</b> Divided by the outings in each year, the rate shows how often I beat my own past. It&rsquo;s highest now.</>}
           source="Activity Log · personal records (Strava segment bests) on runs, walks, trail runs and hikes"
         />
 
@@ -422,10 +422,10 @@ export default function Records() {
           title={`${n0(S.any.len)} days in a row.`}
           sub={S.any.current === S.any.len ? 'The longest streak on record, and still going.' : 'The longest streak on record.'}
           statement={<>
-            The longest run of days with an outing began on {fmtDay(S.any.startISO)}{S.any.current === S.any.len ? ` and has not missed a day since: ${n0(S.any.len)} days to ${fmtDay(S.any.endISO)}` : ` and lasted ${n0(S.any.len)} days`}.
-            {' '}Counted in weeks, {n0(S.week.len)} in a row have had at least one outing{S.week.current === S.week.len ? `, every week since ${fmtDay(S.week.startISO)}` : ''}.
-            {' '}On foot alone the best is {n0(S.foot.len)} days; running alone {S.run.len}, walking alone {S.walk.len}.
-            {' '}The opposite record belongs to the early years: {n0(S.longGap.len)} days without a single outing, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}.
+            My longest run of days with an outing began on {fmtDay(S.any.startISO)}{S.any.current === S.any.len ? ` and I haven’t missed a day since: ${n0(S.any.len)} days to ${fmtDay(S.any.endISO)}` : ` and lasted ${n0(S.any.len)} days`}.
+            {' '}Counted in weeks, I&rsquo;ve gone out at least once in {n0(S.week.len)} weeks in a row{S.week.current === S.week.len ? `, every week since ${fmtDay(S.week.startISO)}` : ''}.
+            {' '}On foot alone my best is {n0(S.foot.len)} days; running alone {S.run.len}, walking alone {S.walk.len}.
+            {' '}The opposite record is from my early years: {n0(S.longGap.len)} days without a single outing, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}.
           </>}
           odds={{
             title: 'In a row',
@@ -455,7 +455,7 @@ export default function Records() {
             ),
           }}
           leftNote={<><b>How to read it.</b> Each bar is an unbroken run of days with at least one outing of any kind. The one still going is in orange.</>}
-          rightNote={<><b>Why it matters.</b> No single sport keeps the streak alive. It holds because the days mix runs, walks and the rest.</>}
+          rightNote={<><b>Why it matters.</b> No single sport keeps my streak alive. It holds because my days mix runs, walks and the rest.</>}
           source="Activity Log · consecutive days and weeks with an outing (weeks run Monday to Sunday)"
         />
 
@@ -469,8 +469,8 @@ export default function Records() {
               title={`${regTop[0][0]} owns the climbs.`}
               sub={`${cap(word(regTop[0][1]))} of the ${top20N} biggest climbs started there.`}
               statement={<>
-                Of the {top20N} biggest single climbs on foot, {regTop.map(([k, v]) => `${v} started in ${k}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-                {' '}The biggest climb in each region: {regs.map((f) => `${f.region} ${n0(f.elev)} m`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+                Of my {top20N} biggest single climbs on foot, {regTop.map(([k, v]) => `${v} started in ${k}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+                {' '}My biggest climb in each region: {regs.map((f) => `${f.region} ${n0(f.elev)} m`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
               </>}
               odds={{
                 title: 'Climbs by region of Tanzania',
@@ -501,7 +501,7 @@ export default function Records() {
                 ),
               }}
               leftNote={<><b>How to read it.</b> The single biggest climb that started in each region of Tanzania, coloured by how it was done.</>}
-              rightNote={<><b>Why it matters.</b> The big climbs cluster in a few mountain regions. The rest of the map is flat by comparison.</>}
+              rightNote={<><b>Why it matters.</b> My big climbs cluster in a few mountain regions. The rest of my map is flat by comparison.</>}
               source="Activity Log and Strava GPS start points · Tanzania regions"
             />
           </>
@@ -516,9 +516,9 @@ export default function Records() {
           sub={`The distance record broke ${dP.length} times. A random order would give ${k1(R.expected)}.`}
           statement={<>
             If the same outings came in a random order, a record would break about ln(n) + 0.58 times, where n is the number of outings: early on almost anything is a record,
-            later almost nothing is. For {n0(R.n)} outings that is {k1(R.expected)}. The distance record broke {dP.length} times, {k1(dP.length / R.expected)} times as often;
-            runs alone broke theirs {SR.Run.broken} times against {k1(SR.Run.expected)}. Walks broke theirs {SR.Walk.broken} times against {k1(SR.Walk.expected)}, about what chance gives:
-            the walks did not chase distance. The present record has stood for {n0(R.distStanding.outingsSince)} outings; in a random order the longest outing would sit this early {Math.round(pEarly * 100)}% of the time.
+            later almost nothing is. For my {n0(R.n)} outings that is {k1(R.expected)}. My distance record broke {dP.length} times, {k1(dP.length / R.expected)} times as often;
+            my runs alone broke theirs {SR.Run.broken} times against {k1(SR.Run.expected)}. My walks broke theirs {SR.Walk.broken} times against {k1(SR.Walk.expected)}, about what chance gives.
+            The present record has stood for {n0(R.distStanding.outingsSince)} outings; in a random order the longest outing would sit this early {Math.round(pEarly * 100)}% of the time.
           </>}
           odds={{
             title: 'Records against chance',
@@ -549,7 +549,7 @@ export default function Records() {
             ),
           }}
           leftNote={<><b>How to read it.</b> The bar is how many times a record broke. The ring is how many times it would break on average if the same outings were shuffled.</>}
-          rightNote={<><b>Why it matters.</b> Most records lasted days. The longest-lived before the present one stood {n0(stoodPrev.days)} days, from {fmtMon(stoodPrev.date)}; the last, in orange, is still standing.</>}
+          rightNote={<><b>Why it matters.</b> Most of my records lasted days. The longest-lived before the present one stood {n0(stoodPrev.days)} days, from {fmtMon(stoodPrev.date)}; the last, in orange, is still standing.</>}
           source="Activity Log · record counts against the harmonic expectation for a random order"
         />
 

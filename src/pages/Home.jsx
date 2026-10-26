@@ -371,10 +371,9 @@ export default function Home() {
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
 
           <Reveal as="p" className="hero__statement">
-            The record is built from days too small to notice. The usual outing is {Math.round(medFootKm)} km,
-            about an hour, a walk or an easy run. What makes it add up is how often it happens: something on{' '}
-            {pctActiveDays}% of all days across {years || 7} years, and a streak {fmtInt(curStreak)} days deep as you
-            read this. Showing up daily adds up.
+            Most of my days on foot are small. My usual outing is {Math.round(medFootKm)} km, about an hour, a walk or an
+            easy run. What adds up is how often it happens: I&rsquo;ve done something on {pctActiveDays}% of all days across{' '}
+            {years || 7} years, and as you read this my streak is {fmtInt(curStreak)} days deep.
           </Reveal>
 
           {yearSummaries.length > 0 && (
@@ -391,14 +390,13 @@ export default function Home() {
             <div className="sgrid__head">
               <p className="eyebrow">How the streak holds</p>
               <h2 id="streak-title" className="section-head__title">Keeping beats&nbsp;restarting.</h2>
-              <p className="section-head__sub">Every day out makes the next one more likely. Every day off makes coming back harder.</p>
+              <p className="section-head__sub">Every day I go out makes the next one more likely. Every day off makes coming back harder.</p>
             </div>
 
             <Reveal as="p" className="sgrid__statement">
-              Every day out makes the next one more likely, and every day off makes coming back harder. Move today and
-              there is an {mAfter}% chance you move tomorrow. Keep going for a week and it is {pc(mWeek.p)}%; after three
-              weeks, {pc(mThreeWk.p)}%. Stop for {['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days
-              and it falls to {pc(mFiveOff.p)}%.
+              Once I&rsquo;ve been out today, there&rsquo;s an {mAfter}% chance I go out tomorrow. After a week in a row it&rsquo;s{' '}
+              {pc(mWeek.p)}%, and after three weeks {pc(mThreeWk.p)}%. If I stop for {['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days,
+              it drops to {pc(mFiveOff.p)}%. That&rsquo;s the pattern in my log: a streak is easier to keep going than to start again.
             </Reveal>
 
             <OddsRow
@@ -406,7 +404,7 @@ export default function Home() {
               items={[
                 { value: mFiveOff.p, label: `after ${['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days off`, tone: 'rest' },
                 { value: mOneOff.p, label: 'after one day off', tone: 'rest' },
-                { value: momentum.origin, label: 'if you moved today', tone: 'move' },
+                { value: momentum.origin, label: 'after a day out', tone: 'move' },
                 { value: mWeek.p, label: 'after a week on a roll', tone: 'move' },
               ]}
             />
@@ -421,14 +419,14 @@ export default function Home() {
                 <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} />
               </figure>
               <p className="sgrid__note sgrid__note--chart">
-                <b>How to read it.</b> The dashed line is a day you moved. Each step right is one more day in a row; each
-                step left is one more day since you last moved. The orange line climbs and flattens near {mDeep}%. The grey
+                <b>How to read it.</b> The dashed line is a day I went out. Each step right is one more day in a row; each
+                step left is one more day since I last went out. The orange line climbs and flattens near {mDeep}%. The grey
                 line drops fast: a single day off already brings the odds down to {pc(mOneOff.p)}%.
               </p>
               <p className="sgrid__note sgrid__note--mx">
                 <b>Why it holds.</b> Each row adds up to 100%. Those two numbers, {mAfter}% after a day out and{' '}
                 {pc(momentum.after.p01)}% after a day off, predict that {pc(mSteady)}% of days should be active in the long
-                run. Since 2021, {pc(momentum.activeFrac)}% were. Before the habit caught, a day out led to another only{' '}
+                run. Since 2021, {pc(momentum.activeFrac)}% of my days were. Before the habit caught, a day out led to another only{' '}
                 {mBefore}% of the time.
               </p>
             </div>
@@ -449,10 +447,10 @@ export default function Home() {
               </div>
 
               <Reveal as="p" className="sgrid__statement">
-                Line up all {fmtInt(work.n)} days on foot from shortest to longest. The busiest tenth, every day over{' '}
-                {Math.floor(work.tenthFrom)} km, carry {pc(work.tenth)}% of the {fmtInt(work.total)} km. That is as much as
-                the quietest half put together. The big days matter, yet no handful of them makes the record: the{' '}
-                {work.k1} biggest days of all carry under {Math.ceil(work.one * 100)}%.
+                If I line up all {fmtInt(work.n)} of my days on foot from shortest to longest, the busiest tenth, every day
+                over {Math.floor(work.tenthFrom)} km, carries {pc(work.tenth)}% of my {fmtInt(work.total)} km. That&rsquo;s as much
+                as my quietest half put together. The big days matter, yet no handful of them makes the record: my{' '}
+                {work.k1} biggest days carry under {Math.ceil(work.one * 100)}%.
               </Reveal>
 
               <OddsRow
@@ -484,7 +482,7 @@ export default function Home() {
                   <b>Why it matters.</b> In an even record each tenth would carry 10%. The shortest tenth carries{' '}
                   {(work.shares[0] * 100).toFixed(1)}%, the longest {(work.shares[9] * 100).toFixed(1)}%. Days of 10 km or
                   more are {fmtInt(work.bigN)} of the {fmtInt(work.n)}, {work.bigN < work.n / 2 ? 'under half' : `${pc(work.bigN / work.n)}%`}, and they carry {pc(work.bigShare)}% of
-                  the distance. The short days keep the habit; the long ones build the kilometres.
+                  the distance. The short days keep my habit going; the long ones build the kilometres.
                 </p>
               </div>
               <p className="source">Source: Activity Log &middot; daily distance on foot (run, walk, trail run, hike), {fmtInt(work.n)} days</p>
@@ -501,12 +499,12 @@ export default function Home() {
             id="years-title"
             eyebrow="How each year was made"
             title="The time per day held."
-            sub="What changed is how that time was split between outings."
+            sub="What changed is how I split that time between outings."
             statement={<>
-              On a day with an activity, the time moving barely changes: between {Math.round(perDayLo)} and{' '}
-              {Math.round(perDayHi)} minutes in every year. The split is what moved. In {shapeMulti.year},{' '}
-              {pc(shapeMulti.multi)}% of active days had two or more outings, and the average outing ran{' '}
-              {Math.round(shapeMulti.avgMin)} minutes. In {shapeNow.year} it is one outing a day: {pc(shapeNow.multi)}% of
+              On a day when I&rsquo;m out, my time moving has hardly changed: between {Math.round(perDayLo)} and{' '}
+              {Math.round(perDayHi)} minutes in every year. What changed is how I split it. In {shapeMulti.year},{' '}
+              {pc(shapeMulti.multi)}% of my active days had two or more outings, and the average outing ran{' '}
+              {Math.round(shapeMulti.avgMin)} minutes. In {shapeNow.year} it&rsquo;s mostly one outing a day: {pc(shapeNow.multi)}% of
               days double up, and the average outing runs {Math.round(shapeNow.avgMin)} minutes.
             </>}
             odds={{
@@ -539,8 +537,8 @@ export default function Home() {
               a single long outing.
             </>}
             rightNote={<>
-              <b>Why it matters.</b> The time given to it each day held steady from the first year to now. What the habit
-              changed was the shape of the day: from two shorter outings to one longer one.
+              <b>Why it matters.</b> The time I give it each day has held steady from the first year to now. What changed
+              is the shape of my day: from two shorter outings to one longer one.
             </>}
             source="Activity Log · moving time and outings per active day, by year"
           />
@@ -563,11 +561,11 @@ export default function Home() {
             title="Two regions do the climbing."
             sub={`Two regions of Tanzania hold ${pc(climbTop2E)}% of the metres climbed.`}
             statement={<>
-              Of the {fmtInt(locN)} outings with a GPS start point, {fmtInt(tzN)} are in Tanzania, {pc(tzN / locN)}%. The
+              {fmtInt(tzN)} of my {fmtInt(locN)} outings with a GPS start point are in Tanzania, {pc(tzN / locN)}%. The
               other {fmtInt(awayN)} are spread over {awayRows.length} countries, {pc(awayTop2N / Math.max(1, awayN))}% of
-              them in {awayTop2.map((c) => c.country).join(' and ')}. Inside Tanzania, {busiestRegion && busiestRegion.region} has
-              the most outings, but the climbing is somewhere else: {climbTop2.map((r) => r.region).join(' and ')} hold{' '}
-              {pc(climbTop2A)}% of the outings and {pc(climbTop2E)}% of the metres climbed.
+              them in {awayTop2.map((c) => c.country).join(' and ')}. Inside Tanzania, {busiestRegion && busiestRegion.region} is
+              where I go out most, but my climbing happens somewhere else: {climbTop2.map((r) => r.region).join(' and ')} hold{' '}
+              {pc(climbTop2A)}% of my outings and {pc(climbTop2E)}% of the metres I&rsquo;ve climbed.
             </>}
             odds={{
               title: 'Where the outings happen',
@@ -591,8 +589,8 @@ export default function Home() {
             </>}
             rightNote={<>
               <b>Why it matters.</b> Each row is a region. The grey ring is its share of the outings in Tanzania, the orange dot its share of the climb, and the number on the right is the gap in percentage points. Rows run from the biggest climb surplus to the biggest shortfall.
-              {busiestRegion ? ` ${busiestRegion.region} is the everyday ground, and flat by comparison.` : ''} The metres are
-              earned on trips to the mountains.
+              {busiestRegion ? ` ${busiestRegion.region} is my everyday ground, and it’s flat by comparison.` : ''} The metres
+              come from my trips to the mountains.
             </>}
             source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
           />
@@ -604,11 +602,11 @@ export default function Home() {
           id="move-title"
           eyebrow="2 · Every way to move"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
-          sub={walkLeadYear ? `Walks have outnumbered runs since ${walkLeadYear}.` : 'Walking is the most common outing.'}
+          sub={walkLeadYear ? `I’ve walked more often than I’ve run every year since ${walkLeadYear}.` : 'Walking is my most common outing.'}
           statement={<>
-            Of {fmtInt(activityLog.length)} outings, {fmtInt(mixN.walk)} are walks and {fmtInt(mixN.run)} are runs. Trail
-            runs and hikes add {fmtInt(mixN.trail)}. Everything off the feet is {pc(mixN.other / mixTot)}%.
-            {walkLeadYear ? ` Walks overtook runs in ${walkLeadYear} and have stayed ahead every year since.` : ''}
+            Of my {fmtInt(activityLog.length)} outings, {fmtInt(mixN.walk)} are walks and {fmtInt(mixN.run)} are runs. Trail
+            runs and hikes add {fmtInt(mixN.trail)}, and everything off my feet is {pc(mixN.other / mixTot)}%.
+            {walkLeadYear ? ` My walks overtook my runs in ${walkLeadYear} and have stayed ahead every year since.` : ''}
           </>}
           odds={{
             title: 'Share of all outings',
@@ -631,7 +629,7 @@ export default function Home() {
             everything else, from bikes to the gym, folds into one tile.
           </>}
           rightNote={<>
-            <b>Why it matters.</b> Running carried the first years. Walking took over once the habit set in and has
+            <b>Why it matters.</b> Running carried my first years. Walking took over once the habit set in and has
             led since. Trail runs are counted on their own, so they are not in the run line.
             {gridYears.length ? ` ${gridYears[gridYears.length - 1]} is still in progress.` : ''}
           </>}
@@ -644,12 +642,12 @@ export default function Home() {
           id="hours-title"
           eyebrow="3 · When the day gets moving"
           title="Both ends of the working day."
-          sub="Most outings start early in the morning or in the evening."
+          sub="I fit most outings in early in the morning or in the evening."
           statement={<>
-            Sort every outing by the hour it began. {pc(hourShare(16, 21))}% start between 4 and 9 in the evening, with{' '}
+            If I sort every outing by the hour it began, {pc(hourShare(16, 21))}% start between 4 and 9 in the evening, with{' '}
             {fmtHour(peakHour)} the busiest hour. Another {pc(hourShare(0, 10))}% start before 10 in the morning. The middle of
-            the day, 10am to 4pm, holds just {pc(hourShare(10, 16))}%. The week is flatter: the quietest day still has{' '}
-            {pc(weekMin / weekMax)}% of the busiest day's outings.
+            the day, 10am to 4pm, holds just {pc(hourShare(10, 16))}%. My week is flatter: the quietest day still has{' '}
+            {pc(weekMin / weekMax)}% of the busiest day&rsquo;s outings.
           </>}
           odds={{
             title: 'When outings start',
@@ -681,7 +679,7 @@ export default function Home() {
           </>}
           rightNote={<>
             <b>Why it matters.</b> {WEEK[weekN.indexOf(weekMax)]} is the busiest day and {WEEK[weekN.indexOf(weekMin)]} the
-            quietest, but the gap is small. Outings are fitted around the working day, morning or evening, on every day of
+            quietest, but the gap is small. I fit my outings around the working day, morning or evening, on every day of
             the week.
           </>}
           source="Activity Log · start hour and weekday of every outing"
@@ -697,9 +695,9 @@ export default function Home() {
               title="Two thin months."
               sub={`${MONTH_NAME[dipIdx[0]]} and ${MONTH_NAME[dipIdx[1]]} are the quietest months of the year.`}
               statement={<>
-                Take the {fullYears.length === 4 ? 'four' : fullYears.length} full years since the habit caught,{' '}
-                {fullYears[0]} to {fullYears[fullYears.length - 1]}, and count the days with an activity in each month.
-                Across the year it is {pc(fullShare)}%. {MONTH_NAME[bestIdx]} is the strongest month at {pc(monthShare[bestIdx])}%.{' '}
+                Take my {fullYears.length === 4 ? 'four' : fullYears.length} full years since the habit caught,{' '}
+                {fullYears[0]} to {fullYears[fullYears.length - 1]}, and count the days I was active in each month.
+                Across the year it&rsquo;s {pc(fullShare)}%. {MONTH_NAME[bestIdx]} is my strongest month at {pc(monthShare[bestIdx])}%.{' '}
                 {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} are the weakest, {pc(monthShare[dipIdx[0]])}% and{' '}
                 {pc(monthShare[dipIdx[1]])}%. Every other month sits between {pc(othersLo)}% and {pc(othersHi)}%.
               </>}
@@ -739,7 +737,7 @@ export default function Home() {
               rightNote={<>
                 <b>Why it matters.</b> The dip is in {dipYears === fullYears.length ? 'every one' : `${dipYears}`} of the{' '}
                 {fullYears.length === 4 ? 'four' : fullYears.length} full years: both months fall below that year's own share.
-                The data does not say why. In {gridYears[gridYears.length - 1]} the streak has filled them too.
+                My log doesn&rsquo;t say why, and I won&rsquo;t guess. In {gridYears[gridYears.length - 1]} the streak has filled them too.
               </>}
               source="Activity Log · days with at least one activity, by month"
             />
@@ -754,12 +752,12 @@ export default function Home() {
               id="indoor-title"
               eyebrow="5 · Off the treadmill"
               title="The treadmill is fading."
-              sub="It has always been a running habit, and it is used less and less."
+              sub="It has always been a running habit, and I use it less and less."
               statement={<>
-                In {ioYears[0]}, {pc(ioFirst.indoor / ioFirst.n)}% of sessions were indoors. So far in{' '}
-                {ioYears[ioYears.length - 1]} it is {pc(ioLast.indoor / ioLast.n)}%. Nearly all of the indoor time is running:{' '}
-                {pc(indoorShare('run'))}% of runs were on a treadmill, against {pc(indoorShare('walk'))}% of walks. Of the{' '}
-                {fmtInt(runKm)} km run, {fmtInt(runKmIn)} km were indoors.
+                In {ioYears[0]}, {pc(ioFirst.indoor / ioFirst.n)}% of my sessions were indoors. So far in{' '}
+                {ioYears[ioYears.length - 1]} it&rsquo;s {pc(ioLast.indoor / ioLast.n)}%. Nearly all my indoor time is running:{' '}
+                {pc(indoorShare('run'))}% of my runs were on a treadmill, against {pc(indoorShare('walk'))}% of my walks. Of the{' '}
+                {fmtInt(runKm)} km I&rsquo;ve run, {fmtInt(runKmIn)} km were indoors.
               </>}
               odds={{
                 title: 'Share of sessions indoors',
@@ -793,8 +791,8 @@ export default function Home() {
                 bike stand or the gym.
               </>}
               rightNote={<>
-                <b>Why it matters.</b> Walks, trail runs and hikes happen outside. Running is the one that moved indoors, so
-                the fall in indoor share is the running moving outside, onto roads and trails.
+                <b>Why it matters.</b> My walks, trail runs and hikes happen outside. Running is the one I took indoors, so
+                the fall in indoor share is my running moving outside, onto roads and trails.
               </>}
               source="Activity Log · trainer flag on each session"
             />
@@ -809,7 +807,7 @@ export default function Home() {
           title="Two jobs on foot."
           sub="Running owns the distance. Walking owns the vertical."
           statement={<>
-            Running is {pc(fShare('Run', 'dist'))}% of the kilometres on foot and only {pc(fShare('Run', 'elev'))}% of the
+            Running is {pc(fShare('Run', 'dist'))}% of my kilometres on foot and only {pc(fShare('Run', 'elev'))}% of my
             climb, because most of it is flat, on a treadmill. Walking is {pc(fShare('Walk', 'dist'))}% of the kilometres
             and {pc(fShare('Walk', 'elev'))}% of the climb. Trail runs and hikes are{' '}
             {pc(fShare('TrailRun', 'dist') + fShare('Hike', 'dist'))}% of the distance and carry{' '}
@@ -849,7 +847,7 @@ export default function Home() {
           rightNote={<>
             <b>Why it matters.</b> A kilometre of hiking climbs {Math.round(mPerKm('Hike'))} m, a trail run{' '}
             {Math.round(mPerKm('TrailRun'))} m, a walk {Math.round(mPerKm('Walk'))} m and a run {mPerKm('Run').toFixed(1)} m.
-            The height on this record is earned slowly, uphill, on foot.
+            The height in my record was earned slowly, uphill, on foot.
           </>}
           source="Activity Log · distance and climb on foot (run, walk, trail run, hike)"
         />
@@ -868,8 +866,7 @@ export default function Home() {
             <h2 id="edges-title" className="section-head__title">Records hiding in the&nbsp;data.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Seven years turned these up on their own, no plan required. Four worth pulling out, and each one opens its
-            full story.
+            Four things from seven years that stand apart from the rest. Each one opens its full story.
           </Reveal>
           <ul className="edges">
             <li><Link className="edgecard" to="/goals#marathon">
@@ -919,8 +916,8 @@ export default function Home() {
             </h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            The record is dense enough now to look permanent. It is still made one ordinary day at a time, and tomorrow is
-            the next one. Every page below opens one part of it.
+            My record is thick enough now to look permanent. It&rsquo;s still made one ordinary day at a time, and tomorrow
+            is the next one. Every page below opens one part of it.
           </Reveal>
           <IndexHub items={menuItems} compact />
         </section>

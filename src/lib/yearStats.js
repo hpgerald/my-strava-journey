@@ -189,34 +189,33 @@ const top = (all, s, k) => all.every((o) => o.year === s.year || (o[k] || 0) < (
 const bottom = (all, s, k) => all.every((o) => o.year === s.year || (o[k] || 0) > (s[k] || 0))
 const most = (ok) => (ok ? ', the most of any year' : '')
 export const YEAR_CHARACTERS = {
-  2019: { label: 'The quiet start', line: (s, all) => `${pc0(s.weekendShare)}% of outings fell on a Saturday or Sunday${most(top(all, s, 'weekendShare'))}. ${pc0(s.runShare)}% were runs.` },
-  2020: { label: 'The false start', line: (s, all) => `${pc0(s.morningShare)}% of outings began before 10 in the morning${most(top(all, s, 'morningShare'))}. Then the log stopped.` },
-  2021: { label: 'The switch', line: (s, all) => `Two a day: ${pc0(s.multiShare)}% of active days had two or more outings${most(top(all, s, 'multiShare'))}.` },
-  2022: { label: 'The peak', line: (s, all) => `Short and often: the average outing ran ${num0(s.avgOutingMin)} minutes${bottom(all, s, 'avgOutingMin') ? ', the shortest of any year' : ''}.` },
-  2023: { label: 'The climb', line: (s, all) => `${num0(s.mPerKm)} m of climb for every km on foot${top(all, s, 'mPerKm') ? ', the steepest year' : ''}, and ${num0(s.trailKm)} km on trails.` },
-  2024: { label: 'The passport', line: (s) => `${s.countries.length} countries in one year, and half of all outings done in under ${num0(s.medMovingMin)} minutes.` },
+  2019: { label: 'The quiet start', line: (s, all) => `${pc0(s.weekendShare)}% of my outings fell on a Saturday or Sunday${most(top(all, s, 'weekendShare'))}. ${pc0(s.runShare)}% were runs.` },
+  2020: { label: 'The false start', line: (s, all) => `${pc0(s.morningShare)}% of my outings began before 10 in the morning${most(top(all, s, 'morningShare'))}. Then my log stopped.` },
+  2021: { label: 'The switch', line: (s, all) => `Two a day: on ${pc0(s.multiShare)}% of my active days I went out more than once${most(top(all, s, 'multiShare'))}.` },
+  2022: { label: 'The peak', line: (s, all) => `Short and often: my average outing ran ${num0(s.avgOutingMin)} minutes${bottom(all, s, 'avgOutingMin') ? ', the shortest of any year' : ''}.` },
+  2023: { label: 'The climb', line: (s, all) => `I climbed ${num0(s.mPerKm)} m for every km on foot${top(all, s, 'mPerKm') ? ', my steepest year' : ''}, and ran ${num0(s.trailKm)} km on trails.` },
+  2024: { label: 'The passport', line: (s) => `${s.countries.length} countries in one year, and half my outings done in under ${num0(s.medMovingMin)} minutes.` },
   2025: { label: 'The long walk', line: (s, all) => {
     const lw = s.longestWalk
     const lwTop = lw && all.every((o) => o.year === s.year || !o.longestWalk || o.longestWalk.km < lw.km)
-    return `Walks were ${pc0(s.walkShare)}% of outings${most(top(all, s, 'walkShare'))}${lw && lwTop ? `, and the longest walk on record, ${num0(lw.km)} km` : ''}.`
+    return `Walks were ${pc0(s.walkShare)}% of my outings${most(top(all, s, 'walkShare'))}${lw && lwTop ? `, and I did my longest walk on record, ${num0(lw.km)} km` : ''}.`
   } },
-  2026: { label: 'Unbroken', line: (s) => `One outing a day, and longer: ${num0(s.avgOutingMin)} minutes on average. Only ${pc0(s.multiShare)}% of days doubled up.` },
+  2026: { label: 'Unbroken', line: (s) => `One outing a day, and longer: ${num0(s.avgOutingMin)} minutes on average. Only ${pc0(s.multiShare)}% of my days doubled up.` },
 }
 
-// A longer, aggregate read of each year for the Year in Sport report hero. These
-// lead with the big patterns (volume, the walk-run split, indoor against outdoor,
-// consistency, how the year sits against its neighbours) rather than any single
-// outing. Headline figures interpolate live; the qualitative comparisons describe
-// settled, past years.
+// A longer read of each year for the Year in Sport report hero, in my own voice.
+// Each line leads with the big patterns of the year. Headline figures fill in
+// live; the comparisons with other years describe settled, past years and were
+// checked against the activity log.
 export const YEAR_REPORT = {
-  2019: (s) => `The starting point, and an honest one. ${s.n} activities, almost all runs, more than half of them indoors on a treadmill. Foot distance barely cleared ${num0(s.footKm)} km for the year, and the longest unbroken run never reached a week. Everything that follows is measured against this.`,
-  2020: (s) => `${s.n} activities, mostly short indoor runs, and foot distance that slipped below 2019. The one real marker was a first trip into Kenya, the first activity logged outside Tanzania. Then after midsummer the log went dark for most of a year.`,
-  2021: (s) => `Activities multiplied almost tenfold to ${s.n}, foot distance cleared ${num0(s.footKm)} km, and the days started doubling up: on well over half of them, one outing was not enough. Walking arrived in force, and indoor and outdoor finally evened out. This is the hinge the whole record turns on.`,
-  2022: (s) => `${s.n} activities, more than any year before or since, and the first year walking logged more outings than running. Climbing roughly doubled as the training moved outdoors, and two days in three carried something.`,
-  2023: (s) => `The activity count eased off the peak, but climbing jumped to over ${num0(s.elev)} metres, more than any year on record, and outdoor runs finally outnumbered the treadmill two to one. Personal records more than doubled. Fewer days out, and much harder ones.`,
-  2024: (s) => `The map reached ${s.countries.length} countries, the widest it ever spread, while home settled into a steady three hundred-odd activities. Foot distance dipped as more of the effort went into trails and travel than flat kilometres.`,
-  2025: (s) => `Walks were ${Math.round(s.walkShare * 100)}% of all outings, more than any year before, and it holds the longest walk on record${s.longestWalk ? `, ${num0(s.longestWalk.km)} km in one go` : ''}. Barely a quarter of sessions were on a treadmill, and the habit held near three hundred activities for a third straight year.`,
-  2026: (s) => `The most complete year yet, and still unfinished. More hours moving and more personal records than any year before, ${s.prs} of them, with almost nothing left indoors. Distance is back over ${num0(s.footKm)} km, climbing near its peak, and the starts have crept to dawn. Every single day so far has carried something.`,
+  2019: (s) => `This is where my log starts. I logged ${s.n} activities, ${s.runN} of them runs, most of those on a treadmill. I covered ${num0(s.footKm)} km on foot that year, and my longest run of days in a row was ${s.streakLen}. Everything after this gets measured against it.`,
+  2020: (s) => `${s.n} activities, mostly treadmill runs, and less distance on foot than in 2019: ${num0(s.footKm)} km. It is also the year I logged my first activity outside Tanzania, in Kenya. Then, after early July, my log went quiet for almost a year.`,
+  2021: (s) => `This is the year it changed. I logged ${s.n} activities, close to ten times 2020, and ${num0(s.footKm)} km on foot. On ${Math.round(s.multiShare * 100)}% of my active days I went out more than once. Walking arrived properly, ${s.walkN} walks, and my sessions split almost evenly between indoors and outdoors. The rest of my record grows out of this year.`,
+  2022: (s) => `${s.n} activities, more than in any other year, and the first year I walked more often than I ran: ${s.walkN} walks against ${s.runN} runs. My climbing nearly doubled, to ${num0(s.elev)} m, and I was out on ${s.activeDays} days, about two in every three.`,
+  2023: (s) => `I went out less often than in 2022, ${s.n} activities, and climbed more than in any other year: ${num0(s.elev)} m. My trail running took off, ${num0(s.trailKm)} km on trails, and I set ${s.prs} personal records, more than twice the year before. Fewer days out, and steeper ones.`,
+  2024: (s) => `My map spread the widest it ever has: ${s.countries.length} countries in one year. I kept to ${s.n} activities, but my distance on foot dropped to ${num0(s.footKm)} km, the lowest since the habit began, and half my outings were done in under ${num0(s.medMovingMin)} minutes.`,
+  2025: (s) => `Walking became ${Math.round(s.walkShare * 100)}% of my outings, the biggest share of any year${s.longestWalk ? `, and I did my longest walk on record, ${num0(s.longestWalk.km)} km in one go` : ''}. About a quarter of my sessions were indoors, and for the third year in a row I logged close to three hundred activities.`,
+  2026: (s) => `My most complete year so far, and it isn’t over. I’ve been out on ${s.streakLen === s.activeDays ? `every one of its ${s.activeDays} days` : `${s.activeDays} days`}, I’ve moved for ${num0(s.hours)} hours, more than in any year before, and I’ve set ${s.prs} personal records, also the most. My distance on foot is back over ${num0(Math.floor(s.footKm / 100) * 100)} km and my climbing is close to its best.`,
 }
 
 export function buildYearSummaries(acts, geo) {

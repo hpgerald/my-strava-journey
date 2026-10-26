@@ -86,7 +86,7 @@ export default function Timeline() {
   return (
     <DetailFrame
       {...frame}
-      lede="The whole record in the order it happened, drawn as one chronicle: the milestones, the firsts, the trips abroad and the new regions, every pair of shoes, and the streaks and silences. Then every moment written out, year by year."
+      lede="My whole record in the order it happened, drawn as one chronicle: the milestones, the firsts, the trips abroad and the new regions, every pair of shoes, and the streaks and silences. Then every moment written out, year by year."
     >
       <div className="yis-report">
         {/* ===== the chronicle ===== */}
@@ -94,11 +94,11 @@ export default function Timeline() {
           <div className="sgrid__head">
             <p className="eyebrow">{fmtMon(C.firstISO)} to {fmtMon(C.lastISO)}</p>
             <h2 id="tl-title" className="section-head__title">The silence never came&nbsp;back.</h2>
-            <p className="section-head__sub">After the {n0(S.len)}-day silence, no break has lasted more than {word(C.maxAfter)} days.</p>
+            <p className="section-head__sub">After my {n0(S.len)}-day silence, no break has lasted more than {word(C.maxAfter)} days.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            The record opens on {fmtDay(C.firstISO)} and logs {n0(C.beforeSilence)} outings in its first {n0(Math.round((C.dayIdx(S.start) - C.dayIdx(C.firstISO)) / 30.44))} months. Then it goes silent from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
-            Since it came back, the longest gap between two outings has been {word(C.maxAfter)} days, and {cur ? `the current streak has run ${n0(cur.len)} days since ${fmtDay(cur.start)}` : 'the outings have kept coming'}.
+            My record opens on {fmtDay(C.firstISO)}, and I logged {n0(C.beforeSilence)} outings in its first {n0(Math.round((C.dayIdx(S.start) - C.dayIdx(C.firstISO)) / 30.44))} months. Then I went quiet from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
+            Since I came back, the longest gap between two of my outings has been {word(C.maxAfter)} days, and {cur ? `my current streak has run ${n0(cur.len)} days since ${fmtDay(cur.start)}` : 'the outings have kept coming'}.
             Along the way: {F.length} firsts on foot, {abroadN} countries outside Tanzania, {C.regions.length} regions of Tanzania and {C.shoes.length} pairs of shoes.
           </Reveal>
           <OddsRow
@@ -132,9 +132,9 @@ export default function Timeline() {
           title={`The first 250 took ${n0(firstStep.days)} days.`}
           sub="Every 250 since has taken under a year."
           statement={<>
-            The {ORD(firstStep.n)} outing came on {fmtDay(firstStep.date)}, {n0(firstStep.days)} days after the first, with the silence inside that stretch.
-            Since then each block of 250 has taken between {n0(fastest.days)} days (to the {ORD(fastest.n)}, {fmtMon(fastest.date)}) and {n0(slowest.days)} days (to the {ORD(slowest.n)}, {fmtMon(slowest.date)}).
-            The breaks shrank with it: the longest each year fell from {n0(Math.max(...gapYears.filter((g) => g.year <= 2020).map((g) => g.g)))} days in 2020 to {C.yearGaps[String(lastYear)] ? `${n0(C.yearGaps[String(lastYear)])} days` : 'no break at all'} in {lastYear}{so}.
+            My {ORD(firstStep.n)} outing came on {fmtDay(firstStep.date)}, {n0(firstStep.days)} days after the first, with the silence inside that stretch.
+            Since then each block of 250 has taken me between {n0(fastest.days)} days (to the {ORD(fastest.n)}, {fmtMon(fastest.date)}) and {n0(slowest.days)} days (to the {ORD(slowest.n)}, {fmtMon(slowest.date)}).
+            My breaks shrank with it: the longest each year fell from {n0(Math.max(...gapYears.filter((g) => g.year <= 2020).map((g) => g.g)))} days in 2020 to {C.yearGaps[String(lastYear)] ? `${n0(C.yearGaps[String(lastYear)])} days` : 'no break at all'} in {lastYear}{so}.
           </>}
           odds={{
             title: 'Every 250 outings',
@@ -166,7 +166,7 @@ export default function Timeline() {
             ),
           }}
           leftNote={<><b>How to read it.</b> Each bar is the days it took to add 250 outings. The first bar, in grey, holds the silence and is cut at 400.</>}
-          rightNote={<><b>Why it matters.</b> The longest stretch without an outing in each year. Bars that run off the top (in grey) are the early years; since the habit began the longest has been {word(C.maxAfter)} days.</>}
+          rightNote={<><b>Why it matters.</b> The longest stretch without an outing in each year. Bars that run off the top (in grey) are the early years; since my habit began the longest has been {word(C.maxAfter)} days.</>}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
         />
 
@@ -179,7 +179,7 @@ export default function Timeline() {
           sub={`From a 10 km on day ${dayOf(F[0].date)} to a ${lastFirst.km.toFixed(1)} km ${lastFirst.sport === 'Walk' ? 'walk' : 'outing'} in ${lastFirst.date.slice(0, 4)}.`}
           statement={<>
             {F.map((f) => `${f.title.replace('First', 'the first')} in ${fmtMon(f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
-            {' '}The treadmill gave the early distance firsts; the trails, the mountains and the long walks gave the later ones.
+            {' '}The treadmill gave me the early distance firsts; the trails, the mountains and the long walks gave me the later ones.
           </>}
           odds={{
             title: 'Firsts on foot',
@@ -210,7 +210,7 @@ export default function Timeline() {
             ),
           }}
           leftNote={<><b>How to read it.</b> Each bar runs from the first outing on record to the day the first came, coloured by how it was done.</>}
-          rightNote={<><b>Why it matters.</b> The firsts cluster in the early habit years and then thin out: each new one needs a longer day or a steeper hill.</>}
+          rightNote={<><b>Why it matters.</b> My firsts cluster in the early habit years and then thin out: each new one needs a longer day or a steeper hill.</>}
           source="Activity Log · the first outing on foot to pass each mark"
         />
 
