@@ -152,9 +152,8 @@ export default function Records() {
         <section className="sgrid yis-top" aria-labelledby="rc-title">
           <div className="sgrid__head">
             <p className="eyebrow">The distance record</p>
-            <h2 id="rc-title" className="section-head__title">
-              The distance record broke {dP.length} times. It has stood since {fmtMonth(dNow.date)}.
-            </h2>
+            <h2 id="rc-title" className="section-head__title">The record broke {dP.length}&nbsp;times.</h2>
+            <p className="section-head__sub">The longest outing on foot has stood since {fmtMonth(dNow.date)}.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             Every outing on foot chased the longest one before it. The first record was a {k1(dP[0].km)} km {lower(dP[0].mode)} on day one;
@@ -191,7 +190,8 @@ export default function Records() {
         <StorySection
           id="rc-long"
           eyebrow={`${num()} · The longest outings`}
-          title={`${cap(word(R.over30.length))} outings went past 30 km. ${cap(word(treadOver30.length))} were on a treadmill.`}
+          title={`${cap(word(R.over30.length))} outings past 30 km.`}
+          sub={`${cap(word(treadOver30.length))} of them were on a treadmill.`}
           statement={<>
             {n0(R.halfUp.length)} outings reached a half marathon (21.1 km) and {word(R.over30.length)} went past 30 km. The {word(treadOver30.length)} treadmill
             ones came between {fmtMon(treadOver30[0]?.date)} and {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. Since then the long days have been outside:{' '}
@@ -235,7 +235,8 @@ export default function Records() {
         <StorySection
           id="rc-climb"
           eyebrow={`${num()} · The climb`}
-          title={`The climbing record broke ${cP.length} times, from ${n0(cP[0].elev)} m to ${n0(cNow.elev)} m.`}
+          title={`${cP.length} climb records.`}
+          sub={`The biggest climb on foot went from ${n0(cP[0].elev)} m to ${n0(cNow.elev)} m.`}
           statement={<>
             The first {word(walkLed)} climbing records were all walks, up to {n0(cP[walkLed - 1].elev)} m in {fmtMonth(cP[walkLed - 1].date)}. Then the hikes took over:{' '}
             {cP.slice(walkLed).map((r) => `${n0(r.elev)} m in ${fmtMonth(r.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
@@ -279,7 +280,8 @@ export default function Records() {
         <StorySection
           id="rc-months"
           eyebrow={`${num()} · The biggest weeks and months`}
-          title={`The biggest month for climbing was ${fmtMonth(moEl.month)}, with ${n0(moEl.elev)} m.`}
+          title={`${fmtMonth(moEl.month)} climbed the most.`}
+          sub={`${n0(moEl.elev)} m in one month, the most of any.`}
           statement={<>
             By distance, the biggest week began on {fmtDay(wk.start)}: {n0(wk.km)} km from {word(wk.n)} outings. The biggest month was {fmtMonth(moKm.month)} with {n0(moKm.km)} km,
             and {sameYearKm === R.topMonthsKm.length ? `all ${word(sameYearKm)}` : word(sameYearKm)} of the {word(R.topMonthsKm.length)} biggest months for distance came in {moKm.month.slice(0, 4)}.
@@ -322,7 +324,8 @@ export default function Records() {
         <StorySection
           id="rc-miles"
           eyebrow={`${num()} · Milestones`}
-          title={`The first 1,000 km took ${n0(R.kmMiles[0].days)} days. The last ${n0(lastKm.mark - prevKm.mark)} took ${n0(lastKm.days)}.`}
+          title="The kilometres came faster."
+          sub={`The first 1,000 km took ${n0(R.kmMiles[0].days)} days. The last ${n0(lastKm.mark - prevKm.mark)} took ${n0(lastKm.days)}.`}
           statement={<>
             The distance on foot passed 1,000 km on {fmtDay(R.kmMiles[0].date)} and {n0(R.kmMiles[1].mark)} km {n0(R.kmMiles[1].days)} days later.
             {R.kmMiles.find((k) => k.mark === 10000) ? ` It reached 10,000 km on ${fmtDay(R.kmMiles.find((k) => k.mark === 10000).date)}.` : ''}
@@ -369,7 +372,8 @@ export default function Records() {
         <StorySection
           id="rc-prs"
           eyebrow={`${num()} · Personal records`}
-          title={prBest.year === lastYear ? `${lastYear} has set ${prLast.prs} personal records, the most of any year.` : `${prBest.year} set ${prBest.prs} personal records, the most of any year.`}
+          title={prBest.year === lastYear ? `${n0(prLast.prs)} personal records in ${lastYear}.` : `${n0(prBest.prs)} personal records in ${prBest.year}.`}
+          sub={prBest.year === lastYear ? 'The most of any year, with the year still running.' : 'The most of any year.'}
           statement={<>
             A personal record here is a Strava segment best: a timed stretch of road or trail where an outing beat every earlier effort on it.
             {' '}{n0(R.prTotal)} have fallen on foot, across {n0(R.prOutings)} outings. Treadmill runs set almost none, because segments need GPS.
@@ -415,7 +419,8 @@ export default function Records() {
         <StorySection
           id="rc-streaks"
           eyebrow={`${num()} · Streaks`}
-          title={S.any.current === S.any.len ? `${n0(S.any.len)} days in a row, and still going.` : `${n0(S.any.len)} days in a row, the longest streak.`}
+          title={`${n0(S.any.len)} days in a row.`}
+          sub={S.any.current === S.any.len ? 'The longest streak on record, and still going.' : 'The longest streak on record.'}
           statement={<>
             The longest run of days with an outing began on {fmtDay(S.any.startISO)}{S.any.current === S.any.len ? ` and has not missed a day since: ${n0(S.any.len)} days to ${fmtDay(S.any.endISO)}` : ` and lasted ${n0(S.any.len)} days`}.
             {' '}Counted in weeks, {n0(S.week.len)} in a row have had at least one outing{S.week.current === S.week.len ? `, every week since ${fmtDay(S.week.startISO)}` : ''}.
@@ -461,7 +466,8 @@ export default function Records() {
             <StorySection
               id="rc-where"
               eyebrow={`${num()} · Where the records were set`}
-              title={`${regTop[0][0]} holds ${word(regTop[0][1])} of the ${top20N} biggest climbs.`}
+              title={`${regTop[0][0]} owns the climbs.`}
+              sub={`${cap(word(regTop[0][1]))} of the ${top20N} biggest climbs started there.`}
               statement={<>
                 Of the {top20N} biggest single climbs on foot, {regTop.map(([k, v]) => `${v} started in ${k}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
                 {' '}The biggest climb in each region: {regs.map((f) => `${f.region} ${n0(f.elev)} m`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
@@ -506,7 +512,8 @@ export default function Records() {
         <StorySection
           id="rc-maths"
           eyebrow={`${num()} · The maths of records`}
-          title={`The distance record broke ${dP.length} times. Chance would give ${k1(R.expected)}.`}
+          title={dP.length > R.expected ? 'More records than chance.' : 'Fewer records than chance.'}
+          sub={`The distance record broke ${dP.length} times. A random order would give ${k1(R.expected)}.`}
           statement={<>
             If the same outings came in a random order, a record would break about ln(n) + 0.58 times, where n is the number of outings: early on almost anything is a record,
             later almost nothing is. For {n0(R.n)} outings that is {k1(R.expected)}. The distance record broke {dP.length} times, {k1(dP.length / R.expected)} times as often;
@@ -551,7 +558,7 @@ export default function Records() {
         <section className="sgrid" aria-labelledby="rc-edges">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · The record book</p>
-            <h2 id="rc-edges" className="section-head__title">Every record on foot, on one page.</h2>
+            <h2 id="rc-edges" className="section-head__title">The record&nbsp;book.</h2>
           </div>
           <ul className="yrecs">
             <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" />

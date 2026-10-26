@@ -94,7 +94,8 @@ export default function WhatItMeans() {
         <section className="sgrid yis-top" aria-labelledby="wm-title">
           <div className="sgrid__head">
             <p className="eyebrow">Seven years, read back</p>
-            <h2 id="wm-title" className="section-head__title">Since {habitYear} this has cost me {n0(habitPerDay)} minutes a day. This year it costs {n0(cur.minPerDay)}.</h2>
+            <h2 id="wm-title" className="section-head__title">{n0(habitPerDay)} minutes a&nbsp;day.</h2>
+            <p className="section-head__sub">That is what this has cost me since {habitYear}. This year it costs {n0(cur.minPerDay)}.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             If you ask me what all of this costs, the answer is time. Since the habit started in {habitYear} I&rsquo;ve spent {n0(habitPerDay)} minutes a day on the move, and that average counts the rest days too.
@@ -126,7 +127,8 @@ export default function WhatItMeans() {
         <StorySection
           id="wm-days"
           eyebrow={`${num()} · Count the days`}
-          title={`In my slowest year the distance fell by ${pc(kmDrop)}%. My days out fell by ${pc(dayDrop)}%.`}
+          title="The days held. The km fell."
+          sub={`In my slowest year the distance fell by ${pc(kmDrop)}%. My days out fell by ${pc(dayDrop)}%.`}
           statement={<>
             {peak.year} was my biggest year for distance: {n0(peak.km)} km on foot over {n0(peak.days)} days. By {low.year} I was down to {n0(low.km)} km.
             The long days went first: {n0(peak.long)} days of {LONG_KM} km or more in {peak.year}, {word(low.long)} in {low.year}. The days out barely moved, {n0(peak.days)} to {n0(low.days)}.
@@ -171,7 +173,8 @@ export default function WhatItMeans() {
         <StorySection
           id="wm-small"
           eyebrow={`${num()} · Do the small version`}
-          title={`One day out in ${word(Math.round(1 / smallShare))} was barely anything. Those days kept the habit going.`}
+          title="The small days count."
+          sub={`One day out in ${word(Math.round(1 / smallShare))} was barely anything. Those days kept the habit going.`}
           statement={<>
             Since {habitYear} I&rsquo;ve had {n0(M.habitActive)} days out, and on {n0(M.smallDays)} of them I covered less than {SMALL_KM} km on foot. {K.foot || 0} were a short walk, {K.gym || 0} a gym session, {K.ride || 0} a ride and {K.physio || 0} a physio session{K.other ? `, plus ${word(K.other)} others` : ''}.
             Together they add {n0(M.smallKm)} km, under 1% of my distance, and that&rsquo;s fine. They&rsquo;re there for the days I&rsquo;d otherwise skip, and it shows the next morning:
@@ -217,7 +220,8 @@ export default function WhatItMeans() {
             <StorySection
               id="wm-floor"
               eyebrow={`${num()} · Guard the floor`}
-              title={`This year no week has dropped below ${n0(Math.floor(wNow.min))} km. From ${between[0].year} to ${between[between.length - 1].year}, ${n0(under10Between)} weeks fell under 10.`}
+              title={`No week under ${n0(Math.floor(wNow.min))} km.`}
+              sub={`That is ${cur.year} so far. From ${between[0].year} to ${between[between.length - 1].year}, ${n0(under10Between)} weeks fell under 10 km.`}
               statement={<>
                 Look at my weeks and the best ones aren&rsquo;t the story. My biggest week of {peak.year} was {n0(wPeak.max)} km and this year&rsquo;s is {n0(wNow.max)} km, about the same.
                 The difference is at the bottom. From {between[0].year} to {between[between.length - 1].year} I had {n0(under10Between)} weeks with less than 10 km on foot. In {cur.year} the lowest is {n0(Math.floor(wNow.min))} km, and the middle half of my weeks sits between {n0(wNow.q25)} and {n0(wNow.q75)} km.
@@ -264,7 +268,8 @@ export default function WhatItMeans() {
         <StorySection
           id="wm-long"
           eyebrow={`${num()} · Build in blocks`}
-          title={`My long days never come alone. The day after one averages ${k1(after.km)} km, double a normal day.`}
+          title="Long days come in bunches."
+          sub={`The day after one averages ${k1(after.km)} km, double a normal day.`}
           statement={<>
             Since {habitYear} I&rsquo;ve had {n0(M.longDays)} days of {LONG_KM} km or more on foot, half-marathon distance and up. {n0(M.longNextActive)} of them, {pc(M.longNextActive / M.longDays)}%, were followed by another day out,
             and that next day averaged {k1(after.km)} km against {k1(M.avgDayKm)} km on a typical day. The three days before a long day were big too.
@@ -311,7 +316,8 @@ export default function WhatItMeans() {
         <StorySection
           id="wm-maths"
           eyebrow={`${num()} · The maths of a year`}
-          title="A year’s distance has two levers: how many days, and how far each day."
+          title="Two levers make a year."
+          sub="How many days I go out, and how far I go each day."
           statement={<>
             Every yearly total is days out times distance per day out. 1,000 km is {k1(1000 / 365)} km a day if you go every day, or {k1(twoThirds)} km a day out if you go two days in three. I&rsquo;ve pulled both levers.
             {' '}{longYear.year} was the long-days year: {k1(longYear.kmPerActive)} km per day out, on {pc(longYear.share)}% of days. {cur.year} is the every-day year: {k1(cur.kmPerActive)} km on {pc(cur.share)}% of days.
@@ -355,7 +361,8 @@ export default function WhatItMeans() {
         <section className="sgrid" aria-labelledby="wm-close">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · What I&rsquo;d tell you</p>
-            <h2 id="wm-close" className="section-head__title">Four things I&rsquo;d tell anyone starting&nbsp;out.</h2>
+            <h2 id="wm-close" className="section-head__title">If you&rsquo;re starting&nbsp;out.</h2>
+            <p className="section-head__sub">Four things I&rsquo;d tell you.</p>
           </div>
           <ul className="yrecs">
             <Card kicker="Count the days" value={low.days} unit="days" label={`out in ${low.year}, my lowest year for distance`} sub={`${pc(dayDrop)}% fewer than ${peak.year}`} tone="hot" />

@@ -93,7 +93,8 @@ export default function Timeline() {
         <section className="sgrid yis-top" aria-labelledby="tl-title">
           <div className="sgrid__head">
             <p className="eyebrow">{fmtMon(C.firstISO)} to {fmtMon(C.lastISO)}</p>
-            <h2 id="tl-title" className="section-head__title">After the {n0(S.len)}-day silence, no break has lasted more than {word(C.maxAfter)} days.</h2>
+            <h2 id="tl-title" className="section-head__title">The silence never came&nbsp;back.</h2>
+            <p className="section-head__sub">After the {n0(S.len)}-day silence, no break has lasted more than {word(C.maxAfter)} days.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             The record opens on {fmtDay(C.firstISO)} and logs {n0(C.beforeSilence)} outings in its first {n0(Math.round((C.dayIdx(S.start) - C.dayIdx(C.firstISO)) / 30.44))} months. Then it goes silent from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
@@ -128,7 +129,8 @@ export default function Timeline() {
         <StorySection
           id="tl-pace"
           eyebrow={`${num()} · The pace`}
-          title={`The first 250 outings took ${n0(firstStep.days)} days. Every 250 since has taken under a year.`}
+          title={`The first 250 took ${n0(firstStep.days)} days.`}
+          sub="Every 250 since has taken under a year."
           statement={<>
             The {ORD(firstStep.n)} outing came on {fmtDay(firstStep.date)}, {n0(firstStep.days)} days after the first, with the silence inside that stretch.
             Since then each block of 250 has taken between {n0(fastest.days)} days (to the {ORD(fastest.n)}, {fmtMon(fastest.date)}) and {n0(slowest.days)} days (to the {ORD(slowest.n)}, {fmtMon(slowest.date)}).
@@ -173,7 +175,8 @@ export default function Timeline() {
         <StorySection
           id="tl-firsts"
           eyebrow={`${num()} · Firsts`}
-          title={`${cap(word(F.length))} firsts on foot, from a 10 km on day ${dayOf(F[0].date)} to a ${lastFirst.km.toFixed(1)} km ${lastFirst.sport === 'Walk' ? 'walk' : 'outing'} in ${lastFirst.date.slice(0, 4)}.`}
+          title={`${cap(word(F.length))} firsts on foot.`}
+          sub={`From a 10 km on day ${dayOf(F[0].date)} to a ${lastFirst.km.toFixed(1)} km ${lastFirst.sport === 'Walk' ? 'walk' : 'outing'} in ${lastFirst.date.slice(0, 4)}.`}
           statement={<>
             {F.map((f) => `${f.title.replace('First', 'the first')} in ${fmtMon(f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
             {' '}The treadmill gave the early distance firsts; the trails, the mountains and the long walks gave the later ones.

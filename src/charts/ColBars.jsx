@@ -28,7 +28,7 @@ export default function ColBars({ items, max, ticks = [], tickFmt = (v) => v, re
     <div ref={ref} className="cb">
       <div ref={root} className={`cb__plot${inView ? ' is-in' : ''}`}>
         <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block' }}>
-          {ticks.map((g) => (
+          {ticks.filter((g) => g <= top).map((g) => (
             <g key={g}>
               <line x1={m.l} y1={y(g)} x2={W - m.r} y2={y(g)} stroke={g === 0 ? 'var(--ink)' : 'var(--rule-faint)'} strokeWidth="1" />
               <text x={m.l - 8} y={y(g) + 4} textAnchor="end" className="cb__gl">{tickFmt(g)}</text>

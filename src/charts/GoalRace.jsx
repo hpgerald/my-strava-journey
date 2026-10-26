@@ -9,7 +9,7 @@ import { useInView } from '../components/Reveal.jsx'
 const MON = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 
 function Panel({ t, years, W, H, narrow, delay }) {
-  const m = { l: narrow ? 38 : 46, r: narrow ? 10 : 34, t: 36, b: 22 }
+  const m = { l: narrow ? 38 : 46, r: narrow ? 10 : 34, t: 40, b: 22 }
   const max = Math.max(t.target * 1.15, ...years.map((y) => y[t.key].total)) * 1.04
   const X = (i, n) => m.l + (i / (n - 1)) * (W - m.l - m.r)
   const Y = (v) => m.t + (1 - v / max) * (H - m.t - m.b)
@@ -23,8 +23,8 @@ function Panel({ t, years, W, H, narrow, delay }) {
   for (let i = 1; i < byY.length; i++) if (Math.abs(byY[i].x - byY[i - 1].x) < 40 && byY[i].y - byY[i - 1].y < 11) byY[i].y = byY[i - 1].y + 11
   return (
     <g>
-      <text x={m.l} y={18} className="grace__t">{t.label}</text>
-      <text x={W - 10} y={18} textAnchor="end" className="grace__u">{t.target.toLocaleString('en-US')} {t.unit}</text>
+      <text x={m.l} y={22} className="grace__t">{t.label}</text>
+      <text x={W - 10} y={22} textAnchor="end" className="grace__u">{t.target.toLocaleString('en-US')} {t.unit}</text>
       {ticks.map((v) => (
         <g key={v}>
           <line x1={m.l} x2={W - m.r} y1={Y(v)} y2={Y(v)} stroke={v === 0 ? 'var(--ink)' : 'var(--rule-faint)'} />

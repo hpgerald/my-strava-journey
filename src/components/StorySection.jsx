@@ -8,12 +8,13 @@ import OddsRow from './OddsRow.jsx'
 // keep the last two words together so a wrapped headline never ends on one word
 const tie = (t) => (typeof t === 'string' ? t.replace(/ (\S+)$/, '\u00A0$1') : t)
 
-export default function StorySection({ id, eyebrow, title, statement, odds, left, right, leftNote, rightNote, source, children }) {
+export default function StorySection({ id, eyebrow, title, sub, statement, odds, left, right, leftNote, rightNote, source, children }) {
   return (
     <section className="sgrid" aria-labelledby={id}>
       <div className="sgrid__head">
         <p className="eyebrow">{eyebrow}</p>
         <h2 id={id} className="section-head__title">{tie(title)}</h2>
+        {sub && <p className="section-head__sub">{sub}</p>}
       </div>
 
       <Reveal as="p" className="sgrid__statement">{statement}</Reveal>

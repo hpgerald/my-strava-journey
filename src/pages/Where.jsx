@@ -117,7 +117,8 @@ export default function Where() {
         <section className="sgrid yis-top" aria-labelledby="wh-title">
           <div className="sgrid__head">
             <p className="eyebrow">Across Africa</p>
-            <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% of the outings with a GPS start began in Tanzania.</h2>
+            <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
+            <p className="section-head__sub">Counting every outing with a GPS start.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             {n0(P.located)} of {n0(P.n)} outings carry a GPS start; the other {n0(P.indoor)} were indoors, on a treadmill or in a gym. Of the ones with a place,
@@ -167,7 +168,8 @@ export default function Where() {
         <section className="sgrid" aria-labelledby="wh-tz">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · Tanzania</p>
-            <h2 id="wh-tz" className="section-head__title">{cap(word(R.length))} regions of Tanzania. Three hold {pc(top3Share)}% of the outings.</h2>
+            <h2 id="wh-tz" className="section-head__title">{R.length} regions of&nbsp;Tanzania.</h2>
+            <p className="section-head__sub">Three of them hold {pc(top3Share)}% of the outings.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             {andList(top3.map((r) => `${r.region} ${n0(r.n)}`))} outings, out of {n0(P.tzTot.n)} in Tanzania. {home.region} leads on outings and on days out ({n0(home.days)}),
@@ -221,7 +223,8 @@ export default function Where() {
         <StorySection
           id="wh-steep"
           eyebrow={`${num()} · Flat at home, steep away`}
-          title={`${andList(steep.map((r) => r.region))} hold ${pc(steepN)}% of the outings and ${pc(steepE)}% of the climb.`}
+          title={`${cap(word(steep.length))} regions do the climbing.`}
+          sub={`${andList(steep.map((r) => r.region))} hold ${pc(steepN)}% of the outings and ${pc(steepE)}% of the climb.`}
           statement={<>
             Across Tanzania an outing on foot climbed {k1(tzMpk)} m for every kilometre. {home.region} climbed {k1(home.mpk)} m and Dar es Salaam {k1(reg('Dar es Salaam').mpk)} m: the
             places with the most outings are the flattest. {andList(steep.map((r) => `${r.region} climbed ${n0(r.mpk)} m per km`))}, and
@@ -259,7 +262,8 @@ export default function Where() {
         <StorySection
           id="wh-home"
           eyebrow={`${num()} · The busiest region, year by year`}
-          title={runOf.after.length ? `${runOf.region} led every year from ${runOf.from} to ${runOf.to}. Then the lead moved.` : `${runOf.region} led every year since ${runOf.from}.`}
+          title={`${runOf.region} led for ${word(Number(runOf.to) - Number(runOf.from) + 1)} ${Number(runOf.to) === Number(runOf.from) ? 'year' : 'years'}.`}
+          sub={runOf.after.length ? `Every year from ${runOf.from} to ${runOf.to}. Then the lead moved.` : `Every year since ${runOf.from}.`}
           statement={<>
             {leaders.map((l) => `${l.year}: ${l.region}, ${l.n} of ${l.of}`).join('; ')}.
             {' '}{leaders[leaders.length - 1].region} leads {lastYear}{so} with {pc(leaders[leaders.length - 1].n / leaders[leaders.length - 1].of)}% of the outings in Tanzania.
@@ -300,7 +304,8 @@ export default function Where() {
         <StorySection
           id="wh-grow"
           eyebrow={`${num()} · The map growing`}
-          title={`${cap(word(disc.length))} regions in ${word(lastYear - Number(disc[0].date.slice(0, 4)))} years. ${cap(word(newLast.n))} ${newLast.n === 1 ? 'was' : 'were'} new in ${lastYear}.`}
+          title={`${disc.length} regions in ${lastYear - Number(disc[0].date.slice(0, 4))} years.`}
+          sub={`${cap(word(newLast.n))} ${newLast.n === 1 ? 'was' : 'were'} new in ${lastYear}.`}
           statement={<>
             {newBy.filter((y) => y.n).map((y) => `${y.year} added ${andList(y.names)}`).join('; ')}.
             {' '}{cap(word(30 - disc.length))} of Tanzania’s 30 regions are still blank on the map.
@@ -343,7 +348,8 @@ export default function Where() {
         <StorySection
           id="wh-abroad"
           eyebrow={`${num()} · Abroad`}
-          title={`${n0(P.abroadN)} outings abroad. ${AB[0].country} has ${AB[0].n} of them.`}
+          title={`${n0(P.abroadN)} outings abroad.`}
+          sub={`${AB[0].country} has ${AB[0].n} of them.`}
           statement={<>
             {kenya ? `Kenya came first, in ${fmtMonth(kenya.first)}; the first outing there on foot was in ${fmtMonth(P.abroadFirstFoot.Kenya)}, and the latest in ${fmtMonth(kenya.last)}. ` : ''}
             {malawi ? `Malawi gave ${malawi.n} outings over ${malawi.days} days between ${fmtMon(malawi.first)} and ${fmtMon(malawi.last)}. ` : ''}
@@ -387,7 +393,8 @@ export default function Where() {
         <StorySection
           id="wh-indoor"
           eyebrow={`${num()} · No place at all`}
-          title={`Outings with no GPS start fell from ${pc(iFirst.share)}% in ${iFirst.year} to ${pc(iLast.share)}% in ${iLast.year}.`}
+          title="Fewer outings without GPS."
+          sub={`Outings with no GPS start fell from ${pc(iFirst.share)}% in ${iFirst.year} to ${pc(iLast.share)}% in ${iLast.year}.`}
           statement={<>
             {n0(P.indoor)} outings have no start point: they happened indoors, on a treadmill, a gym floor or a physio table. {n0(P.indoorBy.tread)} of them were runs on the treadmill.
             {' '}In {iFirst.year} they were {pc(iFirst.share)}% of the year{iy.every((y, i) => !i || y.share <= iy[i - 1].share + 0.005) ? '; no year since has had a bigger share,' : ','} and {iLast.year}{so} is down to {pc(iLast.share)}%.
@@ -434,7 +441,8 @@ export default function Where() {
         <StorySection
           id="wh-maths"
           eyebrow={`${num()} · The maths of place`}
-          title={`In ${effBest.year} the outings spread like ${k1(effBest.effective)} equal regions. In ${effLow.year}, like ${k1(effLow.effective)}.`}
+          title="How widely they spread."
+          sub={`In ${effBest.year} they spread like ${k1(effBest.effective)} equal regions. In ${effLow.year}, like ${k1(effLow.effective)}.`}
           statement={<>
             The effective number of regions asks how many equally busy regions would give the same spread: one over the sum of each region’s squared share of the outings.
             Seventeen regions with one doing almost everything count as close to one; four regions with a quarter each count as four.
@@ -480,7 +488,7 @@ export default function Where() {
         <section className="sgrid" aria-labelledby="wh-places">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · Each place on its own</p>
-            <h2 id="wh-places" className="section-head__title">Open any place for its own page.</h2>
+            <h2 id="wh-places" className="section-head__title">Open any&nbsp;place.</h2>
           </div>
           <ul className="sp-cards wh-cards">
             {placeCards.map((c) => (

@@ -218,7 +218,7 @@ export default function YearInSport() {
         <StorySection
           id="yis-months"
           eyebrow={`${num()} · Month by month`}
-          title={`${MONTH_F[busy]} was the busiest month of ${Y}.`}
+          title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
             {activeMonths === moIdx.length ? `Every month${so} had an outing.` : `${word(activeMonths)[0].toUpperCase() + word(activeMonths).slice(1)} of the ${word(moIdx.length)} months${so} had an outing.`}{' '}
             {MONTH_F[busy]} led with {s.monthsActivities[busy]} outings and {n0(s.monthsKm[busy])} km on foot.{' '}
@@ -248,7 +248,8 @@ export default function YearInSport() {
             <StorySection
               id="yis-mix"
               eyebrow={`${num()} · How it moved`}
-              title={`${lead[0]} led ${Y}: ${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
+              title={`${lead[0]} led ${Y}.`}
+              sub={`${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
               statement={<>
                 Of the {fmtInt(s.n)} outings{so}, {mix.walk} were walks, {mix.run} runs and {mix.trail} trail runs or hikes;
                 {' '}{mix.other} were off the feet. On foot, running covered {pc(flipOf('Run').dist / footKmAll)}% of the distance
@@ -279,7 +280,8 @@ export default function YearInSport() {
             <StorySection
               id="yis-hours"
               eyebrow={`${num()} · When it happened`}
-              title={evening >= morning ? `${pc(evening)}% of outings started between 4 and 9pm.` : `${pc(morning)}% of outings started before 10am.`}
+              title={evening >= morning ? 'The evenings led.' : 'The mornings led.'}
+              sub={evening >= morning ? `${pc(evening)}% of outings started between 4 and 9pm.` : `${pc(morning)}% of outings started before 10am.`}
               statement={<>
                 The busiest hour of {Y} was {fmtH(peakHour)}. {pc(morning)}% of outings started before 10 in the morning, {pc(midday)}%
                 between 10am and 4pm and {pc(evening)}% between 4 and 9pm. {WEEK[s.weekday7.indexOf(wkMax)]} was the busiest day of the
@@ -317,7 +319,7 @@ export default function YearInSport() {
         <StorySection
           id="yis-days"
           eyebrow={`${num()} · Every day of the year`}
-          title={`Something happened on ${pc(pctDays)}% of the days${so}.`}
+          title={`Out on ${pc(pctDays)}% of days${so}.`}
           statement={<>
             {fmtInt(s.activeDays)} of {fmtInt(r.span)} days{so} had at least one outing, across {s.weeksActive} different weeks.
             The longest run of days in a row was {s.streakLen}{s.streakStartISO ? `, from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ''}.
@@ -381,7 +383,7 @@ export default function YearInSport() {
             <StorySection
               id="yis-dist"
               eyebrow={`${num()} · The typical outing`}
-              title={`The usual outing on foot was ${s.medianFoot.toFixed(1)} km.`}
+              title={`The usual outing: ${s.medianFoot.toFixed(1)} km.`}
               statement={<>
                 Half of the {fmtInt(s.footN)} outings on foot were shorter than {s.medianFoot.toFixed(1)} km and half were longer; that
                 middle value is the median. The average was {meanFoot.toFixed(1)} km, pulled up by the long days, and the longest was{' '}
@@ -413,7 +415,8 @@ export default function YearInSport() {
             <StorySection
               id="yis-maths"
               eyebrow={`${num()} · The maths of ${Y}`}
-              title={r.restDays === 0 ? `Not one rest day in ${Y}${so}.` : `A day out led to another ${pc(r.p11)}% of the time.`}
+              title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
+              sub={r.restDays === 0 ? undefined : `A day out led to another ${pc(r.p11)}% of the time.`}
               statement={<>
                 {r.restDays === 0
                   ? `Mark every day of ${Y} as active or rest: there is no rest day to mark${so}, so every day out has led to another.`
@@ -486,7 +489,7 @@ export default function YearInSport() {
             <StorySection
               id="yis-where"
               eyebrow={`${num()} · Where it happened`}
-              title={r.countries.length > 1 ? `${word(r.countries.length)[0].toUpperCase() + word(r.countries.length).slice(1)} countries in ${Y}.` : `All of ${Y} happened in Tanzania.`}
+              title={r.countries.length > 1 ? `${word(r.countries.length)[0].toUpperCase() + word(r.countries.length).slice(1)} countries in ${Y}.` : `All of ${Y} in Tanzania.`}
               statement={<>
                 {fmtInt(r.located)} outings had a GPS start point. {r.countries.length > 1 ? `They reached ${r.countries.length} countries. ` : ''}
                 {r.regRows ? `Inside Tanzania, ${r.regRows[0].label} had the most outings, ${pc(r.regRows[0].a)}% of them.` : ''}
@@ -519,7 +522,8 @@ export default function YearInSport() {
         <StorySection
           id="yis-rank"
           eyebrow={`${num()} · Against the other years`}
-          title={`${Y} ranks ${ORD[rankN - 1]} of ${years.length} years for outings.`}
+          title={`${ORD[rankN - 1][0].toUpperCase() + ORD[rankN - 1].slice(1)} of ${years.length} years.`}
+          sub={`${Y} ranks ${ORD[rankN - 1]} of ${years.length} years for outings.`}
           statement={<>
             By outings {Y} is {ORD[rankN - 1]}, by distance on foot {ORD[rankKm - 1]}, and by climb {ORD[rankEl - 1]} of the {word(years.length)} years.
             {ps ? ` Against ${prevYear} it had ${more(chg(s.n, ps.n), 'more', 'fewer')} outings, ${more(chg(s.footKm, ps.footKm), 'more', 'less')} distance and ${more(chg(s.elev, ps.elev), 'more', 'less')} climb.` : ' It is the first year, so there is nothing before it to compare.'}

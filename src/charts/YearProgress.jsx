@@ -51,7 +51,7 @@ export default function YearProgress({ cum, lastMonth = 11, total = 0 }) {
           {cum.filter((d) => d.inRange).map((d) => {
             const px = x(d.m - 1)
             return (
-              <rect key={d.m} x={px - (W - m.l - m.r) / 24} y={m.t} width={(W - m.l - m.r) / 12} height={H - m.b - m.t}
+              <rect key={d.m} x={Math.max(m.l, px - (W - m.l - m.r) / 22)} y={m.t} width={Math.min(px + (W - m.l - m.r) / 22, W - m.r) - Math.max(m.l, px - (W - m.l - m.r) / 22)} height={H - m.b - m.t}
                 fill="transparent" onMouseEnter={() => setHi(d.m - 1)} onMouseLeave={() => setHi(null)} />
             )
           })}

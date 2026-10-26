@@ -92,8 +92,8 @@ export default function GhostRace({ race, courseKm, aria }) {
               )
             })
           })()}
-          <text x={m.l} y={18} className="ghost__clock">{clock(t)}</text>
-          <text x={m.l + (narrow ? 64 : 76)} y={18} className="cb__axis">into the race</text>
+          <text x={m.l} y={30} className="ghost__clock">{clock(t)}</text>
+          <text x={m.l + (narrow ? 64 : 76)} y={30} className="cb__axis">into the race</text>
         </svg>
       </div>
       <ol className="ghost__board" aria-hidden="true">

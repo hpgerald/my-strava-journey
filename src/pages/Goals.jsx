@@ -114,9 +114,9 @@ export default function Goals() {
   const curOpen = TARGETS.filter((t) => cur[t.key].closed == null)
 
   // ---- the hero headline ----
-  const heroTitle = cur.walk.closed != null && cur.run.closed != null && !bothBefore
-    ? `${cur.year} is the first year to close both 1,000 km rings. The climbing ring is at ${Math.round(cur.elev.share * 100)}%.`
-    : `${cur.year} has closed ${word(curClosed.length)} of the three rings${so}.`
+  const firstBoth = cur.walk.closed != null && cur.run.closed != null && !bothBefore
+  const heroTitle = firstBoth ? 'Both 1,000 km rings closed.' : `${cap(word(curClosed.length))} of three rings closed.`
+  const heroSub = `${firstBoth ? `${cur.year} is the first year to close both.` : `That is ${cur.year}${so}.`} The climbing ring is at ${Math.round(cur.elev.share * 100)}%.`
 
   // ---- the maths ----
   const S = G.sims.elev
@@ -171,6 +171,7 @@ export default function Goals() {
           <div className="sgrid__head">
             <p className="eyebrow">Three targets, every year since {habit[0].year}</p>
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
+            <p className="section-head__sub">{heroSub}</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             The same three targets are held against every year: {unitOf(W, W.target)} walked, {unitOf(R, R.target)} run (treadmill, road and trail) and {unitOf(E, E.target)} climbed on foot.
@@ -205,7 +206,8 @@ export default function Goals() {
         <StorySection
           id="gl-rings"
           eyebrow={`${num()} · Every year against the targets`}
-          title={`Running closed ${times(closedYears('run').length)}, walking ${times(closedYears('walk').length)}, climbing ${closedYears('elev').length ? times(closedYears('elev').length) : 'never'}.`}
+          title={`Running closed ${times(closedYears('run').length)}.`}
+          sub={`Walking closed ${times(closedYears('walk').length)}. Climbing ${closedYears('elev').length ? `closed ${times(closedYears('elev').length)}` : 'never has'}.`}
           statement={<>
             The running ring closed on {list(closedYears('run').filter((y) => y !== cur).map((y) => `${fmtShort(doy(y.year, y.run.closed))} in ${y.year}`))}. {bestOf('run').year} ran {unitOf(R, bestOf('run').run.total)}, {(bestOf('run').run.total / R.target).toFixed(1)} times the target.
             Then {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))} fell short, at {list(habit.filter((y) => y.run.closed == null).map((y) => unitOf(R, y.run.total)))}.
@@ -246,7 +248,8 @@ export default function Goals() {
             <StorySection
               id="gl-odds"
               eyebrow={`${num()} · The maths of the open ring`}
-              title={`The climbing ring has a ${Math.round(S.hit * 100)}% chance of closing in ${cur.year}.`}
+              title={`Climbing: a ${Math.round(S.hit * 100)}% chance.`}
+              sub={`The odds that the climbing ring closes in ${cur.year}.`}
               statement={<>
                 To close it, the last {n0(G.daysLeft)} days need {unitOf(E, toGo)}: {n0(S.needPerDay)} m a day. The year so far has averaged {n0(S.perDay)} m a day, rest days included, so the average alone says it closes {S.perDay >= S.needPerDay ? 'by a whisker' : 'just short'}.
                 To put odds on it, the rest of the year is replayed {n0(S.finals.length)} times, each time by picking {n0(G.daysLeft)} days at random from the {n0(cur.upTo)} days of {cur.year} so far and adding up their climb. {Math.round(S.hit * 100)}% of those replays pass {unitOf(E, E.target)}; the middle one finishes at {unitOf(E, S.p50)}.
@@ -297,7 +300,8 @@ export default function Goals() {
             <StorySection
               id="kili-half"
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
-              title={faster ? 'The Kilimanjaro Half got quicker every year.' : `The Kilimanjaro Half, run ${word(race.length)} times.`}
+              title={faster ? 'Quicker every year.' : 'The Kilimanjaro Half.'}
+              sub={faster ? `The Kilimanjaro Half, ${word(race.length)} editions on record.` : `Run ${word(race.length)} times.`}
               statement={<>
                 The same half marathon, {word(race.length)} editions on record. Moving time went {list(race.map((r) => `${hmin(r.moving)} in ${r.year}`))}, {n0(first.moving - last.moving)} minutes quicker from first to last.
                 The stops shrank faster than the running: {n0(first.stopped)} minutes standing still in {first.year}, {k1(last.stopped)} in {last.year}.
@@ -345,7 +349,8 @@ export default function Goals() {
             <StorySection
               id="ras-kilomoni"
               eyebrow={`${num()} · One place, ${n0(rk.length)} times`}
-              title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni in ${n0(rkDays)} days. The last made it ${n0(rkOuting)} outings.`}
+              title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni.`}
+              sub={`In ${n0(rkDays)} days. The last one made it ${n0(rkOuting)} outings in the record.`}
               statement={<>
                 In {rk[0].date.slice(0, 4)} the target was a place: reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times, numbering the trips {rk[0].roman} to {rkLast.roman} as they went (Roman numerals, 1 to {rk.length}).
                 It took from {fmtDay(rk[0].date)} to {fmtDay(rkLast.date)}: {rkWalks} trips at a walk and {rk.length - rkWalks} on the run, {n0(rkKm)} km in all.{' '}
@@ -391,7 +396,8 @@ export default function Goals() {
         <StorySection
           id="month-streak"
           eyebrow={`${num()} · The goal nobody set`}
-          title={`${n0(G.streak)} months in a row with an outing. ${n0(G.century.length)} months passed 100 km on foot.`}
+          title={`${n0(G.streak)} months in a row.`}
+          sub={`Every one with an outing. ${n0(G.century.length)} months passed 100 km on foot.`}
           statement={<>
             Nobody set this one. The last calendar month without a single outing was {fmtMonth(`${lastEmpty.key}-01`)}; every month since, {n0(G.streak)} in a row, has had at least one.
             {' '}{n0(G.century.length)} months have passed 100 km on foot, the first in {fmtMonth(`${G.century[0].key}-01`)}.
@@ -435,7 +441,7 @@ export default function Goals() {
         <section className="sgrid" aria-labelledby="gl-book">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · The goal book</p>
-            <h2 id="gl-book" className="section-head__title">Every goal on foot, met or still open.</h2>
+            <h2 id="gl-book" className="section-head__title">Every goal, met or&nbsp;open.</h2>
           </div>
           <ul className="yrecs">
             <GoalCard kicker="Running ring" value={closedYears('run').length} unit="times" label={`closed, best ${unitOf(R, bestOf('run').run.total)}`} sub={list(closedYears('run').map((y) => y.year))} tone="hot" />

@@ -390,9 +390,8 @@ export default function Home() {
           <section className="sgrid" aria-labelledby="streak-title">
             <div className="sgrid__head">
               <p className="eyebrow">How the streak holds</p>
-              <h2 id="streak-title" className="section-head__title">
-                A streak is easier to keep than to&nbsp;restart.
-              </h2>
+              <h2 id="streak-title" className="section-head__title">Keeping beats&nbsp;restarting.</h2>
+              <p className="section-head__sub">Every day out makes the next one more likely. Every day off makes coming back harder.</p>
             </div>
 
             <Reveal as="p" className="sgrid__statement">
@@ -445,9 +444,8 @@ export default function Home() {
             <section className="sgrid" aria-labelledby="work-title">
               <div className="sgrid__head">
                 <p className="eyebrow">Who does the work</p>
-                <h2 id="work-title" className="section-head__title">
-                  The busiest tenth of days carry {pc(work.tenth)}% of the&nbsp;distance.
-                </h2>
+                <h2 id="work-title" className="section-head__title">The busy days do the&nbsp;work.</h2>
+                <p className="section-head__sub">The busiest tenth of days carry {pc(work.tenth)}% of the distance.</p>
               </div>
 
               <Reveal as="p" className="sgrid__statement">
@@ -502,7 +500,8 @@ export default function Home() {
           <StorySection
             id="years-title"
             eyebrow="How each year was made"
-            title="The time per active day held. The split changed."
+            title="The time per day held."
+            sub="What changed is how that time was split between outings."
             statement={<>
               On a day with an activity, the time moving barely changes: between {Math.round(perDayLo)} and{' '}
               {Math.round(perDayHi)} minutes in every year. The split is what moved. In {shapeMulti.year},{' '}
@@ -553,7 +552,7 @@ export default function Home() {
         <hr className="rule" />
         <div className="closer-head">
           <p className="eyebrow">A closer look</p>
-          <h2 className="section-head__title">Six smaller things the data&nbsp;shows.</h2>
+          <h2 className="section-head__title">Six smaller&nbsp;findings.</h2>
         </div>
 
         {/* 1. Where in the world */}
@@ -561,7 +560,8 @@ export default function Home() {
           <StorySection
             id="where-title"
             eyebrow="1 · Where in the world"
-            title={`Two regions of Tanzania do ${pc(climbTop2E)}% of the climbing.`}
+            title="Two regions do the climbing."
+            sub={`Two regions of Tanzania hold ${pc(climbTop2E)}% of the metres climbed.`}
             statement={<>
               Of the {fmtInt(locN)} outings with a GPS start point, {fmtInt(tzN)} are in Tanzania, {pc(tzN / locN)}%. The
               other {fmtInt(awayN)} are spread over {awayRows.length} countries, {pc(awayTop2N / Math.max(1, awayN))}% of
@@ -603,7 +603,8 @@ export default function Home() {
         <StorySection
           id="move-title"
           eyebrow="2 · Every way to move"
-          title={walkLeadYear ? `Walks have outnumbered runs since ${walkLeadYear}.` : 'Walking is the most common outing.'}
+          title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
+          sub={walkLeadYear ? `Walks have outnumbered runs since ${walkLeadYear}.` : 'Walking is the most common outing.'}
           statement={<>
             Of {fmtInt(activityLog.length)} outings, {fmtInt(mixN.walk)} are walks and {fmtInt(mixN.run)} are runs. Trail
             runs and hikes add {fmtInt(mixN.trail)}. Everything off the feet is {pc(mixN.other / mixTot)}%.
@@ -642,7 +643,8 @@ export default function Home() {
         <StorySection
           id="hours-title"
           eyebrow="3 · When the day gets moving"
-          title="Outings start at either end of the working day."
+          title="Both ends of the working day."
+          sub="Most outings start early in the morning or in the evening."
           statement={<>
             Sort every outing by the hour it began. {pc(hourShare(16, 21))}% start between 4 and 9 in the evening, with{' '}
             {fmtHour(peakHour)} the busiest hour. Another {pc(hourShare(0, 10))}% start before 10 in the morning. The middle of
@@ -692,7 +694,8 @@ export default function Home() {
             <StorySection
               id="season-title"
               eyebrow="4 · The year has a season"
-              title={`${MONTH_NAME[dipIdx[0]]} and ${MONTH_NAME[dipIdx[1]]} are the thin months.`}
+              title="Two thin months."
+              sub={`${MONTH_NAME[dipIdx[0]]} and ${MONTH_NAME[dipIdx[1]]} are the quietest months of the year.`}
               statement={<>
                 Take the {fullYears.length === 4 ? 'four' : fullYears.length} full years since the habit caught,{' '}
                 {fullYears[0]} to {fullYears[fullYears.length - 1]}, and count the days with an activity in each month.
@@ -750,7 +753,8 @@ export default function Home() {
             <StorySection
               id="indoor-title"
               eyebrow="5 · Off the treadmill"
-              title="The treadmill is a running habit, and it is fading."
+              title="The treadmill is fading."
+              sub="It has always been a running habit, and it is used less and less."
               statement={<>
                 In {ioYears[0]}, {pc(ioFirst.indoor / ioFirst.n)}% of sessions were indoors. So far in{' '}
                 {ioYears[ioYears.length - 1]} it is {pc(ioLast.indoor / ioLast.n)}%. Nearly all of the indoor time is running:{' '}
@@ -802,7 +806,8 @@ export default function Home() {
         <StorySection
           id="flip-title"
           eyebrow="6 · Walking climbs, running runs"
-          title="Running owns the distance. Walking owns the vertical."
+          title="Two jobs on foot."
+          sub="Running owns the distance. Walking owns the vertical."
           statement={<>
             Running is {pc(fShare('Run', 'dist'))}% of the kilometres on foot and only {pc(fShare('Run', 'elev'))}% of the
             climb, because most of it is flat, on a treadmill. Walking is {pc(fShare('Walk', 'dist'))}% of the kilometres
@@ -860,9 +865,7 @@ export default function Home() {
           <section className="sgrid" aria-labelledby="edges-title">
           <div className="sgrid__head">
             <p className="eyebrow">The far edges</p>
-            <h2 id="edges-title" className="section-head__title">
-              The records hiding in the&nbsp;data.
-            </h2>
+            <h2 id="edges-title" className="section-head__title">Records hiding in the&nbsp;data.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
             Seven years turned these up on their own, no plan required. Four worth pulling out, and each one opens its

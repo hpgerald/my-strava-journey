@@ -153,9 +153,8 @@ export default function Sports() {
         <section className="sgrid yis-top" aria-labelledby="sp-title">
           <div className="sgrid__head">
             <p className="eyebrow">Four sports on foot</p>
-            <h2 id="sp-title" className="section-head__title">
-              Runs covered {pc(share('km', 'Run'))}% of the distance. Walks, trails and hikes did {pc(climbOff)}% of the&nbsp;climbing.
-            </h2>
+            <h2 id="sp-title" className="section-head__title">Runs go far. The rest&nbsp;climb.</h2>
+            <p className="section-head__sub">Runs covered {pc(share('km', 'Run'))}% of the distance. Walks, trails and hikes did {pc(climbOff)}% of the climbing.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             Of {n0(T.all)} outings, {n0(T.n)} were on foot: {n0(S.Run.n)} runs, {n0(S.Walk.n)} walks, {S.TrailRun.n} trail runs and {S.Hike.n} hikes.
@@ -180,7 +179,8 @@ export default function Sports() {
         <StorySection
           id="sp-split"
           eyebrow={`${num()} · Who does what`}
-          title={walkHoursMore ? 'Walks took more hours than runs did.' : 'Runs took the most hours and the most distance.'}
+          title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
+          sub={walkHoursMore ? 'More hours than runs, for less distance.' : 'And the most distance.'}
           statement={<>
             Runs and walks are close in number ({n0(S.Run.n)} against {n0(S.Walk.n)}) and in hours moving ({n0(S.Run.hours)} against {n0(S.Walk.hours)}),
             but a typical run went {k1(S.Run.medKm / S.Walk.medKm)} times as far: {k1(S.Run.medKm)} km at the median against {k1(S.Walk.medKm)} km.
@@ -231,7 +231,8 @@ export default function Sports() {
         <StorySection
           id="sp-mix"
           eyebrow={`${num()} · The mix, year by year`}
-          title={walkLead ? `In ${walkLead.year}, walks went further than runs for the first time.` : 'Runs went further than walks every year.'}
+          title={walkLead ? `In ${walkLead.year}, walks went further.` : 'Runs went further every year.'}
+          sub={walkLead ? 'For the first time, walks covered more distance than runs.' : undefined}
           statement={<>
             Runs carried the record for years: {n0(runPeak.km.Run)} km in {runPeak.year} against {n0(runPeak.km.Walk)} km of walking.
             Since then running has fallen to {n0(latest.km.Run)} km in {LY}{so} while walking has grown to {n0(latest.km.Walk)} km,
@@ -282,7 +283,8 @@ export default function Sports() {
         <StorySection
           id="sp-tread"
           eyebrow={`${num()} · The treadmill`}
-          title={`${pc(treadShare)}% of all running kilometres never left the room.`}
+          title={`${pc(treadShare)}% of running was indoors.`}
+          sub="Those kilometres were run on a treadmill and never left the room."
           statement={<>
             {n0(M.tread.n)} of {n0(S.Run.n)} runs were on a treadmill, {n0(M.tread.km)} km in all. In {peakIndoor.year}, {pc(indoorShare(peakIndoor))}% of running kilometres
             were indoors{firstUnderHalf ? `; ${firstUnderHalf.year} was the first year under half, at ${pc(indoorShare(firstUnderHalf))}%` : ''}{firstUnderHalf && firstUnderHalf.year !== LY ? `, and ${LY}${so} sits at ${pc(indoorShare(latest))}%` : ''}.
@@ -330,7 +332,8 @@ export default function Sports() {
         <StorySection
           id="sp-pace"
           eyebrow={`${num()} · Pace`}
-          title={`A treadmill kilometre took ${pace(M.tread.pace.med)}. A walking one took ${pace(M.walk.pace.med)}.`}
+          title="Each sport has its pace."
+          sub={`A treadmill kilometre took ${pace(M.tread.pace.med)}. A walking one took ${pace(M.walk.pace.med)}.`}
           statement={<>
             Pace here is minutes moving for each kilometre, the middle value of every outing: treadmill {pace(M.tread.pace.med)}, outdoor run {pace(M.road.pace.med)},
             trail run {pace(M.trail.pace.med)}, walk {pace(M.walk.pace.med)} and hike {pace(M.hike.pace.med)}. Outdoors, a typical run took {k1(M.road.pace.med / M.tread.pace.med)} times
@@ -381,7 +384,8 @@ export default function Sports() {
             <StorySection
               id="sp-walks"
               eyebrow={`${num()} · The walks`}
-              title={`The typical walk grew from ${k1(w0.walkMed)} km to ${k1(w1.walkMed)} km.`}
+              title="The typical walk grew."
+              sub={`From ${k1(w0.walkMed)} km to ${k1(w1.walkMed)} km.`}
               statement={<>
                 From {w0.year} to 2024 about {pc(shortEarlyAvg)}% of walks were shorter than 3 km.
                 {' '}The share fell to {walkYears.filter((b) => b.year > 2024).map((b) => `${pc(b.walkShort)}% in ${b.year}${b.year === LY ? so : ''}`).join(' and ')}.
@@ -430,7 +434,8 @@ export default function Sports() {
         <StorySection
           id="sp-long"
           eyebrow={`${num()} · The long days`}
-          title={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? 'The long days moved off the treadmill.' : `${n0(longAll)} outings reached a half marathon.`}
+          title={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? 'Long days moved outdoors.' : `${n0(longAll)} half marathons or more.`}
+          sub={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? `They started on the treadmill. ${n0(longAll)} outings reached a half marathon.` : undefined}
           statement={<>
             A half marathon is 21.1 km. {earlyLong ? `There were ${earlyLong} outings that long up to 2022, ${earlyLong === earlyTread ? 'every one of them' : `${earlyTread} of them`} on a treadmill. ` : ''}
             In {LY}{so} there have been {latest.longN}, and {lastLongOut} of them were outside:{' '}
@@ -476,7 +481,8 @@ export default function Sports() {
         <StorySection
           id="sp-climb"
           eyebrow={`${num()} · The climb`}
-          title={`Hikes climbed ${n0(M.hike.mPerKm)} m for every kilometre; walks climbed ${n0(M.walk.mPerKm)}.`}
+          title="Hikes climb the most."
+          sub={`Hikes climbed ${n0(M.hike.mPerKm)} m for every kilometre. Walks climbed ${n0(M.walk.mPerKm)}.`}
           statement={<>
             Spread over every kilometre each covered: {climbModes.map((k) => (M[k].mPerKm < 0.5 ? `the treadmill none` : `${ofModeName(k)} ${n0(M[k].mPerKm)} m`)).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
             That is why walks, with {pc(share('km', 'Walk'))}% of the distance, did {pc(share('elev', 'Walk'))}% of the climbing{topClimbsOffRoad ? `, and why the ${word(r.climbs.length)} biggest climbs on record were all hikes and trail runs` : ''}.
@@ -519,7 +525,8 @@ export default function Sports() {
         <StorySection
           id="sp-when"
           eyebrow={`${num()} · When`}
-          title={`${pc(M.tread.night)}% of treadmill runs started after 8pm or before 5am.`}
+          title="The treadmill runs at night."
+          sub={`${pc(M.tread.night)}% of treadmill runs started after 8pm or before 5am.`}
           statement={<>
             Each way of moving keeps its own hours. Treadmill runs peak at {fmtH(peakHour('tread'))} and again from 7pm to midnight, {pc(treadEve)}% of them in that late stretch.
             Walks peak at {fmtH(peakHour('walk'))}, with {pc(walkEve)}% between 4 and 7pm. Outdoor runs start at {fmtH(peakHour('road'))} or in the late afternoon.
@@ -569,7 +576,8 @@ export default function Sports() {
         <StorySection
           id="sp-doubles"
           eyebrow={`${num()} · A run and a walk on the same day`}
-          title={`${n0(D.total)} days held a run and a walk. They were usually hours apart.`}
+          title={`${n0(D.total)} run-and-walk days.`}
+          sub="Days that held both a run and a walk. They were usually hours apart."
           statement={<>
             The run came first on {D.runFirst} of the {D.total} days ({pc(D.runFirst / Math.max(1, D.total))}%). From the end of the first outing to the start of the second, the median
             gap was {hm(D.medGap)}; only {word(under30)} pairs were under half an hour apart, while {far8} were 8 hours or more apart, a morning run and an evening walk.
@@ -614,7 +622,8 @@ export default function Sports() {
         <StorySection
           id="sp-effort"
           eyebrow={`${num()} · Effort and reward`}
-          title={`Per hour, ${ofModeName(rated[0])} scored ${n0(M[rated[0]].effortPerHour)} on effort and walks ${n0(M.walk.effortPerHour)}.`}
+          title={`${cap(ofModeName(rated[0]))} work hardest.`}
+          sub={`Per hour, ${ofModeName(rated[0])} scored ${n0(M[rated[0]].effortPerHour)} on effort and walks ${n0(M.walk.effortPerHour)}.`}
           statement={<>
             Relative effort is Strava’s score of how hard the heart worked, built from heart rate. Counted per hour moving, the order is{' '}
             {rated.map((k) => `${ofModeName(k)} (${n0(M[k].effortPerHour)})`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
@@ -659,7 +668,8 @@ export default function Sports() {
         <StorySection
           id="sp-maths"
           eyebrow={`${num()} · The maths of the feet`}
-          title="The longer the treadmill run, the quicker each kilometre."
+          title="Longer runs, quicker km."
+          sub="The longer the treadmill run, the quicker each kilometre."
           statement={<>
             A correlation measures how two things move together, from −1 to 1, with 0 meaning no link. Across {n0(F.n)} treadmill runs, distance against pace gives {F.r.toFixed(2).replace('-', '−')}:
             a {strength(F.r)} pull, longer runs going quicker. The fitted line takes {secPerKm} seconds off each kilometre for every extra kilometre run.
@@ -709,7 +719,7 @@ export default function Sports() {
         <section className="sgrid" aria-labelledby="sp-edges">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · The far edges</p>
-            <h2 id="sp-edges" className="section-head__title">The biggest day of each sport.</h2>
+            <h2 id="sp-edges" className="section-head__title">Each sport&rsquo;s biggest&nbsp;day.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
             The longest treadmill run was {k1(M.tread.longest.km)} km, a full marathon without leaving the room. Outdoors the longest run was {k1(M.road.longest.km)} km and the longest
@@ -733,7 +743,7 @@ export default function Sports() {
         <section className="sgrid" aria-labelledby="sp-each">
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · Each sport on its own</p>
-            <h2 id="sp-each" className="section-head__title">Open any sport for its own page.</h2>
+            <h2 id="sp-each" className="section-head__title">Open any&nbsp;sport.</h2>
           </div>
           <ul className="sp-cards">
             {SPORTS.map((s) => (
