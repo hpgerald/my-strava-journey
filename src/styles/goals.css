@@ -72,7 +72,7 @@
 .stopb__sw { width: 16px; height: 10px; border-radius: 2px; background: repeating-linear-gradient(135deg, var(--grey-45) 0 2px, transparent 2px 4px); border: 1px solid var(--grey-45); }
 .stopb__stop { position: absolute; top: 0; bottom: 0; left: calc(100% * var(--v0) * var(--hb-max)); width: calc(100% * var(--v) * var(--hb-max)); background: repeating-linear-gradient(135deg, var(--grey-45) 0 2px, transparent 2px 4px); border: 1px solid var(--grey-45); border-left: 0; border-radius: 0 2px 2px 0; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.8s); }
 .stopb.is-in .stopb__stop { opacity: 1; }
-.stopb .hb__val { transform: translate(10px, -50%); }
+.stopb .hb__val { translate: 10px -50%; }
 
 /* ---- the tally ---- */
 .tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-3); padding-top: var(--sp-2); }

@@ -28,12 +28,10 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria })
   const grid = []
   for (let g = 0; g <= top + 1e-9; g += 0.1) grid.push(Math.round(g * 10) / 10)
   const r0 = narrow ? 6 : 7.5
-  // a value sits beside its dot on the outer side; if that would run into the
-  // zero line it moves above the dot instead
-  const valPos = (cx, leftSide, gap, cy) => {
-    if (leftSide && cx - gap - 30 < m.l + 2) return { x: cx, y: cy - gap - 4, textAnchor: 'middle' }
-    return leftSide ? { x: cx - gap, y: cy + 4, textAnchor: 'end' } : { x: cx + gap, y: cy + 4, textAnchor: 'start' }
-  }
+  // a value sits beside its dot on the outer side. When the left one would run
+  // into the zero line it moves to the right, after the other value, on the
+  // same baseline, so every row keeps one line of figures.
+  const estW = (s) => s.length * 7
 
   return (
     <div ref={ref} className="pbars">
@@ -70,8 +68,21 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria })
                 <circle className="pbars__dot" cx={xa} cy={cy} r={r0} fill="var(--paper)" stroke="var(--grey-55)" strokeWidth="2.25" />
                 <circle className="pbars__dot pbars__dot--b" cx={xb} cy={cy} r={r0 + 0.5} fill="var(--accent)" />
                 {/* values sit outside the pair, never between the two dots */}
-                <text {...valPos(xa, xa < xb, r0 + 6, cy)} className="pbars__val">{pc(r.a)}</text>
-                <text {...valPos(xb, xb < xa, r0 + 7, cy)} className="pbars__val pbars__val--b">{pc(r.b)}</text>
+                {(() => {
+                  const aLeft = xa < xb
+                  const left = aLeft ? { v: pc(r.a), cls: 'pbars__val', x: xa } : { v: pc(r.b), cls: 'pbars__val pbars__val--b', x: xb }
+                  const right = aLeft ? { v: pc(r.b), cls: 'pbars__val pbars__val--b' } : { v: pc(r.a), cls: 'pbars__val' }
+                  const gR = r0 + 7, rx = hi + gR
+                  const fits = left.x - gR - estW(left.v) >= m.l + 4
+                  return (
+                    <>
+                      <text x={rx} y={cy + 4} textAnchor="start" className={right.cls}>{right.v}</text>
+                      {fits
+                        ? <text x={left.x - gR} y={cy + 4} textAnchor="end" className={left.cls}>{left.v}</text>
+                        : <text x={rx + estW(right.v) + 8} y={cy + 4} textAnchor="start" className={left.cls}>{left.v}</text>}
+                    </>
+                  )
+                })()}
                 <text x={W - 2} y={cy + 5} textAnchor="end" className={`pbars__gap${up ? ' pbars__gap--up' : ''}`}>{pts(r.b - r.a)}</text>
               </g>
             )

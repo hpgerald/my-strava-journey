@@ -100,7 +100,16 @@
 
 /* ---- the moment ---- */
 .ymom { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
-@media (min-width: 52rem) { .ymom { grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: var(--sp-8); } }
+/* the title runs the full width on one line; the words and the figure share the
+   row beneath it on two equal columns */
+@media (min-width: 52rem) {
+  .ymom { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "k k" "t t" "b f"; align-items: start; gap: 0 var(--grid-gap); }
+  .ymom__head { display: contents; }
+  .ymom__kicker { grid-area: k; }
+  .ymom__title { grid-area: t; }
+  .ymom__body { grid-area: b; }
+  .ymom__fig { grid-area: f; align-self: center; }
+}
 .ymom__kicker { color: var(--accent-ink); }
 .ymom__title { font-size: var(--fs-2xl); line-height: 1.04; letter-spacing: var(--tr-tight); margin: var(--sp-2) 0 var(--sp-3); }
 .ymom__body { color: var(--fg-muted); font-size: var(--fs-md); line-height: 1.5; margin: 0; }
@@ -232,3 +241,11 @@
 .ycal__sw.is-on { background: color-mix(in srgb, var(--accent) 62%, var(--paper)); }
 .ycal__sw.is-streak { background: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .ycal__month { opacity: 1 !important; transition: none !important; } }
+
+/* phones: the moment's title keeps to one line like every section title, and
+   its figures sit three across on one row */
+@media (max-width: 47.999rem) {
+  .ymom__title { font-size: clamp(1.3rem, 0.85rem + 2.4vw, 1.65rem); }
+  .ymom__chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3); }
+  .ymom__chip .ymom__big { font-size: clamp(1.5rem, 1rem + 2.4vw, 2rem); }
+}

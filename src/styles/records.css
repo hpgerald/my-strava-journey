@@ -40,7 +40,7 @@
 .chr__mark { position: absolute; top: 50%; left: calc(100% * var(--v) * var(--hb-max)); width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--paper); z-index: 1;
   opacity: 0; transition: opacity 0.4s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.9s); }
 .chr.is-in .chr__mark { opacity: 1; }
-.chr .hb__val { transform: translate(14px, -50%); }
+.chr .hb__val { translate: 14px -50%; }
 .chr__exp { color: var(--fg-faint); font-weight: 400; }
 
 /* ---- firsts, as bars from the first outing ---- */

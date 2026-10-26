@@ -885,7 +885,7 @@ text.chart-panel-title {
 /* ---- Compact index (Home exit): a card grid, not one long column ------- */
 .index--compact { border-top: 0; display: grid; grid-template-columns: 1fr; gap: var(--sp-4) var(--grid-gap); }
 @media (min-width: 40rem) { .index--compact { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 64rem) { .index--compact { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 64rem) { .index--compact { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .index--compact .index__item { border: 1px solid var(--rule-faint); border-top: 2px solid var(--rule); border-radius: 4px; }
 .index--compact .index__link { padding: var(--sp-4); grid-template-columns: 2.4rem 1fr; gap: var(--sp-3); align-items: start; height: 100%; }
 .index--compact .index__link:hover, .index--compact .index__link:focus-visible { padding-left: var(--sp-4); }
@@ -1199,8 +1199,16 @@ text.chart-panel-title {
   .odds__cell { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
-/* chart slot inside a section figure: shorter charts sit centred in the shared height */
-.sgrid__chart { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+/* chart slot inside a section figure: both charts hang from the same line under
+   their titles; a matrix stretches to the height of the chart beside it */
+.sgrid__chart { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; }
+.sgrid__chart > .tmx { flex: 1; display: flex; flex-direction: column; }
+.sgrid__chart > .tmx .tmx__grid { flex: 1; grid-template-rows: auto 1fr 1fr; }
+/* bar lists share one row height and spread to the height of the chart beside
+   them, so two lists side by side line up row for row */
+.sgrid__chart > .hb { flex: 1; display: flex; flex-direction: column; }
+.sgrid__chart > .hb > .hb__wrap { flex: 1; display: flex; flex-direction: column; }
+.sgrid__chart > .hb > .hb__list, .sgrid__chart > .hb > .hb__wrap > .hb__list { flex: 1; grid-auto-rows: 1fr; max-height: 34rem; }
 .sgrid__chart > * { width: 100%; }
 .odds__u { font-size: 0.5em; font-weight: 700; margin-left: 0.08em; letter-spacing: 0; }
 .closer-head { padding-block: var(--sp-6) 0; }
@@ -2459,7 +2467,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 
 /* ---- Home: GeoBubbles (where in the world) -------------------------- */
 .geo { position: relative; }
-.geo__grid { display: flex; gap: var(--sp-6); align-items: center; }
+.geo__grid { display: flex; gap: var(--sp-6); align-items: flex-start; }
 .geo__grid.is-narrow { flex-direction: column; align-items: stretch; gap: var(--sp-5); }
 .geo__home { flex: 0 0 auto; text-align: center; }
 .geo__grid.is-narrow .geo__home { align-self: center; }

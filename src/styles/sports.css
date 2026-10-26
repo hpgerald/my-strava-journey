@@ -129,7 +129,7 @@
 .hb__track { position: relative; height: 26px; }
 .hb__bar { width: calc(100% * var(--v) * var(--hb-max)); position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
 .hb.is-in .hb__bar { transform: scaleX(1); }
-.hb__val { left: calc(100% * var(--v) * var(--hb-max)); position: absolute; top: 50%; transform: translate(8px, -50%); font-size: var(--fs-xs); white-space: nowrap; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.6s); font-variant-numeric: tabular-nums; }
+.hb__val { left: calc(100% * var(--v) * var(--hb-max)); position: absolute; top: 50%; translate: 8px -50%; font-size: var(--fs-xs); white-space: nowrap; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.6s); font-variant-numeric: tabular-nums; }
 .hb.is-in .hb__val { opacity: 1; }
 
 /* ---- fit scatter ---- */
