@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
+import { useBook } from './BookContext.js'
 
 // Shared page frame: skip link, sticky nav, main landmark, footer.
 // It also drives the site-wide scroll-reveal: every chart figure, section header
@@ -8,9 +9,10 @@ import Footer from './Footer.jsx'
 // Year in Sport report runs its own choreography, so anything inside it is left
 // alone. Honours prefers-reduced-motion (nothing is hidden at all in that case).
 export default function Layout({ children }) {
+  const book = useBook()
   const mainRef = useRef(null)
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || book) return
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const root = mainRef.current
     if (reduce || !root || typeof IntersectionObserver === 'undefined') return
@@ -24,7 +26,7 @@ export default function Layout({ children }) {
     const scan = () => {
       const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges')
       nodes.forEach((el) => {
-        if (el.dataset.areveal || el.closest('.yis-report')) return
+        if (el.dataset.areveal || el.closest('.yis-report') || el.closest('.book')) return
         el.dataset.areveal = '1'
         el.classList.add('areveal')
         io.observe(el)
@@ -36,6 +38,9 @@ export default function Layout({ children }) {
     mo.observe(root, { childList: true, subtree: true })
     return () => { io.disconnect(); mo.disconnect() }
   }, [])
+
+  // inside My Book a page is typeset as a chapter, so it brings no site chrome
+  if (book) return <>{children}</>
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useBook } from './BookContext.js'
 
 // Shared scroll-reveal + count-up helpers for the animated report pages.
 // All of them degrade to the final (visible, full-value) state under
@@ -6,10 +7,12 @@ import { useState, useEffect, useRef } from 'react'
 // is ever stranded invisible.
 
 export function usePrefersReducedMotion() {
-  const [reduce, setReduce] = useState(false)
+  const book = useBook()
+  const [reduce, setReduce] = useState(!!book)
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (book) { setReduce(true); return }
     setReduce(mq.matches)
     const on = () => setReduce(mq.matches)
     mq.addEventListener('change', on)

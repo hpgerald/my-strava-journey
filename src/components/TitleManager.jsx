@@ -10,6 +10,7 @@ const STATIC = {
   '/where': 'Where',
   '/timeline': 'Timeline',
   '/what-it-means': 'What It Means',
+  '/book': 'My Book',
   '/data': 'The Data',
   '/about': 'About',
   '/design': 'Design System',

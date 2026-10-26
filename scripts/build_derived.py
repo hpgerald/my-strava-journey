@@ -139,6 +139,7 @@ nav=[
  ["06","Timeline","In order. First upload to now.","/timeline","timeline","authored"],
  ["07","Goals","The targets, year by year.","/goals","dashboard","authored"],
  ["08","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
+ ["09","My Book","The whole story, as a book.","/book","book","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)
 

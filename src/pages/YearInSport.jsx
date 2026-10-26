@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
+import { useBook } from '../components/BookContext.js'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import OutingSky from '../charts/OutingSky.jsx'
@@ -61,7 +62,8 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, text = 
   )
 }
 
-export default function YearInSport() {
+export default function YearInSport({ year: bookYear } = {}) {
+  const book = useBook()
   const activities = useTable('activities')
   const activityGeo = useTable('activity_geo')
   const { prev, next } = useSectionPaging('/numbers')
@@ -77,7 +79,8 @@ export default function YearInSport() {
     const y = Number(yearParam)
     setPicked(years.includes(y) ? y : null)
   }, [yearParam, years])
-  const activeYear = picked ?? latest
+  const activeYear = bookYear ?? picked ?? latest
+  const idp = (k) => (book ? `${k}-${activeYear}` : k)
 
   const geoByKey = useMemo(() => {
     const m = {}
@@ -184,20 +187,20 @@ export default function YearInSport() {
       prev={prev}
       next={next}
     >
-      <div ref={pickerRef} className="yis-picker" role="group" aria-label="Choose a year" onKeyDown={onPickerKey}>
+      {!book && <div ref={pickerRef} className="yis-picker" role="group" aria-label="Choose a year" onKeyDown={onPickerKey}>
         {years.map((y) => (
           <button key={y} type="button" className={`yis-picker__yr${y === Y ? ' is-on' : ''}`} aria-pressed={y === Y} onClick={() => setPicked(y)}>
             {y}
           </button>
         ))}
-      </div>
+      </div>}
 
       <div key={Y} className="yis-report">
         {/* ===== the year in one view ===== */}
-        <section className="sgrid yis-top" aria-labelledby="yis-title">
+        <section className="sgrid yis-top" aria-labelledby={idp('yis-title')}>
           <div className="sgrid__head">
             <p className="eyebrow">{Y}{isPartial ? ' · still running' : ''}</p>
-            <h2 id="yis-title" className="section-head__title">{theme}.</h2>
+            <h2 id={idp('yis-title')} className="section-head__title">{theme}.</h2>
           </div>
           {YEAR_REPORT[Y] && <Reveal as="p" className="sgrid__statement">{YEAR_REPORT[Y](s)}</Reveal>}
           <OddsRow
@@ -216,7 +219,7 @@ export default function YearInSport() {
         {/* ===== 1. month by month ===== */}
         <hr className="rule rule--faint" />
         <StorySection
-          id="yis-months"
+          id={idp('yis-months')}
           eyebrow={`${num()} · Month by month`}
           title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
@@ -246,7 +249,7 @@ export default function YearInSport() {
           <>
             <hr className="rule rule--faint" />
             <StorySection
-              id="yis-mix"
+              id={idp('yis-mix')}
               eyebrow={`${num()} · How it moved`}
               title={`${lead[0]} led ${Y}.`}
               sub={`I logged ${lead[1]} of them, against ${lead[3]} ${lead[2]}.`}
@@ -278,7 +281,7 @@ export default function YearInSport() {
           <>
             <hr className="rule rule--faint" />
             <StorySection
-              id="yis-hours"
+              id={idp('yis-hours')}
               eyebrow={`${num()} · When it happened`}
               title={evening >= morning ? 'The evenings led.' : 'The mornings led.'}
               sub={evening >= morning ? `${pc(evening)}% of my outings started between 4 and 9pm.` : `${pc(morning)}% of my outings started before 10am.`}
@@ -317,7 +320,7 @@ export default function YearInSport() {
         {/* ===== 4. every day of the year ===== */}
         <hr className="rule rule--faint" />
         <StorySection
-          id="yis-days"
+          id={idp('yis-days')}
           eyebrow={`${num()} · Every day of the year`}
           title={`Out on ${pc(pctDays)}% of days${so}.`}
           statement={<>
@@ -381,7 +384,7 @@ export default function YearInSport() {
           <>
             <hr className="rule rule--faint" />
             <StorySection
-              id="yis-dist"
+              id={idp('yis-dist')}
               eyebrow={`${num()} · The typical outing`}
               title={`The usual outing: ${s.medianFoot.toFixed(1)} km.`}
               statement={<>
@@ -413,7 +416,7 @@ export default function YearInSport() {
           <>
             <hr className="rule rule--faint" />
             <StorySection
-              id="yis-maths"
+              id={idp('yis-maths')}
               eyebrow={`${num()} · The maths of ${Y}`}
               title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
               sub={r.restDays === 0 ? undefined : `A day out led to another ${pc(r.p11)}% of the time.`}
@@ -459,10 +462,10 @@ export default function YearInSport() {
 
         {/* ===== 7. the far edges ===== */}
         <hr className="rule rule--faint" />
-        <section className="sgrid" aria-labelledby="yis-edges">
+        <section className="sgrid" aria-labelledby={idp('yis-edges')}>
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · The far edges</p>
-            <h2 id="yis-edges" className="section-head__title">The biggest days of {Y}.</h2>
+            <h2 id={idp('yis-edges')} className="section-head__title">The biggest days of {Y}.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
             {s.biggestFoot ? `My furthest outing on foot was ${s.biggestFoot.val.toFixed(1)} km in ${fmtMonth(s.biggestFoot.date)}. ` : ''}
@@ -487,7 +490,7 @@ export default function YearInSport() {
           <>
             <hr className="rule rule--faint" />
             <StorySection
-              id="yis-where"
+              id={idp('yis-where')}
               eyebrow={`${num()} · Where it happened`}
               title={r.countries.length > 1 ? `${word(r.countries.length)[0].toUpperCase() + word(r.countries.length).slice(1)} countries in ${Y}.` : `All of ${Y} in Tanzania.`}
               statement={<>
@@ -520,7 +523,7 @@ export default function YearInSport() {
         {/* ===== 9. against the other years ===== */}
         <hr className="rule rule--faint" />
         <StorySection
-          id="yis-rank"
+          id={idp('yis-rank')}
           eyebrow={`${num()} · Against the other years`}
           title={`${ORD[rankN - 1][0].toUpperCase() + ORD[rankN - 1].slice(1)} of ${years.length} years.`}
           sub={`${Y} ranks ${ORD[rankN - 1]} of ${years.length} years for outings.`}
@@ -568,14 +571,14 @@ export default function YearInSport() {
           <YearMoment year={Y} stats={s} />
         </section>
 
-        <Reveal as="section" className="yis-cta">
+        {!book && <Reveal as="section" className="yis-cta">
           <p>That was {Y}.</p>
           <div className="yis-cta__row">
             {years.includes(Y - 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y - 1); scrollToTop() }}>&larr; {Y - 1}</button>}
             <button type="button" className="yis-cta__btn" onClick={scrollToTop}>Pick another year &uarr;</button>
             {years.includes(Y + 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y + 1); scrollToTop() }}>{Y + 1} &rarr;</button>}
           </div>
-        </Reveal>
+        </Reveal>}
       </div>
     </DetailFrame>
   )

@@ -9,7 +9,7 @@ function cellStyle(p, active, delay) {
   const bg = active
     ? `color-mix(in srgb, var(--accent) ${Math.round(12 + p * 80)}%, var(--paper))`
     : `color-mix(in srgb, var(--grey-55) ${Math.round(10 + p * 55)}%, var(--paper))`
-  const color = active && p > 0.55 ? 'var(--paper)' : 'var(--ink)'
+  const color = 'var(--ink)'
   return { background: bg, color, transitionDelay: `${delay}ms` }
 }
 

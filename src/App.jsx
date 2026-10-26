@@ -11,6 +11,7 @@ import PlaceDetail from './pages/PlaceDetail.jsx'
 import Timeline from './pages/Timeline.jsx'
 import Goals from './pages/Goals.jsx'
 import WhatItMeans from './pages/WhatItMeans.jsx'
+import Book from './pages/Book.jsx'
 import Data from './pages/Data.jsx'
 import About from './pages/About.jsx'
 import NotFound from './pages/NotFound.jsx'
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/goals" element={<Goals />} />
         <Route path="/what-it-means" element={<WhatItMeans />} />
+        <Route path="/book" element={<Book />} />
 
         {/* Data + About (Phase 8) */}
         <Route path="/data" element={<Data />} />

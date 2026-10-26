@@ -58,6 +58,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | 06 | **Timeline** | The whole record as one chronicle: milestones every 250 outings, the firsts on foot, trips abroad and new regions, every pair of shoes, the streaks and silences, the pace of the habit, and every moment written out year by year. |
 | 07 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year: each year raced against the calendar, the rings year by year, the odds that the open climbing ring closes (a resampling of the year's days), the Kilimanjaro Half with all editions raced at once, the fifty trips to Ras Kilomoni as a tally, the unbroken run of months, and a goal book. |
 | 08 | **What It Means** | The record read back as lessons, in the first person: what the habit costs in time (a clock per year), counting days before kilometres, the small days that kept it going, the weekly floor, how long days arrive in blocks, and the two levers of a yearly total. |
+| 09 | **My Book** | The whole site set as one sports memoir, *Showing Up*: cover, contents, prologue, five parts and an epilogue, with every chapter drawn live from the data. Prints as an A4 book; `scripts/book_pdf.mjs` renders the downloadable PDF into `public/book/` (re-run it after each data refresh). |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
 

@@ -213,7 +213,7 @@ a { color: inherit; text-decoration: none; }
 .nav__burger.is-open span:nth-child(3) { top: 4.75px; transform: rotate(-45deg); }
 
 /* Collapse to a hamburger + dropdown until the full row of links fits (~72rem) */
-@media (max-width: 71.999rem) {
+@media (max-width: 76.999rem) {
   .nav__inner { align-items: center; }
   .nav__toggle { display: inline-flex; }
   .nav__nav {

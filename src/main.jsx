@@ -14,6 +14,7 @@ import './styles/where.css'
 import './styles/timeline.css'
 import './styles/goals.css'
 import './styles/meaning.css'
+import './styles/book.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
