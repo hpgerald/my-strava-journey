@@ -1,6 +1,6 @@
 region,activities,distance_km,moving_time_h,elevation_m,first_activity_date,last_activity_date,top_sport,source_page
 Dodoma,375,1861.5,428.4,12178,2021-07-18,2026-10-14,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-Dar es Salaam,233,1513.9,339.6,5301,2019-10-12,2026-10-03,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+Dar es Salaam,236,1535.1,344.4,5356,2019-10-12,2026-10-25,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 Kilimanjaro,233,1462.2,350,30098,2021-07-06,2026-09-13,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 Morogoro,85,432.6,128.2,21238,2021-07-25,2026-07-05,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 Iringa,40,102.5,32,1293,2022-09-26,2025-08-12,Walk,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city

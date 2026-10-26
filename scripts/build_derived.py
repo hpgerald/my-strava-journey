@@ -21,6 +21,10 @@ def write(name,header,rows):
 yearly={r['year']:r for r in load('yearly_totals.csv')}
 re_year={r['year']:r for r in load('relative_effort_by_year.csv')}
 y0,y1="2019","2026"
+# the latest month on record in y1, so the comparison label stays true each refresh
+_MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+_last=max((r['month'] for r in load('monthly_totals.csv') if r['month'].startswith(y1)),default=f"{y1}-12")
+y1_span=f"Jan-{_MON[int(_last[5:7])-1]}"
 
 # ---------- comparisons.csv (then vs now) ----------
 def cmp_row(metric,cat,dim,unit,b,t,plain,src):
@@ -33,7 +37,7 @@ def cmp_row(metric,cat,dim,unit,b,t,plain,src):
     else:
         f=b/t
         direction=f"Reduce x{round(f,1)}" if f<=100 else "Sharp drop"
-    return [metric,cat,dim,f"{y0} (Aug-Dec)",round(b,1),f"{y1} (Jan-Aug)",round(t,1),unit,direction,plain,src]
+    return [metric,cat,dim,f"{y0} (Aug-Dec)",round(b,1),f"{y1} ({y1_span})",round(t,1),unit,direction,plain,src]
 
 comp=[]
 # --- Volume / terrain (from Yearly Trends) ---
