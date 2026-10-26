@@ -107,6 +107,7 @@ function TitlePage({ F }) {
         <p>This edition covers every activity I logged on Strava from {fmtDay(F.firstISO)} to {fmtDay(F.lastISO)}: {n0(F.n)} of them.</p>
         <p>Every number in this book is computed from that log, and every chart is drawn from the same rows. Distance and climb count my four sports on foot: runs, walks, trail runs and hikes. Activity names and exact locations were removed before publishing.</p>
         <p>This book is the website My Strava Journey set as one volume. On the site it is rebuilt from the data every time the page opens; the PDF is printed again whenever the data is refreshed, so each edition matches the site on the day it was made.</p>
+        <p>How the book was built is told in Annex A, and how to reach me is on the last page before the back cover.</p>
       </div>
     </section>
   )
@@ -129,7 +130,9 @@ function Contents() {
           </li>
         ))}
         <li className="bk-toc__front"><a href="#/book" onClick={jump('bk-epilogue')}>Epilogue</a></li>
-        <li className="bk-toc__front"><a href="#/book" onClick={jump('bk-notes')}>About the data</a></li>
+        <li className="bk-toc__front"><a href="#/book" onClick={jump('bk-made')}><span className="bk-toc__an">Annex A</span>How this book was made</a></li>
+        <li className="bk-toc__front"><a href="#/book" onClick={jump('bk-notes')}><span className="bk-toc__an">Annex B</span>About the data</a></li>
+        <li className="bk-toc__front"><a href="#/book" onClick={jump('bk-contact')}>Get in touch</a></li>
       </ol>
     </section>
   )
@@ -204,9 +207,94 @@ function Epilogue({ F }) {
   )
 }
 
+// the weekly pipeline, step by step, as drawn in Annex A
+const PIPE = [
+  ['Strava', 'Every outing I record lands in my Strava account.'],
+  ['MCP pull', 'Each week the latest activities come out through an MCP server, as one raw CSV.'],
+  ['Build', 'Python scripts rebuild the activity log and every table derived from it.'],
+  ['Privacy', 'Names, Strava IDs and exact GPS points are removed. Places stay at country and region.'],
+  ['Checks', 'Encoding, data rules, tests, accessibility and phone layouts are checked.'],
+  ['Site', 'The React site reads the tables in the browser and draws every chart live.'],
+  ['Book', 'The same pages print as this book, and a fresh PDF is made with each refresh.'],
+]
+const STACK = [
+  ['Data source', 'My Strava activity history, pulled weekly through an MCP server'],
+  ['Pipeline', 'Python, standard library only: rebuild, foot-only totals, derived tables, privacy pass'],
+  ['Data store', `${32} CSV tables, the single source of truth for every number`],
+  ['Site', 'React 18 and Vite 5, React Router with hash links, PapaParse to read the CSVs'],
+  ['Charts', 'Drawn by hand in SVG and canvas, without a chart library'],
+  ['Type and colour', 'Archivo and Inter on a Swiss grid, one accent colour, Strava orange, kept for data'],
+  ['Quality', 'Data validation, tests, an axe accessibility audit and layout checks at phone widths'],
+  ['Hosting', 'GitHub Pages, from the repository github.com/hpgerald/my-strava-journey'],
+  ['Book', 'The site printed through headless Chromium to an A4 PDF'],
+]
+
+function HowMade({ F }) {
+  return (
+    <section className="bk-page bk-made" id="bk-made" aria-labelledby="bk-made-t">
+      <p className="bk-annex">Annex A</p>
+      <h2 id="bk-made-t" className="bk-head">How this book was made</h2>
+      <p className="bk-lead">
+        This book started as a website, My Strava Journey: my Strava history laid out so anyone can read it. Nothing in it is typed in by hand. Every figure is computed from my activity log, and the log is refreshed every week.
+      </p>
+      <div className="bk-made__cols">
+        <div className="bk-prose">
+          <p>
+            Each week I pull my latest activities from Strava through an MCP server. MCP, the Model Context Protocol, is an open standard that lets an AI assistant connect to outside tools and data; here it connects to my Strava account and returns every activity as one raw CSV file.
+          </p>
+          <p>
+            From that file a set of Python scripts rebuilds everything: the activity log, the totals on foot, the places, the streaks, the records and the tables behind each chart. A privacy pass removes activity names, Strava IDs and exact GPS points before anything is published. Then the checks run, and the site goes live with the new numbers. This edition holds {n0(F.n)} activities, up to {fmtDay(F.lastISO)}.
+          </p>
+          <p>
+            I built it with Claude, Anthropic&rsquo;s AI model, as a coding and analysis partner. I set the questions, the design and the voice; Claude wrote the code, mined the data and checked each number against the log before it went into the text.
+          </p>
+        </div>
+        <dl className="bk-stack">
+          {STACK.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+      </div>
+      <h3 className="bk-made__h">The weekly pipeline</h3>
+      <ol className="bk-pipe">
+        {PIPE.map(([k, v], i) => (
+          <li key={k}><span className="bk-pipe__n">{String(i + 1).padStart(2, '0')}</span><b>{k}</b><span>{v}</span></li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+const CONTACTS = [
+  ['Email', 'hpgerald@gmail.com', 'mailto:hpgerald@gmail.com'],
+  ['Phone', '+255 763 453 400', 'tel:+255763453400'],
+  ['LinkedIn', 'linkedin.com/in/gtesha', 'https://www.linkedin.com/in/gtesha/'],
+  ['Strava', 'strava.com/athletes/gtesha', 'https://www.strava.com/athletes/gtesha'],
+  ['GitHub', 'github.com/hpgerald', 'https://github.com/hpgerald'],
+  ['Website', 'hpgerald.github.io/my-strava-journey', 'https://hpgerald.github.io/my-strava-journey/'],
+]
+
+function Contact() {
+  return (
+    <section className="bk-page bk-contact" id="bk-contact" aria-labelledby="bk-contact-t">
+      <p className="bk-annex">The author</p>
+      <h2 id="bk-contact-t" className="bk-contact__t">Get in touch.</h2>
+      <p className="bk-lead">
+        I&rsquo;m Gerald Tesha. I work in monitoring, evaluation and data, and this book is what I do with my own numbers.
+        If you&rsquo;d like a project like this built from your own data, want to work together, or would like to feature this story, I&rsquo;d be glad to hear from you.
+      </p>
+      <dl className="bk-contact__list">
+        {CONTACTS.map(([k, v, href]) => (
+          <div key={k}><dt>{k}</dt><dd><a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>{v}</a></dd></div>
+        ))}
+      </dl>
+      <p className="bk-contact__note">Strava is a trademark of Strava, Inc. This is a personal project, not affiliated with or endorsed by Strava.</p>
+    </section>
+  )
+}
+
 function Notes({ glossary }) {
   return (
     <section className="bk-page bk-notes" id="bk-notes" aria-labelledby="bk-notes-t">
+      <p className="bk-annex">Annex B</p>
       <h2 id="bk-notes-t" className="bk-head">About the data</h2>
       <div className="bk-notes__cols">
         <div>
@@ -214,8 +302,6 @@ function Notes({ glossary }) {
           <p>Every activity comes from my Strava export: date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and personal records. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
           <p>Distance and climb count the four sports on foot: runs, walks, trail runs and hikes. Rides, the gym and everything else count as outings and days out, but add no distance or climb.</p>
           <p>A treadmill session is one Strava marks as a trainer session. Those have no GPS, so they never appear on a map and set almost no segment records.</p>
-          <h3>Colophon</h3>
-          <p>Set in Archivo and Inter on a Swiss grid, with one accent colour, Strava orange, kept for the data. Charts are drawn by hand in SVG and canvas, without a chart library.</p>
         </div>
         <dl className="bk-gloss">
           {glossary.filter((g) => !SKIP_TERMS.has(g.term)).map((g) => (
@@ -317,7 +403,9 @@ export default function Book() {
           <WhatItMeans />
 
           <Epilogue F={F} />
+          <HowMade F={F} />
           <Notes glossary={glossary} />
+          <Contact />
           <section className="bk-back" aria-label="Back cover">
             <p className="bk-back__q">{n0(F.n)} outings. {n0(F.footKm)} km on foot. One habit.</p>
             <p className="bk-back__a">{BOOK_TITLE} · Gerald Tesha</p>
