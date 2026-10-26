@@ -5,7 +5,7 @@ The CSVs are the single source of truth for the site. No figure was invented; wh
 value was unavailable it was left blank and logged here.
 
 Generated for Phase 1 of the "my-strava-journey" build.
-Coverage: 2019-08-17 through 2026-08-24 (1,996 activities). Workbook last refreshed 2026-08-25.
+Coverage: 2019-08-17 through 2026-10-25 (2,061 activities). Last refreshed 2026-10-26 from a fresh Strava export.
 
 ---
 
@@ -28,14 +28,14 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 
 | File | Source | Confidence | Notes |
 |---|---|---|---|
-| activities.csv | Activity Log | High | Full 1,996-row log, verbatim. `None` cells blanked. |
+| activities.csv | Activity Log | High | Full 2,061-row log, verbatim. `None` cells blanked. |
 | lifetime_totals.csv | Overview | High | 10 headline figures. |
-| sport_breakdown.csv | Overview | High | 15 sports; sums to 1,996 activities. |
+| sport_breakdown.csv | Overview | High | 15 sports; sums to 2,061 activities. |
 | yearly_totals.csv | Yearly Trends | High | 2019 & 2026 are partial years (see §4). |
 | yearly_by_sport.csv | Yearly Trends | High | Long format; zero-distance cells dropped. |
 | monthly_totals.csv | Monthly Trends | High | Only months with activity appear. |
 | pr_longest / pr_elevation.csv | Personal Records | High | Top-10 tables. |
-| pr_activities.csv | Personal Records | High | 120 activities with PR count > 0. |
+| pr_activities.csv | Personal Records | High | 125 activities with PR count > 0. |
 | hr_zones / power_zones / pace_zones.csv | Zones & Effort | High | Zone **boundaries** only (see §3). |
 | relative_effort_by_year.csv | Zones & Effort | High | |
 | gear.csv | Gear | High | Two distance columns differ by design (see §3). |
@@ -92,7 +92,7 @@ Saudi Arabia 2, Rwanda 2, United Kingdom 1 — and 17 Tanzanian regions
 Manyara, Mbeya, Mara, Mwanza, Njombe, Tanga, Rukwa, Singida).
 
 **Limits, logged honestly:**
-- **880 of 1,996 activities have no GPS** (indoor/trainer sessions, or GPS off). They cannot
+- **906 of 2,061 activities have no GPS** (indoor/trainer sessions, or GPS off). They cannot
   be placed and are bucketed as **"Indoor / no GPS"** in `countries.csv`; they are excluded
   from `tanzania_regions.csv`. So the geographic totals describe the **1,116 GPS activities**,
   not all 1,996.
