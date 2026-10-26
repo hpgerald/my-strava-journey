@@ -50,23 +50,95 @@ const jump = (id) => (e) => {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-// every day from the first upload to the latest, as one thin mark: tall and dark
-// for a day out (taller for more distance on foot), absent for a day without
-function HabitBand({ days, streak }) {
-  const n = days.length
-  const maxKm = Math.max(1, ...days.map((d) => d.km))
-  let ink = '', hot = ''
-  days.forEach((d, i) => {
+// The cover: every day from the first upload to the latest, wound into a spiral
+// of one turn per year with 1 January at the top. A day out is a mark pointing
+// outward, longer for more distance on foot; a day without leaves the thin
+// calendar track bare, so the long silence reads as an empty stretch of track.
+// The run of days still going is the only colour on the page.
+const SP = { c: 540, r0: 66, ring: 48, min: 5, max: 29 }
+const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
+const turnOf = (iso, y0) => {
+  const y = +iso.slice(0, 4)
+  const doy = (Date.parse(iso + 'T00:00:00Z') - Date.UTC(y, 0, 1)) / 86400000
+  return (y - y0) + doy / (isLeap(y) ? 366 : 365)
+}
+const DAYMS = 86400000
+const isoDay = (i) => new Date(i * DAYMS).toISOString().slice(0, 10)
+const polar = (t, r) => {
+  const a = 2 * Math.PI * t
+  return [SP.c + r * Math.sin(a), SP.c - r * Math.cos(a)]
+}
+const radius = (t) => SP.r0 + SP.ring * t
+const f1 = (v) => v.toFixed(1)
+
+function track(t0, t1) {
+  let d = ''
+  const steps = Math.max(2, Math.ceil((t1 - t0) * 360))
+  for (let k = 0; k <= steps; k++) {
+    const t = t0 + ((t1 - t0) * k) / steps
+    const [x, y] = polar(t, radius(t))
+    d += `${k ? 'L' : 'M'}${f1(x)} ${f1(y)}`
+  }
+  return d
+}
+
+function SpiralYears({ F }) {
+  const y0 = +F.firstISO.slice(0, 4)
+  const y1 = +F.lastISO.slice(0, 4)
+  const maxKm = Math.max(1, ...F.days.map((d) => d.km))
+  const n = F.days.length
+  const rings = {}
+  let hot = ''
+  F.days.forEach((d, k) => {
     if (!d.on) return
-    const h = 18 + 82 * Math.sqrt(Math.min(d.km, maxKm) / maxKm)
-    const seg = `M${i + 0.5} 100V${(100 - h).toFixed(1)}`
-    if (i >= n - streak) hot += seg
-    else ink += seg
+    const iso = isoDay(d.i)
+    const t = turnOf(iso, y0)
+    const r = radius(t)
+    const len = SP.min + (SP.max - SP.min) * Math.sqrt(d.km / maxKm)
+    const [xa, ya] = polar(t, r)
+    const [xb, yb] = polar(t, r + len)
+    const seg = `M${f1(xa)} ${f1(ya)}L${f1(xb)} ${f1(yb)}`
+    if (k >= n - F.streak) hot += seg
+    else {
+      const ring = Math.floor(t)
+      rings[ring] = (rings[ring] || '') + seg
+    }
   })
+  const tA = turnOf(F.firstISO, y0)
+  const tB = turnOf(F.lastISO, y0)
+  const tS0 = turnOf(F.silence.from, y0)
+  const tS1 = turnOf(F.silence.to, y0)
+  const [sx, sy] = polar(tA, radius(tA))
+  const [ex, ey] = polar(tB, radius(tB))
+  // mark width follows the length of one day of track on each turn
+  const w = (ring) => Math.min(3.2, Math.max(0.7, (0.62 * 2 * Math.PI * radius(ring + 0.5)) / 365.25))
+  const years = []
+  for (let y = y0 + 1; y <= y1; y++) years.push(y)
+  const months = [['Jan', 0], ['Apr', 0.25], ['Jul', 0.5], ['Oct', 0.75]]
+  const rOut = radius(y1 - y0 + 1) + 12
   return (
-    <svg className="bk-band" viewBox={`0 0 ${n} 100`} preserveAspectRatio="none" aria-hidden="true">
-      <path d={ink} className="bk-band__ink" />
-      <path d={hot} className="bk-band__hot" />
+    <svg className="bk-spiral" viewBox="0 0 1080 1080" role="img"
+      aria-label={`A spiral of every day from ${fmtShort(F.firstISO)} to ${fmtShort(F.lastISO)}, one turn per year. ${n0(F.n)} outings, a ${n0(F.silence.len)} day gap with none, and the last ${n0(F.streak)} days all out.`}>
+      <path d={track(tA, tB)} className="bk-spiral__track" />
+      <path d={track(tS0 + 0.004, tS1 - 0.004)} id="bk-silence" className="bk-spiral__gap" />
+      {Object.entries(rings).map(([ring, d]) => (
+        <path key={ring} d={d} className="bk-spiral__ink" style={{ strokeWidth: w(+ring) }} />
+      ))}
+      <path d={hot} className="bk-spiral__hot" style={{ strokeWidth: w(y1 - y0) }} />
+      {years.map((y) => {
+        const r = radius(y - y0)
+        return <text key={y} x={SP.c + 6} y={SP.c - r + 13} className="bk-spiral__yr">{y}</text>
+      })}
+      {months.map(([m, t]) => {
+        const [x, y] = polar(t, rOut + 26)
+        return <text key={m} x={f1(x)} y={f1(y + 6)} textAnchor="middle" className="bk-spiral__mo">{m}</text>
+      })}
+      <text className="bk-spiral__note" dy="-6">
+        <textPath href="#bk-silence" startOffset="50%" textAnchor="middle">{n0(F.silence.len)} days without one</textPath>
+      </text>
+      <circle cx={f1(sx)} cy={f1(sy)} r="5" className="bk-spiral__dot" />
+      <text x={f1(sx + 12)} y={f1(sy + 5)} className="bk-spiral__lab">{fmtShort(F.firstISO)}</text>
+      <circle cx={f1(ex)} cy={f1(ey)} r="6" className="bk-spiral__end" />
     </svg>
   )
 }
@@ -75,21 +147,28 @@ function Cover({ F }) {
   return (
     <section className="bk-cover" aria-label="Cover">
       <div className="bk-cover__top">
-        <p className="bk-cover__k">A data-driven memoir</p>
-        <p className="bk-cover__k">My Strava Journey</p>
-      </div>
-      <h2 className="bk-cover__t">Showing<br />Up.</h2>
-      <p className="bk-cover__s">{BOOK_SUB}.</p>
-      <HabitBand days={F.days} streak={F.streak} />
-      <dl className="bk-cover__nums">
-        <div><dt>outings</dt><dd>{n0(F.n)}</dd></div>
-        <div><dt>km on foot</dt><dd>{n0(F.footKm)}</dd></div>
-        <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
-        <div><dt>days in a row, still going</dt><dd>{n0(F.streak)}</dd></div>
-      </dl>
-      <div className="bk-cover__foot">
         <p className="bk-cover__a">Gerald Tesha</p>
+        <p className="bk-cover__k">A data-driven memoir</p>
+      </div>
+      <figure className="bk-cover__fig">
+        <SpiralYears F={F} />
+        <figcaption className="bk-cover__cap">
+          Every day since my first upload, one turn per year. A mark is a day out, longer for more km on foot.
+          <span> Orange: the {n0(F.streak)} days in a row still going.</span>
+        </figcaption>
+      </figure>
+      <div className="bk-cover__base">
+        <h2 className="bk-cover__t">Showing<br />Up<span>.</span></h2>
+        <dl className="bk-cover__nums">
+          <div><dt>outings</dt><dd>{n0(F.n)}</dd></div>
+          <div><dt>km on foot</dt><dd>{n0(F.footKm)}</dd></div>
+          <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
+          <div><dt>days in a row</dt><dd>{n0(F.streak)}</dd></div>
+        </dl>
+      </div>
+      <div className="bk-cover__foot">
         <p className="bk-cover__d">{fmtShort(F.firstISO)} to {fmtShort(F.lastISO)}</p>
+        <p className="bk-cover__d">My Strava Journey</p>
       </div>
     </section>
   )
