@@ -135,31 +135,31 @@ write("timeline.csv",["date","label","category","note","source_page"],tl)
 
 # ---------- nav_index.csv (authored structure) ----------
 nav=[
- ["01","The Journey","Seven years. One habit. The totals.","/","overview","authored"],
- ["02","Year in Sport","Pick a year. See the whole story.","/numbers","report","authored"],
- ["03","Sports","What the work is made of.","/sports","section","authored"],
- ["04","Records","The far edges. Longest, highest, hardest.","/records","section","authored"],
- ["05","Where","Seven countries. Seventeen regions.","/where","geography","authored"],
- ["06","Timeline","In order. First upload to now.","/timeline","timeline","authored"],
- ["07","Goals","The targets, year by year.","/goals","dashboard","authored"],
- ["08","What It Means","What the numbers say to you.","/what-it-means","personas","authored"],
- ["09","My Book","The whole story, as a book.","/book","book","authored"],
+ ["01","The Journey","Seven years of one habit","/","overview","authored"],
+ ["02","Year in Sport","Pick a year and read it","/numbers","report","authored"],
+ ["03","Sports","My four sports on foot","/sports","section","authored"],
+ ["04","Records","My longest, highest and hardest days","/records","section","authored"],
+ ["05","Where","Five countries. Seventeen regions.","/where","geography","authored"],
+ ["06","Timeline","From my first upload to now","/timeline","timeline","authored"],
+ ["07","Goals","What I aim for each year","/goals","dashboard","authored"],
+ ["08","What It Means","What I\u2019ve learned from it","/what-it-means","personas","authored"],
+ ["09","My Book","The whole story, as a book","/book","book","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)
 
 # ---------- glossary.csv (authored definitions) ----------
 gl=[
- ["Relative Effort","Strava's measure of how hard a session was, from heart-rate time-in-zone. Higher means more cardiovascular strain."],
- ["Kudos","A thumbs-up from another Strava athlete, the platform's version of a like."],
- ["PR","Personal Record: a best-ever time over a segment or standard distance."],
- ["Achievement","A Strava badge earned on a segment (for example a top-10 or a personal best)."],
- ["Elevation gain","Total metres climbed over an activity, summed over every uphill section."],
+ ["Relative Effort","Strava's score for how hard a session was, based on the time spent in each heart-rate zone. The higher it is, the harder my heart worked."],
+ ["Kudos","A thumbs-up from someone on Strava, the same idea as a like."],
+ ["PR","Personal record: my best time on a segment or over a set distance."],
+ ["Achievement","A badge Strava gives on a segment, for a top-10 time or a personal best."],
+ ["Elevation gain","All the metres climbed in an activity, added up over every uphill stretch."],
  ["Cadence","Steps per minute when running."],
- ["Moving time","Time spent actually moving, with auto-pauses removed. Elapsed time includes stops."],
- ["Heart-rate zones","Five bands from easy (Z1) to maximal (Z5), based on max heart rate, used to gauge intensity."],
+ ["Moving time","The time I was actually moving, with the pauses taken out. Elapsed time includes the stops."],
+ ["Heart-rate zones","Five bands from easy (Z1) to all-out (Z5), based on maximum heart rate."],
  ["Pace zones","Running speed bands in minutes per kilometre, from easy to fastest."],
- ["Trainer","An indoor session (treadmill or stationary trainer) flagged by Strava; these carry no GPS."],
- ["Relative Effort score","Same as Relative Effort; shown as a single number per activity."],
+ ["Trainer","An indoor session, like a treadmill run, as marked by Strava. These have no GPS."],
+ ["Relative Effort score","The same as Relative Effort, shown as one number per activity."],
 ]
 write("glossary.csv",["term","definition"],[[t,d] for t,d in gl])
 print("derived CSVs done")

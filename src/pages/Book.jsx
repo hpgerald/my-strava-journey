@@ -30,15 +30,14 @@ const fmtShort = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseI
 const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const word = (n) => WORD[n] || String(n)
-const SPORT = { Ride: 'ride', GravelRide: 'ride', Run: 'run', Walk: 'walk', TrailRun: 'trail run', Hike: 'hike' }
 
 // the parts of the book and the chapters inside each
 const PARTS = [
-  { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where and in what.', chapters: [['01', 'The Journey']] },
-  { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year read on its own, from the first quiet months to the year with no day off.', chapters: [['02', 'Year in Sport']] },
-  { n: 'III', name: 'Part three', title: 'The work', line: 'The sports on foot, the records they set and the places they happened.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
-  { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I hold every year against.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
-  { n: 'V', name: 'Part five', title: 'The lessons', line: 'What I think seven years of logs taught me.', chapters: [['08', 'What It Means']] },
+  { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where, and what I do.', chapters: [['01', 'The Journey']] },
+  { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year on its own, from the quiet first months to the year with no day off.', chapters: [['02', 'Year in Sport']] },
+  { n: 'III', name: 'Part three', title: 'The work', line: 'My sports on foot, the records I set and the places I went.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
+  { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I set myself each year.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
+  { n: 'V', name: 'Part five', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [['08', 'What It Means']] },
 ]
 
 // glossary terms for measures this book never uses
@@ -184,9 +183,9 @@ function TitlePage({ F }) {
       </div>
       <div className="bk-imprint">
         <p>This edition covers every activity I logged on Strava from {fmtDay(F.firstISO)} to {fmtDay(F.lastISO)}: {n0(F.n)} of them.</p>
-        <p>Every number in this book is computed from that log, and every chart is drawn from the same rows. Distance and climb count my four sports on foot: runs, walks, trail runs and hikes. Activity names and exact locations were removed before publishing.</p>
-        <p>This book is the website My Strava Journey set as one volume. On the site it is rebuilt from the data every time the page opens; the PDF is printed again whenever the data is refreshed, so each edition matches the site on the day it was made.</p>
-        <p>How the book was built is told in Annex A, and how to reach me is on the last page before the back cover.</p>
+        <p>Every number in this book comes from that log, and every chart is drawn from it. Distance and climb only count my four sports on foot: runs, walks, trail runs and hikes. I took out activity names and exact locations before publishing.</p>
+        <p>The book is my website, My Strava Journey, put together as one volume. The site redraws everything from the data each time it&rsquo;s opened, and I print a new PDF whenever the data is refreshed, so each edition matches the site on the day it was made.</p>
+        <p>Annex A explains how I made it, and my contact details are on the page before the back cover.</p>
       </div>
     </section>
   )
@@ -218,25 +217,24 @@ function Contents() {
 }
 
 function Prologue({ F }) {
-  const firstWhat = SPORT[F.firstSport] || 'outing'
   return (
     <section className="bk-page bk-prose" id="bk-prologue" aria-labelledby="bk-pro-t">
       <h2 id="bk-pro-t" className="bk-head">Prologue</h2>
       <p className="bk-lead">
-        I uploaded my first activity on {fmtDay(F.firstISO)}: {F.firstKm >= 1 ? `a ${n0(F.firstKm)} km ${firstWhat}` : `a ${firstWhat}`}. Over the next months I logged {n0(F.beforeSilence)} outings, most of them runs on a treadmill.
-        Then my log went quiet for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
+        I uploaded my first activity on {fmtDay(F.firstISO)}. Over the next months I logged {n0(F.beforeSilence)} outings, most of them runs on a treadmill.
+        Then I stopped for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
       </p>
       <p>
-        When it came back, it didn&rsquo;t stop again. Since {fmtMonth(F.habitISO)} I&rsquo;ve gone out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and the longest break has been {word(F.maxAfter)} days.
-        As this edition closes, my streak stands at {n0(F.streak)} days in a row.
+        When I started again, I didn&rsquo;t stop. Since {fmtMonth(F.habitISO)} I&rsquo;ve been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest break has been {word(F.maxAfter)} days.
+        As I finish this edition, I&rsquo;m on {n0(F.streak)} days in a row.
       </p>
       <p>
-        This book is that record, read back. It&rsquo;s built from {n0(F.n)} activities and nothing else: {n0(F.footKm)} km on foot, {n0(F.footElev)} metres of climb and {n0(F.hours)} hours on the move, across {F.countries} countries and {F.regions} regions of Tanzania.
-        Every number is computed from my Strava log, and every chart is drawn from the same rows. Where the log can&rsquo;t tell me why something happened, I say so.
+        This book is me going back through that record. It&rsquo;s made from {n0(F.n)} activities and nothing else: {n0(F.footKm)} km on foot, {n0(F.footElev)} metres of climbing and {n0(F.hours)} hours on the move, in {F.countries} countries and {F.regions} regions of Tanzania.
+        Every number comes from my Strava log. When the log can&rsquo;t tell me why something happened, I say so rather than guess.
       </p>
       <p>
-        It runs in five parts. The first is the habit as a whole. The second goes through it year by year. The third takes the work apart: my sports, my records and the places I went.
-        The fourth is the long view, the timeline and my goals. The last part is what I think it all means.
+        There are five parts. The first looks at the habit as a whole, and the second goes through it year by year. The third is about my sports, my records and the places I went.
+        The fourth has the timeline and my goals, and the last part is what I think it all means.
       </p>
     </section>
   )
@@ -274,11 +272,11 @@ function Epilogue({ F }) {
     <section className="bk-page bk-prose" id="bk-epilogue" aria-labelledby="bk-epi-t">
       <h2 id="bk-epi-t" className="bk-head">Epilogue</h2>
       <p className="bk-lead">
-        The last activity in this edition is from {fmtDay(F.lastISO)}. My streak stands at {n0(F.streak)} days, and the habit that started in {F.habitISO.slice(0, 4)} has now run for {n0(F.habitDays)} days.
+        The last activity in this edition is from {fmtDay(F.lastISO)}. I&rsquo;m on {n0(F.streak)} days in a row, and the habit that started in {F.habitISO.slice(0, 4)} has now lasted {n0(F.habitDays)} days.
       </p>
       <p>
-        None of the totals in this book came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, fitted in early in the morning or in the evening, on days that looked like any other.
-        The record will keep growing after this edition, one day at a time, and the next edition will carry the new numbers.
+        None of the totals in this book came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, fitted in early in the morning or in the evening on days like any other.
+        The log will keep growing after this edition, and the next one will have the new numbers.
       </p>
       <p>I&rsquo;ll be out tomorrow.</p>
       <p className="bk-sign">Gerald Tesha</p>
@@ -291,18 +289,18 @@ const PIPE = [
   ['Strava', 'Every outing I record lands in my Strava account.'],
   ['MCP pull', 'Each week the latest activities come out through an MCP server, as one raw CSV.'],
   ['Build', 'Python scripts rebuild the activity log and every table derived from it.'],
-  ['Privacy', 'Names, Strava IDs and exact GPS points are removed. Places stay at country and region.'],
-  ['Checks', 'Encoding, data rules, tests, accessibility and phone layouts are checked.'],
-  ['Site', 'The React site reads the tables in the browser and draws every chart live.'],
-  ['Book', 'The same pages print as this book, and a fresh PDF is made with each refresh.'],
+  ['Privacy', 'Names, Strava IDs and exact GPS points are removed, and places are kept to country and region.'],
+  ['Checks', 'The data rules, tests, accessibility and phone layouts are checked.'],
+  ['Site', 'The site reads the tables in the browser and draws every chart from them.'],
+  ['Book', 'The same pages print as this book, and I make a new PDF with each refresh.'],
 ]
 const STACK = [
   ['Data source', 'My Strava activity history, pulled weekly through an MCP server'],
   ['Pipeline', 'Python, standard library only: rebuild, foot-only totals, derived tables, privacy pass'],
-  ['Data store', `${32} CSV tables, the single source of truth for every number`],
+  ['Data store', `${32} CSV tables that every number comes from`],
   ['Site', 'React 18 and Vite 5, React Router with hash links, PapaParse to read the CSVs'],
   ['Charts', 'Drawn by hand in SVG and canvas, without a chart library'],
-  ['Type and colour', 'Archivo and Inter on a Swiss grid, one accent colour, Strava orange, kept for data'],
+  ['Type and colour', 'Archivo and Inter on a simple grid, with Strava orange kept for the data'],
   ['Quality', 'Data validation, tests, an axe accessibility audit and layout checks at phone widths'],
   ['Hosting', 'GitHub Pages, from the repository github.com/hpgerald/my-strava-journey'],
   ['Book', 'The site printed through headless Chromium to an A4 PDF'],
@@ -314,18 +312,18 @@ function HowMade({ F }) {
       <p className="bk-annex">Annex A</p>
       <h2 id="bk-made-t" className="bk-head">How this book was made</h2>
       <p className="bk-lead">
-        This book started as a website, My Strava Journey: my Strava history laid out so anyone can read it. Nothing in it is typed in by hand. Every figure is computed from my activity log, and the log is refreshed every week.
+        This book started as a website, My Strava Journey, where I laid out my Strava history so anyone could read it. None of the figures are typed in by hand. They&rsquo;re all worked out from my activity log, which I refresh every week.
       </p>
       <div className="bk-made__cols">
         <div className="bk-prose">
           <p>
-            Each week I pull my latest activities from Strava through an MCP server. MCP, the Model Context Protocol, is an open standard that lets an AI assistant connect to outside tools and data; here it connects to my Strava account and returns every activity as one raw CSV file.
+            Each week I pull my latest activities from Strava through an MCP server. MCP, the Model Context Protocol, is an open standard that lets an AI assistant connect to other tools and data. Here it connects to my Strava account and gives back every activity in one raw CSV file.
           </p>
           <p>
-            From that file a set of Python scripts rebuilds everything: the activity log, the totals on foot, the places, the streaks, the records and the tables behind each chart. A privacy pass removes activity names, Strava IDs and exact GPS points before anything is published. Then the checks run, and the site goes live with the new numbers. This edition holds {n0(F.n)} activities, up to {fmtDay(F.lastISO)}.
+            A set of Python scripts then rebuilds everything from that file: the activity log, the totals on foot, the places, the streaks, the records and the tables behind each chart. Before anything is published, activity names, Strava IDs and exact GPS points are taken out. Then the checks run and the site goes live with the new numbers. This edition has {n0(F.n)} activities, up to {fmtDay(F.lastISO)}.
           </p>
           <p>
-            I built it with Claude, Anthropic&rsquo;s AI model, as a coding and analysis partner. I set the questions, the design and the voice; Claude wrote the code, mined the data and checked each number against the log before it went into the text.
+            I built it with Claude, Anthropic&rsquo;s AI model, helping with the code and the analysis. I decided the questions, the design and how it should read. Claude wrote the code, dug through the data and checked each number against the log before it went into the text.
           </p>
         </div>
         <dl className="bk-stack">
@@ -357,8 +355,8 @@ function Contact() {
       <p className="bk-annex">The author</p>
       <h2 id="bk-contact-t" className="bk-contact__t">Get in touch.</h2>
       <p className="bk-lead">
-        I&rsquo;m Gerald Tesha. I work in monitoring, evaluation and data, and this book is what I do with my own numbers.
-        If you&rsquo;d like a project like this built from your own data, want to work together, or would like to feature this story, I&rsquo;d be glad to hear from you.
+        I&rsquo;m Gerald Tesha. I work in monitoring, evaluation and data, and this book is what I did with my own numbers.
+        If you&rsquo;d like something like this made from your own data, want to work together, or want to feature this story, I&rsquo;d be happy to hear from you.
       </p>
       <dl className="bk-contact__list">
         {CONTACTS.map(([k, v, href]) => (
@@ -378,9 +376,9 @@ function Notes({ glossary }) {
       <div className="bk-notes__cols">
         <div>
           <h3>Where the numbers come from</h3>
-          <p>Every activity comes from my Strava export: date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and personal records. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
-          <p>Distance and climb count the four sports on foot: runs, walks, trail runs and hikes. Rides, the gym and everything else count as outings and days out, but add no distance or climb.</p>
-          <p>A treadmill session is one Strava marks as a trainer session. Those have no GPS, so they never appear on a map and set almost no segment records.</p>
+          <p>Every activity comes from my Strava export: the date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and personal records. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
+          <p>Distance and climb only count the four sports on foot: runs, walks, trail runs and hikes. Everything else counts as other activities. Those still count as outings and days out, but they add no distance or climb, and I don&rsquo;t name them.</p>
+          <p>A treadmill run is one that Strava marks as done indoors. Those have no GPS, so they never show up on a map and set almost no segment records.</p>
         </div>
         <dl className="bk-gloss">
           {glossary.filter((g) => !SKIP_TERMS.has(g.term)).map((g) => (
@@ -422,8 +420,8 @@ export default function Book() {
     crumbs: [{ label: 'Home', to: '/' }, { label: 'My Book' }],
     number: '09',
     title: 'My Book',
-    subtitle: 'The whole story, as a book.',
-    lede: 'Everything on this site, set as one book: a data-driven memoir of seven years on foot, in five parts, from the first upload to today. Read it here, or download it as a PDF.',
+    subtitle: 'The whole story, as a book',
+    lede: 'Everything on this site put together as one book, seven years on foot told from my own data, in five parts, from my first upload to today. You can read it here or download it as a PDF.',
     prev,
     next,
   }
@@ -449,7 +447,7 @@ export default function Book() {
           <PartOpener p={PARTS[0]} />
           <section className="bk-ch" id="bk-ch-01" aria-labelledby="bk-ch-01-t">
             <div className="container">
-              <Opener number="01" title="The Journey" subtitle="Seven years. One habit. The totals." lede="The whole habit at once: how the streak holds, how the distance spreads across my days, how each year was made, and six smaller things the data shows." />
+              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" lede="The whole habit at once: how the streak keeps going, how my distance is spread over my days, how my days are shaped, and six more things I found in the data." />
             </div>
             <Home />
           </section>
@@ -457,7 +455,7 @@ export default function Book() {
           <PartOpener p={PARTS[1]} />
           <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">
             <div className="container">
-              <Opener number="02" title="Year in Sport" subtitle="One year at a time." lede={`Each year from ${years[0]} to ${years[years.length - 1]} as its own report: the months, how I moved, when, every day of the year, the typical outing, the maths, the biggest days and where it happened.`} />
+              <Opener number="02" title="Year in Sport" subtitle="One year at a time" lede={`Each year from ${years[0]} to ${years[years.length - 1]} on its own: the months, the sports, the time of day, the days out, a typical outing, the biggest days and where I went.`} />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">

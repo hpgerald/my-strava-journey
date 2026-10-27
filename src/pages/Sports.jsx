@@ -56,7 +56,7 @@ export default function Sports() {
   const { prev, next } = useSectionPaging('/sports')
   const r = useMemo(() => (activities.length ? buildFootReport(activities) : null), [activities])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Sports' }], number: '03', title: 'Sports', subtitle: 'What the work is made of', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Sports' }], number: '03', title: 'Sports', subtitle: 'My four sports on foot', prev, next }
   if (!r) return <DetailFrame {...frame} />
 
   const { total: T, sport: S, mode: M, byYear: BY } = r
@@ -146,20 +146,20 @@ export default function Sports() {
   return (
     <DetailFrame
       {...frame}
-      lede="My four sports on foot, taken apart. Every run, walk, trail run and hike I&rsquo;ve logged, compared on distance, pace, climb, hours, the time of day, the long days, the effort and the crowd. I keep the treadmill apart from the road because in my log it behaves like a sport of its own."
+      lede="Every run, walk, trail run and hike I&rsquo;ve logged, side by side: how far, how fast, how much climbing, when I go and how long the long days get. I&rsquo;ve kept treadmill runs apart from outdoor runs, because in my log they look like two different sports."
     >
       <div className="yis-report">
         {/* ===== the four sports in one view ===== */}
         <section className="sgrid yis-top" aria-labelledby="sp-title">
           <div className="sgrid__head">
             <p className="eyebrow">Four sports on foot</p>
-            <h2 id="sp-title" className="section-head__title">Runs go far. The rest&nbsp;climb.</h2>
-            <p className="section-head__sub">Runs covered {pc(share('km', 'Run'))}% of the distance. Walks, trails and hikes did {pc(climbOff)}% of the climbing.</p>
+            <h2 id="sp-title" className="section-head__title">Runs cover the&nbsp;ground.</h2>
+            <p className="section-head__sub">Runs covered {pc(share('km', 'Run'))}% of the distance, and walks, trail runs and hikes did {pc(climbOff)}% of the climbing.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
             Of my {n0(T.all)} outings, {n0(T.n)} were on foot: {n0(S.Run.n)} runs, {n0(S.Walk.n)} walks, {S.TrailRun.n} trail runs and {S.Hike.n} hikes.
-            Together they covered {n0(T.km)} km and climbed {n0(T.elev)} m over {n0(T.hours)} hours moving, on {n0(T.days)} different days.
-            My running splits in two: {n0(M.tread.n)} runs on a treadmill and {M.road.n} outdoors. The two behave like different sports, so I keep them apart on this page.
+            Together they add up to {n0(T.km)} km and {n0(T.elev)} m of climbing, over {n0(T.hours)} hours of moving on {n0(T.days)} different days.
+            {' '}{n0(M.tread.n)} of my runs were on a treadmill and {M.road.n} were outside. They&rsquo;re so different that I count them separately on this page.
           </Reveal>
           <OddsRow
             title="The four sports on foot"
@@ -182,10 +182,10 @@ export default function Sports() {
           title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
           sub={walkHoursMore ? 'More hours than runs, for less distance.' : 'And the most distance.'}
           statement={<>
-            My runs and walks are close in number ({n0(S.Run.n)} against {n0(S.Walk.n)}) and in hours moving ({n0(S.Run.hours)} against {n0(S.Walk.hours)}),
-            but a typical run of mine went {k1(S.Run.medKm / S.Walk.medKm)} times as far: {k1(S.Run.medKm)} km at the median against {k1(S.Walk.medKm)} km.
-            Trail runs are {pc(share('n', 'TrailRun'))}% of my outings and {pc(share('elev', 'TrailRun'))}% of my climb. My {word(S.Hike.n)} hikes add {pc(share('elev', 'Hike'))}% of
-            the climb from {share('km', 'Hike') < 0.01 ? 'under 1%' : `${pc(share('km', 'Hike'))}%`} of the distance.
+            I&rsquo;ve done about as many runs as walks ({n0(S.Run.n)} and {n0(S.Walk.n)}) and spent about the same hours on each ({n0(S.Run.hours)} and {n0(S.Walk.hours)}),
+            but a typical run goes {k1(S.Run.medKm / S.Walk.medKm)} times as far as a typical walk, {k1(S.Run.medKm)} km compared with {k1(S.Walk.medKm)} km.
+            Trail runs are {pc(share('n', 'TrailRun'))}% of my outings and {pc(share('elev', 'TrailRun'))}% of my climbing. My {word(S.Hike.n)} hikes add another {pc(share('elev', 'Hike'))}% of
+            the climbing from {share('km', 'Hike') < 0.01 ? 'less than 1%' : `${pc(share('km', 'Hike'))}%`} of the distance.
           </>}
           odds={{
             title: 'Each sport’s biggest share',
@@ -221,8 +221,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each bar is one measure, cut into the four sports’ shares of it. Read down a colour to see one sport rise and fall from measure to measure.</>}
-          rightNote={<><b>Why it matters.</b> The median outing, the one in the middle when all are lined up by distance. My typical walk is short; the long walks sit further out.</>}
+          leftNote={<>Each bar is one measure, split into the four sports&rsquo; shares of it. Follow one colour down the bars to see how that sport&rsquo;s share changes.</>}
+          rightNote={<>This is the middle outing of each sport when they&rsquo;re lined up by distance. My typical walk is short, even though I&rsquo;ve done some long ones.</>}
           source="Activity Log · runs, walks, trail runs and hikes; distance and climb on foot only"
         />
 
@@ -234,10 +234,10 @@ export default function Sports() {
           title={walkLead ? `In ${walkLead.year}, walks went further.` : 'Runs went further every year.'}
           sub={walkLead ? 'For the first time, walks covered more distance than runs.' : undefined}
           statement={<>
-            Running carried my record for years: {n0(runPeak.km.Run)} km in {runPeak.year} against {n0(runPeak.km.Walk)} km of walking.
-            Since then my running has fallen to {n0(latest.km.Run)} km in {LY}{so} while my walking has grown to {n0(latest.km.Walk)} km,
+            For years most of my distance was running. In {runPeak.year} I ran {n0(runPeak.km.Run)} km and walked {n0(runPeak.km.Walk)} km.
+            Since then my running has dropped to {n0(latest.km.Run)} km in {LY}{so}, and my walking has gone up to {n0(latest.km.Walk)} km,
             {latest.km.Walk > walkBase.km.Walk ? ` ${(latest.km.Walk / Math.max(1, walkBase.km.Walk)).toFixed(1)} times its ${walkBase.year} total` : ''}.
-            My trail running, counted on its own here, peaked in {trailPeak.year} with {n0(trailPeak.km.TrailRun)} km.
+            My trail running, which I count separately, was at its highest in {trailPeak.year}, with {n0(trailPeak.km.TrailRun)} km.
           </>}
           odds={{
             title: `${LY}${so}, against the running peak`,
@@ -273,8 +273,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> One column a year, cut by sport, with the total on top.{partial ? ` The star marks ${LY}, still running.` : ''}</>}
-          rightNote={<><b>Why it matters.</b> Runs here are road and treadmill runs; trail runs are counted on their own. The dashed line marks the year the walking line crossed the running one.</>}
+          leftNote={<>One column a year, split by sport, with the total on top.{partial ? ` The star marks ${LY}, which isn’t over yet.` : ''}</>}
+          rightNote={<>Runs here are outdoor and treadmill runs, and trail runs are counted separately. The dashed line is the year my walking passed my running.</>}
           source="Activity Log · distance on foot by sport and year"
         />
 
@@ -284,12 +284,12 @@ export default function Sports() {
           id="sp-tread"
           eyebrow={`${num()} · The treadmill`}
           title={`${pc(treadShare)}% of running was indoors.`}
-          sub="I ran those kilometres on a treadmill, without leaving the room."
+          sub="Most of my running kilometres were on a treadmill."
           statement={<>
             {n0(M.tread.n)} of my {n0(S.Run.n)} runs were on a treadmill, {n0(M.tread.km)} km in all. In {peakIndoor.year}, {pc(indoorShare(peakIndoor))}% of my running kilometres
-            were indoors{firstUnderHalf ? `; ${firstUnderHalf.year} was the first year under half, at ${pc(indoorShare(firstUnderHalf))}%` : ''}{firstUnderHalf && firstUnderHalf.year !== LY ? `, and ${LY}${so} sits at ${pc(indoorShare(latest))}%` : ''}.
-            The treadmill also leaves a fingerprint in my log: {pc(r.roundFive)}% of my treadmill runs stopped within 100 m of a whole 5 km, and {pc(r.roundOne)}% within 100 m of a whole
-            kilometre, against {pc(r.roadRoundOne)}% of outdoor runs.
+            were indoors{firstUnderHalf ? `. ${firstUnderHalf.year} was the first year below half, at ${pc(indoorShare(firstUnderHalf))}%` : ''}{firstUnderHalf && firstUnderHalf.year !== LY ? `, and ${LY}${so} is at ${pc(indoorShare(latest))}%` : ''}.
+            You can spot the treadmill in the numbers, too. {pc(r.roundFive)}% of my treadmill runs ended within 100 m of a round 5 km, and {pc(r.roundOne)}% within 100 m of a
+            round kilometre. Only {pc(r.roadRoundOne)}% of my outdoor runs did.
           </>}
           odds={{
             title: 'Running indoors',
@@ -322,8 +322,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Running kilometres each year, the treadmill in light orange and outdoors in deep orange. The figure on top is the indoor share.</>}
-          rightNote={<><b>Why it matters.</b> One bar per kilometre. My runs pile up at 5, 10, 15 and 21 km: on a treadmill I stop when the display says so.</>}
+          leftNote={<>My running kilometres each year, with the treadmill in light orange and outside in deep orange. The figure on top is the share done indoors.</>}
+          rightNote={<>One bar per kilometre. My treadmill runs bunch up at 5, 10, 15 and 21 km, because on a treadmill I tend to stop when the display hits a round number.</>}
           source="Activity Log · runs marked as treadmill (trainer) against runs outdoors"
         />
 
@@ -335,10 +335,10 @@ export default function Sports() {
           title="Each sport has its pace."
           sub={`A treadmill kilometre took ${pace(M.tread.pace.med)}. A walking one took ${pace(M.walk.pace.med)}.`}
           statement={<>
-            Pace here is minutes moving for each kilometre, the middle value of all my outings: treadmill {pace(M.tread.pace.med)}, outdoor run {pace(M.road.pace.med)},
-            trail run {pace(M.trail.pace.med)}, walk {pace(M.walk.pace.med)} and hike {pace(M.hike.pace.med)}. Outdoors, my typical run took {k1(M.road.pace.med / M.tread.pace.med)} times
-            as long per kilometre as on the treadmill, nearer a walk than a treadmill run. On the treadmill my quickest year was {quickYear.year} at {pace(quickYear.treadPace.med)};
-            {' '}{LY}{so} sits at {pace(latest.treadPace ? latest.treadPace.med : 0)}.
+            Pace here means the minutes it takes me to cover a kilometre, using the middle outing of each sport: treadmill {pace(M.tread.pace.med)}, outdoor run {pace(M.road.pace.med)},
+            trail run {pace(M.trail.pace.med)}, walk {pace(M.walk.pace.med)} and hike {pace(M.hike.pace.med)}. A typical outdoor run of mine takes {k1(M.road.pace.med / M.tread.pace.med)} times
+            as long per kilometre as a treadmill run, which puts it closer to a walk. My quickest year on the treadmill was {quickYear.year}, at {pace(quickYear.treadPace.med)}, and
+            {' '}{LY}{so} is at {pace(latest.treadPace ? latest.treadPace.med : 0)}.
           </>}
           odds={{
             title: 'Median minutes per kilometre',
@@ -372,8 +372,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each ridge is one way of moving, its height the share of outings at each pace. The tick under a ridge and the figure on the right mark its median.</>}
-          rightNote={<><b>Why it matters.</b> The band covers the middle half of each year’s treadmill runs and the bar marks the median. Quicker years stand taller; the quickest is in orange.</>}
+          leftNote={<>Each ridge is one way of moving, and its height shows how many outings were at each pace. The tick under the ridge and the figure on the right are the middle value.</>}
+          rightNote={<>The band covers the middle half of each year&rsquo;s treadmill runs, and the bar is the middle run. The higher the bar, the quicker the year, and the quickest is in orange.</>}
           source={`Activity Log · moving time over distance; ${r.oddTread} treadmill runs logged quicker than ${pace(TREAD_MIN)} a km left out of pace as likely misreadings`}
         />
 
@@ -387,9 +387,9 @@ export default function Sports() {
               title="The typical walk grew."
               sub={`From ${k1(w0.walkMed)} km to ${k1(w1.walkMed)} km.`}
               statement={<>
-                From {w0.year} to 2024 about {pc(shortEarlyAvg)}% of my walks were shorter than 3 km.
-                {' '}The share fell to {walkYears.filter((b) => b.year > 2024).map((b) => `${pc(b.walkShort)}% in ${b.year}${b.year === LY ? so : ''}`).join(' and ')}.
-                {' '}My median walk of {w1.year}{w1.year === LY ? so : ''} is {k1(w1.walkMed)} km, and {walkHalves ? `${word(walkHalves)} of my walks have reached a half marathon or more` : 'none has yet reached a half marathon'}.
+                From {w0.year} to 2024, about {pc(shortEarlyAvg)}% of my walks were under 3 km.
+                {' '}That dropped to {walkYears.filter((b) => b.year > 2024).map((b) => `${pc(b.walkShort)}% in ${b.year}${b.year === LY ? so : ''}`).join(' and ')}.
+                {' '}My typical walk in {w1.year}{w1.year === LY ? so : ''} is {k1(w1.walkMed)} km, and {walkHalves ? `${word(walkHalves)} of my walks have gone a half marathon or further` : 'none has reached a half marathon yet'}.
               </>}
               odds={{
                 title: `The walk, ${w0.year} against ${w1.year}`,
@@ -422,8 +422,8 @@ export default function Sports() {
                   />
                 ),
               }}
-              leftNote={<><b>How to read it.</b> One ridge a year, its height the share of walks at each distance. The ridge slides right as the walks grow; {LY} is in orange.</>}
-              rightNote={<><b>Why it matters.</b> Half my walks used to be short ones. In {LY} almost every walk is an outing of its own.</>}
+              leftNote={<>One ridge a year, and its height shows how many walks were each length. As my walks got longer, the ridge moved to the right. {LY} is in orange.</>}
+              rightNote={<>About half my walks used to be short ones. In {LY} nearly every walk is a proper outing.</>}
               source="Activity Log · walks, indoor and outdoor"
             />
           </>
@@ -437,10 +437,10 @@ export default function Sports() {
           title={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? 'Long days moved outdoors.' : `${n0(longAll)} half marathons or more.`}
           sub={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? `They started on the treadmill. ${n0(longAll)} outings reached a half marathon.` : undefined}
           statement={<>
-            A half marathon is 21.1 km. {earlyLong ? `Up to 2022 I did ${earlyLong} outings that long, ${earlyLong === earlyTread ? 'every one of them' : `${earlyTread} of them`} on a treadmill. ` : ''}
+            A half marathon is 21.1 km. {earlyLong ? `Up to 2022 I did ${earlyLong} outings that long, and ${earlyLong === earlyTread ? 'every one of them was' : `${earlyTread} of them were`} on a treadmill. ` : ''}
             In {LY}{so} I&rsquo;ve done {latest.longN}, and {lastLongOut} of them were outside:{' '}
             {['road', 'trail', 'walk', 'hike'].filter((k) => latest.long[k]).map((k) => `${latest.long[k]} ${{ road: 'outdoor runs', trail: 'trail runs', walk: 'walks', hike: 'hikes' }[k]}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            {' '}My longest of all was {k1(M.tread.longest.km)} km on a treadmill in {fmtMonth(M.tread.longest.date)}, a marathon indoors.
+            {' '}My longest ever was {k1(M.tread.longest.km)} km on a treadmill in {fmtMonth(M.tread.longest.date)}, a whole marathon indoors.
           </>}
           odds={{
             title: 'Half marathon or longer',
@@ -471,8 +471,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each column counts the year’s outings of 21.1 km or more, coloured by how they were done.</>}
-          rightNote={<><b>Why it matters.</b> Every way I move except the hike has gone past 30 km at least once. My longest hike was {k1(M.hike.longest.km)} km, but it climbed {n0(M.hike.longest.elev)} m on the way.</>}
+          leftNote={<>Each column counts that year&rsquo;s outings of 21.1 km or more, coloured by sport.</>}
+          rightNote={<>Every sport except hiking has gone past 30 km at least once. My longest hike was {k1(M.hike.longest.km)} km, but it climbed {n0(M.hike.longest.elev)} m on the way.</>}
           source="Activity Log · outings of 21.1 km or more by way of moving"
         />
 
@@ -484,9 +484,9 @@ export default function Sports() {
           title="Hikes climb the most."
           sub={`Hikes climbed ${n0(M.hike.mPerKm)} m for every kilometre. Walks climbed ${n0(M.walk.mPerKm)}.`}
           statement={<>
-            Spread over every kilometre I covered in each: {climbModes.map((k) => (M[k].mPerKm < 0.5 ? `the treadmill none` : `${ofModeName(k)} ${n0(M[k].mPerKm)} m`)).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            That&rsquo;s why my walks, with {pc(share('km', 'Walk'))}% of the distance, did {pc(share('elev', 'Walk'))}% of the climbing{topClimbsOffRoad ? `, and why my ${word(r.climbs.length)} biggest climbs were all hikes and trail runs` : ''}.
-            The biggest was {n0(big.elev)} m on a {SPORT_NAME[big.sport].toLowerCase()} of {k1(big.km)} km in {fmtMonth(big.date)}.
+            Here&rsquo;s how much I climb for each kilometre: {climbModes.map((k) => (M[k].mPerKm < 0.5 ? `the treadmill none at all` : `${ofModeName(k)} ${n0(M[k].mPerKm)} m`)).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
+            So my walks, with {pc(share('km', 'Walk'))}% of the distance, did {pc(share('elev', 'Walk'))}% of the climbing{topClimbsOffRoad ? `, and my ${word(r.climbs.length)} biggest climbs were all hikes and trail runs` : ''}.
+            The biggest was {n0(big.elev)} m, on a {k1(big.km)} km {SPORT_NAME[big.sport].toLowerCase()} in {fmtMonth(big.date)}.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -515,8 +515,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each line climbs across one kilometre at that sport’s average gradient. The rise is drawn taller than true so the gentle ones can be told apart; the figures are the true ones.</>}
-          rightNote={<><b>Why it matters.</b> My single biggest days of climbing, coloured by sport. None of them was a walk or a road run.</>}
+          leftNote={<>Each line goes across one kilometre at that sport&rsquo;s average slope. I&rsquo;ve drawn the slopes steeper than they really are so the gentle ones don&rsquo;t all look flat, but the figures are the real ones.</>}
+          rightNote={<>My biggest single climbs, coloured by sport. None of them was a walk or an outdoor run.</>}
           source="Activity Log · elevation gain on foot over distance on foot"
         />
 
@@ -525,13 +525,13 @@ export default function Sports() {
         <StorySection
           id="sp-when"
           eyebrow={`${num()} · When`}
-          title="The treadmill runs at night."
+          title="Treadmill runs at night."
           sub={`${pc(M.tread.night)}% of my treadmill runs started after 8pm or before 5am.`}
           statement={<>
-            Each way I move keeps its own hours. My treadmill runs peak at {fmtH(peakHour('tread'))} and again from 7pm to midnight, {pc(treadEve)}% of them in that late stretch.
-            My walks peak at {fmtH(peakHour('walk'))}, with {pc(walkEve)}% between 4 and 7pm. My outdoor runs start at {fmtH(peakHour('road'))} or in the late afternoon.
-            Trail runs and hikes are my weekend sports: {pc(M.trail.weekend)}% and {pc(M.hike.weekend)}% fell on a Saturday or Sunday, against {pc(M.tread.weekend)}% of treadmill runs,
-            when an even week would give 29%.
+            Each sport has its own time of day. My treadmill runs are busiest at {fmtH(peakHour('tread'))} and again from 7pm to midnight, and {pc(treadEve)}% of them start in that late stretch.
+            My walks are busiest at {fmtH(peakHour('walk'))}, with {pc(walkEve)}% between 4 and 7pm. My outdoor runs start at {fmtH(peakHour('road'))} or in the late afternoon.
+            Trail runs and hikes are mostly for the weekend. {pc(M.trail.weekend)}% of trail runs and {pc(M.hike.weekend)}% of hikes were on a Saturday or Sunday, compared with {pc(M.tread.weekend)}% of
+            treadmill runs. If the days were even, it would be 29%.
           </>}
           odds={{
             title: 'Hours and days',
@@ -566,8 +566,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> One ridge per way of moving, its height the share of outings starting at each hour from midnight to midnight. The tick and the figure on the right mark the busiest hour.</>}
-          rightNote={<><b>Why it matters.</b> Bars past the dashed line lean to the weekend. The trails need a free morning; the treadmill fits into any evening I have.</>}
+          leftNote={<>One ridge per sport, and its height shows how many outings started at each hour, from midnight to midnight. The tick and the figure on the right are the busiest hour.</>}
+          rightNote={<>Bars past the dashed line lean towards the weekend. A trail run needs a free morning, and a treadmill run fits into whatever evening I have.</>}
           source="Activity Log · local start hour and weekday of every outing on foot"
         />
 
@@ -577,11 +577,11 @@ export default function Sports() {
           id="sp-doubles"
           eyebrow={`${num()} · A run and a walk on the same day`}
           title={`${n0(D.total)} run-and-walk days.`}
-          sub="Days when I both ran and walked. The two were usually hours apart."
+          sub="Days when I both ran and walked, usually hours apart."
           statement={<>
-            I ran first on {D.runFirst} of the {D.total} days ({pc(D.runFirst / Math.max(1, D.total))}%). From the end of the first outing to the start of the second, the median
-            gap was {hm(D.medGap)}; only {word(under30)} pairs were under half an hour apart, while {far8} were 8 hours or more apart, a morning run and an evening walk.
-            Most of these days came in {dblPeak[0]}, {dblPeak[1]} of them; {LY}{so} has {D.perYear[LY]}.
+            On {D.runFirst} of the {D.total} days ({pc(D.runFirst / Math.max(1, D.total))}%) I ran first. The typical gap between finishing one and starting the other
+            was {hm(D.medGap)}. Only {word(under30)} pairs were less than half an hour apart, and {far8} were 8 hours or more apart, a run in the morning and a walk in the evening.
+            Most of these days were in {dblPeak[0]}, {dblPeak[1]} of them, and {LY}{so} has {D.perYear[LY]}.
           </>}
           odds={{
             title: 'Days with both',
@@ -612,8 +612,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each bar counts the days in that year with at least one run (or trail run) and at least one walk.</>}
-          rightNote={<><b>Why it matters.</b> My walk was rarely a cool-down. Most pairs were two separate outings, one at each end of the day.</>}
+          leftNote={<>Each bar counts the days that year with at least one run (or trail run) and at least one walk.</>}
+          rightNote={<>The walk was hardly ever a cool-down after the run. Most of the time they were two separate outings at different ends of the day.</>}
           source="Activity Log · start time and moving time of runs and walks on the same date"
         />
 
@@ -625,11 +625,11 @@ export default function Sports() {
           title={`${cap(ofModeName(rated[0]))} work hardest.`}
           sub={`Per hour, ${ofModeName(rated[0])} scored ${n0(M[rated[0]].effortPerHour)} on effort and walks ${n0(M.walk.effortPerHour)}.`}
           statement={<>
-            Relative effort is Strava’s score of how hard my heart worked, built from heart rate. Counted per hour moving, the order is{' '}
+            Relative effort is Strava&rsquo;s score for how hard my heart worked, based on heart rate. Per hour of moving, the order is{' '}
             {rated.map((k) => `${ofModeName(k)} (${n0(M[k].effortPerHour)})`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.
-            {unrated.length ? ` ${cap(unrated.map((k) => ofModeName(k)).join(' and '))} are left out: too few carry a score.` : ''}
-            {' '}The people who follow me answer differently: my {ofModeName(kudosTop)} drew {n0(M[kudosTop].kudosPer)} kudos each, the most of any. My outdoor runs set {M.road.prsPer.toFixed(1)} personal records
-            per outing, while the treadmill sets almost none ({M.tread.prsPer.toFixed(2)}), because Strava’s segment records need GPS.
+            {unrated.length ? ` I left out ${unrated.map((k) => ofModeName(k)).join(' and ')}, because too few of them have a score.` : ''}
+            {' '}The people who follow me see it differently. My {ofModeName(kudosTop)} got {n0(M[kudosTop].kudosPer)} kudos each, more than any other sport. My outdoor runs set {M.road.prsPer.toFixed(1)} personal records
+            per outing, and the treadmill sets almost none ({M.tread.prsPer.toFixed(2)}), because Strava&rsquo;s segment records need GPS.
           </>}
           odds={{
             title: 'Effort per hour, kudos and records per outing',
@@ -658,8 +658,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> The sum of every scored outing’s relative effort, divided by the hours they took. Higher means harder on the heart for each hour out.</>}
-          rightNote={<><b>Why it matters.</b> Kudos are the likes other athletes give. The small figure under each sport is how many personal records it sets per outing.</>}
+          leftNote={<>All the relative effort scores for each sport added up and divided by the hours they took. The higher the bar, the harder my heart worked for each hour out.</>}
+          rightNote={<>Kudos are the likes other people give on Strava. The small figure under each sport is how many personal records it sets per outing.</>}
           source="Activity Log · Strava relative effort (heart rate), kudos and personal records"
         />
 
@@ -669,12 +669,12 @@ export default function Sports() {
           id="sp-maths"
           eyebrow={`${num()} · The maths of the feet`}
           title="Longer runs, quicker km."
-          sub="The longer the treadmill run, the quicker each kilometre."
+          sub="On the treadmill, the further I run, the quicker each kilometre goes."
           statement={<>
-            A correlation measures how two things move together, from −1 to 1, with 0 meaning no link. Across my {n0(F.n)} treadmill runs, distance against pace gives {F.r.toFixed(2).replace('-', '−')}:
-            a {strength(F.r)} pull, with my longer runs going quicker. The fitted line takes {secPerKm} seconds off each kilometre for every extra kilometre run.
-            {at5 && at21 ? ` My typical 5 km went at ${pace(at5.pace)} a km, my typical 21 km at ${pace(at21.pace)}, ${gain} seconds quicker.` : ''}
-            {' '}My running and walking didn&rsquo;t trade off: week by week since 2021 the two give {WF.r.toFixed(2).replace('-', '−')}, {strength(WF.r)}, so a big running week didn&rsquo;t mean less walking.
+            A correlation shows how two things move together, on a scale from −1 to 1, where 0 means no link at all. Across my {n0(F.n)} treadmill runs, distance against pace comes out at {F.r.toFixed(2).replace('-', '−')},
+            a {strength(F.r)} link, with my longer runs going quicker. The best-fit line takes {secPerKm} seconds off each kilometre for every extra kilometre I run.
+            {at5 && at21 ? ` My typical 5 km went at ${pace(at5.pace)} a km and my typical 21 km at ${pace(at21.pace)}, ${gain} seconds quicker.` : ''}
+            {' '}Running and walking didn&rsquo;t compete for my time. Week by week since 2021 they come out at {WF.r.toFixed(2).replace('-', '−')}, {strength(WF.r)}, so a big running week didn&rsquo;t mean less walking.
           </>}
           odds={{
             title: 'Four numbers from the fits',
@@ -709,8 +709,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> One dot per treadmill run, quicker at the top. The black line is the straight line that fits the dots best; it falls to the right, so longer runs ran quicker.</>}
-          rightNote={<><b>Why it matters.</b> One dot per week since 2021. The fitted line is nearly flat: how far a week ran says almost nothing about how far it walked.</>}
+          leftNote={<>One dot per treadmill run, with quicker runs higher up. The black line is the straight line that fits the dots best. It goes down to the right, which means longer runs were quicker.</>}
+          rightNote={<>One dot per week since 2021. The line is nearly flat, so how much I ran in a week tells you almost nothing about how much I walked.</>}
           source={`Activity Log · least-squares fits; treadmill runs quicker than ${pace(TREAD_MIN)} a km left out`}
         />
 
@@ -718,12 +718,12 @@ export default function Sports() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="sp-edges">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · The far edges</p>
+            <p className="eyebrow">{num()} · Biggest days</p>
             <h2 id="sp-edges" className="section-head__title">Each sport&rsquo;s biggest&nbsp;day.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            My longest treadmill run was {k1(M.tread.longest.km)} km, a full marathon without leaving the room. Outdoors my longest run was {k1(M.road.longest.km)} km and my longest
-            trail run {k1(M.trail.longest.km)} km with {n0(M.trail.longest.elev)} m of climb. My longest walk went {k1(M.walk.longest.km)} km, and my biggest hike climbed {n0(M.hike.steepest.elev)} m.
+            My longest treadmill run was {k1(M.tread.longest.km)} km, a whole marathon in one room. Outside, my longest run was {k1(M.road.longest.km)} km and my longest
+            trail run was {k1(M.trail.longest.km)} km, with {n0(M.trail.longest.elev)} m of climbing. My longest walk was {k1(M.walk.longest.km)} km, and my biggest hike climbed {n0(M.hike.steepest.elev)} m.
           </Reveal>
           <ul className="yrecs">
             <RecordCard kicker="Treadmill run" value={M.tread.longest.km} decimals={1} unit="km" label="the longest, a marathon indoors" sub={fmtDay(M.tread.longest.date)} tone="hot" />
@@ -758,8 +758,7 @@ export default function Sports() {
             ))}
           </ul>
           <p className="sp-other">
-            {n0(T.all - T.n)} more outings were off the feet: rides, gym workouts, physical therapy and the rest. They count in every total of outings, hours and kudos
-            elsewhere on the site, but not in distance or climb.
+            I also logged {n0(T.all - T.n)} other activities. They count towards my outings, hours and kudos everywhere on the site, but not towards distance or climb.
           </p>
         </section>
       </div>

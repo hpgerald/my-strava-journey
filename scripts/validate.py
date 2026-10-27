@@ -70,6 +70,19 @@ def main():
         if leaked:
             failures.append(f"{table}.csv exposes activity titles: {', '.join(sorted(leaked))}")
 
+    # only the four sports on foot and African countries are ever named
+    import re
+    banned = re.compile(r"ride|bike|cycl|gym|physio|workout|weight|crossfit|sail|canoe|golf|gravel|saudi|united kingdom", re.I)
+    for name, rows in tables.items():
+        for row in rows:
+            for key, value in row.items():
+                if key != "tags" and value and banned.search(str(value)):
+                    failures.append(f"{name}.csv names something the site folds into Other: {value[:60]}")
+                    break
+            else:
+                continue
+            break
+
     if failures:
         print("\nFAILED")
         print("\n".join(f"- {failure}" for failure in failures))

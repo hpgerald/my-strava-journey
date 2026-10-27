@@ -8,9 +8,12 @@ import NotFound from './NotFound.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { slugify, prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
+import { isNamedCountry } from '../lib/geo.js'
 
 // distance and climb count the four sports on foot, as on every other page
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const day = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 
 export default function PlaceDetail() {
   const { placeId } = useParams()
@@ -23,7 +26,8 @@ export default function PlaceDetail() {
     return <DetailFrame title="Loading…" crumbs={[{ label: 'Home', to: '/' }]} />
   }
 
-  const realCountries = countries.filter((c) => c.country && c.country !== 'Indoor / no GPS')
+  // only African countries get a page; others are never named
+  const realCountries = countries.filter((c) => isNamedCountry(c.country))
   const cIdx = realCountries.findIndex((c) => slugify(c.country) === placeId)
   const rIdx = regions.findIndex((r) => slugify(r.region) === placeId)
 
@@ -73,7 +77,7 @@ export default function PlaceDetail() {
         { label: name },
       ]}
       title={name}
-      subtitle={isCountry ? 'Country' : 'Tanzanian region'}
+      subtitle={isCountry ? 'A country I went out in' : 'A region of Tanzania'}
       prev={prev}
       next={next}
     >
@@ -85,9 +89,9 @@ export default function PlaceDetail() {
           <StatCard value={fmtInt(Math.round(footElev))} unit="m" label="Climbed on foot" />
         </div>
         <p className="text-muted" style={{ marginTop: 'var(--sp-4)', fontSize: 'var(--fs-sm)' }}>
-          {isCountry ? 'First logged here' : 'Active here'}: {(row.first_activity_date || '').slice(0, 10)}
-          {row.last_activity_date ? ` to ${(row.last_activity_date || '').slice(0, 10)}` : ''}
-          {row.top_sport ? ` · most common sport: ${prettySport(row.top_sport)}` : ''}.
+          My first outing here was on {day(row.first_activity_date)}
+          {row.last_activity_date ? `, and the most recent on ${day(row.last_activity_date)}` : ''}
+          {row.top_sport && row.top_sport !== 'Other' ? `. Most of them were ${prettySport(row.top_sport).toLowerCase()}s` : ''}.
         </p>
       </section>
 

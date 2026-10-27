@@ -44,7 +44,7 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   for (let k = 250; k <= acts.length; k += 250) counts.push(k)
   const milestones = [{ n: 1, date: firstISO }, ...counts.map((k) => ({ n: k, date: acts[k - 1].date }))]
   milestones.forEach((m, i) => { m.days = i ? dayIdx(m.date) - dayIdx(milestones[i - 1].date) : 0 })
-  for (const m of milestones) if (m.n === 1 || m.n % 500 === 0) events.push({ lane: 'mile', date: m.date, title: m.n === 1 ? 'My first outing' : `My ${ORD(m.n)} outing`, sub: m.n === 1 ? `a ${acts[0].sport === 'Ride' ? 'ride' : acts[0].sport.toLowerCase()}` : `${m.days} days after the ${ORD(m.n - 250)}`, key: 'ink' })
+  for (const m of milestones) if (m.n === 1 || m.n % 500 === 0) events.push({ lane: 'mile', date: m.date, title: m.n === 1 ? 'My first outing' : `My ${ORD(m.n)} outing`, sub: m.n === 1 ? 'where my log starts' : `${m.days} days after the ${ORD(m.n - 250)}`, key: 'ink' })
   events.push({ lane: 'mile', date: lastISO, title: `${acts.length.toLocaleString('en-US')} outings`, sub: 'my latest on record', key: 'road', now: true })
 
   // ---- firsts on foot ----
@@ -68,7 +68,8 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   // ---- places: each country's first outing and every stay abroad ----
   const countryName = (c) => (NAMED_COUNTRIES.has(c) ? c : 'Other')
   const byCountry = new Map()
-  for (const a of acts) if (a.country) { if (!byCountry.has(a.country)) byCountry.set(a.country, []); byCountry.get(a.country).push(dayIdx(a.date)) }
+  // only African countries appear; anything outside Africa is never shown
+  for (const a of acts) if (a.country && NAMED_COUNTRIES.has(a.country)) { if (!byCountry.has(a.country)) byCountry.set(a.country, []); byCountry.get(a.country).push(dayIdx(a.date)) }
   const stays = []
   for (const [c, ds] of byCountry) {
     if (c === 'Tanzania') continue
@@ -84,11 +85,11 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   stays.sort((a, b) => (a.start < b.start ? -1 : 1))
   const firstAbroad = new Map()
   for (const s of stays) if (!firstAbroad.has(s.raw)) firstAbroad.set(s.raw, s)
-  for (const [raw, s] of firstAbroad) events.push({ lane: 'place', date: s.start, title: NAMED_COUNTRIES.has(raw) ? `My first outing in ${raw}` : 'An outing outside Africa', sub: `${s.days} day${s.days > 1 ? 's' : ''} with an outing on that trip`, key: 'trail' })
+  for (const [raw, s] of firstAbroad) events.push({ lane: 'place', date: s.start, title: `My first outing in ${raw}`, sub: `${s.days} day${s.days > 1 ? 's' : ''} out on that trip`, key: 'trail' })
   const regionFirst = new Map()
   for (const a of acts) if (a.region && !regionFirst.has(a.region)) regionFirst.set(a.region, a.date)
   const regions = [...regionFirst.entries()].map(([region, date]) => ({ region, date })).sort((a, b) => (a.date < b.date ? -1 : 1))
-  for (const r of regions) events.push({ lane: 'region', date: r.date, title: `My first outing in ${r.region}`, sub: 'a new region of Tanzania for me', key: 'quiet' })
+  for (const r of regions) events.push({ lane: 'region', date: r.date, title: `My first outing in ${r.region}`, sub: 'a new region of Tanzania', key: 'quiet' })
 
   // ---- shoes: each pair from its first outing to its last ----
   const gearById = Object.fromEntries(gearRows.map((g) => [String(g.gear_id), g]))
@@ -99,7 +100,7 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   }
   const shoes = [...gMap.values()].map((g) => ({ ...g, model: gearById[g.id].model, brand: gearById[g.id].brand, retired: gearById[g.id].retired === 'Yes' }))
     .sort((a, b) => (a.first < b.first ? -1 : 1))
-  for (const s of shoes) events.push({ lane: 'shoe', date: s.first, title: `New pair: ${s.model}`, sub: `${Math.round(s.km).toLocaleString('en-US')} km in it${s.retired ? '' : ', still in my rotation'}`, key: 'walk' })
+  for (const s of shoes) events.push({ lane: 'shoe', date: s.first, title: `New pair: ${s.model}`, sub: `${Math.round(s.km).toLocaleString('en-US')} km in them${s.retired ? '' : ', and still wearing them'}`, key: 'walk' })
 
   // ---- streaks and silences ----
   const days = [...new Set(acts.map((a) => dayIdx(a.date)))].sort((a, b) => a - b)

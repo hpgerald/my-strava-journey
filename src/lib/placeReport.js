@@ -1,5 +1,5 @@
 import { toNum } from './format.js'
-import { NAMED_COUNTRIES } from './geo.js'
+import { NAMED_COUNTRIES, OTHER_LABEL } from './geo.js'
 
 // Everything the Where page says, from the activity log joined to each outing's
 // start place (country, and region inside Tanzania). Outings count every sport;
@@ -44,7 +44,10 @@ export function buildPlaceReport(activities, geoRows) {
   const abroad = countries.filter((c) => c.country !== 'Tanzania')
   const named = abroad.filter((c) => NAMED_COUNTRIES.has(c.country))
   const others = abroad.filter((c) => !NAMED_COUNTRIES.has(c.country))
-  const abroadFolded = [...named, ...(others.length ? [{ country: 'Other', ...agg(located.filter((r) => others.some((o) => o.country === r.country))), count: others.length }] : [])]
+  // anything outside Africa is one "Others" row, never named or counted as a country
+  const abroadFolded = [...named, ...(others.length ? [{ country: OTHER_LABEL, ...agg(located.filter((r) => others.some((o) => o.country === r.country))), isOther: true }] : [])]
+  const namedCountries = countries.filter((c) => NAMED_COUNTRIES.has(c.country))
+  const othersN = others.reduce((s, c) => s + c.n, 0)
   const abroadFirstFoot = Object.fromEntries(abroad.map((c) => [c.country, (located.find((r) => r.country === c.country && r.foot) || {}).date || null]))
 
   // ---- regions of Tanzania ----
@@ -90,7 +93,7 @@ export function buildPlaceReport(activities, geoRows) {
 
   return {
     n: rows.length, located: located.length, indoor: indoor.length, lastISO, years,
-    countries, abroad, abroadFolded, abroadFirstFoot, abroadN: abroad.reduce((s, c) => s + c.n, 0),
+    countries, namedCountries, othersN, abroad, abroadFolded, abroadFirstFoot, abroadN: abroad.reduce((s, c) => s + c.n, 0),
     regions, tzTot, discovered, byYear, topRegions, lifeEffective, indoorBy,
     firstISO: rows.length ? rows[0].date : '', dayIdx,
   }

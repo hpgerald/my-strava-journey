@@ -1,18 +1,21 @@
-// Only five countries are ever named across the site. Everywhere activities are
-// listed or labelled by country, anything outside this set folds into a single
-// neutral "Other" bucket, counted but not broken out (the choropleth is the one
-// exception, since a map shows real geography).
-export const NAMED_COUNTRIES = new Set(['Tanzania', 'Kenya', 'South Africa', 'Malawi', 'Rwanda'])
+// Only African countries are ever named on the site. The public data already
+// folds every country outside Africa into one "Other" row (see
+// scripts/sanitize_public_data.py); this keeps the code honest if one slips in.
+// Counts of countries only ever count the named ones.
+export const NAMED_COUNTRIES = new Set(['Tanzania', 'Kenya', 'South Africa', 'Malawi', 'Rwanda', 'Uganda', 'Zambia', 'Mozambique', 'Burundi', 'Ethiopia', 'Zimbabwe', 'Botswana', 'Namibia'])
 export const OTHER_COUNTRY = 'Other'
+export const OTHER_LABEL = 'Others'
 export const INDOOR_COUNTRY = 'Indoor / no GPS'
 
+export const isNamedCountry = (c) => NAMED_COUNTRIES.has(c)
+
 export function prettyCountry(c) {
-  return NAMED_COUNTRIES.has(c) ? c : OTHER_COUNTRY
+  return NAMED_COUNTRIES.has(c) ? c : OTHER_LABEL
 }
 
 // Fold an array of {country, ...} rows into named rows plus one aggregated
 // "Other", summing the numeric fields named in `sum`. Keeps named order by the
-// first `sum` field, Other last. The true distinct-country count is returned too.
+// first `sum` field, Other last. `distinct` counts the named countries only.
 export function foldCountryRows(rows, sum = ['activities'], { keepIndoor = false } = {}) {
   const N = (x) => Number(x) || 0
   const src = rows.filter((r) => r.country && (keepIndoor || r.country !== INDOOR_COUNTRY))
@@ -29,5 +32,5 @@ export function foldCountryRows(rows, sum = ['activities'], { keepIndoor = false
   }
   named.sort((a, b) => N(b[sum[0]]) - N(a[sum[0]]))
   const out = other ? [...named, other] : named
-  return { rows: out, distinct: src.length }
+  return { rows: out, distinct: named.length }
 }

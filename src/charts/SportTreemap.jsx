@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 
-// Every way the seven years moved. Only the four foot sports get a tile and a
-// name; everything else the log holds is gathered into one neutral "Other
-// activities" tile, counted but never broken out. Two warm tiles swallow the
-// frame - walking and running - and the eye reads the answer before the labels:
-// this is a life on foot.
+// Every outing as a tile. The four sports on foot get a tile and a name each;
+// everything else shares one "Other activities" tile and is never named.
 // props: rows (sport_breakdown table: { sport, activities })
 const FOOT = new Set(['Walk', 'Run', 'TrailRun', 'Hike'])
 const OTHER = '__other'
@@ -58,7 +55,6 @@ export default function SportTreemap({ rows }) {
   const total = all.reduce((s, d) => s + d.value, 0)
   const footN = all.filter((d) => FOOT.has(d.sport)).reduce((s, d) => s + d.value, 0)
   const footPct = total ? Math.round((footN / total) * 100) : 0
-  const distinctN = all.length
 
   // one tile per foot sport, plus a single aggregated "Other activities" tile
   const footTiles = all.filter((d) => FOOT.has(d.sport))
@@ -73,8 +69,7 @@ export default function SportTreemap({ rows }) {
   return (
     <div ref={ref} className="tm">
       <p className="tm__readout">
-        <span className="mono tm__readout-n">{distinctN}</span> sports in all, yet{' '}
-        <strong>{footPct}%</strong> of every outing is on foot.
+        <strong>{footPct}%</strong> of all my outings are on foot.
       </p>
       <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img"
         aria-label={`The four foot sports sized by how often they were done, with everything else gathered into one other-activities tile. ${footPct} percent of all outings are on foot.`}

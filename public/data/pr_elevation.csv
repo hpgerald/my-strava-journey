@@ -1,11 +1,11 @@
 rank,elevation_m,date,sport,distance_km,kudos,prs,source_page
 1,1979.1,2025-03-29 07:32:34,Hike,16.118,59,0,Personal Records
 2,1718.3,2023-04-30 05:53:41,Hike,17.239,47,0,Personal Records
-3,1439.9,2020-07-07 08:33:01,Ride,119.071,3,0,Personal Records
-4,1425.4,2022-06-23 07:23:15,Hike,11.317,37,0,Personal Records
-5,1327.6,2023-01-22 08:41:07,TrailRun,22.711,85,5,Personal Records
-6,1194.9,2023-02-19 08:15:44,TrailRun,10.753,68,1,Personal Records
-7,1171.9,2025-04-21 11:30:34,GravelRide,64.011,0,2,Personal Records
-8,1158.1,2024-05-04 08:13:46,GravelRide,87.392,21,6,Personal Records
-9,1059.8,2023-08-19 06:32:44,TrailRun,18.749,74,1,Personal Records
-10,1037.4,2023-03-07 08:25:06,TrailRun,12.604,59,0,Personal Records
+3,1425.4,2022-06-23 07:23:15,Hike,11.317,37,0,Personal Records
+4,1327.6,2023-01-22 08:41:07,TrailRun,22.711,85,5,Personal Records
+5,1194.9,2023-02-19 08:15:44,TrailRun,10.753,68,1,Personal Records
+6,1059.8,2023-08-19 06:32:44,TrailRun,18.749,74,1,Personal Records
+7,1037.4,2023-03-07 08:25:06,TrailRun,12.604,59,0,Personal Records
+8,1036.6,2023-08-20 08:15:29,TrailRun,18.169,57,2,Personal Records
+9,1017.3,2023-03-08 08:05:22,TrailRun,9.303,62,0,Personal Records
+10,980.9,2023-03-08 22:51:12,TrailRun,5.417,62,0,Personal Records

@@ -62,10 +62,8 @@ export function buildMeaningReport(activities) {
   const smallKm = smallDays.reduce((s, i) => s + kmOn(i), 0)
   const kindOf = (i) => {
     const r = byDay.get(i)
+    // a short outing on foot, or only other activities (never named)
     if (r.some((a) => FOOT.has(a.sport))) return 'foot'
-    if (r.some((a) => /Ride/.test(a.sport))) return 'ride'
-    if (r.some((a) => a.sport === 'PhysicalTherapy')) return 'physio'
-    if (r.some((a) => a.sport === 'Workout' || a.sport === 'WeightTraining')) return 'gym'
     return 'other'
   }
   const smallKinds = {}

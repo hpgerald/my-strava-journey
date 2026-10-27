@@ -44,20 +44,20 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 | comparisons.csv | Yearly Trends, Zones & Effort | High (derived) | 2019→2026 then/now; every value traces to a sheet. |
 | timeline.csv | Activity Log, Personal Records, Fun Stats, Strava GPS | Mixed | Milestone dates computed from the ordered log; travel dates from GPS (see §5). |
 | activity_geo.csv | Strava GPS + geocoding | Medium–High | Per-activity country/region; 880 have no GPS (see §5). |
-| countries.csv | Strava GPS + point-in-polygon | Medium–High | 7 countries; border caveats in §5. |
+| countries.csv | Strava GPS + point-in-polygon | Medium–High | 5 African countries plus Other; border caveats in §5. |
 | tanzania_regions.csv | Strava GPS + nearest TZ city | Medium–High | 17 regions; see §5. |
 | nav_index.csv | authored | n/a | Site structure, no figures. |
 | glossary.csv | authored | n/a | Standard Strava term definitions. |
 
 ---
 
-## 3. Known gaps (value genuinely unavailable — left blank, not invented)
+## 3. Known gaps (value genuinely unavailable, left blank, not invented)
 
 - **Time-in-zone**: the workbook gives only the **boundaries** of HR, power and pace zones,
   not how much time was spent in each. A "time per zone" chart is therefore not possible from
   this data and is not attempted.
-- **Calories = 0**: some sports carry zero calories in the source (Sail, Canoeing, and the
-  distance-less Workout / PhysicalTherapy / Crossfit entries). Strava did not record them;
+- **Calories = 0**: some other activities carry zero calories in the source. Strava did not
+  record them;
   shown as 0 / blank, not estimated.
 - **Cadence**: absent (`None`) on many early-2019/2020 activities and non-foot sports; blanked.
 - **Gear distance**: `strava_total_km` is Strava's lifetime odometer for the item and can
@@ -84,10 +84,10 @@ polyline. Country was assigned by **point-in-polygon** against Natural Earth adm
 boundaries (offline). For points inside Tanzania, region (admin-1) was assigned by the
 **nearest Tanzanian town** in the GeoNames cities1000 dataset. An activity is attributed
 wholly to the region/country of its start point (a route crossing a boundary counts where it
-began — standard practice, stated here).
+began, standard practice, stated here).
 
-**Result.** 7 countries — Tanzania 1,043, Kenya 32, Malawi 23, South Africa 13,
-Saudi Arabia 2, Rwanda 2, United Kingdom 1 — and 17 Tanzanian regions
+**Result.** 5 African countries (Tanzania, Kenya, Malawi, South Africa and Rwanda),
+a handful of outings grouped as Other, and 17 Tanzanian regions
 (Dodoma, Kilimanjaro, Dar es Salaam, Morogoro, Iringa, Arusha, Pwani, Zanzibar,
 Manyara, Mbeya, Mara, Mwanza, Njombe, Tanga, Rukwa, Singida).
 
@@ -102,12 +102,12 @@ Manyara, Mbeya, Mara, Mwanza, Njombe, Tanga, Rukwa, Singida).
   an `interior` flag (1 = confidently inland, 0 = within 2 km of another country). 161 GPS
   activities are border-margin; of the foreign ones, 8 are the coastal Kenya/Tanzania border
   cluster (~-3.97, 39.75).
-- **One notable edge case**: the 2020-07-07 121 km ride starts near the Amboseli/Longido
+- **One notable edge case**: an activity on 2020-07-07 starts near the Amboseli/Longido
   border. Both the polygon test and the nearest-town test place it in Kenya, so it is counted
   there and listed as the first Kenya activity, but at this resolution a Tanzania start cannot
-  be ruled out. Flagged for your eye.
-- Every other foreign country resolves to a clearly interior city (Nairobi/Mombasa/Maasai Mara,
-  Lilongwe, Johannesburg/Sandton, Kigali, Riyadh, Oxford) and is high-confidence.
+  be ruled out.
+- Every other country resolves to a clearly interior city (Nairobi/Mombasa/Maasai Mara,
+  Lilongwe, Johannesburg/Sandton, Kigali) and is high-confidence.
 
 ---
 
@@ -119,7 +119,7 @@ Manyara, Mbeya, Mara, Mwanza, Njombe, Tanga, Rukwa, Singida).
 - Totals reconcile: `activities.csv` rows, and the activity sums of sport_breakdown,
   yearly_totals, countries, weekday, time-of-day and indoor/outdoor all equal **1,996**.
 - 10 values spot-checked against the workbook (Walk 831; Run 8,083.4 km; 2026 = 258
-  activities; longest ride 121.344 km; highest climb 1,979.1 m; lifetime 1,996; longest streak
-  239 days; top kudos 125; top title "Evening Walk"; 11.69 Everests) — all match.
+  activities; highest climb 1,979.1 m; lifetime 1,996; longest streak
+  239 days; top kudos 125; top title "Evening Walk"; 11.69 Everests), all match.
 
 Run `scripts/validate.py` to re-check.

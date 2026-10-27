@@ -49,11 +49,11 @@ export default function Chronicle({ data, aria }) {
   const lane = (key, title, h) => { L[key] = { y, c: y + off, h: h + off, title }; y += h + off }
   lane('mile', 'Milestones', narrow ? 40 : 52)
   lane('first', 'Firsts on foot', narrow ? 34 : 126)
-  lane('place', 'Abroad', narrow ? 34 : 70)
+  lane('place', 'Across the border', narrow ? 34 : 70)
   lane('region', 'New regions', narrow ? 26 : 34)
   const shoeRows = 3
   lane('shoe', 'Shoes', narrow ? 40 : 30 + shoeRows * 18)
-  lane('streak', 'Streaks and silences', narrow ? 46 : 62)
+  lane('streak', 'Streaks and long gaps', narrow ? 46 : 62)
   lane('tex', 'Outings a month', narrow ? 34 : 44)
   const H = y + 8
 
@@ -133,7 +133,7 @@ export default function Chronicle({ data, aria }) {
             const x0 = X(s.start), x1 = Math.max(X(s.end), x0 + 3)
             return (
               <rect key={i} x={x0} y={L.place.c + (narrow ? 14 : 44)} width={x1 - x0} height={narrow ? 12 : 16} rx="1.5" className={`mfill--${COUNTRY_KEY[s.country] || 'quiet'} chron__m chron__bar`} style={{ '--d': `${fr(s.start) * 1.8}s` }}
-                onMouseEnter={show(s, `${fmtDay(s.start)}${s.end !== s.start ? ` to ${fmtDay(s.end)}` : ''} · ${s.country === 'Other' ? 'outside Africa' : s.country}, ${s.days} day${s.days > 1 ? 's' : ''} with an outing`)} />
+                onMouseEnter={show(s, `${fmtDay(s.start)}${s.end !== s.start ? ` to ${fmtDay(s.end)}` : ''} · ${s.country}, ${s.days} day${s.days > 1 ? 's' : ''} out`)} />
             )
           })}
           {!narrow && (() => {
@@ -185,7 +185,7 @@ export default function Chronicle({ data, aria }) {
           {(() => {
             const cand = [
               ...data.streaks.filter((s) => s.len >= 60).map((s) => ({ key: s.start, len: s.len, x: X(s.start), text: narrow ? `${s.len} days` : `${s.len} days${s.current ? ', still going' : ''}`, gap: false, start: s.start })),
-              ...data.breaks.filter((b) => b.len >= 300).map((b) => ({ key: b.start, len: b.len, x: X(b.start), text: narrow ? `${b.len} silent` : `${b.len} days silent`, gap: true, start: b.start })),
+              ...data.breaks.filter((b) => b.len >= 300).map((b) => ({ key: b.start, len: b.len, x: X(b.start), text: narrow ? `${b.len} days off` : `${b.len} days off`, gap: true, start: b.start })),
             ].sort((a, b) => b.len - a.len)
             const taken = []
             const out = []

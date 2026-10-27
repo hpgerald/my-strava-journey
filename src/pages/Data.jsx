@@ -6,65 +6,64 @@ const GROUPS = [
   {
     title: 'Activity data',
     items: [
-      ['activities', 'Every activity, one row each (the master log).'],
-      ['activity_geo', 'Per-activity GPS start point, country and region.'],
+      ['activities', 'Every activity, one row each. Everything else is built from this.'],
+      ['activity_geo', 'The country and region each activity started in.'],
     ],
   },
   {
     title: 'Totals & trends',
     items: [
-      ['lifetime_totals', 'The ten headline lifetime figures.'],
-      ['sport_breakdown', 'Totals per sport type.'],
-      ['yearly_totals', 'All-sport totals by year.'],
+      ['lifetime_totals', 'The main totals since the first upload.'],
+      ['sport_breakdown', 'Totals for each sport on foot, and for other activities.'],
+      ['yearly_totals', 'Totals by year.'],
       ['yearly_by_sport', 'Distance by year and sport.'],
-      ['monthly_totals', 'All-sport totals by month.'],
+      ['monthly_totals', 'Totals by month.'],
     ],
   },
   {
     title: 'Records',
     items: [
-      ['pr_longest', 'Ten longest activities.'],
-      ['pr_elevation', 'Ten highest climbs.'],
+      ['pr_longest', 'My ten longest outings on foot.'],
+      ['pr_elevation', 'My ten biggest climbs on foot.'],
       ['pr_activities', 'Every activity that set a personal record.'],
-      ['kudos_leaderboard', 'Most-kudoed activities.'],
-      ['most_repeated_titles', 'Most-used activity titles.'],
+      ['kudos_leaderboard', 'The activities with the most kudos.'],
+      ['most_repeated_titles', 'How often my most-used titles came up, without the titles.'],
     ],
   },
   {
     title: 'Effort & zones',
     items: [
       ['hr_zones', 'Heart-rate zone boundaries.'],
-      ['power_zones', 'Power zone boundaries.'],
       ['pace_zones', 'Running pace zone boundaries.'],
-      ['relative_effort_by_year', 'Relative effort and cadence per year.'],
+      ['relative_effort_by_year', 'Relative effort and cadence by year.'],
     ],
   },
   {
     title: 'Geography',
     items: [
-      ['countries', 'Activities, distance and more by country.'],
-      ['tanzania_regions', 'The same, by Tanzanian region.'],
+      ['countries', 'Outings, distance and climb by country.'],
+      ['tanzania_regions', 'The same for each region of Tanzania.'],
     ],
   },
   {
     title: 'Patterns, gear & fun',
     items: [
-      ['weekday_patterns', 'Activity by day of week.'],
-      ['time_of_day_patterns', 'Activity by time of day.'],
-      ['indoor_outdoor', 'Indoor/trainer versus outdoor.'],
-      ['streaks', 'Longest and current active streaks.'],
-      ['gear', 'Shoes, with lifetime and in-log distance.'],
-      ['fun_journey', 'Distance as marathons, Everests and more.'],
+      ['weekday_patterns', 'Outings by day of the week.'],
+      ['time_of_day_patterns', 'Outings by time of day.'],
+      ['indoor_outdoor', 'Indoors against outside.'],
+      ['streaks', 'My longest and current streaks.'],
+      ['gear', 'My shoes and how far each pair went.'],
+      ['fun_journey', 'My distance and climb as marathons, Everests and so on.'],
     ],
   },
   {
     title: 'Derived & site content',
     items: [
-      ['comparisons', 'The then-versus-now figures behind the dashboard.'],
-      ['timeline', 'Dated milestones.'],
-      ['glossary', 'Term definitions.'],
-      ['nav_index', 'Site navigation structure.'],
-      ['meta', 'Coverage, units and refresh info.'],
+      ['comparisons', 'Then-and-now figures.'],
+      ['timeline', 'Milestones with their dates.'],
+      ['glossary', 'What the terms mean.'],
+      ['nav_index', 'The chapters and their order.'],
+      ['meta', 'Dates covered, units and when it was last refreshed.'],
     ],
   },
 ]
@@ -82,8 +81,8 @@ export default function Data() {
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Data' }]}
       title="The data"
-      subtitle="What powers the site"
-      lede="The whole site runs off the tables below. Here is what each one holds and how it was put together. This is my own activity data, so it is shown for reference rather than offered as a download."
+      subtitle="The tables behind the site"
+      lede="Everything on the site comes from the tables below. Here&rsquo;s what each one holds and how it was put together. It&rsquo;s my own activity data, so I&rsquo;ve listed it here rather than offering it as a download."
     >
       {GROUPS.map((g) => (
         <section key={g.title} style={{ paddingTop: 'var(--sp-6)' }}>
@@ -120,10 +119,9 @@ export default function Data() {
             and exact locations are removed before anything is published.
           </p>
           <p>
-            Numbers are never invented. Where a value was unavailable it is left blank and logged.
-            The geographic totals cover the {gpsCount.toLocaleString()} activities that carry GPS; indoor and trainer
-            sessions have none. The country and region maps are approximate cartography, and the
-            full method notes ship with the project.
+            I never make numbers up. If a value wasn&rsquo;t available, I left it blank. The country and region totals
+            cover the {gpsCount.toLocaleString()} activities with GPS, because indoor sessions don&rsquo;t have any. The maps
+            are close but not exact, especially near borders.
           </p>
         </div>
       </section>

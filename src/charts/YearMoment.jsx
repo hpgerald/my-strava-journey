@@ -1,9 +1,10 @@
 import { useInView, useCountUp, Reveal } from '../components/Reveal.jsx'
-import { prettySport } from '../lib/slug.js'
+import { isNamedCountry } from '../lib/geo.js'
 
 // The signature moment of each year: a focused, animated statement plus one
 // bespoke mini-visual. Driven entirely by the year's computed `stats`, so the
-// words and figures stay true to the data. Cycling never appears by name.
+// words and figures stay true to the data. Only sports on foot and African
+// countries are ever named.
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 function Big({ value, decimals = 0 }) {
@@ -48,12 +49,12 @@ export default function YearMoment({ year, stats }) {
   if (year <= 2019) {
     kicker = 'First steps'
     title = 'The record begins.'
-    body = `It opens with a short run in August and gathers ${s.n} activities before the year is out, most of them indoor miles. A quiet debut, with no sign yet of what it becomes.`
+    body = `My first upload was in August, and by the end of the year I had ${s.n} activities, most of them runs on a treadmill. Nothing about it looked like the start of a habit.`
     figure = <div className="ymom__chips">{chip('activities', s.n)}{chip('active days', s.activeDays)}{chip('kilometres on foot', Math.round(s.footKm))}</div>
   } else if (year === 2020) {
     kicker = 'The quiet year'
-    title = 'Then it nearly stops.'
-    body = `Just ${s.n} activities across the whole year, and after midsummer the log falls silent for months. The habit has not caught yet.`
+    title = 'Then it nearly stopped.'
+    body = `Only ${s.n} activities all year. After the middle of the year I stopped logging for months. The habit hadn’t taken hold yet.`
     figure = <div className="ymom__chips">{chip('activities', s.n)}{chip('active days', s.activeDays)}{chip('longest streak', s.streakLen)}</div>
   } else if (year === 2021) {
     kicker = 'The switch'
@@ -61,12 +62,12 @@ export default function YearMoment({ year, stats }) {
     const jun = s.monthsActivities[5] || 0
     const jul = s.monthsActivities[6] || 0
     const aug = s.monthsActivities[7] || 0
-    body = `For the first half the calendar barely registers. Then July arrives and does not let go: a handful of activities becomes dozens, and the year closes with a ${s.streakLen}-day unbroken run.`
+    body = `For the first half of the year there’s hardly anything. Then, in the middle of the year, a handful of outings a month turned into dozens, and by the end I’d strung together ${s.streakLen} days in a row.`
     figure = <JumpBars items={[{ label: 'Jun', v: jun }, { label: 'Jul', v: jul, hot: true }, { label: 'Aug', v: aug }]} />
   } else if (year === 2022) {
     kicker = 'The peak'
     title = 'The busiest year on record.'
-    body = `${s.n} activities, more than any year before or since, and the year walking first drew level with running as the engine of the habit.`
+    body = `${s.n} activities, more than in any other year, and the first year I walked more often than I ran.`
     figure = (
       <div className="ymom__versus">
         <div className="ymom__vrow"><span className="ymom__vlbl">Walk</span><span className="ymom__vbar" style={{ width: `${Math.min(100, (s.walkN / Math.max(s.walkN, s.runN)) * 100)}%`, background: 'var(--accent)' }} /><span className="mono">{s.walkN}</span></div>
@@ -75,20 +76,21 @@ export default function YearMoment({ year, stats }) {
     )
   } else if (year === 2023) {
     kicker = 'The climb'
-    title = 'The year of vertical.'
-    body = `${Math.round(s.elev).toLocaleString()} metres gained, far more than any year yet, capped by a 100 km stage race run over four straight nights in March.`
+    title = 'My year of climbing.'
+    body = `I climbed ${Math.round(s.elev).toLocaleString()} metres, far more than in any year before, and in March I ran a 100 km stage race over four evenings in a row.`
     const peak = s.monthsElev.indexOf(Math.max(...s.monthsElev))
     figure = (
       <>
         <div className="ymom__chips">{chip('metres climbed', Math.round(s.elev))}{chip('personal records', s.prs)}</div>
-        <p className="ymom__cap">Steepest month: <b>{MON[peak]}</b>, {Math.round(s.monthsElev[peak]).toLocaleString()} m.</p>
+        <p className="ymom__cap">My biggest month for climbing was <b>{MON[peak]}</b>, with {Math.round(s.monthsElev[peak]).toLocaleString()} m.</p>
       </>
     )
   } else if (year === 2024) {
-    kicker = 'The passport'
+    kicker = 'The travel year'
     title = 'The map at its widest.'
-    const away = s.countries.filter((c) => c.country !== 'Tanzania')
-    body = `${s.countries.length} countries in a single year, from home in Tanzania out to ${away.slice(0, 3).map((c) => c.country).join(', ')}${away.length > 3 ? ' and more' : ''}.`
+    const away = s.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country)
+    const list = away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away.join('')
+    body = `I went out in ${s.countriesNamed} countries that year. Most outings were at home in Tanzania, and the rest were in ${list}.`
     figure = (
       <Reveal className="ymom__stamps">
         {s.countries.map((c, i) => (
@@ -100,14 +102,14 @@ export default function YearMoment({ year, stats }) {
     )
   } else if (year === 2025) {
     kicker = 'The highest point'
-    title = 'The steepest day on record.'
-    body = `One outing climbed ${Math.round(s.highestClimb ? s.highestClimb.val : 0).toLocaleString()} metres, the most vertical ever gained in a single day, part of a year that kept pointing uphill.`
+    title = 'My biggest climb.'
+    body = `One outing that year climbed ${Math.round(s.highestClimb ? s.highestClimb.val : 0).toLocaleString()} metres, more than any other single outing I’ve done.`
     figure = <div className="ymom__chips">{chip('metres in a day', Math.round(s.highestClimb ? s.highestClimb.val : 0))}{chip('metres in the year', Math.round(s.elev))}</div>
   } else {
     // 2026 and any later year: the unbroken streak
     kicker = 'Unbroken'
     title = 'A streak that never broke.'
-    body = `Active ${s.streakLen} days in a row and still counting, with more hours moving and more personal records than any year before.`
+    body = `I’ve been out ${s.streakLen} days in a row and I’m still going. I’ve also moved for more hours and set more personal records than in any year before.`
     figure = <div className="ymom__chips">{chip('day streak', s.streakLen)}{chip('hours moving', Math.round(s.hours))}{chip('personal records', s.prs)}</div>
   }
 

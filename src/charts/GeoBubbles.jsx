@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
-import { NAMED_COUNTRIES } from '../lib/geo.js'
+import { NAMED_COUNTRIES, OTHER_LABEL } from '../lib/geo.js'
 
-// Where in the world the seven years happened. Almost all of it is home: of every
-// activity a GPS fix could place, more than nine in ten sit inside Tanzania, drawn
-// as one dominant disc. The rest are passport stamps - a handful of activities each,
-// six other countries, listed with the year they were first logged. The story is the
-// gap between the disc and the list: a life of training run overwhelmingly at home,
-// with a thin scatter carried abroad.
+// Home against away. Of every outing a GPS start could place, Tanzania is the
+// disc; the other African countries are listed with the year each was first
+// reached, and anything outside Africa sits in one row marked Others.
 // props: rows (the countries table: { country, activities, first_activity_date })
 const HOME = 'Tanzania'
 const INDOOR = 'Indoor / no GPS'
@@ -24,12 +21,11 @@ export default function GeoBubbles({ rows }) {
     .filter((r) => r.country !== HOME)
     .map((r) => ({ country: r.country, n: N(r.activities), year: (r.first_activity_date || '').slice(0, 4) }))
     .sort((a, b) => b.n - a.n)
-  const trueAwayCount = awayRaw.length
-  // name only the five; fold the rest into one "Other" row
+  // name the African countries; everything else is one "Others" row
   const namedAway = awayRaw.filter((a) => NAMED_COUNTRIES.has(a.country))
   const restAway = awayRaw.filter((a) => !NAMED_COUNTRIES.has(a.country))
   const away = [...namedAway]
-  if (restAway.length) away.push({ country: 'Other', n: restAway.reduce((s, a) => s + a.n, 0), year: '' })
+  if (restAway.length) away.push({ country: OTHER_LABEL, n: restAway.reduce((s, a) => s + a.n, 0), year: '' })
   const total = located.reduce((a, r) => a + N(r.activities), 0)
   const homeN = home ? N(home.activities) : 0
   const homePct = total ? Math.round((homeN / total) * 100) : 0
@@ -54,13 +50,13 @@ export default function GeoBubbles({ rows }) {
             <text x={R + 4} y={R + 4 + 22} textAnchor="middle" className="geo__disc-lbl">at home</text>
           </svg>
           <p className="geo__home-cap">
-            <strong>{HOME}</strong> · {homeN.toLocaleString()} activities
+            <strong>{HOME}</strong> · {homeN.toLocaleString()} outings
           </p>
         </div>
 
         <div className="geo__away">
           <p className="geo__away-hd">
-            The passport · {awayN.toLocaleString()} activities, {trueAwayCount} other countries
+            Outside Tanzania · {awayN.toLocaleString()} outings
           </p>
           <ul className="geo__list">
             {away.map((a, i) => (

@@ -21,7 +21,7 @@ const ORD = (n) => `${n.toLocaleString('en-US')}${n % 100 >= 11 && n % 100 <= 13
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const word = (n) => WORD[n] || String(n)
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
-const LANE = { mile: 'Milestone', first: 'First on foot', place: 'Abroad', region: 'New region', shoe: 'Shoes', streak: 'Streak' }
+const LANE = { mile: 'Milestone', first: 'First on foot', place: 'Across the border', region: 'New region', shoe: 'Shoes', streak: 'Streak' }
 
 // the event rail: one block per year, every moment in date order
 function YearBlock({ year, items }) {
@@ -52,7 +52,7 @@ export default function Timeline() {
   const { prev, next } = useSectionPaging('/timeline')
   const C = useMemo(() => (activities.length ? buildChronicle(activities, geoRows, gearRows) : null), [activities, geoRows, gearRows])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: '06', title: 'Timeline', subtitle: 'In order. First upload to now.', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: '06', title: 'Timeline', subtitle: 'From my first upload to now', prev, next }
   if (!C) return <DetailFrame {...frame} />
 
   let secN = 0
@@ -86,20 +86,20 @@ export default function Timeline() {
   return (
     <DetailFrame
       {...frame}
-      lede="My whole record in the order it happened, drawn as one chronicle: the milestones, the firsts, the trips abroad and the new regions, every pair of shoes, and the streaks and silences. Then every moment written out, year by year."
+      lede="Everything in the order it happened, drawn on one chart: the milestones, the firsts, the trips across the border, the new regions, every pair of shoes, and the streaks and the long gaps. After that, every moment written out year by year."
     >
       <div className="yis-report">
         {/* ===== the chronicle ===== */}
         <section className="sgrid yis-top" aria-labelledby="tl-title">
           <div className="sgrid__head">
             <p className="eyebrow">{fmtMon(C.firstISO)} to {fmtMon(C.lastISO)}</p>
-            <h2 id="tl-title" className="section-head__title">The silence never came&nbsp;back.</h2>
-            <p className="section-head__sub">After my {n0(S.len)}-day silence, no break has lasted more than {word(C.maxAfter)} days.</p>
+            <h2 id="tl-title" className="section-head__title">No long gap since&nbsp;then.</h2>
+            <p className="section-head__sub">Since my {n0(S.len)}-day gap, no break has lasted more than {word(C.maxAfter)} days.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            My record opens on {fmtDay(C.firstISO)}, and I logged {n0(C.beforeSilence)} outings in its first {n0(Math.round((C.dayIdx(S.start) - C.dayIdx(C.firstISO)) / 30.44))} months. Then I went quiet from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
-            Since I came back, the longest gap between two of my outings has been {word(C.maxAfter)} days, and {cur ? `my current streak has run ${n0(cur.len)} days since ${fmtDay(cur.start)}` : 'the outings have kept coming'}.
-            Along the way: {F.length} firsts on foot, {abroadN} countries outside Tanzania, {C.regions.length} regions of Tanzania and {C.shoes.length} pairs of shoes.
+            My log starts on {fmtDay(C.firstISO)}, and I logged {n0(C.beforeSilence)} outings in the first {n0(Math.round((C.dayIdx(S.start) - C.dayIdx(C.firstISO)) / 30.44))} months. Then I stopped from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
+            Since I started again, the longest gap between two outings has been {word(C.maxAfter)} days, and {cur ? `my current streak has run for ${n0(cur.len)} days, since ${fmtDay(cur.start)}` : 'the outings have kept coming'}.
+            Along the way there have been {F.length} firsts on foot, {abroadN} countries besides Tanzania, {C.regions.length} regions of Tanzania and {C.shoes.length} pairs of shoes.
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -130,11 +130,11 @@ export default function Timeline() {
           id="tl-pace"
           eyebrow={`${num()} · The pace`}
           title={`The first 250 took ${n0(firstStep.days)} days.`}
-          sub="Every 250 since has taken under a year."
+          sub="Each 250 since then has taken less than a year."
           statement={<>
-            My {ORD(firstStep.n)} outing came on {fmtDay(firstStep.date)}, {n0(firstStep.days)} days after the first, with the silence inside that stretch.
-            Since then each block of 250 has taken me between {n0(fastest.days)} days (to the {ORD(fastest.n)}, {fmtMon(fastest.date)}) and {n0(slowest.days)} days (to the {ORD(slowest.n)}, {fmtMon(slowest.date)}).
-            My breaks shrank with it: the longest each year fell from {n0(Math.max(...gapYears.filter((g) => g.year <= 2020).map((g) => g.g)))} days in 2020 to {C.yearGaps[String(lastYear)] ? `${n0(C.yearGaps[String(lastYear)])} days` : 'no break at all'} in {lastYear}{so}.
+            My {ORD(firstStep.n)} outing came on {fmtDay(firstStep.date)}, {n0(firstStep.days)} days after the first, and the long gap falls inside that stretch.
+            Since then each block of 250 has taken between {n0(fastest.days)} days (to the {ORD(fastest.n)}, in {fmtMon(fastest.date)}) and {n0(slowest.days)} days (to the {ORD(slowest.n)}, in {fmtMon(slowest.date)}).
+            My breaks got shorter too. The longest one each year went from {n0(Math.max(...gapYears.filter((g) => g.year <= 2020).map((g) => g.g)))} days in 2020 down to {C.yearGaps[String(lastYear)] ? `${n0(C.yearGaps[String(lastYear)])} days` : 'no break at all'} in {lastYear}{so}.
           </>}
           odds={{
             title: 'Every 250 outings',
@@ -165,8 +165,8 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each bar is the days it took to add 250 outings. The first bar, in grey, holds the silence and is cut at 400.</>}
-          rightNote={<><b>Why it matters.</b> The longest stretch without an outing in each year. Bars that run off the top (in grey) are the early years; since my habit began the longest has been {word(C.maxAfter)} days.</>}
+          leftNote={<>Each bar is how many days it took to add another 250 outings. The first bar, in grey, includes the long gap, so I&rsquo;ve cut it off at 400.</>}
+          rightNote={<>The longest stretch without an outing in each year. The bars that run off the top, in grey, are the early years. Since the habit started, the longest has been {word(C.maxAfter)} days.</>}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
         />
 
@@ -179,7 +179,7 @@ export default function Timeline() {
           sub={`From a 10 km on day ${dayOf(F[0].date)} to a ${lastFirst.km.toFixed(1)} km ${lastFirst.sport === 'Walk' ? 'walk' : 'outing'} in ${lastFirst.date.slice(0, 4)}.`}
           statement={<>
             {F.map((f) => `${f.title.replace('First', 'the first')} in ${fmtMon(f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
-            {' '}The treadmill gave me the early distance firsts; the trails, the mountains and the long walks gave me the later ones.
+            {' '}The early distance firsts all came on the treadmill. The later ones came on trails, in the mountains and on long walks.
           </>}
           odds={{
             title: 'Firsts on foot',
@@ -209,8 +209,8 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<><b>How to read it.</b> Each bar runs from the first outing on record to the day the first came, coloured by how it was done.</>}
-          rightNote={<><b>Why it matters.</b> My firsts cluster in the early habit years and then thin out: each new one needs a longer day or a steeper hill.</>}
+          leftNote={<>Each bar runs from my first outing to the day of that first, coloured by sport.</>}
+          rightNote={<>Most of my firsts came in the early habit years and then they slowed down, because each new one needs a longer day or a steeper hill.</>}
           source="Activity Log · the first outing on foot to pass each mark"
         />
 
@@ -218,7 +218,7 @@ export default function Timeline() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="tl-rail">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Every moment, in order</p>
+            <p className="eyebrow">{num()} · Year by year</p>
             <h2 id="tl-rail" className="section-head__title">{C.events.length} moments in {word(lastYear - Number(C.firstISO.slice(0, 4)) + 1)} years.</h2>
           </div>
           <ol className="trail">

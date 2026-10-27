@@ -10,6 +10,7 @@ import { slugify, prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+const PLURAL = { Run: 'runs', Walk: 'walks', TrailRun: 'trail runs', Hike: 'hikes' }
 
 export default function SportDetail() {
   const { sportId } = useParams()
@@ -19,7 +20,7 @@ export default function SportDetail() {
   if (!sports.length) return <DetailFrame title="Loading…" crumbs={[{ label: 'Home', to: '/' }]} />
 
   const idx = sports.findIndex((s) => slugify(s.sport) === sportId)
-  if (idx === -1) {
+  if (idx === -1 || !FOOT.has(sports[idx].sport)) {
     return <NotFound message={`No sport called "${sportId}" appears in this history.`} />
   }
   const s = sports[idx]
@@ -65,17 +66,17 @@ export default function SportDetail() {
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Sports', to: '/sports' }, { label: name }]}
       title={name}
-      subtitle={`${fmtInt(s.activities)} activities logged`}
+      subtitle={`${fmtInt(s.activities)} ${PLURAL[s.sport] || 'outings'} so far`}
       prev={prev}
       next={next}
     >
       <section aria-label="Totals" style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--4">
-          <StatCard value={fmtInt(s.activities)} label="Activities" />
+          <StatCard value={fmtInt(s.activities)} label="Outings" />
           {hasDistance && <StatCard value={fmtNum(s.distance_km, 0)} unit="km" label="Distance" />}
           <StatCard value={fmtNum(s.moving_time_h, 0)} unit="h" label="Moving time" />
           {toNum(s.elevation_m) > 0 && (
-            <StatCard value={fmtInt(s.elevation_m)} unit="m" label="Elevation" />
+            <StatCard value={fmtInt(s.elevation_m)} unit="m" label="Climbed" />
           )}
         </div>
       </section>
@@ -98,10 +99,10 @@ export default function SportDetail() {
       {notable.length > 0 && (
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>
-            Standout {name.toLowerCase()} activities
+            My longest {PLURAL[s.sport] || 'outings'}
           </p>
           <DataTable
-            caption={`Longest ${name} activities`}
+            caption={`My longest ${PLURAL[s.sport] || 'outings'}`}
             columns={[
               { key: 'date', label: 'Date', mono: true, render: (r) => (r.date || '').slice(0, 10) },
               ...(hasDistance ? [{ key: 'distance_km', label: 'km', align: 'right', mono: true, render: (r) => fmtNum(r.distance_km) }] : []),

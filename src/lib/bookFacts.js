@@ -1,4 +1,5 @@
 import { toNum } from './format.js'
+import { NAMED_COUNTRIES } from './geo.js'
 
 // The handful of facts My Book opens and closes with, read from the activity log
 // and the place table so the prologue, the cover and the epilogue always match
@@ -37,7 +38,8 @@ export function buildBookFacts(activities, geo = []) {
   const footKm = acts.reduce((s, a) => s + (FOOT.has(a.sport_type) ? toNum(a.distance_km) || 0 : 0), 0)
   const footElev = acts.reduce((s, a) => s + (FOOT.has(a.sport_type) ? toNum(a.elevation_gain_m) || 0 : 0), 0)
   const hours = acts.reduce((s, a) => s + (toNum(a.moving_time_min) || 0), 0) / 60
-  const countries = new Set(geo.map((g) => g.country).filter((c) => c && !/indoor/i.test(c))).size
+  // only African countries are counted; anything else is folded into others
+  const countries = new Set(geo.map((g) => g.country).filter((c) => NAMED_COUNTRIES.has(c))).size
   const regions = new Set(geo.filter((g) => g.country === 'Tanzania' && g.region).map((g) => g.region)).size
   const firstAct = acts[0]
 

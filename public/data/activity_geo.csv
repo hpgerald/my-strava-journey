@@ -1,5 +1,5 @@
 activity_key,date,sport,country,region,has_gps,interior,source_page
-a0001,2019-08-17,Ride,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0001,2019-08-17,Other,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0002,2019-08-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0003,2019-08-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0004,2019-08-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -21,13 +21,13 @@ a0019,2019-09-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0020,2019-09-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0021,2019-10-12,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0022,2019-10-13,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0023,2019-11-03,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0023,2019-11-03,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0024,2019-12-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0025,2019-12-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0026,2019-12-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0027,2019-12-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0028,2020-01-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0029,2020-01-14,Ride,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0029,2020-01-14,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0030,2020-03-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0031,2020-03-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0032,2020-03-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -48,19 +48,19 @@ a0046,2020-06-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0047,2020-06-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0048,2020-06-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0049,2020-06-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0050,2020-06-14,Ride,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0050,2020-06-14,Other,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0051,2020-06-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0052,2020-06-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0053,2020-06-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0054,2020-06-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0055,2020-06-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0056,2020-06-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0057,2020-06-30,Ride,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0057,2020-06-30,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0058,2020-07-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0059,2020-07-05,Ride,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0060,2020-07-07,Ride,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0061,2020-07-07,Ride,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0062,2020-07-08,Ride,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0059,2020-07-05,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0060,2020-07-07,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0061,2020-07-07,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0062,2020-07-08,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0063,2021-06-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0064,2021-06-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0065,2021-07-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -73,7 +73,7 @@ a0071,2021-07-07,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0072,2021-07-07,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0073,2021-07-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0074,2021-07-08,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0075,2021-07-08,Ride,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0075,2021-07-08,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0076,2021-07-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0077,2021-07-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0078,2021-07-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -315,10 +315,10 @@ a0313,2021-11-14,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a0314,2021-11-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0315,2021-11-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0316,2021-11-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0317,2021-11-16,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0318,2021-11-16,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0317,2021-11-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0318,2021-11-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0319,2021-11-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0320,2021-11-16,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0320,2021-11-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0321,2021-11-17,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0322,2021-11-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0323,2021-11-19,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -327,11 +327,11 @@ a0325,2021-11-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0326,2021-11-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0327,2021-11-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0328,2021-11-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0329,2021-11-22,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0329,2021-11-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0330,2021-11-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0331,2021-11-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0332,2021-11-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0333,2021-11-25,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0333,2021-11-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0334,2021-11-25,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0335,2021-11-25,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0336,2021-11-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -384,9 +384,9 @@ a0382,2021-12-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a0383,2021-12-26,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0384,2021-12-27,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0385,2021-12-28,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0386,2021-12-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0387,2021-12-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0388,2021-12-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0386,2021-12-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0387,2021-12-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0388,2021-12-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0389,2021-12-30,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0390,2021-12-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0391,2022-01-01,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -406,7 +406,7 @@ a0404,2022-01-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0405,2022-01-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0406,2022-01-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0407,2022-01-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0408,2022-01-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0408,2022-01-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0409,2022-01-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0410,2022-01-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0411,2022-01-17,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -450,7 +450,7 @@ a0448,2022-02-16,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (
 a0449,2022-02-18,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0450,2022-02-21,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0451,2022-02-22,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0452,2022-02-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0452,2022-02-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0453,2022-02-23,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0454,2022-02-24,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0455,2022-02-25,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -464,108 +464,108 @@ a0462,2022-03-06,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (
 a0463,2022-03-06,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0464,2022-03-06,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0465,2022-03-07,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0466,2022-03-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0466,2022-03-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0467,2022-03-07,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0468,2022-03-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0469,2022-03-08,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0470,2022-03-09,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0471,2022-03-10,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0471,2022-03-10,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0472,2022-03-11,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0473,2022-03-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0473,2022-03-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0474,2022-03-12,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0475,2022-03-12,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0476,2022-03-12,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0477,2022-03-12,Crossfit,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0478,2022-03-13,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0477,2022-03-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0478,2022-03-13,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0479,2022-03-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0480,2022-03-15,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0480,2022-03-15,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0481,2022-03-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0482,2022-03-17,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0483,2022-03-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0483,2022-03-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0484,2022-03-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0485,2022-03-18,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0485,2022-03-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0486,2022-03-18,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0487,2022-03-19,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0488,2022-03-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0488,2022-03-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0489,2022-03-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0490,2022-03-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0491,2022-03-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0490,2022-03-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0491,2022-03-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0492,2022-03-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0493,2022-03-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0493,2022-03-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0494,2022-03-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0495,2022-03-25,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0495,2022-03-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0496,2022-03-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0497,2022-03-27,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0498,2022-03-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0499,2022-03-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0500,2022-03-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0500,2022-03-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0501,2022-03-31,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0502,2022-03-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0502,2022-03-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0503,2022-03-31,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0504,2022-04-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0505,2022-04-01,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0505,2022-04-01,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0506,2022-04-02,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0507,2022-04-02,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0507,2022-04-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0508,2022-04-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0509,2022-04-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0510,2022-04-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0511,2022-04-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0512,2022-04-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0512,2022-04-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0513,2022-04-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0514,2022-04-05,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0514,2022-04-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0515,2022-04-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0516,2022-04-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0517,2022-04-06,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0517,2022-04-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0518,2022-04-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0519,2022-04-07,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0520,2022-04-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0520,2022-04-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0521,2022-04-07,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0522,2022-04-08,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0523,2022-04-09,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0523,2022-04-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0524,2022-04-09,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0525,2022-04-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0526,2022-04-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0527,2022-04-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0528,2022-04-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0528,2022-04-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0529,2022-04-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0530,2022-04-12,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0530,2022-04-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0531,2022-04-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0532,2022-04-13,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0532,2022-04-13,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0533,2022-04-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0534,2022-04-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0534,2022-04-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0535,2022-04-16,Walk,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0536,2022-04-17,Walk,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0537,2022-04-17,Walk,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0538,2022-04-18,Walk,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0539,2022-04-19,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0540,2022-04-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0541,2022-04-20,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0541,2022-04-20,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0542,2022-04-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0543,2022-04-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0544,2022-04-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0544,2022-04-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0545,2022-04-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0546,2022-04-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0547,2022-04-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0547,2022-04-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0548,2022-04-22,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0549,2022-04-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0550,2022-04-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0550,2022-04-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0551,2022-04-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0552,2022-04-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0552,2022-04-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0553,2022-04-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0554,2022-04-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0555,2022-04-25,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0555,2022-04-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0556,2022-04-26,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0557,2022-04-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0558,2022-04-26,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0558,2022-04-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0559,2022-04-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0560,2022-04-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0560,2022-04-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0561,2022-04-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0562,2022-04-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0563,2022-04-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0564,2022-04-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0565,2022-04-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0565,2022-04-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0566,2022-04-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0567,2022-04-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0567,2022-04-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0568,2022-05-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0569,2022-05-02,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0570,2022-05-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -593,7 +593,7 @@ a0591,2022-05-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0592,2022-05-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0593,2022-05-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0594,2022-05-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0595,2022-05-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0595,2022-05-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0596,2022-05-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0597,2022-05-21,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0598,2022-05-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -711,15 +711,15 @@ a0709,2022-08-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0710,2022-08-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0711,2022-08-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0712,2022-08-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0713,2022-08-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0713,2022-08-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0714,2022-08-31,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0715,2022-09-01,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0715,2022-09-01,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0716,2022-09-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0717,2022-09-02,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0717,2022-09-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0718,2022-09-02,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0719,2022-09-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0720,2022-09-03,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0721,2022-09-03,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0720,2022-09-03,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0721,2022-09-03,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0722,2022-09-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0723,2022-09-04,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0724,2022-09-04,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -730,28 +730,28 @@ a0728,2022-09-06,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a0729,2022-09-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0730,2022-09-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0731,2022-09-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0732,2022-09-12,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0732,2022-09-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0733,2022-09-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0734,2022-09-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0735,2022-09-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0735,2022-09-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0736,2022-09-15,Hike,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0737,2022-09-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0738,2022-09-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0739,2022-09-16,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0739,2022-09-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0740,2022-09-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0741,2022-09-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0742,2022-09-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0741,2022-09-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0742,2022-09-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0743,2022-09-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0744,2022-09-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0745,2022-09-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0746,2022-09-26,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0747,2022-09-26,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0748,2022-09-27,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0749,2022-09-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0750,2022-09-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0749,2022-09-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0750,2022-09-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0751,2022-09-27,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0752,2022-09-28,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0753,2022-10-01,GravelRide,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0753,2022-10-01,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0754,2022-10-02,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0755,2022-10-08,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0756,2022-10-08,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -763,11 +763,11 @@ a0761,2022-10-12,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a0762,2022-10-15,TrailRun,Tanzania,Mbeya,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0763,2022-10-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0764,2022-10-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0765,2022-10-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0766,2022-10-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0765,2022-10-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0766,2022-10-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0767,2022-10-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0768,2022-10-19,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0769,2022-10-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0769,2022-10-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0770,2022-10-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0771,2022-10-23,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0772,2022-10-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -776,14 +776,14 @@ a0774,2022-10-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a0775,2022-10-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0776,2022-10-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0777,2022-10-31,TrailRun,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0778,2022-10-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0778,2022-10-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0779,2022-11-02,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0780,2022-11-02,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0781,2022-11-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0782,2022-11-03,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0783,2022-11-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0784,2022-11-05,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0785,2022-11-05,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0785,2022-11-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0786,2022-11-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0787,2022-11-06,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0788,2022-11-07,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -817,8 +817,8 @@ a0815,2022-12-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a0816,2022-12-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0817,2022-12-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0818,2022-12-10,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0819,2022-12-10,GravelRide,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0820,2022-12-11,GravelRide,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0819,2022-12-10,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0820,2022-12-11,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0821,2022-12-12,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0822,2022-12-14,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0823,2022-12-15,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -830,19 +830,19 @@ a0828,2022-12-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a0829,2022-12-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0830,2022-12-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0831,2022-12-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0832,2022-12-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0832,2022-12-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0833,2022-12-30,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0834,2023-01-01,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0835,2023-01-01,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0836,2023-01-02,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0837,2023-01-02,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0838,2023-01-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0838,2023-01-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0839,2023-01-04,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0840,2023-01-05,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0841,2023-01-06,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0842,2023-01-08,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0843,2023-01-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0844,2023-01-09,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0844,2023-01-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0845,2023-01-09,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0846,2023-01-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0847,2023-01-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -874,13 +874,13 @@ a0872,2023-02-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0873,2023-02-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0874,2023-02-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0875,2023-02-11,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0876,2023-02-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0876,2023-02-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0877,2023-02-12,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0878,2023-02-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0879,2023-02-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0880,2023-02-17,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0881,2023-02-18,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0882,2023-02-18,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0882,2023-02-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0883,2023-02-19,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0884,2023-02-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0885,2023-02-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -901,27 +901,27 @@ a0899,2023-03-03,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon
 a0900,2023-03-04,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0901,2023-03-05,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0902,2023-03-06,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0903,2023-03-06,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0903,2023-03-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0904,2023-03-07,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0905,2023-03-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0905,2023-03-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0906,2023-03-08,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0907,2023-03-08,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0907,2023-03-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0908,2023-03-08,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0909,2023-03-09,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0910,2023-03-10,MountainBikeRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0911,2023-03-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0910,2023-03-10,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0911,2023-03-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0912,2023-03-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0913,2023-03-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0914,2023-03-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0915,2023-03-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0916,2023-03-17,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0917,2023-03-18,GravelRide,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0918,2023-03-18,GravelRide,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0917,2023-03-18,Other,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0918,2023-03-18,Other,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0919,2023-03-18,TrailRun,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0920,2023-03-19,Run,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0921,2023-03-19,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0921,2023-03-19,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0922,2023-03-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0923,2023-03-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0923,2023-03-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0924,2023-03-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0925,2023-03-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0926,2023-03-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -929,44 +929,44 @@ a0927,2023-03-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0928,2023-03-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0929,2023-03-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0930,2023-03-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0931,2023-03-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0931,2023-03-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0932,2023-03-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0933,2023-03-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0934,2023-03-30,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0933,2023-03-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0934,2023-03-30,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0935,2023-03-31,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0936,2023-04-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0937,2023-04-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0938,2023-04-06,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0938,2023-04-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0939,2023-04-07,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0940,2023-04-08,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0941,2023-04-09,GravelRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0941,2023-04-09,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0942,2023-04-09,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0943,2023-04-10,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0944,2023-04-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0944,2023-04-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0945,2023-04-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0946,2023-04-15,MountainBikeRide,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0946,2023-04-15,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0947,2023-04-15,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0948,2023-04-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0949,2023-04-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0950,2023-04-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0951,2023-04-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0952,2023-04-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0953,2023-04-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0954,2023-04-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0953,2023-04-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0954,2023-04-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0955,2023-04-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0956,2023-04-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0956,2023-04-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0957,2023-04-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0958,2023-04-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0959,2023-04-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0959,2023-04-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0960,2023-04-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0961,2023-04-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0962,2023-04-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0963,2023-04-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0964,2023-04-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0962,2023-04-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0963,2023-04-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0964,2023-04-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0965,2023-04-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0966,2023-04-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0966,2023-04-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0967,2023-04-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0968,2023-04-25,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0968,2023-04-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0969,2023-04-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0970,2023-04-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0971,2023-04-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -975,7 +975,7 @@ a0973,2023-04-28,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a0974,2023-04-29,Walk,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0975,2023-04-30,Hike,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0976,2023-05-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0977,2023-05-02,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0977,2023-05-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0978,2023-05-02,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0979,2023-05-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0980,2023-05-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -983,8 +983,8 @@ a0981,2023-05-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a0982,2023-05-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0983,2023-05-08,TrailRun,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0984,2023-05-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0985,2023-05-10,Ride,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0986,2023-05-10,GravelRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0985,2023-05-10,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0986,2023-05-10,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0987,2023-05-11,TrailRun,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0988,2023-05-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0989,2023-05-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -994,15 +994,15 @@ a0992,2023-05-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a0993,2023-05-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0994,2023-05-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0995,2023-05-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0996,2023-05-30,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0996,2023-05-30,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0997,2023-05-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a0998,2023-05-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a0998,2023-05-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a0999,2023-06-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1000,2023-06-02,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1001,2023-06-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1002,2023-06-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1003,2023-06-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1004,2023-06-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1004,2023-06-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1005,2023-06-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1006,2023-06-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1007,2023-06-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1028,16 +1028,16 @@ a1026,2023-07-07,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural
 a1027,2023-07-08,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1028,2023-07-09,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1029,2023-07-11,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1030,2023-07-11,Ride,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1030,2023-07-11,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1031,2023-07-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1032,2023-07-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1032,2023-07-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1033,2023-07-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1034,2023-07-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1035,2023-07-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1036,2023-07-23,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1037,2023-07-28,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1038,2023-07-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1039,2023-07-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1038,2023-07-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1039,2023-07-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1040,2023-07-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1041,2023-08-04,Walk,Tanzania,Tanga,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1042,2023-08-05,Hike,Tanzania,Tanga,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1063,7 +1063,7 @@ a1061,2023-09-02,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a1062,2023-09-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1063,2023-09-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1064,2023-09-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1065,2023-09-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1065,2023-09-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1066,2023-09-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1067,2023-09-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1068,2023-09-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1072,23 +1072,23 @@ a1070,2023-09-09,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon
 a1071,2023-09-10,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1072,2023-09-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1073,2023-09-19,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1074,2023-09-21,GravelRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1074,2023-09-21,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1075,2023-09-23,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1076,2023-09-30,GravelRide,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1077,2023-09-30,Canoeing,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1078,2023-10-03,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1076,2023-09-30,Other,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1077,2023-09-30,Other,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1078,2023-10-03,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1079,2023-10-04,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1080,2023-10-05,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1081,2023-10-07,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1082,2023-10-07,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1083,2023-10-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1084,2023-10-09,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1085,2023-10-11,Sail,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1085,2023-10-11,Other,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1086,2023-10-11,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1087,2023-10-12,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1087,2023-10-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1088,2023-10-12,Walk,Tanzania,Zanzibar Central/South,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1089,2023-10-13,Sail,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1090,2023-10-14,Sail,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1089,2023-10-13,Other,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1090,2023-10-14,Other,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1091,2023-10-22,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1092,2023-10-22,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1093,2023-10-23,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1123,8 +1123,8 @@ a1121,2023-12-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1122,2023-12-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1123,2023-12-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1124,2023-12-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1125,2023-12-13,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1126,2023-12-16,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1125,2023-12-13,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1126,2023-12-16,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1127,2023-12-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1128,2023-12-23,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1129,2023-12-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1137,7 +1137,7 @@ a1135,2024-01-06,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon
 a1136,2024-01-07,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1137,2024-01-07,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1138,2024-01-09,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1139,2024-01-12,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1139,2024-01-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1140,2024-01-13,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1141,2024-01-14,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1142,2024-01-15,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1165,7 +1165,7 @@ a1163,2024-02-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1164,2024-02-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1165,2024-02-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1166,2024-02-17,TrailRun,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1167,2024-02-18,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1167,2024-02-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1168,2024-02-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1169,2024-02-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1170,2024-02-23,TrailRun,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1174,47 +1174,47 @@ a1172,2024-02-24,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon
 a1173,2024-02-25,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1174,2024-02-26,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1175,2024-02-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1176,2024-02-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1176,2024-02-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1177,2024-02-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1178,2024-02-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1179,2024-03-01,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1178,2024-02-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1179,2024-03-01,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1180,2024-03-01,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1181,2024-03-02,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1182,2024-03-03,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1181,2024-03-02,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1182,2024-03-03,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1183,2024-03-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1184,2024-03-08,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1185,2024-03-09,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1184,2024-03-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1185,2024-03-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1186,2024-03-13,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1187,2024-03-14,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1188,2024-03-16,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1189,2024-03-17,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1190,2024-03-20,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1190,2024-03-20,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1191,2024-03-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1192,2024-03-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1193,2024-03-25,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1194,2024-03-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1195,2024-03-29,GravelRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1193,2024-03-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1194,2024-03-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1195,2024-03-29,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1196,2024-03-30,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1197,2024-03-31,GravelRide,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1198,2024-03-31,GravelRide,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1199,2024-04-01,GravelRide,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1197,2024-03-31,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1198,2024-03-31,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1199,2024-04-01,Other,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1200,2024-04-01,Walk,Tanzania,Iringa,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1201,2024-04-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1202,2024-04-08,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1202,2024-04-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1203,2024-04-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1204,2024-04-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1205,2024-04-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1205,2024-04-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1206,2024-04-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1207,2024-04-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1208,2024-04-19,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1209,2024-04-20,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1210,2024-04-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1209,2024-04-20,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1210,2024-04-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1211,2024-04-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1212,2024-04-22,Walk,Saudi Arabia,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1212,2024-04-22,Walk,Other,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1213,2024-04-22,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1214,2024-04-24,GravelRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1214,2024-04-24,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1215,2024-04-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1216,2024-04-27,GravelRide,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1216,2024-04-27,Other,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1217,2024-04-27,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1218,2024-04-28,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1219,2024-04-29,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1224,34 +1224,34 @@ a1222,2024-04-30,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural E
 a1223,2024-05-01,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1224,2024-05-02,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1225,2024-05-02,Walk,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1226,2024-05-03,GravelRide,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1227,2024-05-03,GravelRide,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1228,2024-05-04,GravelRide,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1226,2024-05-03,Other,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1227,2024-05-03,Other,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1228,2024-05-04,Other,South Africa,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1229,2024-05-05,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1230,2024-05-07,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1231,2024-05-09,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1232,2024-05-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1233,2024-05-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1234,2024-05-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1234,2024-05-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1235,2024-05-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1236,2024-05-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1237,2024-05-14,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1238,2024-05-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1239,2024-05-15,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1238,2024-05-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1239,2024-05-15,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1240,2024-05-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1241,2024-05-18,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1241,2024-05-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1242,2024-05-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1243,2024-05-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1243,2024-05-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1244,2024-05-24,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1245,2024-05-26,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1246,2024-05-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1247,2024-05-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1248,2024-05-28,GravelRide,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1249,2024-05-29,Ride,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1250,2024-05-29,Ride,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1251,2024-05-29,Ride,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1252,2024-05-30,GravelRide,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1253,2024-05-31,Ride,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1247,2024-05-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1248,2024-05-28,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1249,2024-05-29,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1250,2024-05-29,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1251,2024-05-29,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1252,2024-05-30,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1253,2024-05-31,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1254,2024-06-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1255,2024-06-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1256,2024-06-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1260,14 +1260,14 @@ a1258,2024-06-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a1259,2024-06-09,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1260,2024-06-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1261,2024-06-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1262,2024-06-14,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1262,2024-06-14,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1263,2024-06-14,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1264,2024-06-15,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1265,2024-06-15,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1266,2024-06-16,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1267,2024-06-16,EBikeRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1268,2024-06-16,EBikeRide,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1269,2024-06-17,GravelRide,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1264,2024-06-15,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1265,2024-06-15,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1266,2024-06-16,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1267,2024-06-16,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1268,2024-06-16,Other,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1269,2024-06-17,Other,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1270,2024-06-17,Walk,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1271,2024-06-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1272,2024-06-28,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1278,24 +1278,24 @@ a1276,2024-07-03,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1277,2024-07-04,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1278,2024-07-05,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1279,2024-07-06,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1280,2024-07-12,GravelRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1281,2024-07-13,GravelRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1280,2024-07-12,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1281,2024-07-13,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1282,2024-07-13,Hike,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1283,2024-07-14,Hike,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1284,2024-07-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1285,2024-07-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1286,2024-07-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1285,2024-07-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1286,2024-07-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1287,2024-07-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1288,2024-07-20,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1288,2024-07-20,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1289,2024-07-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1290,2024-07-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1291,2024-07-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1291,2024-07-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1292,2024-07-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1293,2024-07-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1293,2024-07-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1294,2024-07-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1295,2024-07-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1295,2024-07-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1296,2024-07-28,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1297,2024-07-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1297,2024-07-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1298,2024-08-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1299,2024-08-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1300,2024-08-03,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1311,10 +1311,10 @@ a1309,2024-08-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1310,2024-08-19,Walk,Rwanda,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1311,2024-08-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1312,2024-08-25,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1313,2024-08-26,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1313,2024-08-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1314,2024-08-28,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1315,2024-08-29,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1316,2024-08-29,Ride,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1316,2024-08-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1317,2024-08-30,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1318,2024-08-30,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1319,2024-08-30,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1322,11 +1322,11 @@ a1320,2024-08-31,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) /
 a1321,2024-09-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1322,2024-09-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1323,2024-09-14,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1324,2024-09-14,GravelRide,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1324,2024-09-14,Other,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1325,2024-09-15,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1326,2024-09-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1327,2024-09-28,GravelRide,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1328,2024-09-29,Ride,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1327,2024-09-28,Other,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1328,2024-09-29,Other,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1329,2024-09-30,Walk,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1330,2024-09-30,Walk,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1331,2024-10-01,Walk,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1337,37 +1337,37 @@ a1335,2024-10-04,Walk,Kenya,,1,0,Strava GPS + point-in-polygon (Natural Earth) /
 a1336,2024-10-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1337,2024-10-09,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1338,2024-10-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1339,2024-10-10,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1339,2024-10-10,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1340,2024-10-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1341,2024-10-12,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1342,2024-10-13,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1343,2024-10-13,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1341,2024-10-12,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1342,2024-10-13,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1343,2024-10-13,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1344,2024-10-15,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1345,2024-10-16,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1346,2024-10-16,EBikeRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1346,2024-10-16,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1347,2024-10-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1348,2024-10-19,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1349,2024-10-19,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1350,2024-10-20,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1351,2024-10-20,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1351,2024-10-20,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1352,2024-10-20,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1353,2024-10-21,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1354,2024-10-22,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1355,2024-10-23,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1356,2024-10-24,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1353,2024-10-21,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1354,2024-10-22,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1355,2024-10-23,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1356,2024-10-24,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1357,2024-10-25,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1358,2024-10-26,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1359,2024-10-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1360,2024-10-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1361,2024-10-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1362,2024-10-31,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1362,2024-10-31,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1363,2024-11-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1364,2024-11-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1365,2024-11-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1366,2024-11-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1367,2024-11-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1368,2024-11-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1369,2024-11-06,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1369,2024-11-06,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1370,2024-11-06,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1371,2024-11-07,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1372,2024-11-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1384,7 +1384,7 @@ a1382,2024-11-16,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) 
 a1383,2024-11-17,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1384,2024-11-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1385,2024-11-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1386,2024-11-19,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1386,2024-11-19,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1387,2024-11-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1388,2024-11-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1389,2024-11-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1392,7 +1392,7 @@ a1390,2024-11-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1391,2024-11-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1392,2024-11-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1393,2024-11-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1394,2024-11-25,Ride,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1394,2024-11-25,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1395,2024-11-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1396,2024-11-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1397,2024-11-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1415,7 +1415,7 @@ a1413,2024-12-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1414,2024-12-12,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1415,2024-12-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1416,2024-12-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1417,2024-12-14,Golf,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1417,2024-12-14,Other,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1418,2024-12-14,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1419,2024-12-15,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1420,2024-12-15,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1425,19 +1425,19 @@ a1423,2024-12-18,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1424,2024-12-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1425,2024-12-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1426,2024-12-20,Walk,Malawi,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1427,2024-12-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1428,2024-12-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1427,2024-12-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1428,2024-12-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1429,2024-12-23,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1430,2024-12-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1431,2024-12-25,GravelRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1432,2024-12-26,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1430,2024-12-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1431,2024-12-25,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1432,2024-12-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1433,2024-12-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1434,2024-12-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1435,2024-12-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1434,2024-12-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1435,2024-12-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1436,2024-12-29,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1437,2024-12-29,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1438,2024-12-29,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1439,2024-12-30,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1439,2024-12-30,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1440,2024-12-31,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1441,2025-01-01,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1442,2025-01-02,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1451,13 +1451,13 @@ a1449,2025-01-10,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1450,2025-01-10,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1451,2025-01-10,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1452,2025-01-11,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1453,2025-01-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1453,2025-01-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1454,2025-01-11,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1455,2025-01-12,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1456,2025-01-13,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1457,2025-01-14,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1458,2025-01-15,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1459,2025-01-16,EBikeRide,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1459,2025-01-16,Other,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1460,2025-01-17,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1461,2025-01-19,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1462,2025-01-20,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1470,14 +1470,14 @@ a1468,2025-01-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1469,2025-01-29,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1470,2025-01-30,Walk,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1471,2025-01-31,Walk,Tanzania,Zanzibar Central/South,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1472,2025-02-01,Sail,Tanzania,Zanzibar Central/South,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1473,2025-02-02,Sail,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1472,2025-02-01,Other,Tanzania,Zanzibar Central/South,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1473,2025-02-02,Other,Tanzania,Zanzibar Urban/West,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1474,2025-02-07,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1475,2025-02-08,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1476,2025-02-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1477,2025-02-13,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1478,2025-02-14,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1479,2025-02-15,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1479,2025-02-15,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1480,2025-02-16,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1481,2025-02-17,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1482,2025-02-17,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1491,37 +1491,37 @@ a1489,2025-02-20,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Nat
 a1490,2025-02-21,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1491,2025-02-22,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1492,2025-02-23,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1493,2025-02-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1493,2025-02-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1494,2025-02-23,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1495,2025-02-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1496,2025-02-25,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1497,2025-02-26,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1498,2025-02-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1498,2025-02-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1499,2025-02-28,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1500,2025-02-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1500,2025-02-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1501,2025-02-28,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1502,2025-03-05,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1503,2025-03-05,Crossfit,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1502,2025-03-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1503,2025-03-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1504,2025-03-05,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1505,2025-03-06,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1505,2025-03-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1506,2025-03-07,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1507,2025-03-10,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1508,2025-03-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1509,2025-03-12,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1508,2025-03-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1509,2025-03-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1510,2025-03-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1511,2025-03-14,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1511,2025-03-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1512,2025-03-15,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1513,2025-03-16,Sail,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1513,2025-03-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1514,2025-03-16,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1515,2025-03-16,Walk,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1516,2025-03-17,Walk,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1517,2025-03-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1518,2025-03-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1518,2025-03-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1519,2025-03-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1520,2025-03-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1521,2025-03-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1521,2025-03-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1522,2025-03-24,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1523,2025-03-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1523,2025-03-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1524,2025-03-25,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1525,2025-03-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1526,2025-03-28,Hike,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1534,18 +1534,18 @@ a1532,2025-04-02,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1533,2025-04-03,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1534,2025-04-05,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1535,2025-04-06,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1536,2025-04-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1537,2025-04-08,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1536,2025-04-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1537,2025-04-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1538,2025-04-08,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1539,2025-04-09,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1540,2025-04-18,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1541,2025-04-19,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1542,2025-04-20,GravelRide,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1543,2025-04-21,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1544,2025-04-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1545,2025-04-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1546,2025-04-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1547,2025-04-26,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1541,2025-04-19,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1542,2025-04-20,Other,Tanzania,Mara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1543,2025-04-21,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1544,2025-04-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1545,2025-04-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1546,2025-04-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1547,2025-04-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1548,2025-04-30,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1549,2025-05-01,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1550,2025-05-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1558,18 +1558,18 @@ a1556,2025-05-11,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1557,2025-05-12,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1558,2025-05-14,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1559,2025-05-15,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1560,2025-05-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1560,2025-05-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1561,2025-05-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1562,2025-05-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1563,2025-05-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1564,2025-05-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1565,2025-05-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1566,2025-05-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1566,2025-05-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1567,2025-05-30,Walk,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1568,2025-05-31,Hike,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1569,2025-06-01,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1570,2025-06-03,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1571,2025-06-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1571,2025-06-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1572,2025-06-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1573,2025-06-07,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1574,2025-06-09,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1577,14 +1577,14 @@ a1575,2025-06-10,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1576,2025-06-11,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1577,2025-06-12,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1578,2025-06-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1579,2025-06-16,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1579,2025-06-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1580,2025-06-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1581,2025-06-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1582,2025-06-19,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1583,2025-06-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1584,2025-06-21,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1585,2025-06-21,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1586,2025-06-23,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1586,2025-06-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1587,2025-06-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1588,2025-06-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1589,2025-06-25,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1608,7 +1608,7 @@ a1606,2025-07-12,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Nat
 a1607,2025-07-13,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1608,2025-07-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1609,2025-07-14,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1610,2025-07-14,Ride,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1610,2025-07-14,Other,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1611,2025-07-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1612,2025-07-16,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1613,2025-07-18,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1621,16 +1621,16 @@ a1619,2025-07-21,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1620,2025-07-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1621,2025-07-23,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1622,2025-07-24,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1623,2025-07-26,GravelRide,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1623,2025-07-26,Other,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1624,2025-07-26,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1625,2025-07-27,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1626,2025-07-30,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1627,2025-07-30,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1628,2025-07-31,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1629,2025-08-01,Walk,Saudi Arabia,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1629,2025-08-01,Walk,Other,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1630,2025-08-02,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1631,2025-08-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1632,2025-08-05,GravelRide,Tanzania,Tanga,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1632,2025-08-05,Other,Tanzania,Tanga,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1633,2025-08-05,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1634,2025-08-05,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1635,2025-08-06,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1652,12 +1652,12 @@ a1650,2025-08-21,Run,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural E
 a1651,2025-08-22,Run,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1652,2025-08-23,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1653,2025-08-23,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1654,2025-08-25,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1655,2025-09-03,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1656,2025-09-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1654,2025-08-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1655,2025-09-03,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1656,2025-09-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1657,2025-09-07,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1658,2025-09-09,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1659,2025-09-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1658,2025-09-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1659,2025-09-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1660,2025-09-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1661,2025-09-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1662,2025-09-20,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1677,7 +1677,7 @@ a1675,2025-10-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1676,2025-10-09,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1677,2025-10-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1678,2025-10-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1679,2025-10-13,GravelRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1679,2025-10-13,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1680,2025-10-15,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1681,2025-10-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1682,2025-10-17,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1691,12 +1691,12 @@ a1689,2025-10-24,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Nat
 a1690,2025-10-25,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1691,2025-10-26,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1692,2025-10-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1693,2025-10-29,EBikeRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1693,2025-10-29,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1694,2025-10-30,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1695,2025-11-06,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1696,2025-11-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1695,2025-11-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1696,2025-11-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1697,2025-11-08,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1698,2025-11-09,EBikeRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1698,2025-11-09,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1699,2025-11-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1700,2025-11-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1701,2025-11-19,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1708,58 +1708,58 @@ a1706,2025-11-22,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural 
 a1707,2025-11-22,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1708,2025-11-24,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1709,2025-11-25,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1710,2025-11-27,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1711,2025-11-27,GravelRide,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1710,2025-11-27,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1711,2025-11-27,Other,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1712,2025-11-28,Run,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1713,2025-11-29,TrailRun,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1714,2025-12-05,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1714,2025-12-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1715,2025-12-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1716,2025-12-08,EBikeRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1717,2025-12-11,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1718,2025-12-12,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1716,2025-12-08,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1717,2025-12-11,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1718,2025-12-12,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1719,2025-12-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1720,2025-12-13,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1721,2025-12-14,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1722,2025-12-15,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1723,2025-12-18,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1724,2025-12-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1725,2025-12-20,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1726,2025-12-21,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1727,2025-12-22,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1722,2025-12-15,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1723,2025-12-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1724,2025-12-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1725,2025-12-20,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1726,2025-12-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1727,2025-12-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1728,2025-12-22,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1729,2025-12-23,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1730,2025-12-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1730,2025-12-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1731,2025-12-25,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1732,2025-12-26,WeightTraining,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1732,2025-12-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1733,2025-12-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1734,2025-12-27,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1735,2025-12-27,TrailRun,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1736,2025-12-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1737,2025-12-30,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1738,2025-12-31,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1739,2026-01-01,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1740,2026-01-02,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1737,2025-12-30,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1738,2025-12-31,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1739,2026-01-01,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1740,2026-01-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1741,2026-01-02,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1742,2026-01-03,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1743,2026-01-04,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1742,2026-01-03,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1743,2026-01-04,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1744,2026-01-04,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1745,2026-01-05,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1745,2026-01-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1746,2026-01-06,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1747,2026-01-07,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1748,2026-01-08,WeightTraining,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1748,2026-01-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1749,2026-01-08,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1750,2026-01-09,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1751,2026-01-10,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1751,2026-01-10,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1752,2026-01-11,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1753,2026-01-12,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1754,2026-01-13,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1755,2026-01-14,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1756,2026-01-15,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1756,2026-01-15,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1757,2026-01-16,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1758,2026-01-16,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1759,2026-01-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1759,2026-01-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1760,2026-01-18,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1761,2026-01-19,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1761,2026-01-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1762,2026-01-20,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1763,2026-01-21,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1764,2026-01-22,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1768,9 +1768,9 @@ a1766,2026-01-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1767,2026-01-24,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1768,2026-01-25,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1769,2026-01-26,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1770,2026-01-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1770,2026-01-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1771,2026-01-28,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1772,2026-01-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1772,2026-01-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1773,2026-01-30,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1774,2026-01-30,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1775,2026-01-31,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1782,7 +1782,7 @@ a1780,2026-02-05,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / neare
 a1781,2026-02-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1782,2026-02-07,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1783,2026-02-08,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1784,2026-02-09,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1784,2026-02-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1785,2026-02-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1786,2026-02-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1787,2026-02-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1798,9 +1798,9 @@ a1796,2026-02-20,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural 
 a1797,2026-02-21,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1798,2026-02-22,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1799,2026-02-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1800,2026-02-24,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1800,2026-02-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1801,2026-02-25,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1802,2026-02-26,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1802,2026-02-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1803,2026-02-27,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1804,2026-02-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1805,2026-03-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1833,7 +1833,7 @@ a1831,2026-03-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Na
 a1832,2026-03-24,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1833,2026-03-25,Walk,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1834,2026-03-26,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1835,2026-03-27,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1835,2026-03-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1836,2026-03-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1837,2026-03-29,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1838,2026-03-30,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1844,17 +1844,17 @@ a1842,2026-04-03,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (N
 a1843,2026-04-04,TrailRun,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1844,2026-04-05,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1845,2026-04-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1846,2026-04-07,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1847,2026-04-08,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1846,2026-04-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1847,2026-04-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1848,2026-04-09,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1849,2026-04-10,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1849,2026-04-10,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1850,2026-04-11,TrailRun,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1851,2026-04-12,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1852,2026-04-13,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1853,2026-04-14,Walk,Kenya,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1854,2026-04-15,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1855,2026-04-16,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1856,2026-04-17,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1856,2026-04-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1857,2026-04-18,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1858,2026-04-19,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1859,2026-04-20,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1865,14 +1865,14 @@ a1863,2026-04-24,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1864,2026-04-25,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1865,2026-04-26,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1866,2026-04-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1867,2026-04-28,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1868,2026-04-29,Workout,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1867,2026-04-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1868,2026-04-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1869,2026-04-30,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1870,2026-05-01,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1871,2026-05-02,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1871,2026-05-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1872,2026-05-03,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1873,2026-05-04,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1874,2026-05-05,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1874,2026-05-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1875,2026-05-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1876,2026-05-06,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1877,2026-05-07,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1884,8 +1884,8 @@ a1882,2026-05-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a1883,2026-05-12,Walk,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1884,2026-05-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1885,2026-05-13,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1886,2026-05-14,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1887,2026-05-15,Ride,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1886,2026-05-14,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1887,2026-05-15,Other,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1888,2026-05-16,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1889,2026-05-17,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1890,2026-05-18,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1895,9 +1895,9 @@ a1893,2026-05-21,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1894,2026-05-22,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1895,2026-05-23,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1896,2026-05-24,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1897,2026-05-24,Ride,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1897,2026-05-24,Other,Tanzania,Pwani,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1898,2026-05-25,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1899,2026-05-26,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1899,2026-05-26,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1900,2026-05-27,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1901,2026-05-28,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1902,2026-05-29,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1907,7 +1907,7 @@ a1905,2026-06-01,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1906,2026-06-02,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1907,2026-06-03,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1908,2026-06-04,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1909,2026-06-04,Walk,United Kingdom,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1909,2026-06-04,Walk,Other,,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1910,2026-06-05,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1911,2026-06-06,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1912,2026-06-07,TrailRun,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1934,17 +1934,17 @@ a1932,2026-06-23,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (N
 a1933,2026-06-24,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1934,2026-06-25,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1935,2026-06-26,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1936,2026-06-27,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1936,2026-06-27,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1937,2026-06-28,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1938,2026-06-29,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1938,2026-06-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1939,2026-06-30,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1940,2026-06-30,Walk,Tanzania,Pwani,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1941,2026-07-01,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1941,2026-07-01,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1942,2026-07-02,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1943,2026-07-03,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1944,2026-07-04,Walk,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1945,2026-07-05,TrailRun,Tanzania,Morogoro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1946,2026-07-06,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1946,2026-07-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1947,2026-07-07,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1948,2026-07-08,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1949,2026-07-09,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1954,7 +1954,7 @@ a1952,2026-07-12,TrailRun,Tanzania,Manyara,1,1,Strava GPS + point-in-polygon (Na
 a1953,2026-07-13,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1954,2026-07-14,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1955,2026-07-15,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1956,2026-07-16,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1956,2026-07-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1957,2026-07-17,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1958,2026-07-18,TrailRun,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1959,2026-07-19,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -1968,46 +1968,46 @@ a1966,2026-07-26,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (
 a1967,2026-07-26,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1968,2026-07-27,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1969,2026-07-28,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1970,2026-07-29,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1970,2026-07-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1971,2026-07-30,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1972,2026-07-31,Walk,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1973,2026-08-01,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1974,2026-08-02,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1975,2026-08-03,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1976,2026-08-04,Run,Tanzania,Dar es Salaam,1,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1977,2026-08-05,WeightTraining,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1977,2026-08-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1978,2026-08-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1979,2026-08-07,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1979,2026-08-07,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1980,2026-08-08,Walk,Tanzania,Singida,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1981,2026-08-09,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1982,2026-08-10,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1981,2026-08-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1982,2026-08-10,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1983,2026-08-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1984,2026-08-12,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1985,2026-08-13,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1985,2026-08-13,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1986,2026-08-14,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1987,2026-08-15,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1988,2026-08-16,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1988,2026-08-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1989,2026-08-17,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1990,2026-08-18,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1991,2026-08-19,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1992,2026-08-20,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1993,2026-08-21,GravelRide,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1993,2026-08-21,Other,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1994,2026-08-22,Run,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1995,2026-08-23,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1996,2026-08-24,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a1997,2026-08-25,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1996,2026-08-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a1997,2026-08-25,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1998,2026-08-26,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a1999,2026-08-27,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2000,2026-08-28,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2001,2026-08-29,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2002,2026-08-30,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2003,2026-08-31,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2004,2026-09-01,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2004,2026-09-01,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2005,2026-09-02,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2006,2026-09-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2007,2026-09-04,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2008,2026-09-05,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2009,2026-09-06,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2008,2026-09-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2009,2026-09-06,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2010,2026-09-07,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2011,2026-09-08,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2012,2026-09-09,Walk,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -2018,31 +2018,31 @@ a2016,2026-09-12,Run,Tanzania,Arusha,1,1,Strava GPS + point-in-polygon (Natural 
 a2017,2026-09-13,Run,Tanzania,Kilimanjaro,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2018,2026-09-14,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2019,2026-09-15,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2020,2026-09-16,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2020,2026-09-16,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2021,2026-09-17,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2022,2026-09-18,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2023,2026-09-19,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2024,2026-09-20,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2025,2026-09-21,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2026,2026-09-22,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2027,2026-09-23,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2028,2026-09-24,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2027,2026-09-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2028,2026-09-24,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2029,2026-09-25,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2030,2026-09-26,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2031,2026-09-27,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2032,2026-09-28,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2033,2026-09-29,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2032,2026-09-28,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2033,2026-09-29,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2034,2026-09-30,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2035,2026-10-01,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2036,2026-10-02,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2036,2026-10-02,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2037,2026-10-03,Run,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2038,2026-10-03,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2039,2026-10-04,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2040,2026-10-05,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2040,2026-10-05,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2041,2026-10-06,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2042,2026-10-07,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2043,2026-10-08,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2044,2026-10-09,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2043,2026-10-08,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2044,2026-10-09,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2045,2026-10-10,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2046,2026-10-11,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2047,2026-10-11,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
@@ -2051,12 +2051,12 @@ a2049,2026-10-13,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural
 a2050,2026-10-14,Walk,Tanzania,Dodoma,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2051,2026-10-15,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2052,2026-10-16,Run,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2053,2026-10-17,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2054,2026-10-18,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2055,2026-10-19,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2053,2026-10-17,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2054,2026-10-18,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2055,2026-10-19,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2056,2026-10-20,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2057,2026-10-21,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2058,2026-10-22,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
-a2059,2026-10-23,PhysicalTherapy,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2057,2026-10-21,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2058,2026-10-22,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
+a2059,2026-10-23,Other,,,0,0,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2060,2026-10-24,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city
 a2061,2026-10-25,Walk,Tanzania,Dar es Salaam,1,1,Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city

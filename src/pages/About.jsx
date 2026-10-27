@@ -39,7 +39,7 @@ export default function About() {
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       title="About"
-      subtitle="What this is. How to read it."
+      subtitle="What this is and how to read it"
       lede="My Strava history, laid out so anyone can read it."
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
@@ -47,34 +47,33 @@ export default function About() {
           <div className="stack">
             <p>
               It covers {count(meta.total_activities)} activities from {day(meta.coverage_start)}{' '}
-              to {day(meta.coverage_end)}. Running, walking, trail running, hiking, and a
-              handful of other activities. Mostly Tanzania, with the occasional trip abroad. It refreshes each week
-              as new activities land.
+              to {day(meta.coverage_end)}. Most of them are runs, walks, trail runs and hikes, and the rest I just call
+              other activities. Nearly all of it happened in Tanzania, with a few trips across the border. I update it
+              every week with my new activities.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
-              A habit, measured over time
+              A habit, counted over time
             </h2>
             <p>
-              The numbers track a habit as it builds. A streak counts until the day it breaks. A
-              yearly total is a year still in progress. Read them as a record of effort over time.
+              The numbers follow a habit as it grows. A streak keeps counting until the day it breaks, and this
+              year&rsquo;s totals are for a year that isn&rsquo;t over yet. It&rsquo;s a record of showing up, more than
+              anything else.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
-              Accuracy and limits
+              What counts, and what doesn&rsquo;t
             </h2>
             <p>
-              Figures are shown as logged on Strava. One deliberate choice runs through the whole site:
-              distance and elevation count foot sports only, running, walking, trail running and hiking.
-              Everything else still counts as an activity and appears in every other metric, but
-              the kilometres and vertical from those sports are left out of the distance and climb totals,
-              which keeps the focus on training on foot. The country and region breakdowns are derived from each
-              activity's GPS start point and are approximate near international borders. The full method,
-              confidence levels and known gaps are documented on the{' '}
+              The figures are as logged on Strava. I made one choice that runs through the whole site: distance and
+              climb only count my sports on foot, which are running, walking, trail running and hiking. Everything else
+              still counts as an outing, and towards my hours and kudos, but its kilometres and climbing are left out,
+              because this is about what I do on foot. Countries and regions come from each activity&rsquo;s GPS start
+              point, so they can be a little off near a border. There&rsquo;s more on how it&rsquo;s put together on the{' '}
               <Link to="/data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
                 data page
               </Link>
-              . This is a personal record for interest's sake, not coaching, medical or training advice.
+              . It&rsquo;s a personal record, kept out of interest. It isn&rsquo;t coaching, medical or training advice.
             </p>
 
             <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-4)' }}>
@@ -110,7 +109,7 @@ export default function About() {
               Get in touch
             </h2>
             <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-3)', maxWidth: '28rem' }}>
-              Built by Gerald. Follow the training on Strava, or reach out any time.
+              I&rsquo;m Gerald. You can follow my training on Strava, or get in touch any time.
             </p>
           </div>
 
