@@ -45,6 +45,8 @@ function YearBlock({ year, items }) {
   )
 }
 
+const fmtDayL = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
+
 export default function Timeline() {
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
@@ -95,12 +97,17 @@ export default function Timeline() {
             <h2 id="tl-title" className="section-head__title">No long gap since&nbsp;then.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            My log begins in {fmtMonth(C.firstISO)}, mostly short runs on a treadmill. For the first year I came and went, and in{' '}
-            {fmtMonth(S.start)} I stopped completely for almost a year. What I am most thankful for is what happened after I came
-            back in {fmtMonth(S.end)}: the long gaps never returned. Since then my longest break has been {word(C.maxAfter)} days, and
-            the streaks grew longer{cur ? `, until this one, ${n0(cur.len)} days without missing one` : ''}. On the line below you can
-            see the firsts move from the treadmill to the trails and the mountains, and {word(C.shoes.length)} pairs of shoes
-            carry me through it.
+            On 28 August 2026 two things happened on the same outing. It was my fiftieth trip to Ras Kilomoni, the target I set at
+            the start of the year, and it was also my 2,000th outing.
+            {(() => {
+              const ms = C.milestones.filter((x) => x.n % 500 === 0)
+              if (ms.length < 2) return ''
+              const span = (a, b) => (Date.parse(b) - Date.parse(a)) / 86400000
+              const firstYrs = span(C.firstISO, ms[0].date) / 365.25
+              const lastMo = Math.round(span(ms[ms.length - 2].date, ms[ms.length - 1].date) / 30.44)
+              return ` The first 500 outings took me ${firstYrs > 2.5 && firstYrs < 3 ? 'almost three years' : `${Math.round(firstYrs)} years`}. The last 500 took ${['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'][lastMo] || lastMo} months.`
+            })()}
+            {' '}Looking along this line, I can see the habit getting steadier, one outing at a time.
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -137,9 +144,9 @@ export default function Timeline() {
           title='Shorter breaks.'
           leftNote={<>The first bar includes the long gap, so it is cut off.</>}
           statement={<>
-            The habit made the outings come faster. My first 250 took more than two years, because the long gap falls inside
-            them. Since then every 250 has come in less than a year, and the breaks between outings got shorter too. In{' '}
-            {lastYear}{so} there has been no break at all.
+            On {fmtDayL(fastest.date)} I logged my {ORD(fastest.n)} outing, less than six months after the {ORD(fastest.n - 250)}. The first
+            250 had taken me more than two years, with the long gap inside them. Since then every 250 has come in less than a year,
+            and the breaks between outings got shorter too. In {lastYear}{so} there has been no break at all.
           </>}
           odds={{
             title: 'Every 250 outings',
@@ -180,9 +187,9 @@ export default function Timeline() {
           eyebrow={`${num()} · Firsts`}
           title='From the treadmill to the hills.'
           statement={<>
-            My firsts follow the same path as my habit: they started on the treadmill and moved to the hills. The 10 km, the half
-            marathon, 30 km and the marathon all came indoors. Then came the trail run, the first hike, 1,000 m of climbing in a
-            day and a half marathon done as a walk. Each new first needs a longer day or a steeper hill, so they come slowly now.
+            On 19 December 2021 I did my first trail run. It was the moment my firsts left the treadmill. The 10 km, the half
+            marathon, 30 km and the marathon had all come indoors. After the trail run came the first hike, 1,000 m of climbing in a
+            day, and a half marathon done as a walk. Each new first needs a longer day or a steeper hill, so they come slowly now.
           </>}
           odds={{
             title: 'Firsts on foot',

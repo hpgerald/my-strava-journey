@@ -111,6 +111,7 @@ export function buildFootReport(activities) {
   const treadMax = Math.ceil(Math.max(0, ...tread.map((f) => f.km)))
   for (let k = 1; k <= treadMax; k++) treadBins.push({ km: k, count: tread.filter((f) => Math.round(f.km) === k).length })
   const roundFive = tread.length ? tread.filter((f) => f.km >= 4.9 && near(f.km, 5)).length / tread.length : 0
+  const exactFive = tread.filter((f) => Math.abs(f.km - 5) <= 0.1).length
   const roundOne = tread.length ? tread.filter((f) => near(f.km, 1)).length / tread.length : 0
   const roadRoundOne = foot.filter((f) => f.mode === 'road').length ? foot.filter((f) => f.mode === 'road' && near(f.km, 1)).length / foot.filter((f) => f.mode === 'road').length : 0
 
@@ -182,5 +183,5 @@ export function buildFootReport(activities) {
   const mostKudos = foot.reduce((b, f) => (!b || f.kudos > b.kudos ? f : b), null)
   const mostPrs = foot.reduce((b, f) => (!b || f.prs > b.prs ? f : b), null)
 
-  return { rows: foot, total, sport, mode, years, byYear, lastISO, treadBins, roundFive, roundOne, roadRoundOne, doubles, climbs, treadFit, treadAt, oddTread, weekFit, streak, mostKudos, mostPrs }
+  return { rows: foot, total, sport, mode, years, byYear, lastISO, treadBins, roundFive, exactFive, roundOne, roadRoundOne, doubles, climbs, treadFit, treadAt, oddTread, weekFit, streak, mostKudos, mostPrs }
 }

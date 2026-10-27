@@ -263,7 +263,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                 {lead[0]} led the year, {lead[1]} of my {fmtInt(s.n)} outings{so}, against {lead[3]} {lead[2]}
                 {mix.trail === 1 ? ' and one trail run or hike' : mix.trail ? ` and ${mix.trail} trail runs or hikes` : ''}.
                 {flipOf('Run').dist / footKmAll > 0.5 ? (lead[0] === 'Walks' ? ' Running still gave me most of my distance' : ' Running gave me most of my distance') : (lead[0] === 'Runs' ? ' Walking still gave me most of my distance' : ' Walking gave me most of my distance')}
-                {climber ? `, and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} gave me the biggest share of the climbing.` : '.'}
+                {climber ? ((climber.key === 'Walk') === (flipOf('Run').dist / footKmAll <= 0.5) && (climber.key === 'Walk' || climber.key === 'Run') ? ' and the biggest share of the climbing.' : `, and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} gave me the biggest share of the climbing.`) : '.'}
                 {s.trailKm >= 1 ? ` I ran ${n0(s.trailKm)} km on trails.` : ''}
               </>}
               odds={{

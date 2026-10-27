@@ -21,6 +21,8 @@ const pc = (v) => Math.round((v || 0) * 100)
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
 const k1 = (v) => (v || 0).toFixed(1)
 const fmtMon = (iso) => (iso ? `${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const ORDW = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth']
 const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
 const word = (n) => WORD[n] || String(n)
@@ -119,8 +121,9 @@ export default function Where() {
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Almost all my outings happened at home, in Tanzania. The trips across the border were short, a few days each, and
-            most of them came in 2024, the year I travelled the most.{P.othersN ? ` ${cap(word(P.othersN))} outings abroad I count as others.` : ''} My indoor outings have no place on the map, so they are left out here.
+            My first outing outside Tanzania was in Kenya, on 7 July 2020, just before the long silence. Most of my trips across the
+            border came later, in 2024, the year I travelled the most. Still, almost everything on this map happened at home.
+            {P.othersN ? ` ${cap(word(P.othersN))} outings abroad I count as others.` : ''}
           </Reveal>
           <OddsRow
             title="The outings by place"
@@ -166,10 +169,9 @@ export default function Where() {
             <h2 id="wh-tz" className="section-head__title">Three places carry most of&nbsp;it.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Three places carry most of my story: {andList(top3.map((r) => r.region))}. {home.region} is where the habit took hold in
-            2021 and where I have spent the most days out. Dar es Salaam is my other home, and in 2026 it is where I go out most.
-            {reg('Kilimanjaro').n && reg('Morogoro').n ? ' Kilimanjaro and Morogoro are where I go for the hills.' : ''}
-            {' '}The other regions came mostly from trips.
+            My first outing in {home.region} was on 18 July 2021, a few weeks after I came back. It became the place where the habit
+            took hold, and where I have spent the most days out. Dar es Salaam is my other home, and in 2026 it is where I go out
+            most. Kilimanjaro and Morogoro are where I go for the hills, and the other regions came mostly from trips.
           </Reveal>
           <OddsRow
             title="Inside Tanzania"
@@ -217,9 +219,10 @@ export default function Where() {
           eyebrow={`${num()} · Flat at home, hilly away`}
           title={`The climbing is in ${word(steep.length)} regions.`}
           statement={<>
-            Where I live, the ground is flat, so the hills are something I travel to. They are in{' '}
-            {andList(steep.map((r) => r.region))}, and that is where {steep.reduce((s, r) => s + r.trail, 0)} of my trail runs and
-            hikes started. A kilometre there climbs many times more than a kilometre at home.
+            In Dar es Salaam I climb about {k1(reg('Dar es Salaam').mpk)} m for every kilometre. In Morogoro it is{' '}
+            {n0(reg('Morogoro').mpk)}. One kilometre there climbs as much as{' '}
+            {Math.round(reg('Morogoro').mpk / Math.max(0.1, reg('Dar es Salaam').mpk))} at home. Where I live, the ground is flat, so
+            the hills are something I travel to, and that is where {steep.reduce((s, r) => s + r.trail, 0)} of my trail runs and hikes started.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -291,8 +294,9 @@ export default function Where() {
           eyebrow={`${num()} · New places`}
           title={`${disc.length} regions in ${lastYear - Number(disc[0].date.slice(0, 4))} years.`}
           statement={<>
-            Each new region came with a trip, and they came in bunches. {newBy.filter((y) => y.n).map((y) => `In ${y.year} I added ${andList(y.names)}`).join('. ')}.
-            There is still a lot of Tanzania to see.
+            {(() => { const last = disc[disc.length - 1]; return last ? `On ${fmtDay(last.date)} I went out for the first time in ${last.region}, my ${ORDW[disc.length] || `${disc.length}th`} region.` : '' })()}
+            {' '}Each new region came with a trip, and they came in bunches, in the years I travelled. There is still a lot of
+            Tanzania to see.
           </>}
           odds={{
             title: 'New regions',
@@ -332,10 +336,9 @@ export default function Where() {
           eyebrow={`${num()} · Across the border`}
           title={`${n0(P.abroadN)} outings outside Tanzania.`}
           statement={<>
-            My trips outside Tanzania were short, but each one kept the habit going on the road.
-            {kenya ? ` My first outing abroad was in Kenya, in ${fmtMonth(kenya.first)}, and I have been back a few times since.` : ''}
-            {malawi ? ` In Malawi I went out ${malawi.n} times over ${malawi.days} days, between ${fmtMon(malawi.first)} and ${fmtMon(malawi.last)}.` : ''}
-            {sa ? ` In South Africa I had ${sa.n} outings in ${sa.days} days.` : ''}
+            {malawi ? `On ${fmtDay(malawi.first)} I went out for the first time in Malawi, and over the next two months I went out there ${malawi.n} times.` : ''}
+            {' '}My trips outside Tanzania were short, a few days each, but the habit came with me.
+            {kenya ? ` Kenya was the first, in ${fmtMonth(kenya.first)}, and I have been back a few times since.` : ''}
             {P.othersN ? ` The other ${word(P.othersN)} I count as others.` : ''}
           </>}
           odds={{

@@ -207,14 +207,14 @@ export const YEAR_CHARACTERS = {
 // Headline figures fill in live; the comparisons with other years describe
 // settled, past years and were checked against the activity log.
 export const YEAR_REPORT = {
-  2019: (s) => `This is where my log starts. Most of my outings were runs on a treadmill, and the most days I managed in a row was ${s.streakLen}. It was a small beginning.`,
-  2020: () => `Mostly treadmill runs again. This was also the year of my first outing outside Tanzania, in Kenya. Then, after early July, I stopped logging for almost a year.`,
-  2021: (s) => `Kawia ufike, it is better to arrive late than not to arrive. This is the year I came back. On ${Math.round(s.multiShare * 100)}% of my days out I went out more than once, and I started walking properly. Everything after grew from this year.`,
-  2022: (s) => `My busiest year. For the first time I walked more often than I ran, ${s.walkN} walks to ${s.runN} runs, and I was out about two days in every three.`,
-  2023: (s) => `I went out a bit less than in 2022, but I went to the hills more. It is the most I have climbed in a year, and I ran ${num0(s.trailKm)} km on trails.`,
-  2024: (s) => `I travelled a lot and went out in ${w(s.countriesNamed)} countries. My distance on foot was the lowest since the habit started, and half my outings were over in under ${num0(s.medMovingMin)} minutes. Still, I went out on ${s.activeDays} days.`,
-  2025: (s) => `Walking was ${Math.round(s.walkShare * 100)}% of my outings${s.longestWalk ? `, and I did my longest walk, ${num0(s.longestWalk.km)} km in one go` : ''}. For the third year in a row I logged close to three hundred activities.`,
-  2026: () => `This year is not over yet. I am thankful the body has carried me this far.`,
+  2019: (s) => `On 18 August 2019 I did my first run in this log, 5.1 km on a treadmill. By the end of the year I had ${s.n} activities, most of them runs indoors, and the most days I managed in a row was ${s.streakLen}. It was a small beginning.`,
+  2020: () => `On 7 July 2020 I went out in Kenya, my first outing outside Tanzania. The next day I went out once more, in Arusha, and then I stopped. It stayed like that for almost a year.`,
+  2021: (s) => `Kawia ufike, it is better to arrive late than not to arrive. On 27 June 2021 I came back with a 10 km run, after 353 days away. Within weeks I was going out almost every day, and on ${Math.round(s.multiShare * 100)}% of my days out I went out more than once. Everything after grew from this year.`,
+  2022: (s) => `On 1 May 2022 I ran a full marathon on the treadmill, the longest outing in my log. It was my busiest year, and the first year I walked more often than I ran, ${s.walkN} walks to ${s.runN} runs.`,
+  2023: (s) => `In March 2023 I climbed more than 5,000 m in a single month, most of it in Kilimanjaro. I went out a bit less than in 2022, but I went to the hills more, and I ran ${num0(s.trailKm)} km on trails.`,
+  2024: (s) => `In October 2024 I went to Malawi, and I went out there 23 times in two months. It was my travel year, with outings in ${w(s.countriesNamed)} countries, and my lowest distance since the habit started. Still, I went out on ${s.activeDays} days.`,
+  2025: (s) => `On 19 February 2025 I walked 30 km in one go, my longest walk. Walking was ${Math.round(s.walkShare * 100)}% of my outings that year, and for the third year in a row I logged close to three hundred activities.`,
+  2026: () => `On 28 August 2026 I made my fiftieth trip to Ras Kilomoni, and it was also my 2,000th outing. This year is not over yet. I am thankful the body has carried me this far.`,
 }
 
 export function buildYearSummaries(acts, geo) {

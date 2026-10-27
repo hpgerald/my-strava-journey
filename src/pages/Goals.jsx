@@ -21,6 +21,7 @@ const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt
 const fmtShort = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
 const fmtMon = (iso) => (iso ? `${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const fmtDayL = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 const doy = (y, i) => new Date(Date.UTC(y, 0, 1) + i * 86400000).toISOString().slice(0, 10)
 const clock = (min) => { const t = Math.round(min * 60); const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` }
 const hmin = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
@@ -171,9 +172,11 @@ export default function Goals() {
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Every year I aim for the same three things: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
-            {unitOf(E, E.target)} of climbing on foot. Running I have reached {times(closedYears('run').length)}.{' '}
-            {closedYears('walk').length ? `Walking I reached ${closedYears('walk').length === 1 ? `for the first time in ${closedYears('walk')[0].year}` : times(closedYears('walk').length)}.` : 'Walking I have not reached yet.'} {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
+            {closedYears('walk').length && closedYears('run').length && doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed).slice(5) === doy(closedYears('run')[0].year, closedYears('run')[0].run.closed).slice(5)
+              ? `My first running ring closed on ${fmtDayL(doy(closedYears('run')[0].year, closedYears('run')[0].run.closed))}. ${cap(word(closedYears('walk')[0].year - closedYears('run')[0].year))} years later, to the day, my first walking ring closed. `
+              : ''}
+            Every year I aim for the same three: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
+            {unitOf(E, E.target)} of climbing on foot. {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
           </Reveal>
           <OddsRow
             title={`${cur.year}${so}`}
@@ -292,9 +295,9 @@ export default function Goals() {
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
               statement={<>
-                It is the same half marathon each time{faster ? ', and each time I was a little quicker' : ''}: {list(race.map((r) => `${hmin(r.moving)} in ${r.year}`))}.
-                Most of the time I saved came from standing still less. In {first.year} I stopped for {n0(first.stopped)} minutes, and
-                in {last.year} for about {k1(last.stopped)}.
+                In {first.year} I stood still for {n0(first.stopped)} minutes during the Kilimanjaro Half. In {last.year} I stood still for
+                less than {word(Math.ceil(last.stopped))}. It is the same half marathon each time{faster ? ', and each time I was a little quicker' : ''},
+                and most of the time I saved came from stopping less.
               </>}
               odds={{
                 title: `${cap(word(race.length))} editions of one race`,

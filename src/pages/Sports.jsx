@@ -155,10 +155,10 @@ export default function Sports() {
             <h2 id="sp-title" className="section-head__title">Runs cover the&nbsp;ground.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            I keep the treadmill apart because in my log it behaves like a different sport: flat, quick and always the same. In
-            the chart below it sits alone on the left. The walks gather in the middle, and the trail runs and hikes climb high on
-            the right, the few outings that carry so much of my climbing. Most of my days are runs and walks, and the hills come
-            when I can travel to them.
+            My very first outing on foot was a treadmill run, and I stopped at 5.1 km. Since then {n0(Math.max(0, r.exactFive - 1))} more of my
+            treadmill runs have ended within 100 m of 5 km. In my log the treadmill behaves like a different sport, flat, quick and
+            always the same, so on this page I keep it apart. In the chart below it sits alone on the left, far from the walks, the
+            trail runs and the hikes.
           </Reveal>
           <OddsRow
             title="The four sports on foot"
@@ -179,10 +179,9 @@ export default function Sports() {
           eyebrow={`${num()} · Who does what`}
           title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
           statement={<>
-            Runs and walks share my time almost equally, but they give me different things. I have done about as many of each
-            ({n0(S.Run.n)} and {n0(S.Walk.n)}) and spent about the same hours on each, yet a run takes me further, about{' '}
-            {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km for a walk. The hills belong to the small sports. Trail runs and hikes
-            are only {n0(S.TrailRun.n + S.Hike.n)} of my outings, but they carry a big part of my climbing.
+            One hike on 29 March 2025 climbed as much as all my running climbs in a whole year. That is the difference between my
+            sports. Runs and walks share my time almost equally, about the same number and the same hours, and a run takes me further,
+            about {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km. But the hills belong to the few trail runs and hikes.
           </>}
           odds={{
             title: 'Each sport’s biggest share',
@@ -228,9 +227,9 @@ export default function Sports() {
           eyebrow={`${num()} · The mix, year by year`}
           title={walkLead ? `In ${walkLead.year}, walks went further.` : 'Runs went further every year.'}
           statement={<>
-            For years running carried my distance. In {runPeak.year} I walked only {n0(runPeak.km.Walk)} km. Since then my running
-            came down and my walking went up, little by little, year after year, until the two lines crossed. Trail running came in
-            from the end of 2021, when I started going to the hills.
+            On 2 January 2026, two days into the year, my walking kilometres passed my running for the year, and they never fell
+            behind again. In {runPeak.year} I walked only {n0(runPeak.km.Walk)} km against more than 2,000 km of running. The change came
+            little by little, year after year. Trail running came in from the end of 2021, when I started going to the hills.
           </>}
           odds={{
             title: `${LY}${so}, against the running peak`,
@@ -276,10 +275,9 @@ export default function Sports() {
           eyebrow={`${num()} · The treadmill`}
           title={`${pc(treadShare)}% of running was indoors.`}
           statement={<>
-            The treadmill is where my running started. I used it early in the morning or late in the evening, and in the first
-            years nearly all my running was there. Each year since, more of it has moved outside. The treadmill also left a mark in
-            my numbers: I tend to stop when the screen shows a round number, so my treadmill runs bunch up at 5, 10, 15 and 21 km.
-            Outside, my runs end at many different distances.
+            On 1 May 2022 I ran 42.7 km on a treadmill, a full marathon in one room. That was the peak of my treadmill years. Since
+            then, each year more of my running has moved outside, and in 2026, for the first time, more than half of it was out on the
+            roads and trails. The treadmill still shows in my habits: I tend to stop when the screen shows a round number.
           </>}
           odds={{
             title: 'Running indoors',
@@ -322,11 +320,9 @@ export default function Sports() {
           eyebrow={`${num()} · Pace`}
           title="Each sport has its pace."
           statement={<>
-            The treadmill makes me look fast. My usual treadmill kilometre takes {pace(M.tread.pace.med)}, but outside a run takes
-            me {pace(M.road.pace.med)}, {Math.abs(M.road.pace.med / M.tread.pace.med - 2) < 0.15 ? 'about twice as long' : `about ${k1(M.road.pace.med / M.tread.pace.med)} times as long`}, which
-            is closer to a walk ({pace(M.walk.pace.med)}) than to the treadmill. Pace here is the minutes I take for one kilometre.
-            My quickest treadmill year was {quickYear.year}, at {pace(quickYear.treadPace.med)}, and in {LY}{so} I am at{' '}
-            {pace(latest.treadPace ? latest.treadPace.med : 0)}.
+            When I ran the Kilimanjaro Half in 2026, each kilometre took me about ten minutes of moving time. On the treadmill my usual
+            kilometre takes under six. Outside I am closer to my walking pace than to my treadmill pace, so the treadmill makes me look
+            faster than I am. Pace here is the minutes I take for one kilometre.
           </>}
           odds={{
             title: 'Median minutes per kilometre',
@@ -372,9 +368,9 @@ export default function Sports() {
               eyebrow={`${num()} · The walks`}
               title="The typical walk grew."
               statement={<>
-                My walks changed more than anything else in my log. From {w0.year} to 2024, about half of them were short, under 3
-                km. In 2025 that started to change, and now almost every walk is a proper outing of many kilometres
-                {walkHalves ? `. ${cap(word(walkHalves))} of them have gone a half marathon or further` : ''}.
+                On Sunday 27 September 2026 I walked 22.8 km in Dar es Salaam, and now that is an ordinary weekend walk for me. From{' '}
+                {w0.year} to 2024, about half of my walks were short, under 3 km. In 2025 that started to change, and now almost every walk
+                is a proper outing of many kilometres.
               </>}
               odds={{
                 title: `The walk, ${w0.year} against ${w1.year}`,
@@ -419,9 +415,9 @@ export default function Sports() {
           eyebrow={`${num()} · The long days`}
           title={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? 'Long days moved outdoors.' : `${n0(longAll)} half marathons or more.`}
           statement={<>
-            My long days left the treadmill. Up to 2022, every half marathon or longer was indoors. My first one outside came in
-            January 2023, and now most of my long days are on roads, trails and long walks. The {k1(M.tread.longest.km)} km I ran on
-            a treadmill in {fmtMonth(M.tread.longest.date)}, a full marathon indoors, is still my longest.
+            On 22 January 2023 I ran my first half marathon outside, 22.7 km on the trails of Morogoro. Before that, every long day
+            in my log had been on the treadmill. Now most of them are outside, on roads, trails and long walks. Only the marathon,
+            run indoors in 2022, is still longer than any of them.
           </>}
           odds={{
             title: 'Half marathon or longer',
@@ -463,10 +459,9 @@ export default function Sports() {
           title="Hikes climb the most."
           leftNote={<>I drew the slopes steeper than they really are.</>}
           statement={<>
-            Climbing is slow work for me, and it happens on foot. An outdoor run climbs about {n0(M.road.mPerKm)} m for every
-            kilometre and the treadmill nothing, so my walks, with {pc(share('km', 'Walk'))}% of the distance, did{' '}
-            {pc(share('elev', 'Walk'))}% of my climbing. My biggest climb was a {k1(big.km)} km {SPORT_NAME[big.sport].toLowerCase()} in{' '}
-            {fmtMonth(big.date)}.
+            My {n0(M.tread.n)} treadmill runs together climbed nothing at all. One hike in Morogoro climbed almost 2,000 m in 16 km.
+            Between those two are my walks, which with {pc(share('km', 'Walk'))}% of my distance did {pc(share('elev', 'Walk'))}% of my
+            climbing. Climbing is slow work for me, and it happens on foot.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -595,10 +590,9 @@ export default function Sports() {
           eyebrow={`${num()} · Effort and reward`}
           title={`${cap(ofModeName(rated[0]))} work hardest.`}
           statement={<>
-            The treadmill works my heart the hardest, and walking the least. Relative effort is Strava&rsquo;s score for how hard my
-            heart worked, and per hour the treadmill comes first. I left out hikes, because too few of them have a score. The people
-            who follow me see it differently: my {ofModeName(kudosTop)} get the most kudos. Outdoor runs set the most personal
-            records, because Strava needs GPS for them.
+            My most cheered outing is the Kilimanjaro Half of 2023. It got 125 kudos and set 18 personal records on its segments in
+            one morning. The people who follow me cheer the trail runs most. My heart says something else: per hour, the treadmill
+            works it hardest and walking the least. Relative effort is Strava&rsquo;s score for how hard my heart worked.
           </>}
           odds={{
             title: 'Effort per hour, kudos and records per outing',
