@@ -127,7 +127,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
           <>
             <hr className="rule" style={{ marginTop: 0 }} />
             <nav aria-label="Pagination" className="prevnext">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 0 }}>
                 <PagingLink item={prev} dir="prev" />
                 <PagingLink item={next} dir="next" />
               </div>

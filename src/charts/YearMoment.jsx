@@ -86,7 +86,7 @@ export default function YearMoment({ year, stats }) {
     )
   } else if (year === 2024) {
     kicker = 'The passport'
-    title = 'The widest the map ever spread.'
+    title = 'The map at its widest.'
     const away = s.countries.filter((c) => c.country !== 'Tanzania')
     body = `${s.countries.length} countries in a single year, from home in Tanzania out to ${away.slice(0, 3).map((c) => c.country).join(', ')}${away.length > 3 ? ' and more' : ''}.`
     figure = (

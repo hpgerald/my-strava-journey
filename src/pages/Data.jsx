@@ -92,17 +92,7 @@ export default function Data() {
           </p>
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {g.items.map(([name, desc]) => (
-              <li
-                key={name}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(10rem, 14rem) 1fr auto',
-                  gap: 'var(--sp-4)',
-                  alignItems: 'baseline',
-                  padding: 'var(--sp-3) 0',
-                  borderTop: '1px solid var(--rule-faint)',
-                }}
-              >
+              <li key={name} className="ds-row">
                 <span className="mono" style={{ fontWeight: 600 }}>
                   {name}.csv
                 </span>
@@ -124,9 +114,10 @@ export default function Data() {
         </p>
         <div className="measure stack">
           <p>
-            The figures come from Strava, pulled through the Strava API. Per-sheet totals are read
-            straight from a companion workbook; the geographic files are built by decoding each
-            activity's GPS start point and placing it with offline boundary and place data.
+            Every week I pull my latest activities from Strava through an MCP server into one raw
+            file. Python scripts rebuild every table above from it. The geographic files place each
+            activity&rsquo;s GPS start point with offline boundary and place data, and activity names
+            and exact locations are removed before anything is published.
           </p>
           <p>
             Numbers are never invented. Where a value was unavailable it is left blank and logged.

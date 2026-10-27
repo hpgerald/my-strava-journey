@@ -1825,6 +1825,17 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 }
 .chapterturn__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); letter-spacing: var(--tr-snug); line-height: 1.05; }
 .chapterturn__sub { display: block; margin-top: 4px; font-size: var(--fs-sm); opacity: 0.7; }
+@media (max-width: 30rem) {
+  .chapterturn { padding: var(--sp-5) var(--sp-3); }
+  .chapterturn__title { font-size: var(--fs-md); }
+  .chapterturn__row { flex-wrap: wrap; gap: 0 var(--sp-2); }
+}
+/* the data page: one row per table */
+.ds-row { display: grid; grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) auto; gap: var(--sp-4); align-items: baseline; padding: var(--sp-3) 0; border-top: 1px solid var(--rule-faint); }
+@media (max-width: 40rem) {
+  .ds-row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-1) var(--sp-3); }
+  .ds-row > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+}
 
 /* ---- Records: AscentProfile (elevation metaphor) ----------------------- */
 .ascent { position: relative; }
@@ -2615,3 +2626,4 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .edgecard__foot { padding-top: var(--sp-2); }
   .edgecard__arrow { font-size: var(--fs-md); }
 }
+.ds-row > :first-child { overflow-wrap: anywhere; }

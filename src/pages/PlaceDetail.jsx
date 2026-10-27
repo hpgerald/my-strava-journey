@@ -9,6 +9,9 @@ import { useTable } from '../context/DataContext.jsx'
 import { slugify, prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
+// distance and climb count the four sports on foot, as on every other page
+const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+
 export default function PlaceDetail() {
   const { placeId } = useParams()
   const countries = useTable('countries')
@@ -42,14 +45,17 @@ export default function PlaceDetail() {
   const next =
     idx < siblings.length - 1
       ? { to: `/where/${slugify(siblings[idx + 1][keyName])}`, label: siblings[idx + 1][keyName] }
-      : null
+      : { to: '/where', label: 'All places' }
 
   // notable activities in this place, from the geo join
   const actById = new Map(activities.map((a) => [a.activity_key, a]))
   const here = geo
     .filter((g) => g.has_gps === '1' && (isCountry ? g.country === name : g.region === name && g.country === 'Tanzania'))
     .map((g) => ({ ...g, act: actById.get(g.activity_key) || {} }))
-  const notable = [...here].sort((a, b) => toNum(b.act.distance_km) - toNum(a.act.distance_km)).slice(0, 6)
+  const onFoot = here.filter((g) => FOOT.has(g.act.sport_type))
+  const footKm = onFoot.reduce((t, g) => t + (toNum(g.act.distance_km) || 0), 0)
+  const footElev = onFoot.reduce((t, g) => t + (toNum(g.act.elevation_gain_m) || 0), 0)
+  const notable = [...onFoot].sort((a, b) => toNum(b.act.distance_km) - toNum(a.act.distance_km)).slice(0, 6)
 
   // activities per year in this place
   const byYear = {}
@@ -73,10 +79,10 @@ export default function PlaceDetail() {
     >
       <section aria-label="Totals" style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--4">
-          <StatCard value={fmtInt(row.activities)} label="Activities" source="Strava GPS" />
-          <StatCard value={fmtNum(row.distance_km, 0)} unit="km" label="Distance" source="Strava GPS" />
-          <StatCard value={fmtNum(row.moving_time_h, 0)} unit="h" label="Moving time" source="Strava GPS" />
-          <StatCard value={fmtInt(row.elevation_m)} unit="m" label="Elevation" source="Strava GPS" />
+          <StatCard value={fmtInt(row.activities)} label="Outings" />
+          <StatCard value={fmtInt(Math.round(footKm))} unit="km" label="On foot" />
+          <StatCard value={fmtNum(row.moving_time_h, 0)} unit="h" label="Moving time" />
+          <StatCard value={fmtInt(Math.round(footElev))} unit="m" label="Climbed on foot" />
         </div>
         <p className="text-muted" style={{ marginTop: 'var(--sp-4)', fontSize: 'var(--fs-sm)' }}>
           {isCountry ? 'First logged here' : 'Active here'}: {(row.first_activity_date || '').slice(0, 10)}
@@ -96,10 +102,10 @@ export default function PlaceDetail() {
       {notable.length > 0 && (
         <section style={{ paddingTop: 'var(--sp-7)' }}>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>
-            Notable activities here
+            Longest outings on foot here
           </p>
           <DataTable
-            caption={`Longest activities in ${name}`}
+            caption={`Longest outings on foot in ${name}`}
             columns={[
               { key: 'date', label: 'Date', mono: true, render: (r) => (r.date || '').slice(0, 10) },
               { key: 'sport', label: 'Sport', render: (r) => prettySport(r.sport) },

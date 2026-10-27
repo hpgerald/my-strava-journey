@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { useKeyed } from '../context/DataContext.jsx'
 
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const day = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+const count = (v) => (v ? Number(v).toLocaleString('en-US') : '')
+
 function Fact({ label, children }) {
   return (
     <div className="factsheet__row">
@@ -42,8 +46,8 @@ export default function About() {
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
             <p>
-              It covers {meta.total_activities || '2,000'} activities from {meta.coverage_start || '2019'}{' '}
-              to {meta.coverage_end || '2026'}. Running, walking, trail running, hiking, and a
+              It covers {count(meta.total_activities)} activities from {day(meta.coverage_start)}{' '}
+              to {day(meta.coverage_end)}. Running, walking, trail running, hiking, and a
               handful of other activities. Mostly Tanzania, with the occasional trip abroad. It refreshes each week
               as new activities land.
             </p>
@@ -82,14 +86,14 @@ export default function About() {
           <aside className="factsheet" aria-label="Fact sheet">
             <p className="eyebrow" style={{ marginBottom: 'var(--sp-4)' }}>The record, in brief</p>
             <dl className="factsheet__list">
-              <Fact label="Activities">{meta.total_activities || '2,000'}</Fact>
+              <Fact label="Activities">{count(meta.total_activities)}</Fact>
               <Fact label="Coverage">
-                {(meta.coverage_start || '2019-08-17')} to {(meta.coverage_end || '2026-08-24')}
+                {day(meta.coverage_start)} to {day(meta.coverage_end)}
               </Fact>
               <Fact label="Refresh">Weekly</Fact>
               <Fact label="Units">{meta.units || 'metric'}</Fact>
-              <Fact label="Data source">{meta.data_source || 'Strava API'}</Fact>
-              <Fact label="Last refreshed">{meta.last_refreshed || 'recently'}</Fact>
+              <Fact label="Data source">My Strava log, pulled weekly through an MCP server</Fact>
+              <Fact label="Last refreshed">{day(meta.last_refreshed)}</Fact>
             </dl>
           </aside>
         </div>

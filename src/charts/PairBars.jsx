@@ -31,7 +31,7 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria })
   // a value sits beside its dot on the outer side. When the left one would run
   // into the zero line it moves to the right, after the other value, on the
   // same baseline, so every row keeps one line of figures.
-  const estW = (s) => s.length * 7
+  const estW = (s) => s.length * 8.5
 
   return (
     <div ref={ref} className="pbars">
@@ -73,13 +73,19 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria })
                   const left = aLeft ? { v: pc(r.a), cls: 'pbars__val', x: xa } : { v: pc(r.b), cls: 'pbars__val pbars__val--b', x: xb }
                   const right = aLeft ? { v: pc(r.b), cls: 'pbars__val pbars__val--b' } : { v: pc(r.a), cls: 'pbars__val' }
                   const gR = r0 + 7, rx = hi + gR
-                  const fits = left.x - gR - estW(left.v) >= m.l + 4
+                  // where the left value goes: outside on the left; else after the
+                  // right value if the gap column leaves room; else between the dots,
+                  // just above the bar; else above its own dot
+                  const gapCol = W - 2 - pts(r.b - r.a).length * 12 - 8
+                  let lp
+                  if (left.x - gR - estW(left.v) >= m.l + 4) lp = { x: left.x - gR, y: cy + 4, textAnchor: 'end' }
+                  else if (rx + estW(right.v) + 8 + estW(left.v) <= gapCol) lp = { x: rx + estW(right.v) + 8, y: cy + 4, textAnchor: 'start' }
+                  else if (hi - lo - 2 * (r0 + 4) >= estW(left.v)) lp = { x: (lo + hi) / 2, y: cy - 7, textAnchor: 'middle' }
+                  else lp = { x: left.x, y: cy - r0 - 5, textAnchor: 'middle' }
                   return (
                     <>
                       <text x={rx} y={cy + 4} textAnchor="start" className={right.cls}>{right.v}</text>
-                      {fits
-                        ? <text x={left.x - gR} y={cy + 4} textAnchor="end" className={left.cls}>{left.v}</text>
-                        : <text x={rx + estW(right.v) + 8} y={cy + 4} textAnchor="start" className={left.cls}>{left.v}</text>}
+                      <text {...lp} className={left.cls}>{left.v}</text>
                     </>
                   )
                 })()}

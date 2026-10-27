@@ -300,7 +300,7 @@ print("TZ regions:", [(n, rr['act']) for n, rr in rrows])
 # meta
 today = datetime.date.today().isoformat()
 Wr("meta.csv", ["key", "value", "source_page"], [["coverage_start", "2019-08-17", "Notes"], ["coverage_end", days[-1], "Notes"],
-    ["total_activities", str(len(rows)), "Notes"], ["units", "Metric (km, meters, km/h)", "Notes"],
+    ["total_activities", str(len(rows)), "Notes"], ["units", "Metric (km, metres, km/h)", "Notes"],
     ["data_source", "Strava API via connected Strava MCP", "Notes"], ["last_refreshed", today, "Notes"],
     ["refresh_cadence", "Weekly automated rebuild", "Notes"]])
 # ============ RAS KILOMONI CHALLENGE (named-trip series, from raw titles) ============

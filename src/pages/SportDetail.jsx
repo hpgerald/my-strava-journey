@@ -9,6 +9,8 @@ import { useTable } from '../context/DataContext.jsx'
 import { slugify, prettySport } from '../lib/slug.js'
 import { fmtInt, fmtNum, toNum } from '../lib/format.js'
 
+const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+
 export default function SportDetail() {
   const { sportId } = useParams()
   const sports = useTable('sport_breakdown')
@@ -23,12 +25,13 @@ export default function SportDetail() {
   const s = sports[idx]
   const name = prettySport(s.sport)
 
-  // sibling paging, in sport_breakdown order (by activity count)
-  const prev = idx > 0 ? { to: `/sports/${slugify(sports[idx - 1].sport)}`, label: prettySport(sports[idx - 1].sport) } : { to: '/sports', label: 'All sports' }
-  const next =
-    idx < sports.length - 1
-      ? { to: `/sports/${slugify(sports[idx + 1].sport)}`, label: prettySport(sports[idx + 1].sport) }
-      : null
+  // sibling paging through the four sports on foot, busiest first, the same
+  // set the Sports chapter opens; the ends lead back to that chapter
+  const foot = sports.filter((x) => FOOT.has(x.sport))
+  const fi = foot.findIndex((x) => x.sport === s.sport)
+  const link = (x) => ({ to: `/sports/${slugify(x.sport)}`, label: prettySport(x.sport) })
+  const prev = fi > 0 ? link(foot[fi - 1]) : { to: '/sports', label: 'All sports' }
+  const next = fi >= 0 && fi < foot.length - 1 ? link(foot[fi + 1]) : { to: '/sports', label: 'All sports' }
 
   // per-sport rows from the master log
   const rows = activities.filter((a) => a.sport_type === s.sport)
@@ -68,11 +71,11 @@ export default function SportDetail() {
     >
       <section aria-label="Totals" style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--4">
-          <StatCard value={fmtInt(s.activities)} label="Activities" source="Overview" />
-          {hasDistance && <StatCard value={fmtNum(s.distance_km, 0)} unit="km" label="Distance" source="Overview" />}
-          <StatCard value={fmtNum(s.moving_time_h, 0)} unit="h" label="Moving time" source="Overview" />
+          <StatCard value={fmtInt(s.activities)} label="Activities" />
+          {hasDistance && <StatCard value={fmtNum(s.distance_km, 0)} unit="km" label="Distance" />}
+          <StatCard value={fmtNum(s.moving_time_h, 0)} unit="h" label="Moving time" />
           {toNum(s.elevation_m) > 0 && (
-            <StatCard value={fmtInt(s.elevation_m)} unit="m" label="Elevation" source="Overview" />
+            <StatCard value={fmtInt(s.elevation_m)} unit="m" label="Elevation" />
           )}
         </div>
       </section>

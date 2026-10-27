@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 import { useKeyed } from '../context/DataContext.jsx'
 import Container from './Container.jsx'
 
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const day = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
+
 export default function Footer() {
   const meta = useKeyed('meta', 'key', 'value')
   return (
@@ -35,11 +38,11 @@ export default function Footer() {
               Coverage
             </p>
             <p className="mono text-muted" style={{ margin: 0, fontSize: 'var(--fs-sm)' }}>
-              {meta.coverage_start || '2019'} &ndash; {meta.coverage_end || 'now'}
+              {day(meta.coverage_start)} to {day(meta.coverage_end)}
               <br />
-              {meta.total_activities || '2,000'} activities
+              {meta.total_activities ? Number(meta.total_activities).toLocaleString('en-US') : ''} activities
               <br />
-              Refreshed {meta.last_refreshed || 'recently'}
+              Refreshed {day(meta.last_refreshed)}
             </p>
           </div>
         </div>

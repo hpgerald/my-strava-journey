@@ -51,6 +51,12 @@
 .bk-spiral__note { font-style: italic; fill: var(--ink); }
 .bk-spiral__dot { fill: var(--ink); }
 .bk-spiral__end { fill: var(--accent); stroke: var(--paper); stroke-width: 2px; }
+/* on a phone the spiral is too small for its fine print: the year, date and gap
+   labels step out (the caption carries them) and the month marks grow */
+@container (max-width: 34rem) {
+  .bk-spiral__yr, .bk-spiral__note, .bk-spiral__lab { display: none; }
+  .bk-spiral__mo { font-size: 34px; letter-spacing: 0.08em; }
+}
 .bk-cover__cap { margin: 0; max-width: 62ch; text-align: center; font-family: var(--font-mono); font-size: max(0.62rem, 1.45cqw); line-height: 1.5; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
 .bk-cover__cap span { color: var(--accent-ink); }
 .bk-cover__base { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 4cqw; border-top: 1px solid var(--ink); padding-top: 3cqw; }
