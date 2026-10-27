@@ -97,8 +97,8 @@ export default function WhatItMeans() {
             <h2 id="wm-title" className="section-head__title">It costs&nbsp;time.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            It is not much in one day, but it adds up. These are the lessons
-            I took from it.
+            It is not much in one day, about the time of a long lunch, but it adds up. Most of it is walking and easy running,
+            nothing heavy. These are the lessons I took from it.
           </Reveal>
           <OddsRow
             title="What it cost"
@@ -213,8 +213,9 @@ export default function WhatItMeans() {
               eyebrow={`${num()} · The quiet weeks`}
               title='Keep a floor.'
               statement={<>
-                My big weeks have not changed much over the years. What changed is the quiet weeks. If the bad weeks are not too
-                bad, the year takes care of itself.
+                My big weeks have not changed much over the years. What changed is the quiet weeks. From 2022 to 2025 some weeks
+                slipped very low. In {cur.year} none has, and the middle half of my weeks are between{' '}
+                {n0(wNow.q25)} and {n0(wNow.q75)} km. If the bad weeks are not too bad, the year takes care of itself.
               </>}
               odds={{
                 title: 'Weeks on foot',
@@ -256,8 +257,8 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Long days together`}
           title="Long days come in bunches."
           statement={<>
-            My long days do not come alone. The day after one, I usually go out again, and further than normal. The days before
-            are bigger too. So for me the long days come in the middle of a busy time.
+            My long days do not come alone. The day after one, I usually go out again, and further than normal. The three days
+            before are bigger than usual too. So for me the long days come in the middle of a busy time. After a long run, a full rest the next day is rare.
           </>}
           odds={{
             title: `Days of ${LONG_KM} km or more since ${habitYear}`,
@@ -300,9 +301,10 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Days and distance`}
           title="How a year adds up."
           statement={<>
-            A year&rsquo;s total is just two things: how often I go out, and how far I go each time. {longYear.year} was a year
-            of long days on about half the days. {cur.year} is a year of going every day, shorter each time. {lowYear.year} was
-            low on both.
+            A year&rsquo;s total is just two things: how often I go out, and how far I go each time. 1,000 km a year is a short
+            outing every day, or about {k1(twoThirds)} km on two days in three. I have done it both ways. {longYear.year} was a year
+            of long days on about half the days. {cur.year} is a year of going every day, shorter each time. {lowYear.year} was low
+            on both, and it became my lowest year since the habit started.
           </>}
           odds={{
             title: 'The two levers',

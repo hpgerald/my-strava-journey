@@ -191,7 +191,9 @@ export default function Records() {
           title='The longest days.'
           statement={<>
             The ones past 30 km on the treadmill all came between {fmtMon(treadOver30[0]?.date)} and{' '}
-            {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. After that, every one was outside.
+            {fmtMon(treadOver30[treadOver30.length - 1]?.date)}, when the treadmill was still where I did my long runs. After that,
+            every one was outside:{' '}
+            {[...outOver30.filter((f) => f.mode !== 'walk').map((f) => `${/^(8|11\.|18\.)/.test(k1(f.km)) ? 'an' : 'a'} ${k1(f.km)} km ${lower(f.mode)}${f.elev >= 300 ? ` with ${n0(f.elev)} m of climb` : ''}`), ...(outOver30.some((f) => f.mode === 'walk') ? ['one long walk'] : [])].join(', ').replace(/, ([^,]*)$/, ' and $1')}.
           </>}
           odds={{
             title: 'Long outings on foot',
@@ -232,8 +234,8 @@ export default function Records() {
           leftNote={<>The bottom of the scale is stretched so the small climbs show.</>}
           statement={<>
             My first {word(walkLed)} climbing records were all walks, up to {n0(cP[walkLed - 1].elev)} m in{' '}
-            {fmtMonth(cP[walkLed - 1].date)}. After that the hikes took over. On my biggest day of climbing,{' '}
-            {word(bigDayClimb.n)} outings together went past any single climb.
+            {fmtMonth(cP[walkLed - 1].date)}. After that the hikes took over, and each new record needed a bigger mountain. On my
+            biggest day of climbing, {word(bigDayClimb.n)} outings together went past any single climb.
           </>}
           odds={{
             title: 'The biggest climb on foot',
@@ -273,8 +275,9 @@ export default function Records() {
           eyebrow={`${num()} · The biggest weeks and months`}
           title={`${fmtMonth(moEl.month)} climbed the most.`}
           statement={<>
-            {sameYearKm === R.topMonthsKm.length ? `All ${word(sameYearKm)} of my biggest months for distance were in ${moKm.month.slice(0, 4)}. ` : ''}
-            The climbing came in different months, and from far fewer kilometres, only {n0(moEl.km)} km in that month.
+            {sameYearKm === R.topMonthsKm.length ? `All ${word(sameYearKm)} of my biggest months for distance were in ${moKm.month.slice(0, 4)}, when most of my running was still on the treadmill. ` : ''}
+            The climbing came in different months, and from far fewer kilometres, only {n0(moEl.km)} km in that month. The big
+            distance and the big climbing almost never happened together.
           </>}
           odds={{
             title: 'The biggest stretches',
@@ -313,9 +316,11 @@ export default function Records() {
           eyebrow={`${num()} · Milestones`}
           title="The kilometres came faster."
           statement={<>
-            <i lang="sw">Pole pole ndio mwendo</i>, slowly is the way. I passed 1,000 km on foot in {fmtMonth(R.kmMiles[0].date)}
-            {R.kmMiles.find((k) => k.mark === 10000) ? ` and 10,000 km in ${fmtMonth(R.kmMiles.find((k) => k.mark === 10000).date)}` : ''}.
-            I also count my climbing in Everests, 8,849 m each, and each one now comes much quicker than the first.
+            <i lang="sw">Pole pole ndio mwendo</i>, slowly is the way. I passed 1,000 km on foot in {fmtMonth(R.kmMiles[0].date)},
+            two years after my first upload, with the long gap inside that time.
+            {R.kmMiles.find((k) => k.mark === 10000) ? ` I passed 10,000 km in ${fmtMonth(R.kmMiles.find((k) => k.mark === 10000).date)}.` : ''}
+            {' '}The last {n0(lastKm.mark - prevKm.mark)} km took {n0(lastKm.days)} days. I also count my climbing in Everests, 8,849 m
+            each, and each one now comes much quicker than the first.
           </>}
           odds={{
             title: 'The running totals',
@@ -358,7 +363,8 @@ export default function Records() {
           title="Beating my own times."
           statement={<>
             A personal record here means I beat my own earlier time on a Strava segment, a short timed stretch of road or trail.
-            The treadmill gives almost none, because segments need GPS, so they came as I moved outside.
+            They are small wins, a few seconds on a stretch I know. The treadmill gives almost none, because segments need GPS, so
+            they came as I moved outside, most of them on outdoor runs.
           </>}
           odds={{
             title: 'Segment bests on foot',

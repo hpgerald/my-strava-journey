@@ -97,6 +97,8 @@ export default function Timeline() {
           <Reveal as="p" className="sgrid__statement">
             My log starts on {fmtDay(C.firstISO)}. After a few months I stopped, from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
             {cur ? ` Now I have gone out ${n0(cur.len)} days in a row.` : ''}
+            {' '}Along the way there were {word(F.length)} firsts on foot, {word(abroadN)} countries besides Tanzania, {C.regions.length} regions of
+            Tanzania and {word(C.shoes.length)} pairs of shoes. The chart puts all of it on one line.
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -170,7 +172,9 @@ export default function Timeline() {
           eyebrow={`${num()} · Firsts`}
           title='From the treadmill to the hills.'
           statement={<>
-            The early distance firsts all came on the treadmill. The later ones came on trails, in the mountains and on long walks.
+            The early distance firsts all came on the treadmill: 10 km, the half marathon, 30 km and the marathon. The later ones
+            came on trails, in the mountains and on long walks. Each new
+            first needs a longer day or a steeper hill, so they come slowly now.
           </>}
           odds={{
             title: 'Firsts on foot',

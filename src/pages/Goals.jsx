@@ -174,7 +174,7 @@ export default function Goals() {
             Every year I aim for the same three things: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
             {unitOf(E, E.target)} of climbing on foot. Running I have reached {times(closedYears('run').length)}. Walking{' '}
             {closedYears('walk').length === 1 ? `only once, in ${closedYears('walk')[0].year}` : times(closedYears('walk').length)}.
-            {' '}{closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'The climbing I have never reached.'}
+            {' '}{closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'The climbing I have never reached. It is the hardest of the three for me, because most of my outings are on flat ground and the hills are far.'}
           </Reveal>
           <OddsRow
             title={`${cur.year}${so}`}
@@ -338,8 +338,10 @@ export default function Goals() {
               title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni.`}
               statement={<>
                 <i lang="sw">Bandu bandu huisha gogo</i>, chip by chip finishes the log. In {rk[0].date.slice(0, 4)} I set myself a
-                different kind of target: to reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times.
-                I counted the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs.
+                different kind of target: to reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times. I counted
+                the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs. For the first
+                three months I kept a steady count. Then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} came with {rkTop.n} trips, and after
+                that the target was within reach.
               </>}
               odds={{
                 title: 'Ras Kilomoni',
@@ -381,7 +383,8 @@ export default function Goals() {
           eyebrow={`${num()} · A goal I never set`}
           title={`Every month since ${fmtMon(`${G.streakFrom.key}-01`)}.`}
           statement={<>
-            I never set this one as a target. It came on its own, from going out week after week.
+            I never set this one as a target. It came on its own, from going out week after week. Even in the quiet months of
+            the year, I went out at least once.
           </>}
           odds={{
             title: 'Every calendar month',

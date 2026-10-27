@@ -229,6 +229,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
             {activeMonths === moIdx.length ? `I went out in every month${so}.` : `I went out in ${word(activeMonths)} of the ${word(moIdx.length)} months${so}.`}
+            {(() => { const kmTop = moIdx.reduce((b, i) => (s.monthsKm[i] > s.monthsKm[b] ? i : b), moIdx[0]); return kmTop === busy ? ` ${MONTH_F[busy]} was also my biggest month for distance, with ${n0(s.monthsKm[busy])} km on foot.` : ` The most distance came in ${MONTH_F[kmTop]}, with ${n0(s.monthsKm[kmTop])} km on foot.` })()}
             {isPartial && quiet === lastMo ? ` ${MONTH_F[quiet]} is not finished yet.` : ''}
           </>}
           odds={{
@@ -255,8 +256,10 @@ export default function YearInSport({ year: bookYear } = {}) {
               title={`${lead[0]} led ${Y}.`}
               statement={<>
                 {lead[0]} came first, {lead[1]} of my {fmtInt(s.n)} outings{so}, then {lead[3]} {lead[2]}
-                {mix.trail === 1 ? ' and one trail run or hike' : mix.trail ? ` and ${mix.trail} trail runs or hikes` : ''}. Running gave me {pc(flipOf('Run').dist / footKmAll)}% of my
-                distance on foot{climber ? `, and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} gave me the biggest share of the climbing, ${pc(climber.elev / footElAll)}%.` : '.'}
+                {mix.trail === 1 ? ' and one trail run or hike' : mix.trail ? ` and ${mix.trail} trail runs or hikes` : ''}. Running gave me{' '}
+                {pc(flipOf('Run').dist / footKmAll)}% of my distance on foot
+                {climber ? `, and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} gave me the biggest share of the climbing.` : '.'}
+                {s.trailKm >= 1 ? ` I ran ${n0(s.trailKm)} km on trails.` : ''}
               </>}
               odds={{
                 title: 'Share of all outings',
@@ -285,7 +288,9 @@ export default function YearInSport({ year: bookYear } = {}) {
               statement={<>
                 In {Y} I went out more in the {evening >= morning ? 'evenings than in the mornings' : 'mornings than in the evenings'},
                 and {fmtH(peakHour)} was the busiest hour. {WEEK[s.weekday7.indexOf(wkMax)]} was my busiest day and{' '}
-                {WEEK[s.weekday7.indexOf(wkMin)]} the quietest{wkMin / wkMax > 0.75 ? ', but not by much' : ''}.
+                {WEEK[s.weekday7.indexOf(wkMin)]} the quietest{wkMin / wkMax > 0.75 ? ', but not by much' : ''}.{' '}
+                {pc(s.weekendShare)}% of my outings were on a Saturday or Sunday,
+                {s.weekendShare > 0.35 ? ' more than an even week would give.' : s.weekendShare < 0.24 ? ' less than an even week would give.' : ' about what an even week would give.'}
               </>}
               odds={{
                 title: 'When outings started',
@@ -320,8 +325,8 @@ export default function YearInSport({ year: bookYear } = {}) {
           title={r.restDays === 0 ? `Not one day missed${so}.` : `Out on ${pc(pctDays)}% of days${so}.`}
           statement={<>
             {r.restDays === 0
-              ? 'The days add up when none of them is skipped.'
-              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ' was short'}.`}
+              ? 'Not one day was skipped. Some days it was only something small, but it was something, and the days add up when none of them is skipped.'
+              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ' was short'}.${r.longGap.len >= 2 ? ` My longest break ended on ${fmtDay(r.longGap.to)}.` : ''}`}
           </>}
           odds={{
             title: `The days of ${Y}`,
@@ -376,6 +381,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · The typical outing`}
               title='The usual outing.'
               statement={<>
+                {s.peakBins.length ? `Most of my outings on foot were around ${Math.min(...s.peakBins.slice(0, 2))} km${s.peakBins[1] ? ` or ${Math.max(...s.peakBins.slice(0, 2))} km` : ''}. ` : ''}
                 {meanFoot > s.medianFoot ? 'A few long days pulled my average above my usual outing.' : 'The short days pulled my average below my usual outing.'}
                 {s.biggestFoot ? ` The longest came in ${fmtMonth(s.biggestFoot.date)}.` : ''}
               </>}
@@ -406,6 +412,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               statement={<>
                 {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a rest day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it was less sure'}.`}
                 {r.weekly.cv < 0.6 ? ' My weeks were fairly steady.' : r.weekly.cv < 1 ? ' My weeks went up and down a fair bit.' : ' My weeks swung a lot, from almost nothing to very big.'}
+                {' '}My biggest week was {n0(Math.max(...r.weekly.series.map((w) => w.km)))} km on foot.
               </>}
               odds={{
                 title: 'The year in four numbers',
@@ -464,7 +471,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · Where it happened`}
               title={(r.countries.find((c) => c.country === 'Tanzania')?.activities || 0) / Math.max(1, r.located) > 0.8 ? 'Mostly at home.' : 'Across the border.'}
               statement={<>
-                {(() => { const away = r.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country); return away.length ? `Besides Tanzania, I went out in ${away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away[0]}${othersN ? `, plus ${word(othersN)} I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.' })()}
+                {(() => { const away = r.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country); return away.length ? `Besides Tanzania, I went out in ${away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away[0]}${othersN ? `, plus ${word(othersN)} ${othersN === 1 ? 'outing' : 'outings'} I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.' })()}
                 {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` The climbing was mostly in ${c.label}.` })() : ''}
               </>}
               odds={{

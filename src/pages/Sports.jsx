@@ -156,7 +156,9 @@ export default function Sports() {
           </div>
           <Reveal as="p" className="sgrid__statement">
             Most of my outings are runs and walks, with some trail runs and hikes when I can get to the hills. Much of my
-            running was on a treadmill, so on this page I count the treadmill as its own sport.
+            running was on a treadmill, so on this page I count the treadmill as its own sport. In the chart below, the treadmill
+            sits alone on the left, flat and quick. The walks gather in the middle, and the trail runs and hikes climb high on
+            the right.
           </Reveal>
           <OddsRow
             title="The four sports on foot"
@@ -177,9 +179,10 @@ export default function Sports() {
           eyebrow={`${num()} · Who does what`}
           title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
           statement={<>
-            I have done about as many runs as walks, and spent about the same hours on each. But a run takes me further, about{' '}
-            {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km for a walk. For climbing, the small sports matter most. Trail runs
-            and hikes are few, but they carry a big part of the climb.
+            I have done about as many runs as walks ({n0(S.Run.n)} and {n0(S.Walk.n)}), and spent about the same hours on each. But
+            a run takes me further, about {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km for a walk. For climbing, the small
+            sports matter most. Trail runs and hikes are only {n0(S.TrailRun.n + S.Hike.n)} of my outings, but they carry a big part
+            of the climb.
           </>}
           odds={{
             title: 'Each sport’s biggest share',
@@ -226,7 +229,8 @@ export default function Sports() {
           title={walkLead ? `In ${walkLead.year}, walks went further.` : 'Runs went further every year.'}
           statement={<>
             For years most of my distance was running. In {runPeak.year} I walked only {n0(runPeak.km.Walk)} km. Since then my
-            running has come down and my walking has gone up, little by little.
+            running has come down and my walking has gone up, little by little, year after year. Trail running, which I count on
+            its own, came in from the end of 2021, when I started going to the hills.
           </>}
           odds={{
             title: `${LY}${so}, against the running peak`,
@@ -272,8 +276,10 @@ export default function Sports() {
           eyebrow={`${num()} · The treadmill`}
           title={`${pc(treadShare)}% of running was indoors.`}
           statement={<>
-            When I started, the treadmill was where I ran. Each year since, more of my running has moved outside. The treadmill
-            also shows in my habits: I tend to stop when the screen shows a round number.
+            When I started, the treadmill was where I ran, early in the morning or late in the evening. Each year since, more of
+            my running has moved outside. The treadmill also shows in my habits. On it I tend to stop when the screen shows a
+            round number, so my treadmill runs bunch up at 5, 10, 15 and 21 km. Outside, my runs end at many different
+            distances.
           </>}
           odds={{
             title: 'Running indoors',
@@ -365,7 +371,9 @@ export default function Sports() {
               eyebrow={`${num()} · The walks`}
               title="The typical walk grew."
               statement={<>
-                My walks used to be short. Now they are proper outings{walkHalves ? `, and ${word(walkHalves)} of them have gone a half marathon or further` : ''}.
+                My walks used to be short. From {w0.year} to 2024, about half of them were under 3 km. In 2025 that started to
+                change, and now almost every walk is a proper outing
+                {walkHalves ? `. ${cap(word(walkHalves))} of my walks have gone a half marathon or further` : ''}.
               </>}
               odds={{
                 title: `The walk, ${w0.year} against ${w1.year}`,
@@ -410,8 +418,9 @@ export default function Sports() {
           eyebrow={`${num()} · The long days`}
           title={earlyLong && earlyLong === earlyTread && lastLongOut > latest.long.tread ? 'Long days moved outdoors.' : `${n0(longAll)} half marathons or more.`}
           statement={<>
-            My first long days were all on the treadmill. Now most of them are outside. My longest is still the{' '}
-            {k1(M.tread.longest.km)} km I ran on a treadmill in {fmtMonth(M.tread.longest.date)}, a full marathon indoors.
+            My first long days were all on the treadmill, up to 2022. My first half marathon outside came in January 2023. Now
+            most of them are outside, on roads, trails and long walks. My longest is still the {k1(M.tread.longest.km)} km I ran on
+            a treadmill in {fmtMonth(M.tread.longest.date)}, a full marathon indoors.
           </>}
           odds={{
             title: 'Half marathon or longer',
@@ -494,8 +503,9 @@ export default function Sports() {
           eyebrow={`${num()} · When`}
           title="Treadmill runs at night."
           statement={<>
-            Each sport has its own time. The treadmill is for the early morning and late in the evening, and walks are mostly
-            in the evening. Trail runs and hikes need a free day, so they fall on the weekend.
+            Each sport has its own time. The treadmill is busiest at {fmtH(peakHour('tread'))} and again late in the evening. Walks
+            are mostly around {fmtH(peakHour('walk'))}, after the working day. Outdoor runs start early, around{' '}
+            {fmtH(peakHour('road'))}, or in the late afternoon. Trail runs and hikes need a free day, so they fall on the weekend.
           </>}
           odds={{
             title: 'Hours and days',
@@ -540,7 +550,9 @@ export default function Sports() {
           eyebrow={`${num()} · A run and a walk on the same day`}
           title='A run and a walk, hours apart.'
           statement={<>
-            They were rarely together. Usually I ran first and walked later in the day, so these were two separate outings.
+            They were rarely together. Only {word(under30)} pairs were less than half an hour apart. Usually I ran first and walked
+            later in the day, a run in the morning and a walk in the evening. These days were common when the habit started,
+            and they are rare now.
           </>}
           odds={{
             title: 'Days with both',
@@ -582,8 +594,8 @@ export default function Sports() {
           title={`${cap(ofModeName(rated[0]))} work hardest.`}
           statement={<>
             Relative effort is Strava&rsquo;s score for how hard my heart worked. Per hour, the treadmill was hardest for me and
-            walking the easiest. Kudos are a different story: my {ofModeName(kudosTop)} get the most. Outdoor runs set the most
-            personal records, because Strava needs GPS for them.
+            walking the easiest. I left out hikes, because too few of them have a score. Kudos are a different story: my{' '}
+            {ofModeName(kudosTop)} get the most. Outdoor runs set the most personal records, because Strava needs GPS for them.
           </>}
           odds={{
             title: 'Effort per hour, kudos and records per outing',

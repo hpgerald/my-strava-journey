@@ -119,8 +119,9 @@ export default function Where() {
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Most of my outings never left home. The rest were short trips to {andList(awayNamed.map((c) => c.country))}
-            {P.othersN ? `, plus ${word(P.othersN)} I count as others` : ''}. My indoor outings have no place on the map.
+            Most of my outings never left home. The rest were short trips across the border, to the countries on the map
+            {P.othersN ? `, plus ${word(P.othersN)} outings I count as others` : ''}. Most of that travel came in 2024. My indoor
+            outings have no place on the map, so they are left out here.
           </Reveal>
           <OddsRow
             title="The outings by place"
@@ -166,8 +167,10 @@ export default function Where() {
             <h2 id="wh-tz" className="section-head__title">Three places carry most of&nbsp;it.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            {andList(top3.map((r) => r.region))}. {home.region} is where I have spent the most
-            days out.{reg('Kilimanjaro').n && reg('Morogoro').n ? ' For climbing it is Kilimanjaro and Morogoro.' : ''}
+            They are {andList(top3.map((r) => r.region))}. {home.region} is where I have spent the most days out, and where the habit
+            took hold in 2021. Dar es Salaam is the other home, and in 2026 it is where I go out most.
+            {reg('Kilimanjaro').n && reg('Morogoro').n ? ' For climbing it is Kilimanjaro and Morogoro, where the mountains are.' : ''}
+            {' '}The other regions came mostly from trips.
           </Reveal>
           <OddsRow
             title="Inside Tanzania"
@@ -372,8 +375,8 @@ export default function Where() {
           eyebrow={`${num()} · Indoors`}
           title="Fewer outings without GPS."
           statement={<>
-            My indoor outings, most of them treadmill runs, have no start point. As I moved outside, they became a smaller part
-            of each year.
+            My indoor outings, most of them treadmill runs, have no start point. In my first year almost everything was indoors.
+            As I moved outside, they became a smaller part of each year, and the maps above slowly filled in.
           </>}
           odds={{
             title: 'Outings with no GPS start',
@@ -420,7 +423,8 @@ export default function Where() {
           statement={<>
             I wanted one number for how spread out my outings were across Tanzania, so I used the effective number of regions.
             If a year counts as four, it is as if my outings were shared equally between four regions. In my narrowest year,{' '}
-            {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings.
+            {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings. Later years spread out as I travelled
+            and as my home base moved.
           </>}
           odds={{
             title: 'How the outings spread',

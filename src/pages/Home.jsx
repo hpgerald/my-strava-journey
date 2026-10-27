@@ -208,6 +208,19 @@ export default function Home() {
     ? Math.round((Date.parse(edStreak.end) - Date.parse(edStreak.start)) / DAY) + 1
     : toNum(streak)
   const ctryMost = ctryYr ? ctryYr.stats.countriesNamed : 5
+  // the habit: the first day after the longest silence, how often I have gone out since, and the longest break since
+  const habitStartISO = (() => {
+    let best = 0, at = sortedDays[0] || '2021-06-01'
+    for (let i = 1; i < sortedDays.length; i++) { const g = Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1]); if (g > best) { best = g; at = sortedDays[i] } }
+    return at
+  })()
+  const habitDays = sortedDays.filter((d) => d >= habitStartISO)
+  const habitShare = sortedDays.length ? habitDays.length / Math.max(1, Math.round((Date.parse(sortedDays[sortedDays.length - 1]) - Date.parse(habitStartISO)) / DAY) + 1) : 0
+  const habitPhrase = habitShare >= 0.7 ? 'about three days in every four' : habitShare >= 0.6 ? 'about two days in every three' : 'more than half of all days'
+  const habitMaxBreak = habitDays.reduce((m, d, i) => (i ? Math.max(m, Math.round((Date.parse(d) - Date.parse(habitDays[i - 1])) / DAY) - 1) : 0), 0)
+  const streakFrom = edStreak.start ? `${MONTHS_FULL[parseInt(edStreak.start.slice(5, 7), 10) - 1]} ${edStreak.start.slice(0, 4)}` : ''
+  // the usual walk, then and now
+  const walkMedOf = (y) => { const ds = activityLog.filter((a) => a.sport_type === 'Walk' && Number(a.year) === y).map((a) => toNum(a.distance_km) || 0).sort((x, z) => x - z); return ds.length ? ds[Math.floor(ds.length / 2)] : 0 }
   // the last year before the long silence (its bars are grey on the band)
   const quietUntil = (() => {
     let best = 0, before = null
@@ -365,9 +378,12 @@ export default function Home() {
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
 
           <Reveal as="p" className="hero__statement">
-            Most of my outings are simple, a walk or an easy run of about {Math.round(medFootKm)} km, around one hour. What I
-            have tried to do is to go out often. Over {NUMWORD[years] || years || 7} years I have been out on {pctActiveDays}% of all days, and
-            for the last {fmtInt(curStreak)} days I have not missed one.
+            Most of my outings are simple, a walk or an easy run of about {Math.round(medFootKm)} km, around one hour. Nothing
+            special. What I have tried to do is to go out often. The first two years were not steady, and in 2020 I stopped for
+            almost a year. Since I came back in {MONTHS_FULL[parseInt(habitStartISO.slice(5, 7), 10) - 1]} {habitStartISO.slice(0, 4)}, I have
+            gone out on {habitPhrase}{streakFrom ? `, and since ${streakFrom} I have not missed a single day` : ''}. Over{' '}
+            {NUMWORD[years] || years || 7} years that comes to {pctActiveDays}% of all days. Each year had its own character, and you
+            can open any of them below.
           </Reveal>
 
           {yearSummaries.length > 0 && (
@@ -389,7 +405,10 @@ export default function Home() {
             <Reveal as="p" className="sgrid__statement">
               <i lang="sw">Usipoziba ufa utajenga ukuta</i>: if you do not fill a crack, you will end up building a wall. I see
               this in my own log. One day out makes the next one more likely, and after a week it is almost certain. But after a
-              few days off, it becomes hard to start again. So for me it is easier to keep going.
+              few days off, it becomes hard to start again, and every extra day off makes it harder. It was not always like this.
+              Before the habit set in, one day out led to another only {mBefore}% of the time. Since then my longest break has been{' '}
+              {NUMWORD[habitMaxBreak] || habitMaxBreak} days. So for me it is easier to keep going than to start again, and on a
+              tired day a short walk is better than nothing.
             </Reveal>
 
             <OddsRow
@@ -428,7 +447,10 @@ export default function Home() {
 
               <Reveal as="p" className="sgrid__statement">
                 My long days, over {Math.floor(work.tenthFrom)} km, carry about as much distance as my quieter half of days
-                together. Still, no single big day decides the total. It comes from many days, one after another.
+                together. But most of my kilometres come from the middle. Days of 10 km or more are{' '}
+                {work.bigN < work.n / 2 ? 'less than half' : 'about half'} of my days on foot, yet they carry {pc(work.bigShare)}% of the
+                distance. The short days fill the gaps between them and keep the habit alive. Still, no single big day decides the
+                total, not even the marathon. It comes from many days, one after another.
               </Reveal>
 
               <OddsRow
@@ -466,8 +488,9 @@ export default function Home() {
             title="Same time, fewer outings."
             statement={<>
               The time I give each day has not changed much, about {Math.round(perDayLo)} to {Math.round(perDayHi)} minutes on a
-              day out, every year. What changed is how I use it. I used to split it into two sessions. Now most days have one,
-              and it is longer.
+              day out, every year. What changed is how I use it. In {shapeMulti.year} many days had two sessions, often a run in the
+              morning and a walk later in the day. Over the years the two became one. Now most days have a single outing, and it
+              is longer, often a long walk.
             </>}
             odds={{
               title: 'How the days were split',
@@ -513,9 +536,12 @@ export default function Home() {
             eyebrow="1 · Where I go"
             title="The climbing is in two&nbsp;regions."
             statement={<>
-              Most of what I can put on a map happened here at home, with short trips to{' '}
-              {andList(awayRows.map((c) => c.country))}{othersN > 0 ? `, plus ${NUMWORD[othersN] || othersN} I count as others` : ''}.
-              At home I go out most in {busiestRegion && busiestRegion.region}, which is quite flat, so for climbing I have to travel.
+              Most of what I can put on a map happened here at home, in Tanzania. The trips across the border were short, to{' '}
+              {andList(awayRows.map((c) => c.country))}{othersN > 0 ? `, plus ${NUMWORD[othersN] || othersN} outings I count as others` : ''}.
+              At home I go out most in {busiestRegion && busiestRegion.region}, which is quite flat, so for climbing I have to travel
+              to the mountains, to {climbTop2.map((r) => r.region).join(' and ')}. So far I have been out in{' '}
+              {NUMWORD[tzRegions.length] || tzRegions.length} regions of Tanzania. My indoor sessions, mostly the treadmill, are not
+              on the map at all.
             </>}
             odds={{
               title: 'Where the outings happen',
@@ -543,8 +569,11 @@ export default function Home() {
           eyebrow="2 · Walking and running"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
-            I started as a runner, mostly on the treadmill. Over the years walking became my main thing, and since{' '}
-            {walkLeadYear || 'then'} I have walked more often than I have run, every year.
+            I started as a runner, mostly on the treadmill. In {gridYears[0]} almost all my outings were runs. Over the years
+            walking became my main thing, and since {walkLeadYear || 'then'} I have walked more often than I have run, every year.
+            My walks also grew. A usual walk in 2021 was under {Math.ceil(walkMedOf(2021))} km, and in {gridYears[gridYears.length - 1]} it
+            is about {Math.round(walkMedOf(gridYears[gridYears.length - 1]))} km. Trail runs and hikes came later, from the end of
+            2021, when I started going to the hills.
           </>}
           odds={{
             title: 'Share of all outings',
@@ -572,9 +601,11 @@ export default function Home() {
           eyebrow="3 · Time of day"
           title="Mornings and evenings."
           statement={<>
-            Most of my outings happen before or after the working day, and {fmtHour(peakHour)} is the busiest hour. The days of
-            the week are almost the same. {WEEK[weekN.indexOf(weekMax)]} is the busiest and {WEEK[weekN.indexOf(weekMin)]} the
-            quietest, but the gap is small.
+            Most of my outings happen before or after the working day, and {fmtHour(peakHour)} is the busiest hour. Each sport has
+            its own time. Walks are mostly in the evening. The treadmill is for early mornings and late evenings. Trail runs and
+            hikes wait for the weekend, when I have a free morning. Still, the days of the week are almost the same.{' '}
+            {WEEK[weekN.indexOf(weekMax)]} is the busiest and {WEEK[weekN.indexOf(weekMin)]} the quietest, but the gap is small,
+            because the habit does not wait for the weekend.
           </>}
           odds={{
             title: 'When outings start',
@@ -614,8 +645,9 @@ export default function Home() {
               statement={<>
                 In my {fullYears.length === 4 ? 'four' : fullYears.length} full years since the habit started,{' '}
                 {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} were my weakest months{dipYears === fullYears.length ? ' every time' : ''}.
-                My log does not tell me why, and I do not want to guess. In {gridYears[gridYears.length - 1]} the streak has
-                covered them.
+                The other months stay close together. My log does not tell me why, and I do not want to guess. In{' '}
+                {gridYears[gridYears.length - 1]} the streak has covered them
+                {edStreak.start && edStreak.start < `${gridYears[gridYears.length - 1]}-${String(dipIdx[0] + 1).padStart(2, '0')}-01` ? ', and I went out on every day of both' : ''}.
               </>}
               odds={{
                 title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
@@ -660,9 +692,10 @@ export default function Home() {
               eyebrow="5 · Indoors and out"
               title="Less treadmill every year."
               statement={<>
-                When I started, most of my running was on a treadmill. My walks were almost always outside, so the change over
-                the years is my running moving out to the roads and trails. Of the {fmtInt(runKm)} km I have run,{' '}
-                {fmtInt(runKmIn)} km were on the treadmill.
+                When I started, most of my running was on a treadmill, early in the morning or late in the evening. My walks were
+                almost always outside, so the change over the years is my running moving out to the roads and trails. Only
+                recently has more of my running been outside than inside. Of the {fmtInt(runKm)} km I have run,{' '}
+                {fmtInt(runKmIn)} km were on the treadmill, including my only full marathon.
               </>}
               odds={{
                 title: 'Share of sessions indoors',
@@ -703,7 +736,10 @@ export default function Home() {
           title="Where the height comes from."
           statement={<>
             Running gives me most of my kilometres but very little of my climbing, because so much of it was on a flat
-            treadmill. The climbing came slowly, on walks, trail runs and hikes.
+            treadmill. The climbing came slowly, on walks, trail runs and hikes. For every kilometre, a hike climbs about{' '}
+            {NUMWORD[Math.round(mPerKm('Hike') / Math.max(1, mPerKm('Walk')))] || Math.round(mPerKm('Hike') / Math.max(1, mPerKm('Walk')))} times
+            as much as a walk. My biggest climbs all came on hikes and trail runs, in the mountains of Morogoro, Kilimanjaro and
+            Manyara.
           </>}
           odds={{
             title: 'Share of distance and climb on foot',
