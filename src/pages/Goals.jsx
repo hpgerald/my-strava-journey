@@ -172,9 +172,8 @@ export default function Goals() {
           </div>
           <Reveal as="p" className="sgrid__statement">
             Every year I aim for the same three things: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
-            {unitOf(E, E.target)} of climbing on foot. Running I have reached {times(closedYears('run').length)}. Walking{' '}
-            {closedYears('walk').length === 1 ? `only once, in ${closedYears('walk')[0].year}` : times(closedYears('walk').length)}.
-            {' '}{closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'The climbing I have never reached. It is the hardest of the three for me, because most of my outings are on flat ground and the hills are far.'}
+            {unitOf(E, E.target)} of climbing on foot. Running I have reached {times(closedYears('run').length)}.{' '}
+            {closedYears('walk').length ? `Walking I reached ${closedYears('walk').length === 1 ? `for the first time in ${closedYears('walk')[0].year}` : times(closedYears('walk').length)}.` : 'Walking I have not reached yet.'} {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
           </Reveal>
           <OddsRow
             title={`${cur.year}${so}`}
@@ -204,8 +203,9 @@ export default function Goals() {
           eyebrow={`${num()} · Every year against the targets`}
           title={`Running closed ${times(closedYears('run').length)}.`}
           statement={<>
-            My best running year was {bestOf('run').year}, more than twice the target. In{' '}
-            {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))} I did not make it. My walking stayed under{' '}
+            The rings follow my story. Running was strongest at the start: in {bestOf('run').year} I ran more than twice the
+            target. As walking took over, running fell short in{' '}
+            {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))}, while my walking stayed under{' '}
             {n0(Math.ceil(Math.max(...habit.filter((y) => y !== cur).map((y) => y.walk.total)) / 100) * 100)} km a year until{' '}
             {cur.year}. The climbing came closest in {bestOf('elev').year}, at {Math.round(bestOf('elev').elev.share * 100)}%.
           </>}

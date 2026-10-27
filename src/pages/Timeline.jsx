@@ -95,10 +95,12 @@ export default function Timeline() {
             <h2 id="tl-title" className="section-head__title">No long gap since&nbsp;then.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            My log starts on {fmtDay(C.firstISO)}. After a few months I stopped, from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
-            {cur ? ` Now I have gone out ${n0(cur.len)} days in a row.` : ''}
-            {' '}Along the way there were {word(F.length)} firsts on foot, {word(abroadN)} countries besides Tanzania, {C.regions.length} regions of
-            Tanzania and {word(C.shoes.length)} pairs of shoes. The chart puts all of it on one line.
+            My log begins in {fmtMonth(C.firstISO)}, mostly short runs on a treadmill. For the first year I came and went, and in{' '}
+            {fmtMonth(S.start)} I stopped completely for almost a year. What I am most thankful for is what happened after I came
+            back in {fmtMonth(S.end)}: the long gaps never returned. Since then my longest break has been {word(C.maxAfter)} days, and
+            the streaks grew longer{cur ? `, until this one, ${n0(cur.len)} days without missing one` : ''}. On the line below you can
+            see the firsts move from the treadmill to the trails and the mountains, and {word(C.shoes.length)} pairs of shoes
+            carry me through it.
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -135,8 +137,9 @@ export default function Timeline() {
           title='Shorter breaks.'
           leftNote={<>The first bar includes the long gap, so it is cut off.</>}
           statement={<>
-            The first 250 took much longer, because the long gap falls inside it. My breaks got shorter too. In {lastYear}{so}{' '}
-            {C.yearGaps[String(lastYear)] ? `the longest has been ${n0(C.yearGaps[String(lastYear)])} days` : 'there has been no break at all'}.
+            The habit made the outings come faster. My first 250 took more than two years, because the long gap falls inside
+            them. Since then every 250 has come in less than a year, and the breaks between outings got shorter too. In{' '}
+            {lastYear}{so} there has been no break at all.
           </>}
           odds={{
             title: 'Every 250 outings',
@@ -177,9 +180,9 @@ export default function Timeline() {
           eyebrow={`${num()} · Firsts`}
           title='From the treadmill to the hills.'
           statement={<>
-            The early distance firsts all came on the treadmill: 10 km, the half marathon, 30 km and the marathon. The later ones
-            came on trails, in the mountains and on long walks. Each new
-            first needs a longer day or a steeper hill, so they come slowly now.
+            My firsts follow the same path as my habit: they started on the treadmill and moved to the hills. The 10 km, the half
+            marathon, 30 km and the marathon all came indoors. Then came the trail run, the first hike, 1,000 m of climbing in a
+            day and a half marathon done as a walk. Each new first needs a longer day or a steeper hill, so they come slowly now.
           </>}
           odds={{
             title: 'Firsts on foot',

@@ -228,8 +228,13 @@ export default function YearInSport({ year: bookYear } = {}) {
           eyebrow={`${num()} · Month by month`}
           title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
-            {activeMonths === moIdx.length ? `I went out in every month${so}.` : `I went out in ${word(activeMonths)} of the ${word(moIdx.length)} months${so}.`}
-            {(() => { const kmTop = moIdx.reduce((b, i) => (s.monthsKm[i] > s.monthsKm[b] ? i : b), moIdx[0]); return kmTop === busy ? ` ${MONTH_F[busy]} was also my biggest month for distance, with ${n0(s.monthsKm[busy])} km on foot.` : ` The most distance came in ${MONTH_F[kmTop]}, with ${n0(s.monthsKm[kmTop])} km on foot.` })()}
+            {(() => {
+              const kmTop = moIdx.reduce((b, i) => (s.monthsKm[i] > s.monthsKm[b] ? i : b), moIdx[0])
+              const half = Math.ceil(moIdx.length / 2), a = moIdx.slice(0, half), b = moIdx.slice(half)
+              const avg = (xs) => xs.reduce((t, i) => t + s.monthsActivities[i], 0) / Math.max(1, xs.length)
+              const shape = !b.length ? '' : avg(a) > avg(b) * 1.15 ? ' The year started strong and slowed down later.' : avg(b) > avg(a) * 1.15 ? ' The year started slowly and grew stronger as it went.' : ' The months stayed fairly even from start to end.'
+              return `${kmTop === busy ? `${MONTH_F[busy]} was my biggest month for distance too, with ${n0(s.monthsKm[busy])} km on foot.` : `The most distance came in ${MONTH_F[kmTop]}, with ${n0(s.monthsKm[kmTop])} km on foot.`}${shape}${activeMonths === moIdx.length ? ' There was no empty month.' : ` I went out in only ${word(activeMonths)} of the ${word(moIdx.length)} months.`}`
+            })()}
             {isPartial && quiet === lastMo ? ` ${MONTH_F[quiet]} is not finished yet.` : ''}
           </>}
           odds={{
@@ -255,9 +260,9 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · How it moved`}
               title={`${lead[0]} led ${Y}.`}
               statement={<>
-                {lead[0]} came first, {lead[1]} of my {fmtInt(s.n)} outings{so}, then {lead[3]} {lead[2]}
-                {mix.trail === 1 ? ' and one trail run or hike' : mix.trail ? ` and ${mix.trail} trail runs or hikes` : ''}. Running gave me{' '}
-                {pc(flipOf('Run').dist / footKmAll)}% of my distance on foot
+                {lead[0]} led the year, {lead[1]} of my {fmtInt(s.n)} outings{so}, against {lead[3]} {lead[2]}
+                {mix.trail === 1 ? ' and one trail run or hike' : mix.trail ? ` and ${mix.trail} trail runs or hikes` : ''}.
+                {flipOf('Run').dist / footKmAll > 0.5 ? (lead[0] === 'Walks' ? ' Running still gave me most of my distance' : ' Running gave me most of my distance') : (lead[0] === 'Runs' ? ' Walking still gave me most of my distance' : ' Walking gave me most of my distance')}
                 {climber ? `, and ${climber.label === 'Trail' ? 'trail running' : climber.label.toLowerCase() + 'ing'} gave me the biggest share of the climbing.` : '.'}
                 {s.trailKm >= 1 ? ` I ran ${n0(s.trailKm)} km on trails.` : ''}
               </>}
@@ -286,10 +291,9 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · When it happened`}
               title={evening >= morning ? 'The evenings led.' : 'The mornings led.'}
               statement={<>
-                In {Y} I went out more in the {evening >= morning ? 'evenings than in the mornings' : 'mornings than in the evenings'},
-                and {fmtH(peakHour)} was the busiest hour. {WEEK[s.weekday7.indexOf(wkMax)]} was my busiest day and{' '}
-                {WEEK[s.weekday7.indexOf(wkMin)]} the quietest{wkMin / wkMax > 0.75 ? ', but not by much' : ''}.{' '}
-                {pc(s.weekendShare)}% of my outings were on a Saturday or Sunday,
+                The {evening >= morning ? 'evenings' : 'mornings'} were my time in {Y}{(evening >= morning) === (peakHour >= 12) ? `, and ${fmtH(peakHour)} was the busiest hour.` : `, though the single busiest hour was ${fmtH(peakHour)}.`}{' '}
+                {WEEK[s.weekday7.indexOf(wkMax)]} was my busiest day and {WEEK[s.weekday7.indexOf(wkMin)]} the quietest
+                {wkMin / wkMax > 0.75 ? ', but not by much' : ''}. {pc(s.weekendShare)}% of my outings were on a Saturday or Sunday,
                 {s.weekendShare > 0.35 ? ' more than an even week would give.' : s.weekendShare < 0.24 ? ' less than an even week would give.' : ' about what an even week would give.'}
               </>}
               odds={{
