@@ -111,9 +111,6 @@ export default function SportDetail() {
             ]}
             rows={notable}
           />
-          <p className="source" style={{ marginTop: 'var(--sp-3)' }}>
-            Source: Activity Log
-          </p>
         </section>
       )}
     </DetailFrame>

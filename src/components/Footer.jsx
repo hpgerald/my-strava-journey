@@ -16,20 +16,19 @@ export default function Footer() {
               My Strava Journey
             </p>
             <p className="measure text-muted" style={{ margin: 0 }}>
-              Seven years of my Strava activity, laid out so anyone can read it. A record of
-              showing up, week after week.
+              Source: my Strava activity log. Maps from Natural Earth.
             </p>
           </div>
           <div>
             <p className="eyebrow" style={{ marginBottom: 'var(--sp-2)' }}>
-              The data
+              More
             </p>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }} className="mono">
               <li>
                 <Link to="/data">The data</Link>
               </li>
               <li>
-                <Link to="/about">About &amp; method</Link>
+                <Link to="/about">About</Link>
               </li>
             </ul>
           </div>

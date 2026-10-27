@@ -36,7 +36,6 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
 
       {children}
 
-      <p className="source">Source: {source}</p>
     </section>
   )
 }

@@ -40,7 +40,6 @@ export default function About() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       title="About"
       subtitle="What this is and how to read it"
-      lede="My Strava history, laid out so anyone can read it."
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>

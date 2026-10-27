@@ -420,7 +420,6 @@ export default function Book() {
     number: '09',
     title: 'My Book',
     subtitle: 'The whole story, as a book',
-    lede: 'Everything on this site put together as one book. You can read it here or download it as a PDF.',
     prev,
     next,
   }
@@ -446,7 +445,7 @@ export default function Book() {
           <PartOpener p={PARTS[0]} />
           <section className="bk-ch" id="bk-ch-01" aria-labelledby="bk-ch-01-t">
             <div className="container">
-              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" lede="The whole habit at once." />
+              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" />
             </div>
             <Home />
           </section>
@@ -454,7 +453,7 @@ export default function Book() {
           <PartOpener p={PARTS[1]} />
           <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">
             <div className="container">
-              <Opener number="02" title="Year in Sport" subtitle="One year at a time" lede={`Each year on its own, from ${years[0]} to ${years[years.length - 1]}.`} />
+              <Opener number="02" title="Year in Sport" subtitle="One year at a time" />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">

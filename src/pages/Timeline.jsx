@@ -86,7 +86,6 @@ export default function Timeline() {
   return (
     <DetailFrame
       {...frame}
-      lede="Everything in the order it happened, on one chart, and then year by year."
     >
       <div className="yis-report">
         {/* ===== the chronicle ===== */}
@@ -96,10 +95,8 @@ export default function Timeline() {
             <h2 id="tl-title" className="section-head__title">No long gap since&nbsp;then.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            My log starts on {fmtDay(C.firstISO)}. I logged {n0(C.beforeSilence)} outings in the first few months, and then I
-            stopped, from {fmtMonth(S.start)} to {fmtMonth(S.end)}. Since I started again, the
-            longest break between two outings has been {word(C.maxAfter)} days
-            {cur ? `, and I have now gone out ${n0(cur.len)} days in a row` : ''}.
+            My log starts on {fmtDay(C.firstISO)}. After a few months I stopped, from {fmtMonth(S.start)} to {fmtMonth(S.end)}.
+            {cur ? ` Now I have gone out ${n0(cur.len)} days in a row.` : ''}
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -121,7 +118,6 @@ export default function Timeline() {
             <li><i className="chron__kstreak" />20 days or more in a row</li>
             <li><i className="chron__kgap" />30 days or more without an outing</li>
           </ul>
-          <p className="source">Source: Activity Log, Strava GPS start points and the shoe list · every dated moment in the record</p>
         </section>
 
         {/* ===== 1. pace ===== */}
@@ -129,12 +125,11 @@ export default function Timeline() {
         <StorySection
           id="tl-pace"
           eyebrow={`${num()} · The pace`}
-          title={`The first 250 took ${n0(firstStep.days)} days.`}
+          title='Shorter breaks.'
+          leftNote={<>The first bar includes the long gap, so it is cut off.</>}
           statement={<>
-            My {ORD(firstStep.n)} outing came {n0(firstStep.days)} days after the first, because the long gap falls in that
-            stretch. Since then every 250 has taken less than a year, between {n0(fastest.days)} and {n0(slowest.days)} days.
-            My breaks got shorter too. In 2020 the longest was {n0(Math.max(...gapYears.filter((g) => g.year <= 2020).map((g) => g.g)))} days.
-            In {lastYear}{so} {C.yearGaps[String(lastYear)] ? `it is ${n0(C.yearGaps[String(lastYear)])} days` : 'there has been no break at all'}.
+            The first 250 took much longer, because the long gap falls inside it. My breaks got shorter too. In {lastYear}{so}{' '}
+            {C.yearGaps[String(lastYear)] ? `the longest has been ${n0(C.yearGaps[String(lastYear)])} days` : 'there has been no break at all'}.
           </>}
           odds={{
             title: 'Every 250 outings',
@@ -165,7 +160,6 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<>How many days each 250 outings took. The first one includes the long gap, so I cut it off at 400.</>}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
         />
 
@@ -174,10 +168,9 @@ export default function Timeline() {
         <StorySection
           id="tl-firsts"
           eyebrow={`${num()} · Firsts`}
-          title={`${cap(word(F.length))} firsts on foot.`}
+          title='From the treadmill to the hills.'
           statement={<>
-            {F.map((f, i) => (i === 0 ? `${f.title.replace('First', 'My first')} came in ${fmtMon(f.date)}, then` : `${f.title.replace('First', 'my first')} in ${fmtMon(f.date)}`)).join(', ').replace('then, ', 'then ').replace(/, ([^,]*)$/, ' and $1')}.
-            {' '}The early distance firsts all came on the treadmill. The later ones came on trails, in the mountains and on long walks.
+            The early distance firsts all came on the treadmill. The later ones came on trails, in the mountains and on long walks.
           </>}
           odds={{
             title: 'Firsts on foot',
@@ -207,7 +200,6 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<>How long it took me to reach each first, counted from my first outing.</>}
           source="Activity Log · the first outing on foot to pass each mark"
         />
 
@@ -221,7 +213,6 @@ export default function Timeline() {
           <ol className="trail">
             {byYear.map((y) => <YearBlock key={y.year} year={y.year} items={y.items} />)}
           </ol>
-          <p className="source">Source: Activity Log, Strava GPS start points and the shoe list</p>
         </section>
       </div>
     </DetailFrame>

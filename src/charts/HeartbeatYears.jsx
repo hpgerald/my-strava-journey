@@ -21,22 +21,18 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
         <div className="beat__co">
           <div className="beat__n">{fmtInt(actN)}</div>
           <div className="beat__l">Activities</div>
-          <div className="beat__s">on {fmtInt(activeDays)} separate days</div>
         </div>
         <div className="beat__co">
           <div className="beat__n">{fmtInt(kmN)}<span className="beat__u">km</span></div>
           <div className="beat__l">On foot</div>
-          <div className="beat__s">a third of the way around the Earth</div>
         </div>
         <div className="beat__co">
           <div className="beat__n">{fmtInt(elevN)}<span className="beat__u">m</span></div>
           <div className="beat__l">Climbed</div>
-          <div className="beat__s">nine and a half times up Everest</div>
         </div>
         <div className="beat__co beat__co--accent">
           <div className="beat__n">{fmtInt(streakN)}<span className="beat__u">days</span></div>
           <div className="beat__l">Current streak</div>
-          <div className="beat__s">unbroken, and still going</div>
         </div>
       </div>
     </div>

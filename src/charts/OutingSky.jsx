@@ -250,11 +250,6 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     <div ref={ref} className="sky">
       <div ref={stage} className={`sky__stage${armed ? ' is-in' : ''}`}>
         <div className="sky__head">
-          <p className="sky__key">
-            {yearMode
-              ? `Every outing of ${year}. The higher the dot, the earlier in the day I went out.`
-              : `Every outing since ${MONTH[first.getUTCMonth()]} ${first.getUTCFullYear()}. The higher the dot, the earlier in the day I went out.`}
-          </p>
           <ul className="sky__legend" aria-label="Colour key">
             <li><i className="sky__sw sky__sw--run" aria-hidden="true" />Run</li>
             <li><i className="sky__sw sky__sw--walk" aria-hidden="true" />Walk</li>

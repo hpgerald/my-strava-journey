@@ -82,7 +82,7 @@ export default function Data() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Data' }]}
       title="The data"
       subtitle="The tables behind the site"
-      lede="Everything on this site comes from the tables below. It is my own activity data, so I list it here and do not offer it as a download."
+      lede="My own activity data, so I list it here and do not offer it as a download."
     >
       {GROUPS.map((g) => (
         <section key={g.title} style={{ paddingTop: 'var(--sp-6)' }}>

@@ -137,7 +137,6 @@ export default function FootMap({ rows }) {
     <div ref={ref} className="fmap">
       <div ref={stage} className={`fmap__stage${armed ? ' is-in' : ''}`}>
         <div className="fmap__head">
-          <p className="fmap__key">Every outing on foot. The quicker ones are on the left and the hillier ones near the top.</p>
           <ul className="fmap__legend" aria-label="Colour key">
             {MODES.map((k) => <li key={k}><i className={`msw msw--${k}`} aria-hidden="true" />{MODE_NAME[k]} <span className="fmap__ln">{counts[k].toLocaleString('en-US')}</span></li>)}
           </ul>

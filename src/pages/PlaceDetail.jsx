@@ -117,9 +117,6 @@ export default function PlaceDetail() {
             ]}
             rows={notable}
           />
-          <p className="source" style={{ marginTop: 'var(--sp-3)' }}>
-            Source: Strava GPS + Activity Log
-          </p>
         </section>
       )}
     </DetailFrame>

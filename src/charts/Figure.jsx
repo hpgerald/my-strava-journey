@@ -45,7 +45,6 @@ export default function Figure({ n, title, note, source, tableCaption, columns, 
         </div>
       ) : null}
 
-      {source ? <div className="source fig__source">Source: {source}</div> : null}
     </figure>
   )
 }

@@ -190,7 +190,6 @@ export default function YearInSport({ year: bookYear } = {}) {
       number="02"
       title="Year in Sport"
       subtitle="Pick a year and read it."
-      lede="My record one year at a time. Pick a year and the whole page changes to that year."
       prev={prev}
       next={next}
     >
@@ -220,7 +219,6 @@ export default function YearInSport({ year: bookYear } = {}) {
             ]}
           />
           <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} />
-          <p className="source">Source: Activity Log · every outing of {Y}, placed by date and start time</p>
         </section>
 
         {/* ===== 1. month by month ===== */}
@@ -230,14 +228,13 @@ export default function YearInSport({ year: bookYear } = {}) {
           eyebrow={`${num()} · Month by month`}
           title={`${MONTH_F[busy]} was the busiest.`}
           statement={<>
-            {activeMonths === moIdx.length ? `I went out in every month${so}.` : `I went out in ${word(activeMonths)} of the ${word(moIdx.length)} months${so}.`}{' '}
-            {MONTH_F[busy]} was the busiest, with {s.monthsActivities[busy]} outings, and {MONTH_F[quiet]} the quietest
-            {isPartial && quiet === lastMo ? ', but it is not finished yet' : ''}. Altogether I covered {n0(s.footKm)} km on foot{so}.
+            {activeMonths === moIdx.length ? `I went out in every month${so}.` : `I went out in ${word(activeMonths)} of the ${word(moIdx.length)} months${so}.`}
+            {isPartial && quiet === lastMo ? ` ${MONTH_F[quiet]} is not finished yet.` : ''}
           </>}
           odds={{
             title: `${Y} by the month`,
             items: [
-              { num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}, the busiest`, tone: 'move' },
+              { num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}`, tone: 'move' },
               { num: s.monthsActivities[quiet], unit: '', label: `in ${MONTH_F[quiet]}, the quietest`, tone: 'rest' },
               { num: perMonth, unit: '', label: 'outings in an average month', tone: 'move' },
               { num: s.footKm / Math.max(1, moIdx.length), unit: ' km', label: 'on foot in an average month', tone: 'move' },
@@ -245,7 +242,6 @@ export default function YearInSport({ year: bookYear } = {}) {
           }}
           left={{ title: 'Outings, month by month', node: <YearMonths months={monthsData} /> }}
           right={{ title: 'The kilometres adding up', node: <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} /> }}
-          rightNote={<>Where the line climbs steeply I was busy. Where it goes flat I was quiet or away.</>}
           source="Activity Log · outings and distance on foot, by month"
         />
 
@@ -273,7 +269,6 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing, by sport', node: <SportTreemap rows={r.sportRows} /> }}
               right={{ title: 'Distance against climb, on foot', node: r.flip.length >= 2 ? <FootFlip items={r.flip} /> : <p className="yis-empty">Only one sport on foot this year.</p> }}
-              rightNote={<>Distance on the left, climbing on the right.</>}
               source="Activity Log · outings by sport, distance and climb on foot"
             />
           </>
@@ -312,7 +307,6 @@ export default function YearInSport({ year: bookYear } = {}) {
                   />
                 ),
               }}
-              leftNote={<>Midnight is at the top of the clock.</>}
               source="Activity Log · start hour and weekday of every outing"
             />
           </>
@@ -323,12 +317,11 @@ export default function YearInSport({ year: bookYear } = {}) {
         <StorySection
           id={idp('yis-days')}
           eyebrow={`${num()} · Every day of the year`}
-          title={`Out on ${pc(pctDays)}% of days${so}.`}
+          title={r.restDays === 0 ? `Not one day missed${so}.` : `Out on ${pc(pctDays)}% of days${so}.`}
           statement={<>
             {r.restDays === 0
-              ? `I went out on every one of the ${fmtInt(s.activeDays)} days${so}, without a single day off.`
-              : `I went out on ${fmtInt(s.activeDays)} of ${fmtInt(r.span)} days${so}. The most days in a row was ${s.streakLen}${s.streakStartISO ? `, from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ''}.`}
-            {r.restDays === 0 ? '' : r.longGap.len >= 2 ? ` My longest break was ${r.longGap.len} days.` : ' I never took more than one day off in a row.'}
+              ? 'The days add up when none of them is skipped.'
+              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ' was short'}.`}
           </>}
           odds={{
             title: `The days of ${Y}`,
@@ -371,7 +364,6 @@ export default function YearInSport({ year: bookYear } = {}) {
               />
             ),
           }}
-          leftNote={<>The darkest stretch is my longest run of days in a row.</>}
           source="Activity Log · days with at least one outing"
         />
 
@@ -382,11 +374,10 @@ export default function YearInSport({ year: bookYear } = {}) {
             <StorySection
               id={idp('yis-dist')}
               eyebrow={`${num()} · The typical outing`}
-              title={`The usual outing: ${s.medianFoot.toFixed(1)} km.`}
+              title='The usual outing.'
               statement={<>
-                My usual outing on foot was about {s.medianFoot.toFixed(1)} km. The average was {meanFoot.toFixed(1)} km
-                {meanFoot > s.medianFoot ? ', pulled up by a few long days' : ', pulled down by the short ones'}, and the longest was{' '}
-                {longestFoot.toFixed(1)} km{s.biggestFoot ? ` in ${fmtMonth(s.biggestFoot.date)}` : ''}.
+                {meanFoot > s.medianFoot ? 'A few long days pulled my average above my usual outing.' : 'The short days pulled my average below my usual outing.'}
+                {s.biggestFoot ? ` The longest came in ${fmtMonth(s.biggestFoot.date)}.` : ''}
               </>}
               odds={{
                 title: 'Distance on foot',
@@ -399,8 +390,6 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing on foot, by distance', node: <YearDistances bins={s.footBins} peaks={s.peakBins} /> }}
               right={{ title: 'Each tenth of days, by its share', node: r.deciles ? <DecileBars shares={r.deciles} /> : <p className="yis-empty">Too few days on foot to split into tenths.</p> }}
-              leftNote={<>Anything over 25 km is in the last bar.</>}
-              rightNote={<>If every day were the same, each tenth would carry 10%.</>}
               source="Activity Log · distance on foot (run, walk, trail run, hike)"
             />
           </>
@@ -415,18 +404,15 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · How steady it was`}
               title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
               statement={<>
-                {r.restDays === 0
-                  ? ''
-                  : `After a day out, I went out again the next day ${pc(r.p11)}% of the time. After a rest day, it was ${pc(r.p01)}%.`}
+                {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a rest day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it was less sure'}.`}
                 {r.weekly.cv < 0.6 ? ' My weeks were fairly steady.' : r.weekly.cv < 1 ? ' My weeks went up and down a fair bit.' : ' My weeks swung a lot, from almost nothing to very big.'}
-                {' '}My longest outing, {r.tail.mark.toFixed(1)} km, was {(r.tail.mark / r.tail.mean).toFixed(1)} times my average one.
               </>}
               odds={{
                 title: 'The year in four numbers',
                 items: [
                   { value: r.p11, label: 'went out again the day after a day out', tone: 'move' },
                   r.restDays === 0
-                    ? { num: 0, unit: ' days', label: `of rest${so}`, tone: 'rest' }
+                    ? { num: r.weekly.mean, unit: ' km', label: 'in an average week', tone: 'rest' }
                     : { value: r.p01, label: 'went out the day after a rest day', tone: 'rest' },
                   { num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were, where 0 is all the same', tone: 'rest' },
                   { num: r.tail.mark / r.tail.mean, dec: 1, unit: '×', label: 'my longest outing against the average one', tone: 'move' },
@@ -445,8 +431,6 @@ export default function YearInSport({ year: bookYear } = {}) {
                 ),
               } : { title: 'Given today, the chance of tomorrow', node: <TransitionMatrix p11={r.p11} p01={r.p01} /> }}
               right={{ title: 'The longest outing against all the others', node: <TailOutlier values={r.tail.values} mark={r.tail.mark} mean={r.tail.mean} sd={r.tail.sd} z={r.tail.z} pct={r.tail.pct} unit="km" markLabel="the longest" /> }}
-              leftNote={<>{r.restDays === 0 ? 'The orange weeks were above my average.' : 'The top left number is how often a day out led to another.'}</>}
-              rightNote={<>The orange mark is my longest outing.</>}
               source="Activity Log · daily active series, weekly and per-outing distance on foot"
             />
           </>
@@ -459,11 +443,6 @@ export default function YearInSport({ year: bookYear } = {}) {
             <p className="eyebrow">{num()} · Biggest days</p>
             <h2 id={idp('yis-edges')} className="section-head__title">The biggest days of {Y}.</h2>
           </div>
-          <Reveal as="p" className="sgrid__statement">
-            {s.biggestFoot ? `My furthest outing on foot was ${s.biggestFoot.val.toFixed(1)} km in ${fmtMonth(s.biggestFoot.date)}. ` : ''}
-            {s.highestClimb && s.highestClimb.val > 0 ? `The most I climbed in one outing was ${n0(s.highestClimb.val)} m. ` : ''}
-            {everests >= 0.2 ? `All my climbing that year adds up to ${everests.toFixed(1)} times the height of Everest.` : `All my climbing that year adds up to ${n0(s.elev)} m.`}
-          </Reveal>
           <ul className="yrecs">
             {s.biggestFoot && s.biggestFoot.val > 0 && <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} decimals={1} unit="km" label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} tone="hot" />}
             {s.longestTime && s.longestTime.val > 0 && <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} />}
@@ -474,7 +453,6 @@ export default function YearInSport({ year: bookYear } = {}) {
             <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
             <RecordCard kicker="Dar to Dodoma" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma, on foot" sub={`${n0(s.footKm)} km on foot`} />
           </ul>
-          <p className="source">Source: Activity Log · per-outing distance, time, climb, effort, kudos and records</p>
         </section>
 
         {/* ===== 8. where it happened ===== */}
@@ -484,12 +462,10 @@ export default function YearInSport({ year: bookYear } = {}) {
             <StorySection
               id={idp('yis-where')}
               eyebrow={`${num()} · Where it happened`}
-              title={nCountries > 1 ? `${word(nCountries)[0].toUpperCase() + word(nCountries).slice(1)} countries in ${Y}.` : `${Y} was mostly Tanzania.`}
+              title={(r.countries.find((c) => c.country === 'Tanzania')?.activities || 0) / Math.max(1, r.located) > 0.8 ? 'Mostly at home.' : 'Across the border.'}
               statement={<>
-                {fmtInt(r.located)} of my outings in {Y} can go on a map.{' '}
-                {nCountries > 1 ? `They were in ${word(nCountries)} countries${othersN ? `, plus ${word(othersN)} that I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.'}
-                {r.regRows ? ` In Tanzania I went out most in ${r.regRows[0].label}.` : ''}
-                {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return c.b >= 0.5 ? ` Most of the climbing was in ${c.label}, ${pc(c.b)}% of the year’s metres.` : ` The biggest share of the climbing was in ${c.label}, ${pc(c.b)}% of the year’s metres.` })() : ''}
+                {(() => { const away = r.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country); return away.length ? `Besides Tanzania, I went out in ${away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away[0]}${othersN ? `, plus ${word(othersN)} I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.' })()}
+                {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` The climbing was mostly in ${c.label}.` })() : ''}
               </>}
               odds={{
                 title: 'Where the outings were',
@@ -506,7 +482,6 @@ export default function YearInSport({ year: bookYear } = {}) {
                 node: r.regRows ? <PairBars rows={r.regRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                   aria={`Tanzania regions in ${Y}: ${r.regRows.map((x) => `${x.label} ${pc(x.a)}% of outings, ${pc(x.b)}% of climb`).join('; ')}.`} /> : <p className="yis-empty">Only one region this year.</p>,
               }}
-              leftNote={<>Indoor sessions cannot go on a map.</>}
               source="Strava GPS start points · countries and Tanzania regions"
             />
           </>
@@ -519,9 +494,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           eyebrow={`${num()} · Against the other years`}
           title={`${ORD[rankN - 1][0].toUpperCase() + ORD[rankN - 1].slice(1)} of ${years.length} years.`}
           statement={<>
-            Among my {word(years.length)} years, {Y} comes {ORD[rankN - 1]} for outings, {ORD[rankKm - 1]} for distance on foot and {ORD[rankEl - 1]} for climbing.
-            {ps ? ` Against ${prevYear}, I had ${moreN(chg(s.n, ps.n), 'outings')}, ${moreN(chg(s.footKm, ps.footKm), 'distance')} and ${moreN(chg(s.elev, ps.elev), 'climb')}.` : ' It is my first year, so there is nothing before it to compare with.'}
-            {isPartial ? ` ${Y} is not finished yet.` : ''}
+            For distance on foot it comes {ORD[rankKm - 1]}, and for climbing {ORD[rankEl - 1]}{isPartial ? `, and it is not finished yet` : ''}.
           </>}
           odds={{
             title: ps ? `${Y} against ${prevYear}` : `${Y} among the years`,
@@ -561,7 +534,6 @@ export default function YearInSport({ year: bookYear } = {}) {
         </section>
 
         {!book && <Reveal as="section" className="yis-cta">
-          <p>That was {Y}.</p>
           <div className="yis-cta__row">
             {years.includes(Y - 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y - 1); scrollToTop() }}>&larr; {Y - 1}</button>}
             <button type="button" className="yis-cta__btn" onClick={scrollToTop}>Pick another year &uarr;</button>
