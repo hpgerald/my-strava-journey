@@ -1,10 +1,10 @@
 number,title,subtitle,route,category,source_page
-01,The Journey,Seven years. One habit. The totals.,/,overview,authored
-02,Year in Sport,Pick a year. See the whole story.,/numbers,report,authored
-03,Sports,What the work is made of.,/sports,section,authored
-04,Records,"The far edges. Longest, highest, hardest.",/records,section,authored
-05,Where,Seven countries. Seventeen regions.,/where,geography,authored
-06,Timeline,In order. First upload to now.,/timeline,timeline,authored
-07,Goals,"The targets, year by year.",/goals,dashboard,authored
-08,What It Means,What the numbers say to you.,/what-it-means,personas,authored
-09,My Book,"The whole story, as a book.",/book,book,authored
+01,The Journey,Seven years of one habit,/,overview,authored
+02,Year in Sport,Pick a year and read it,/numbers,report,authored
+03,Sports,My four sports on foot,/sports,section,authored
+04,Records,"My longest, highest and hardest days",/records,section,authored
+05,Where,Five countries. Seventeen regions.,/where,geography,authored
+06,Timeline,From my first upload to now,/timeline,timeline,authored
+07,Goals,What I aim for each year,/goals,dashboard,authored
+08,What It Means,What I’ve learned from it,/what-it-means,personas,authored
+09,My Book,"The whole story, as a book",/book,book,authored
