@@ -85,11 +85,11 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   stays.sort((a, b) => (a.start < b.start ? -1 : 1))
   const firstAbroad = new Map()
   for (const s of stays) if (!firstAbroad.has(s.raw)) firstAbroad.set(s.raw, s)
-  for (const [raw, s] of firstAbroad) events.push({ lane: 'place', date: s.start, title: `My first outing in ${raw}`, sub: `${s.days} day${s.days > 1 ? 's' : ''} out on that trip`, key: 'trail' })
+  for (const [raw, s] of firstAbroad) events.push({ lane: 'place', date: s.start, title: raw, sub: `${s.days} day${s.days > 1 ? 's' : ''} out on that trip`, key: 'trail' })
   const regionFirst = new Map()
   for (const a of acts) if (a.region && !regionFirst.has(a.region)) regionFirst.set(a.region, a.date)
   const regions = [...regionFirst.entries()].map(([region, date]) => ({ region, date })).sort((a, b) => (a.date < b.date ? -1 : 1))
-  for (const r of regions) events.push({ lane: 'region', date: r.date, title: `My first outing in ${r.region}`, sub: 'a new region of Tanzania', key: 'quiet' })
+  regions.forEach((r, i) => events.push({ lane: 'region', date: r.date, title: r.region, sub: `region ${i + 1} of ${regions.length} so far`, key: 'quiet' }))
 
   // ---- shoes: each pair from its first outing to its last ----
   const gearById = Object.fromEntries(gearRows.map((g) => [String(g.gear_id), g]))
@@ -100,7 +100,7 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   }
   const shoes = [...gMap.values()].map((g) => ({ ...g, model: gearById[g.id].model, brand: gearById[g.id].brand, retired: gearById[g.id].retired === 'Yes' }))
     .sort((a, b) => (a.first < b.first ? -1 : 1))
-  for (const s of shoes) events.push({ lane: 'shoe', date: s.first, title: `New pair: ${s.model}`, sub: `${Math.round(s.km).toLocaleString('en-US')} km in them${s.retired ? '' : ', and still wearing them'}`, key: 'walk' })
+  for (const s of shoes) events.push({ lane: 'shoe', date: s.first, title: s.model, sub: `${Math.round(s.km).toLocaleString('en-US')} km in them${s.retired ? '' : ', and still wearing them'}`, key: 'walk' })
 
   // ---- streaks and silences ----
   const days = [...new Set(acts.map((a) => dayIdx(a.date)))].sort((a, b) => a - b)

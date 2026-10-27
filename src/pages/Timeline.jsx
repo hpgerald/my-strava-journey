@@ -21,7 +21,7 @@ const ORD = (n) => `${n.toLocaleString('en-US')}${n % 100 >= 11 && n % 100 <= 13
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const word = (n) => WORD[n] || String(n)
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
-const LANE = { mile: 'Milestone', first: 'First on foot', place: 'Across the border', region: 'New region', shoe: 'Shoes', streak: 'Streak' }
+const LANE = { mile: 'Milestone', first: 'First on foot', place: 'First trip to', region: 'New region', shoe: 'New shoes', streak: 'Streak' }
 
 // the event rail: one block per year, every moment in date order
 function YearBlock({ year, items }) {
@@ -115,8 +115,13 @@ export default function Timeline() {
           />
           <ul className="chron__key" aria-hidden="true">
             <li><i className="chron__kdia" />every 500th outing, ticks every 250th</li>
-            <li><i className="msw msw--tread" /><i className="msw msw--road" /><i className="msw msw--trail" /><i className="msw msw--walk" /><i className="msw msw--hike" />firsts by how they were done</li>
-            <li><i className="chron__kshoe" />a pair of shoes, first outing to last</li>
+            <li><i className="msw msw--tread" />treadmill run</li>
+            <li><i className="msw msw--road" />outdoor run</li>
+            <li><i className="msw msw--trail" />trail run</li>
+            <li><i className="msw msw--walk" />walk</li>
+            <li><i className="msw msw--hike" />hike</li>
+            <li><i className="chron__ktrip" />a trip across the border</li>
+            <li><i className="chron__kshoe" />a pair of shoes, black while still in use</li>
             <li><i className="chron__kstreak" />20 days or more in a row</li>
             <li><i className="chron__kgap" />30 days or more without an outing</li>
           </ul>
@@ -156,7 +161,7 @@ export default function Timeline() {
             title: 'The longest break each year',
             node: (
               <ColBars
-                items={gapYears.map((g) => ({ label: String(g.year), short: `'${String(g.year).slice(2)}`, value: Math.min(g.g, gapCap), display: `${n0(g.g)} d`, tone: g.g > gapCap ? 'quiet' : g.year === lastYear ? 'big' : 'mid' }))}
+                items={gapYears.map((g) => ({ label: String(g.year), short: `'${String(g.year).slice(2)}`, value: Math.min(g.g, gapCap), display: `${n0(g.g)} d`, tone: g.g > gapCap || g.year <= 2020 ? 'quiet' : g.year === lastYear ? 'big' : 'mid' }))}
                 max={gapCap * 1.12} ticks={[0, 10, 20, 30, 40]} yCap="days without an outing &uarr;"
                 aria={`Longest break between outings each year: ${gapYears.map((g) => `${g.year} ${g.g} days`).join(', ')}.`}
               />
@@ -180,18 +185,21 @@ export default function Timeline() {
             title: 'Firsts on foot',
             items: [
               { num: F.length, unit: '', label: 'firsts on foot', tone: 'move' },
-              { num: dayOf(F[0].date), unit: '', label: `day in my log of my ${F[0].title.toLowerCase()}`, tone: 'move' },
+              { num: F.filter((f) => f.mode === 'tread').length, unit: '', label: 'of them on the treadmill', tone: 'rest' },
               { num: Math.max(...firstsBy.map((y) => y.n)), unit: '', label: `in ${firstsBy.reduce((b, y) => (y.n > b.n ? y : b), firstsBy[0]).year}, the most in a year`, tone: 'move' },
-              { num: dayOf(lastFirst.date), unit: '', label: `day in my log of my ${lastFirst.title.toLowerCase()}`, tone: 'rest' },
+              { num: (Date.parse(lastFirst.date) - Date.parse(F[0].date)) / (365.25 * 86400000), dec: 1, unit: ' years', label: 'from the first to the latest', tone: 'move' },
             ],
           }}
           left={{
             title: 'How long each first took',
             node: (
+              <><ul className="fmap__legend tl-legend" aria-label="Colour key">
+                {['tread', 'road', 'trail', 'walk', 'hike'].map((k) => <li key={k}><i className={`msw msw--${k}`} aria-hidden="true" />{({ tread: 'Treadmill run', road: 'Outdoor run', trail: 'Trail run', walk: 'Walk', hike: 'Hike' })[k]}</li>)}
+              </ul>
               <HBars
                 aria={`Firsts on foot: ${F.map((f) => `${f.title}, ${fmtDay(f.date)}`).join('; ')}.`}
                 rows={F.map((f) => ({ key: f.mode, label: f.title, sub: `${f.detail} · day ${n0(dayOf(f.date))}`, value: dayOf(f.date), display: fmtMon(f.date) }))}
-              />
+              /></>
             ),
           }}
           right={{

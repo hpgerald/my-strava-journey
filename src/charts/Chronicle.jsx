@@ -11,7 +11,6 @@ import { useInView } from '../components/Reveal.jsx'
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const fmtDay = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 const ORD = (n) => `${n.toLocaleString('en-US')}${n % 100 >= 11 && n % 100 <= 13 ? 'th' : n % 10 === 1 ? 'st' : n % 10 === 2 ? 'nd' : n % 10 === 3 ? 'rd' : 'th'}`
-const COUNTRY_KEY = { Kenya: 'road', Malawi: 'trail', 'South Africa': 'tread', Rwanda: 'walk', Other: 'quiet' }
 
 // greedy rows: each label takes the first row where it fits after the last one.
 // With `stalks`, a label in a lower row also needs its stalk (at x) to clear every
@@ -48,8 +47,8 @@ export default function Chronicle({ data, aria }) {
   const off = narrow ? 14 : 0 // on phones the lane title gets its own line above the marks
   const lane = (key, title, h) => { L[key] = { y, c: y + off, h: h + off, title }; y += h + off }
   lane('mile', 'Milestones', narrow ? 40 : 52)
-  lane('first', 'Firsts on foot', narrow ? 34 : 126)
-  lane('place', 'Across the border', narrow ? 34 : 70)
+  lane('first', 'Firsts on foot', narrow ? 34 : 112)
+  lane('place', 'Across the border', narrow ? 34 : 64)
   lane('region', 'New regions', narrow ? 26 : 34)
   const shoeRows = 3
   lane('shoe', 'Shoes', narrow ? 40 : 30 + shoeRows * 18)
@@ -71,7 +70,13 @@ export default function Chronicle({ data, aria }) {
   // firsts on the same day share one mark and one label
   const sameDay = []
   for (const f of data.firsts) { const last = sameDay[sameDay.length - 1]; if (last && last.date === f.date) { last.title = `${last.title} and ${f.title.replace('First', 'first')}`; last.detail = `${last.detail}; ${f.detail}` } else sameDay.push({ ...f }) }
-  const firstLab = pack(sameDay.map((f) => { const x = X(f.date); return { ...f, x, x0: x - 2, x1: x + 8 + f.title.length * cw } }), 4, 10)
+  // each first sits on its own row with its label beside it, so no line ever crosses a label;
+  // near the right edge the label turns to the left of its dot
+  const firstLab = pack(sameDay.map((f) => {
+    const x = X(f.date), tw = f.title.length * cw
+    const flip = x + 12 + tw > W - m.r
+    return { ...f, x, flip, x0: flip ? x - 12 - tw : x - 6, x1: flip ? x + 6 : x + 12 + tw }
+  }), 4, 12)
   // shoes: bars packed into rows so overlapping pairs never collide
   const shoeBars = pack(data.shoes.map((s) => ({ ...s, x0: X(s.first), x1: Math.max(X(s.last), X(s.first) + 3) })), shoeRows, 2)
   const maxMonth = Math.max(1, ...data.monthly.map((d) => d.n))
@@ -117,13 +122,11 @@ export default function Chronicle({ data, aria }) {
 
           {/* firsts */}
           {firstLab.map((f) => {
-            const dy = L.first.c + (narrow ? 20 : 16)
-            const ly = L.first.c + 40 + Math.max(0, f.row) * 22
+            const cy = narrow ? L.first.c + 20 : L.first.c + 24 + Math.max(0, f.row) * 22
             return (
               <g key={f.title} className="chron__m" style={{ '--d': `${fr(f.date) * 1.8}s` }} onMouseEnter={show(f, `${fmtDay(f.date)} · ${f.title}, ${f.detail}`)}>
-                {!narrow && f.row >= 0 && <line x1={f.x} x2={f.x} y1={dy + 5} y2={ly - 4} className="chron__stalk" />}
-                <circle cx={f.x} cy={dy} r={narrow ? 4 : 5} className={`mfill--${f.mode} chron__dot`} />
-                {!narrow && f.row >= 0 && <text x={f.x + 4} y={ly + 4} className="chron__el">{f.title}</text>}
+                <circle cx={f.x} cy={cy} r={narrow ? 4 : 5} className={`mfill--${f.mode} chron__dot`} />
+                {!narrow && f.row >= 0 && <text x={f.flip ? f.x - 9 : f.x + 9} y={cy + 4} textAnchor={f.flip ? 'end' : 'start'} className="chron__el">{f.title}</text>}
               </g>
             )
           })}
@@ -132,16 +135,16 @@ export default function Chronicle({ data, aria }) {
           {data.stays.map((s, i) => {
             const x0 = X(s.start), x1 = Math.max(X(s.end), x0 + 3)
             return (
-              <rect key={i} x={x0} y={L.place.c + (narrow ? 14 : 44)} width={x1 - x0} height={narrow ? 12 : 16} rx="1.5" className={`mfill--${COUNTRY_KEY[s.country] || 'quiet'} chron__m chron__bar`} style={{ '--d': `${fr(s.start) * 1.8}s` }}
+              <rect key={i} x={x0} y={L.place.c + (narrow ? 14 : 40)} width={x1 - x0} height={narrow ? 12 : 14} rx="2" className="chron__trip chron__m chron__bar" style={{ '--d': `${fr(s.start) * 1.8}s` }}
                 onMouseEnter={show(s, `${fmtDay(s.start)}${s.end !== s.start ? ` to ${fmtDay(s.end)}` : ''} · ${s.country}, ${s.days} day${s.days > 1 ? 's' : ''} out`)} />
             )
           })}
           {!narrow && (() => {
-            // name each country once, above its first stay
-            const seen = new Set()
-            const firstStay = data.stays.filter((s) => (seen.has(s.country) ? false : (seen.add(s.country), true)))
-            const lab = pack(firstStay.map((s) => { const x = X(s.start); return { ...s, x, x0: x, x1: x + s.country.length * cw + 4 } }), 2, 6)
-            return lab.filter((s) => s.row >= 0).map((s) => <text key={s.country} x={s.x} y={L.place.c + (s.row ? 36 : 22)} className="chron__el chron__m" style={{ '--d': `${fr(s.start) * 1.8}s` }}>{s.country}</text>)
+            // name each trip above its bar, once per country in any stretch of the line
+            const last = {}
+            const named = data.stays.filter((s) => { const x = X(s.start); const keep = last[s.country] == null || x - last[s.country] > 70; if (keep) last[s.country] = x; return keep })
+            const lab = pack(named.map((s) => { const x = X(s.start); return { ...s, x, x0: x, x1: x + s.country.length * cw + 4 } }), 2, 6)
+            return lab.filter((s) => s.row >= 0).map((s) => <text key={`${s.country}-${s.start}`} x={s.x} y={L.place.c + (s.row ? 34 : 20)} className="chron__el chron__m" style={{ '--d': `${fr(s.start) * 1.8}s` }}>{s.country}</text>)
           })()}
 
           {/* new regions of Tanzania */}
