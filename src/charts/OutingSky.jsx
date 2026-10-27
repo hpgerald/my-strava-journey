@@ -252,8 +252,8 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
         <div className="sky__head">
           <p className="sky__key">
             {yearMode
-              ? `Every outing of ${year}, one dot each. Across is the year, down is the hour it started, size is the distance on foot.`
-              : `Every outing since ${MONTH[first.getUTCMonth()]} ${first.getUTCFullYear()}, one dot each. Across is time, down is the hour it started, size is the distance on foot.`}
+              ? `Every outing of ${year}. The higher the dot, the earlier in the day I went out.`
+              : `Every outing since ${MONTH[first.getUTCMonth()]} ${first.getUTCFullYear()}. The higher the dot, the earlier in the day I went out.`}
           </p>
           <ul className="sky__legend" aria-label="Colour key">
             <li><i className="sky__sw sky__sw--run" aria-hidden="true" />Run</li>

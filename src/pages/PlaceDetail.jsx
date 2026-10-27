@@ -97,7 +97,7 @@ export default function PlaceDetail() {
 
       {yearCols.length > 1 && (
         <section style={{ paddingTop: 'var(--sp-7)' }}>
-          <Figure title={`Activities per year in ${name}`} source="Strava GPS">
+          <Figure title={`Outings per year in ${name}`} source="Strava GPS">
             <Columns data={yearCols} unit="activities" formatY={(v) => fmtInt(v)} height={200} />
           </Figure>
         </section>

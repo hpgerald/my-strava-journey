@@ -59,8 +59,8 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
     ['First 1,000 m climbed', (f) => f.elev >= 1000, (f) => `${Math.round(f.elev).toLocaleString('en-US')} m up`],
     ['First trail run', (f) => f.sport === 'TrailRun', (f) => `${f.km.toFixed(1)} km`],
     ['First hike', (f) => f.sport === 'Hike', (f) => `${f.km.toFixed(1)} km`],
-    ['First outdoor half', (f) => f.km >= 21.0975 && f.mode !== 'tread', (f) => `${f.km.toFixed(1)} km`],
-    ['First walk of a half', (f) => f.sport === 'Walk' && f.km >= 21.0975, (f) => `${f.km.toFixed(1)} km`],
+    ['First half marathon outside', (f) => f.km >= 21.0975 && f.mode !== 'tread', (f) => `${f.km.toFixed(1)} km`],
+    ['First half-marathon walk', (f) => f.sport === 'Walk' && f.km >= 21.0975, (f) => `${f.km.toFixed(1)} km`],
   ]
   const firsts = firstDefs.map(([title, pred, sub]) => { const f = firstOf(pred); return f ? { title, date: f.date, t: f.t, mode: f.mode, sport: f.sport, km: f.km, elev: f.elev, detail: sub(f) } : null }).filter(Boolean).sort((a, b) => a.t - b.t)
   for (const f of firsts) events.push({ lane: 'first', date: f.date, title: f.title, sub: f.detail, key: f.mode })

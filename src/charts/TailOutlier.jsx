@@ -36,14 +36,14 @@ export default function TailOutlier({ values, mark, mean, sd, z, pct, unit = 'km
     <div ref={ref} className="tail">
       <div ref={root} className={`tail__plot${inView ? ' is-in' : ''}`}>
         <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img"
-          aria-label={`Distribution of efforts with the record marked. The average is ${mean.toFixed(1)} ${unit}; the record of ${mark.toFixed(1)} ${unit} sits ${z.toFixed(1)} standard deviations out, past the ${pct} percentile.`}
+          aria-label={`Distribution of efforts with the record marked. The average is ${mean.toFixed(1)} ${unit}; the longest, ${mark.toFixed(1)} ${unit}, is ${(mark / mean).toFixed(1)} times the average.`}
           style={{ display: 'block' }}>
           {/* one-sigma band */}
           <rect x={x(Math.max(0, mean - sd))} y={m.t} width={x(mean + sd) - x(Math.max(0, mean - sd))} height={H - m.b - m.t}
             fill="var(--ink)" opacity="0.05" />
           <line x1={x(mean)} y1={m.t} x2={x(mean)} y2={H - m.b} stroke="var(--ink)" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
           <text x={x(mean)} y={16} textAnchor="middle" className="tail__meanlbl">average {mean.toFixed(1)} {unit}</text>
-          <text x={x(mean)} y={31} textAnchor="middle" className="tail__meanlbl tail__meanlbl--dim">shaded band = &plusmn;1 sd</text>
+          <text x={x(mean)} y={31} textAnchor="middle" className="tail__meanlbl tail__meanlbl--dim">shaded: normal range</text>
 
           {/* baseline */}
           <line x1={m.l} y1={y(0)} x2={W - m.r} y2={y(0)} stroke="var(--ink)" strokeWidth="1.25" />
@@ -66,8 +66,7 @@ export default function TailOutlier({ values, mark, mean, sd, z, pct, unit = 'km
           <g className="tail__gap">
             <line x1={x(mean + sd) + 4} y1={H - m.b - 14} x2={x(mark) - 6} y2={H - m.b - 14}
               stroke="var(--accent-ink)" strokeWidth="1" strokeDasharray="2 3" opacity="0.6" markerEnd="" />
-            <text x={x(mark) - 10} y={m.t + 62} textAnchor="end" className="tail__gaplbl">{z.toFixed(1)} standard deviations out</text>
-            <text x={x(mark) - 10} y={m.t + 76} textAnchor="end" className="tail__gaplbl">{pct}</text>
+            <text x={x(mark) - 10} y={m.t + 62} textAnchor="end" className="tail__gaplbl">{(mark / mean).toFixed(1)} times the average</text>
           </g>
 
           {xTicks.map((t) => (

@@ -156,7 +156,7 @@ export default function Where() {
                   </li>
                 ))}
               </Ledger>
-              <p className="sgrid__note">The darker the country, the more outings I had there. The shading uses a log scale so the smaller numbers still show up.</p>
+              <p className="sgrid__note">The darker the country, the more I went out there.</p>
             </figure>
           </div>
           <p className="source">Source: Activity Log and Strava GPS start points · Natural Earth country outlines</p>
@@ -211,7 +211,7 @@ export default function Where() {
                 />
               </div>
             </figure>
-            <p className="sgrid__note sgrid__note--chart">The map shades each region by whichever measure is picked above it. Hover over a region to see all four. The pale grey ones are regions I haven&rsquo;t been out in yet.</p>
+            <p className="sgrid__note sgrid__note--chart">Pick a measure above the map, or hover over a region to see all four. The pale grey regions are the ones I haven&rsquo;t been out in yet.</p>
             <p className="sgrid__note sgrid__note--mx">My ten busiest regions by outings and by distance. The order hardly changes, and the same three places are at the top of both.</p>
           </div>
           <p className="source">Source: Activity Log and Strava GPS start points · Natural Earth region outlines</p>
@@ -251,8 +251,8 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>The grey ring is a region&rsquo;s share of my outings and the orange dot is its share of the climbing. The regions where I climbed more than my share are at the top.</>}
-          rightNote={<>Each region&rsquo;s climbing divided by its distance on foot. Past the dashed line, a kilometre there climbs more than my average for Tanzania.</>}
+          leftNote={<>Where the orange dot is ahead of the grey ring, I climbed more in that region than my share. Those regions are at the top.</>}
+          rightNote={<>How hilly each region is for me. Past the dashed line, it&rsquo;s hillier than my average in Tanzania.</>}
           source="Activity Log and Strava GPS start points · climb and distance on foot"
         />
 
@@ -293,7 +293,7 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>One column a year, split by region, with my total for Tanzania on top. The four busiest regions have their own colour and the rest are grey.</>}
+          leftNote={<>My outings in Tanzania each year, by region. The four busiest have their own colour.</>}
           rightNote={<>How many regions I went out in each year. The years with the most are in orange.</>}
           source="Activity Log and Strava GPS start points · outings in Tanzania by region and year"
         />
@@ -337,7 +337,7 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>The line steps up each time I go out in a region for the first time. The first region and the newest ones are named.</>}
+          leftNote={<>The line steps up each time I go out in a new region.</>}
           rightNote={<>New regions come in bunches, when I travel. {lastYear}{so} has added {word(newLast.n)}.</>}
           source="Activity Log and Strava GPS start points · first outing in each region"
         />
@@ -382,7 +382,7 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>Every outing with a GPS start outside Tanzania, by country.</>}
+          leftNote={<>My outings outside Tanzania, by country.</>}
           rightNote={<>My trips across the border were short. The most days I went out in any one country was {Math.max(...awayNamed.map((c) => c.days))}, in {awayNamed.reduce((b, c) => (c.days > b.days ? c : b), awayNamed[0]).country}.</>}
           source="Activity Log and Strava GPS start points · outings outside Tanzania"
         />
@@ -430,7 +430,7 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>Each bar is the share of that year&rsquo;s outings with no GPS start, which means they can&rsquo;t go on the map.</>}
+          leftNote={<>The share of each year&rsquo;s outings with no GPS start, so they can&rsquo;t go on the map.</>}
           rightNote={<>The maps above only show outings that went outside, so most of my treadmill years are missing from them.</>}
           source="Activity Log · outings without a GPS start point"
         />
@@ -477,8 +477,8 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>The taller the bar, the more regions that year&rsquo;s outings were spread over. I left out years with fewer than 50 outings in Tanzania.</>}
-          rightNote={<>This is the same thing seen from the other side. The higher the bar, the more that year depended on three places.</>}
+          leftNote={<>How spread out each year was across regions. I left out years with fewer than 50 outings in Tanzania.</>}
+          rightNote={<>The other side of it. This is how much of each year came from its three busiest regions.</>}
           source="Activity Log and Strava GPS start points · inverse Simpson index of outings by region"
         />
 

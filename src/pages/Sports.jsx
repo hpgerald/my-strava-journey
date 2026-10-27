@@ -221,8 +221,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>Each bar is one measure, split into the four sports&rsquo; shares of it. Follow one colour down the bars to see how that sport&rsquo;s share changes.</>}
-          rightNote={<>This is the middle outing of each sport when they&rsquo;re lined up by distance. My typical walk is short, even though I&rsquo;ve done some long ones.</>}
+          leftNote={<>How the four sports split each total. Follow one colour down to see how its share changes.</>}
+          rightNote={<>My typical outing in each sport. My typical walk is short, even though I&rsquo;ve done some long ones.</>}
           source="Activity Log · runs, walks, trail runs and hikes; distance and climb on foot only"
         />
 
@@ -273,8 +273,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>One column a year, split by sport, with the total on top.{partial ? ` The star marks ${LY}, which isn’t over yet.` : ''}</>}
-          rightNote={<>Runs here are outdoor and treadmill runs, and trail runs are counted separately. The dashed line is the year my walking passed my running.</>}
+          leftNote={<>My distance on foot each year, by sport.{partial ? ` ${LY} isn’t over yet.` : ''}</>}
+          rightNote={<>The dashed line is the year my walking passed my running. Runs include the treadmill, and trail runs are on their own.</>}
           source="Activity Log · distance on foot by sport and year"
         />
 
@@ -322,8 +322,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>My running kilometres each year, with the treadmill in light orange and outside in deep orange. The figure on top is the share done indoors.</>}
-          rightNote={<>One bar per kilometre. My treadmill runs bunch up at 5, 10, 15 and 21 km, because on a treadmill I tend to stop when the display hits a round number.</>}
+          leftNote={<>My running each year, with the treadmill in light orange and outside in dark orange. The number on top is how much of it was indoors.</>}
+          rightNote={<>My treadmill runs bunch up at 5, 10, 15 and 21 km, because I tend to stop when the display hits a round number.</>}
           source="Activity Log · runs marked as treadmill (trainer) against runs outdoors"
         />
 
@@ -372,8 +372,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>Each ridge is one way of moving, and its height shows how many outings were at each pace. The tick under the ridge and the figure on the right are the middle value.</>}
-          rightNote={<>The band covers the middle half of each year&rsquo;s treadmill runs, and the bar is the middle run. The higher the bar, the quicker the year, and the quickest is in orange.</>}
+          leftNote={<>How fast I usually go in each sport. The figure on the right is my typical pace.</>}
+          rightNote={<>My typical treadmill pace each year. The quickest year is in orange.</>}
           source={`Activity Log · moving time over distance; ${r.oddTread} treadmill runs logged quicker than ${pace(TREAD_MIN)} a km left out of pace as likely misreadings`}
         />
 
@@ -422,7 +422,7 @@ export default function Sports() {
                   />
                 ),
               }}
-              leftNote={<>One ridge a year, and its height shows how many walks were each length. As my walks got longer, the ridge moved to the right. {LY} is in orange.</>}
+              leftNote={<>How long my walks were, year by year. As they got longer, the hump moved to the right. {LY} is in orange.</>}
               rightNote={<>About half my walks used to be short ones. In {LY} nearly every walk is a proper outing.</>}
               source="Activity Log · walks, indoor and outdoor"
             />
@@ -471,7 +471,7 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>Each column counts that year&rsquo;s outings of 21.1 km or more, coloured by sport.</>}
+          leftNote={<>My outings of a half marathon or longer each year, by sport.</>}
           rightNote={<>Every sport except hiking has gone past 30 km at least once. My longest hike was {k1(M.hike.longest.km)} km, but it climbed {n0(M.hike.longest.elev)} m on the way.</>}
           source="Activity Log · outings of 21.1 km or more by way of moving"
         />
@@ -515,8 +515,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>Each line goes across one kilometre at that sport&rsquo;s average slope. I&rsquo;ve drawn the slopes steeper than they really are so the gentle ones don&rsquo;t all look flat, but the figures are the real ones.</>}
-          rightNote={<>My biggest single climbs, coloured by sport. None of them was a walk or an outdoor run.</>}
+          leftNote={<>How steep each sport is on average. I drew the slopes steeper than they really are so the gentle ones don&rsquo;t look flat, but the figures are real.</>}
+          rightNote={<>My biggest single climbs. None of them was a walk or an outdoor run.</>}
           source="Activity Log · elevation gain on foot over distance on foot"
         />
 
@@ -566,8 +566,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>One ridge per sport, and its height shows how many outings started at each hour, from midnight to midnight. The tick and the figure on the right are the busiest hour.</>}
-          rightNote={<>Bars past the dashed line lean towards the weekend. A trail run needs a free morning, and a treadmill run fits into whatever evening I have.</>}
+          leftNote={<>When in the day I go out for each sport. The figure on the right is the busiest hour.</>}
+          rightNote={<>The bars past the dashed line lean towards the weekend. A trail run needs a free morning, and a treadmill run fits into any evening.</>}
           source="Activity Log · local start hour and weekday of every outing on foot"
         />
 
@@ -612,7 +612,7 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>Each bar counts the days that year with at least one run (or trail run) and at least one walk.</>}
+          leftNote={<>Days each year when I both ran and walked.</>}
           rightNote={<>The walk was hardly ever a cool-down after the run. Most of the time they were two separate outings at different ends of the day.</>}
           source="Activity Log · start time and moving time of runs and walks on the same date"
         />
@@ -658,8 +658,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>All the relative effort scores for each sport added up and divided by the hours they took. The higher the bar, the harder my heart worked for each hour out.</>}
-          rightNote={<>Kudos are the likes other people give on Strava. The small figure under each sport is how many personal records it sets per outing.</>}
+          leftNote={<>How hard my heart worked for each hour out, by sport.</>}
+          rightNote={<>Kudos are the likes people give on Strava. The small number under each sport is personal records per outing.</>}
           source="Activity Log · Strava relative effort (heart rate), kudos and personal records"
         />
 
@@ -709,8 +709,8 @@ export default function Sports() {
               />
             ),
           }}
-          leftNote={<>One dot per treadmill run, with quicker runs higher up. The black line is the straight line that fits the dots best. It goes down to the right, which means longer runs were quicker.</>}
-          rightNote={<>One dot per week since 2021. The line is nearly flat, so how much I ran in a week tells you almost nothing about how much I walked.</>}
+          leftNote={<>Every treadmill run, with the quicker ones higher up. The line rises to the right, so my longer runs were quicker.</>}
+          rightNote={<>My weeks since 2021, running against walking. The line is nearly flat, so a big running week didn&rsquo;t mean more or less walking.</>}
           source={`Activity Log · least-squares fits; treadmill runs quicker than ${pace(TREAD_MIN)} a km left out`}
         />
 

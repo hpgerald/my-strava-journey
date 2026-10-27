@@ -165,8 +165,8 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<>Each bar is how many days it took to add another 250 outings. The first bar, in grey, includes the long gap, so I&rsquo;ve cut it off at 400.</>}
-          rightNote={<>The longest stretch without an outing in each year. The bars that run off the top, in grey, are the early years. Since the habit started, the longest has been {word(C.maxAfter)} days.</>}
+          leftNote={<>How many days each 250 outings took. The first one includes the long gap, so I cut it off at 400.</>}
+          rightNote={<>My longest break each year. The early years run off the top. Since the habit started, the longest has been {word(C.maxAfter)} days.</>}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
         />
 
@@ -176,18 +176,18 @@ export default function Timeline() {
           id="tl-firsts"
           eyebrow={`${num()} · Firsts`}
           title={`${cap(word(F.length))} firsts on foot.`}
-          sub={`From a 10 km on day ${dayOf(F[0].date)} to a ${lastFirst.km.toFixed(1)} km ${lastFirst.sport === 'Walk' ? 'walk' : 'outing'} in ${lastFirst.date.slice(0, 4)}.`}
+          sub={`From my ${F[0].title.toLowerCase()} in ${fmtMon(F[0].date)} to my ${lastFirst.title.toLowerCase()} in ${lastFirst.date.slice(0, 4)}.`}
           statement={<>
-            {F.map((f) => `${f.title.replace('First', 'the first')} in ${fmtMon(f.date)}`).join(', ').replace(/^the/, 'The').replace(/, ([^,]*)$/, ' and $1')}.
+            {F.map((f, i) => (i === 0 ? `${f.title.replace('First', 'My first')} came in ${fmtMon(f.date)}, then` : `${f.title.replace('First', 'my first')} in ${fmtMon(f.date)}`)).join(', ').replace('then, ', 'then ').replace(/, ([^,]*)$/, ' and $1')}.
             {' '}The early distance firsts all came on the treadmill. The later ones came on trails, in the mountains and on long walks.
           </>}
           odds={{
             title: 'Firsts on foot',
             items: [
               { num: F.length, unit: '', label: 'firsts on foot', tone: 'move' },
-              { num: dayOf(F[0].date), unit: '', label: `day of the first, ${F[0].title.toLowerCase()}`, tone: 'move' },
+              { num: dayOf(F[0].date), unit: '', label: `day in my log of my ${F[0].title.toLowerCase()}`, tone: 'move' },
               { num: Math.max(...firstsBy.map((y) => y.n)), unit: '', label: `in ${firstsBy.reduce((b, y) => (y.n > b.n ? y : b), firstsBy[0]).year}, the most in a year`, tone: 'move' },
-              { num: dayOf(lastFirst.date), unit: '', label: `day of the latest, ${lastFirst.title.toLowerCase()}`, tone: 'rest' },
+              { num: dayOf(lastFirst.date), unit: '', label: `day in my log of my ${lastFirst.title.toLowerCase()}`, tone: 'rest' },
             ],
           }}
           left={{
@@ -209,7 +209,7 @@ export default function Timeline() {
               />
             ),
           }}
-          leftNote={<>Each bar runs from my first outing to the day of that first, coloured by sport.</>}
+          leftNote={<>How long it took me to reach each first, counted from my first outing.</>}
           rightNote={<>Most of my firsts came in the early habit years and then they slowed down, because each new one needs a longer day or a steeper hill.</>}
           source="Activity Log · the first outing on foot to pass each mark"
         />

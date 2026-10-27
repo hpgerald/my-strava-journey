@@ -117,7 +117,7 @@ export default function WhatItMeans() {
             aria={`Minutes on the move per calendar day, each year: ${M.perYear.map((r) => `${r.year} ${n0(r.minPerDay)} minutes`).join(', ')}.`}
           />
           <ul className="chron__key" aria-hidden="true">
-            <li>The circle is one day of 24 hours. The wedge is the minutes on the move per day, rest days included.</li>
+            <li>Each circle is a whole day. The wedge is how much of it I spent on the move, rest days included.</li>
           </ul>
           <p className="source">Source: Activity Log · moving time of every activity, spread over every calendar day</p>
         </section>
@@ -163,7 +163,7 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>Both lines start at 100% in {peak.year}. The black line is the share of days I went out, and the orange line is my distance on foot per day. The shaded gap shows how far the distance fell behind the days.</>}
+          leftNote={<>Both lines start level in {peak.year}. The black line is how often I went out and the orange one is how far. The shaded gap is how far the distance fell behind.</>}
           rightNote={<>Most of my distance comes from the long days. They fell from {longTop.long} in {longTop.year} to {low.long} in {low.year}, and {cur.year} is back up to {cur.long}.</>}
           source="Activity Log · days with any activity, and distance on foot, per calendar year"
         />
@@ -208,7 +208,7 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>Each dot is five days out, stacked by how far I went on foot that day. The orange dots on the left are the days under {SMALL_KM} km, and a day with only other activities counts as zero.</>}
+          leftNote={<>All my days out, by how far I went on foot. The orange ones on the left are the days under {SMALL_KM} km.</>}
           rightNote={<>The small days went up as the distance came down. {smallTop.year} had the most of them and the least distance, and I still kept going.</>}
           source="Activity Log · every day with an activity since the habit began, distance on foot only"
         />
@@ -256,7 +256,7 @@ export default function WhatItMeans() {
                   />
                 ),
               }}
-              leftNote={<>One dot per full week, Monday to Sunday. The shaded band is the middle half of my weeks, the tick is the middle week, and the grey strip on the left is under 10 km.</>}
+              leftNote={<>Every full week, year by year. The grey strip on the left is weeks under 10 km.</>}
               rightNote={<>The years at zero are the ones where I kept a floor, the first half-year of the habit and {cur.year}. In every year in between, some weeks slipped.</>}
               source="Activity Log · distance on foot per full week since the habit began"
             />
@@ -306,8 +306,8 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>The orange bar is my average long day. The bars either side are the days around it, three before and seven after, and the dashed line is an ordinary day.</>}
-          rightNote={<>One square per run of {LONG_RUN_KM} km or more, coloured by what I did the next day. Most of the time I went straight back out, partly because long days tend to happen in busy months.</>}
+          leftNote={<>My average long day in orange, with the three days before it and the seven after. The dashed line is an ordinary day.</>}
+          rightNote={<>What I did the day after each run of {LONG_RUN_KM} km or more. Most of the time I went straight back out, partly because long days tend to come in busy months.</>}
           source={`Activity Log · days of ${LONG_KM} km or more on foot and runs of ${LONG_RUN_KM} km or more since the habit began`}
         />
 
@@ -351,7 +351,7 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>Across is the share of days I went out, and up is the distance per day out. Each dashed curve is one yearly total, and a year above a curve beat that total.</>}
+          leftNote={<>How often I went out against how far I went each time. The dashed curves are yearly totals, and a year above a curve beat it.</>}
           rightNote={<>From {habitYear} to {lowYear.year} my distance per day out kept falling while my days out stayed level or went up. {cur.year} sits in between, with more distance per day than {lowYear.year} and far more days.</>}
           source="Activity Log · days with any activity and distance on foot per calendar year"
         />

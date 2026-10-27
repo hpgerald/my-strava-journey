@@ -127,8 +127,8 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
     { label: 'First hike', f: firstOf((f) => f.sport === 'Hike') },
     { label: 'First 1,000 m climbed', f: firstOf((f) => f.elev >= 1000) },
     { label: 'First outing abroad', f: firstOf((f) => f.country && f.country !== 'Tanzania') },
-    { label: 'First outdoor half', f: firstOf((f) => f.km >= 21.0975 && f.mode !== 'tread') },
-    { label: 'First walk of a half', f: firstOf((f) => f.sport === 'Walk' && f.km >= 21.0975) },
+    { label: 'First half marathon outside', f: firstOf((f) => f.km >= 21.0975 && f.mode !== 'tread') },
+    { label: 'First half-marathon walk', f: firstOf((f) => f.sport === 'Walk' && f.km >= 21.0975) },
   ].filter((x) => x.f).sort((a, b) => a.f.t - b.f.t)
 
   // ---- streaks ----

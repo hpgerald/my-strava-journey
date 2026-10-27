@@ -1023,7 +1023,6 @@ text.chart-panel-title {
 /* ---- Home: full-bleed narrative bands ----------------------------- */
 .bleed { padding-block: var(--sp-7); }
 .bleed--switch { background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-block: 1px solid var(--rule-faint); }
-.bleed--edges { background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-block: 1px solid var(--rule-faint); }
 .bleed--level { --band-bg: color-mix(in srgb, var(--accent) 6%, var(--paper)); background: var(--band-bg); border-block: 1px solid var(--rule-faint); }
 
 /* ---- Home opener candidates (journey arc / every-day field / adds-up) ---- */
@@ -1439,29 +1438,6 @@ text.chart-panel-title {
 .wklvl__ref { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg-muted); letter-spacing: var(--tr-wide); }
 @media (prefers-reduced-motion: reduce) { .wklvl__bar { transform: none !important; } }
 
-/* ---- Home: the far-edges teaser cards ----------------------------- */
-.edges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4) var(--grid-gap); grid-template-columns: 1fr; }
-@media (min-width: 40rem) { .edges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 62rem) { .edges { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.edgecard {
-  display: flex; flex-direction: column; gap: var(--sp-2); height: 100%;
-  padding: var(--sp-5); background: var(--paper); text-decoration: none;
-  border: 1px solid var(--rule); border-top: 3px solid var(--accent); border-radius: 6px;
-  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease);
-}
-.edgecard:hover, .edgecard:focus-visible { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
-.edgecard__stat { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-2xl); line-height: 1; color: var(--ink); letter-spacing: var(--tr-tight); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.edgecard__unit { font-size: 0.42em; font-weight: 700; color: var(--fg-muted); margin-left: 0.3em; letter-spacing: var(--tr-wide); text-transform: uppercase; }
-.edgecard__lbl { font-size: var(--fs-sm); color: var(--fg-muted); line-height: 1.35; }
-.edgecard__foot { margin-top: auto; padding-top: var(--sp-4); display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); border-top: 1px solid var(--rule-faint); }
-.edgecard__when { font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-faint); }
-.edgecard__arrow { color: var(--accent); font-size: var(--fs-lg); }
-.edgecard:hover .edgecard__stat, .edgecard:focus-visible .edgecard__stat,
-.edgecard:hover .edgecard__unit, .edgecard:focus-visible .edgecard__unit,
-.edgecard:hover .edgecard__lbl, .edgecard:focus-visible .edgecard__lbl,
-.edgecard:hover .edgecard__when, .edgecard:focus-visible .edgecard__when,
-.edgecard:hover .edgecard__arrow, .edgecard:focus-visible .edgecard__arrow { color: var(--paper); }
-.edgecard:hover .edgecard__foot, .edgecard:focus-visible .edgecard__foot { border-top-color: color-mix(in srgb, var(--paper) 40%, transparent); }
 
 /* ---- Foot deep dive: RangeBars ---------------------------------------- */
 .rangebars { list-style: none; margin: 0; padding: 0; }
@@ -2619,11 +2595,5 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .index--compact { gap: var(--sp-2); }
   .index--compact .index__link { padding: var(--sp-3) var(--sp-4); }
   .footer { margin-top: var(--sp-7); }
-  .edges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
-  .edgecard { padding: var(--sp-3) var(--sp-3) var(--sp-2); border-radius: 4px; }
-  .edgecard__stat { font-size: var(--fs-xl); }
-  .edgecard__lbl { font-size: var(--fs-xs); }
-  .edgecard__foot { padding-top: var(--sp-2); }
-  .edgecard__arrow { font-size: var(--fs-md); }
 }
 .ds-row > :first-child { overflow-wrap: anywhere; }

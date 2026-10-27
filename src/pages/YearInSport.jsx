@@ -244,8 +244,8 @@ export default function YearInSport({ year: bookYear } = {}) {
           }}
           left={{ title: 'Outings, month by month', node: <YearMonths months={monthsData} /> }}
           right={{ title: 'The kilometres adding up', node: <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} /> }}
-          leftNote={<>One bar per month. The more outings, the taller and darker the bar, and the busiest month has its number on top.</>}
-          rightNote={<>This line adds up my kilometres on foot through the year. Where it climbs steeply I was busy, and where it flattens out I was quiet or away.</>}
+          leftNote={<>My outings month by month. The busiest month has its number on top.</>}
+          rightNote={<>My kilometres on foot adding up through the year. Where it climbs steeply I was busy, and where it goes flat I was quiet or away.</>}
           source="Activity Log · outings and distance on foot, by month"
         />
 
@@ -274,8 +274,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing, by sport', node: <SportTreemap rows={r.sportRows} /> }}
               right={{ title: 'Distance against climb, on foot', node: r.flip.length >= 2 ? <FootFlip items={r.flip} /> : <p className="yis-empty">Only one sport on foot this year.</p> }}
-              leftNote={<>Each tile is a sport, sized by how many outings it had. Everything that isn&rsquo;t on foot shares one tile.</>}
-              rightNote={<>The left column splits my distance on foot by sport and the right column splits the climb. A sport that&rsquo;s thin on the left and thick on the right did a lot of climbing for its distance.</>}
+              leftNote={<>The bigger the box, the more often I did it that year. Everything that isn&rsquo;t on foot shares one box.</>}
+              rightNote={<>Distance on the left and climbing on the right. A sport that gets thicker on the right did a lot of climbing for its distance.</>}
               source="Activity Log · outings by sport, distance and climb on foot"
             />
           </>
@@ -315,7 +315,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                   />
                 ),
               }}
-              leftNote={<>Midnight is at the top and the hours go round clockwise. The longer and darker a spoke, the more outings started in that hour.</>}
+              leftNote={<>The day as a clock, with midnight at the top. The longer the spoke, the more often I went out at that hour.</>}
               rightNote={<>The orange bar is my busiest day and the grey one my quietest. If the bars are close to level, the weekend didn&rsquo;t make much difference to me that year.</>}
               source="Activity Log · start hour and weekday of every outing"
             />
@@ -377,10 +377,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               />
             ),
           }}
-          leftNote={<>Twelve months, one square per day, with Monday first. Orange days had an outing, the darkest orange is my longest run of days in a row, and the number beside each month is its days out.</>}
-          rightNote={r.restDays === 0
-            ? <>With no days off, there were no gaps to count, so this shows how many outings each day had. Each bar is a share of the {fmtInt(s.activeDays)} days.</>
-            : <>Each bar is a share of the gaps between days out. The taller the first bar, the less often one rest day turned into two.</>}
+          leftNote={<>Every day of the year. The orange days had an outing, and the darkest stretch is my longest run of days in a row.</>}
+          rightNote={<>{r.restDays === 0 ? <>With no days off there were no gaps to count, so this is how many outings I fit into each day.</> : <>How long my breaks were. The taller the first bar, the more often I was back out after one day off.</>}</>}
           source="Activity Log · days with at least one outing"
         />
 
@@ -394,14 +392,14 @@ export default function YearInSport({ year: bookYear } = {}) {
               title={`The usual outing: ${s.medianFoot.toFixed(1)} km.`}
               statement={<>
                 Half of my {fmtInt(s.footN)} outings on foot were shorter than {s.medianFoot.toFixed(1)} km and half were longer.
-                The average was {meanFoot.toFixed(1)} km, because the long days pull it up, and my longest was{' '}
+                The average was {meanFoot.toFixed(1)} km{meanFoot > s.medianFoot ? ', pulled up by the long days' : ', pulled down by the short ones'}, and my longest was{' '}
                 {longestFoot.toFixed(1)} km{s.biggestFoot ? ` in ${fmtMonth(s.biggestFoot.date)}` : ''}.
                 {r.top10 != null ? ` My busiest tenth of days carried ${pc(r.top10)}% of the distance.` : ''}
               </>}
               odds={{
                 title: 'Distance on foot',
                 items: [
-                  { num: s.medianFoot, dec: 1, unit: ' km', label: 'the median outing', tone: 'move' },
+                  { num: s.medianFoot, dec: 1, unit: ' km', label: 'the middle outing', tone: 'move' },
                   { num: meanFoot, dec: 1, unit: ' km', label: 'the average outing', tone: 'rest' },
                   { num: longestFoot, dec: 1, unit: ' km', label: 'the longest', tone: 'move' },
                   { value: r.top10 || 0, label: 'of the distance on the busiest tenth of days', tone: 'move' },
@@ -409,8 +407,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing on foot, by distance', node: <YearDistances bins={s.footBins} peaks={s.peakBins} /> }}
               right={{ title: 'Each tenth of days, by its share', node: r.deciles ? <DecileBars shares={r.deciles} /> : <p className="yis-empty">Too few days on foot to split into tenths.</p> }}
-              leftNote={<>Each bar covers one kilometre, and the taller it is, the more outings were that long. Anything over 25 km goes in the last bar.</>}
-              rightNote={<>Here my days on foot are lined up from shortest to longest and cut into ten equal groups. If every day were the same, each group would carry 10% of the distance.</>}
+              leftNote={<>How long my outings on foot were. Anything over 25 km is in the last bar.</>}
+              rightNote={<>My days on foot split into ten groups, shortest to longest. If every day were the same, each group would carry 10% of the distance.</>}
               source="Activity Log · distance on foot (run, walk, trail run, hike)"
             />
           </>
@@ -422,25 +420,25 @@ export default function YearInSport({ year: bookYear } = {}) {
             <hr className="rule rule--faint" />
             <StorySection
               id={idp('yis-maths')}
-              eyebrow={`${num()} · The maths of ${Y}`}
+              eyebrow={`${num()} · How steady it was`}
               title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
               sub={r.restDays === 0 ? undefined : `When I went out, I went out again the next day ${pc(r.p11)}% of the time.`}
               statement={<>
                 {r.restDays === 0
-                  ? `If I mark every day of ${Y} as a day out or a rest day, there are no rest days to mark${so}.`
-                  : `If I mark every day of ${Y} as a day out or a rest day, a day out was followed by another ${pc(r.p11)}% of the time, and a rest day only ${pc(r.p01)}% of the time.`} From week to week my distance moved about {pc(r.weekly.cv)}% either side of the average,
-                {r.weekly.cv < 0.6 ? ' so it was a fairly steady year' : r.weekly.cv < 1 ? ' so it was an up and down year' : ' so it was a year of big swings'}. My longest outing,{' '}
-                {r.tail.mark.toFixed(1)} km, was {r.tail.z.toFixed(1)} standard deviations above my average.
+                  ? `I haven’t had a rest day in ${Y}${so}.`
+                  : `After a day out, I went out again the next day ${pc(r.p11)}% of the time. After a rest day, it was ${pc(r.p01)}%.`}
+                {r.weekly.cv < 0.6 ? ' My weeks were fairly steady.' : r.weekly.cv < 1 ? ' My weeks went up and down a fair bit.' : ' My weeks swung a lot, from almost nothing to very big.'}
+                {' '}My longest outing, {r.tail.mark.toFixed(1)} km, was {(r.tail.mark / r.tail.mean).toFixed(1)} times my average one.
               </>}
               odds={{
-                title: 'Four numbers that describe the year',
+                title: 'The year in four numbers',
                 items: [
-                  { value: r.p11, label: 'chance of going out the day after a day out', tone: 'move' },
+                  { value: r.p11, label: 'went out again the day after a day out', tone: 'move' },
                   r.restDays === 0
                     ? { num: 0, unit: ' days', label: `of rest${so}`, tone: 'rest' }
-                    : { value: r.p01, label: 'chance of going out the day after a rest', tone: 'rest' },
-                  { num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were (0 is even, 1 is one day did it all)', tone: 'rest' },
-                  { num: r.tail.z, dec: 1, unit: ' sd', label: 'how far my longest outing was above the average', tone: 'move' },
+                    : { value: r.p01, label: 'went out the day after a rest day', tone: 'rest' },
+                  { num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were, where 0 is all the same', tone: 'rest' },
+                  { num: r.tail.mark / r.tail.mean, dec: 1, unit: '×', label: 'my longest outing against the average one', tone: 'move' },
                 ],
               }}
               left={r.restDays === 0 ? {
@@ -456,10 +454,8 @@ export default function YearInSport({ year: bookYear } = {}) {
                 ),
               } : { title: 'Given today, the chance of tomorrow', node: <TransitionMatrix p11={r.p11} p01={r.p01} /> }}
               right={{ title: 'The longest outing against all the others', node: <TailOutlier values={r.tail.values} mark={r.tail.mark} mean={r.tail.mean} sd={r.tail.sd} z={r.tail.z} pct={r.tail.pct} unit="km" markLabel="the longest" /> }}
-              leftNote={r.restDays === 0
-                ? <>One bar per week. Orange weeks were above my average week and grey ones were below it. With no rest days, this is where the ups and downs of the year show.</>
-                : <>Each row adds up to 100%. The top left cell is how often a day out led to another. The bigger it is compared with the cell below it, the stronger the habit was that year.</>}
-              rightNote={<>The bars are all my outings on foot, by distance. The grey band is one standard deviation either side of the average, which is roughly how far a normal outing sits from it. The orange mark is my longest outing.</>}
+              leftNote={<>{r.restDays === 0 ? <>Every week of the year. The orange weeks were above my average. With no rest days, this is where the ups and downs show.</> : <>The top left number is how often a day out led to another. The bigger it is next to the one below it, the stronger the habit was that year.</>}</>}
+              rightNote={<>My outings on foot by distance. The grey band is where a normal outing sits, and the orange mark is my longest.</>}
               source="Activity Log · daily active series, weekly and per-outing distance on foot"
             />
           </>
@@ -518,8 +514,8 @@ export default function YearInSport({ year: bookYear } = {}) {
                 node: r.regRows ? <PairBars rows={r.regRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                   aria={`Tanzania regions in ${Y}: ${r.regRows.map((x) => `${x.label} ${pc(x.a)}% of outings, ${pc(x.b)}% of climb`).join('; ')}.`} /> : <p className="yis-empty">Only one region this year.</p>,
               }}
-              leftNote={<>Only outings with a GPS start can go on a map, so treadmill sessions aren&rsquo;t here. The disc is Tanzania and the list shows where else I went.</>}
-              rightNote={<>Each row is a region. The grey ring is its share of my outings and the orange dot its share of the climb. The regions where I climbed more than my share are at the top.</>}
+              leftNote={<>Treadmill sessions can&rsquo;t go on a map, so they aren&rsquo;t here. The list shows where else I went besides Tanzania.</>}
+              rightNote={<>Where the orange dot is ahead of the grey ring, I climbed more in that region than my share. Those regions are at the top.</>}
               source="Strava GPS start points · countries and Tanzania regions"
             />
           </>
@@ -565,8 +561,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               ]} />
             ) : <p className="yis-empty">{Y} is where my record starts.</p>,
           }}
-          leftNote={<>One bar per year, for the number of outings. The orange bar is {Y}.</>}
-          rightNote={<>{ps ? `Each pair puts ${Y} next to ${prevYear}, one measure at a time, so you can see the changes above at their real size.` : 'There was no year before this one, so it’s the starting point for everything after it.'}</>}
+          leftNote={<>My outings every year. {Y} is in orange.</>}
+          rightNote={<>{ps ? `${Y} next to ${prevYear}, so you can see the changes above at their real size.` : 'There was no year before this one, so it’s the starting point for everything after it.'}</>}
           source="Activity Log · yearly totals"
         />
 

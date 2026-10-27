@@ -236,8 +236,8 @@ export default function Goals() {
               />
             ),
           }}
-          leftNote={<>Each ring fills up to its share of the target, and a dot marks a ring that closed. On {cur.year}, the white notch shows where the year is today.</>}
-          rightNote={<>A ring on the line is the day I reached a target. The earlier in the year, the bigger the year was. Targets I didn&rsquo;t reach are listed at the end of the row with how far I got.</>}
+          leftNote={<>A full ring means I hit that target. On {cur.year}, the white notch is where the year is today.</>}
+          rightNote={<>The further left a ring sits, the earlier in the year I got there. The ones I missed are at the end of each row, with how far I got.</>}
           source="Activity Log · yearly totals on foot against the three fixed targets"
         />
 
@@ -286,8 +286,8 @@ export default function Goals() {
                   />
                 ),
               }}
-              leftNote={<>Each bar counts how many of the played-out years finished in that 250 m band. The orange bars get past the target, which is the dashed line.</>}
-              rightNote={<>The orange months were above the pace I now need. {curMonths.filter((m) => !m.partial && m.v >= needMonth).length} of the {curMonths.filter((m) => !m.partial).length} full months were. {MONTH[curMonths[curMonths.length - 1].i]}, in grey, isn&rsquo;t over yet.</>}
+              leftNote={<>All the played-out endings to my year. The orange ones get past the target.</>}
+              rightNote={<>The orange months beat the pace I need now. That&rsquo;s {curMonths.filter((m) => !m.partial && m.v >= needMonth).length} of the {curMonths.filter((m) => !m.partial).length} full months. {MONTH[curMonths[curMonths.length - 1].i]} isn&rsquo;t over yet.</>}
               source={`Activity Log · climb on foot each day of ${cur.year}, resampled ${n0(S.finals.length)} times with a fixed seed`}
             />
           </>
@@ -335,8 +335,8 @@ export default function Goals() {
                   />
                 ),
               }}
-              leftNote={<>The line is the course from start to finish, drawn by its height. Each dot runs it at my pace from that year, half a kilometre at a time, and the ticks show where the others were when the fastest one finished.</>}
-              rightNote={<>The solid bar is time moving and the hatched end is time stopped. Of the {n0(first.moving + first.stopped - last.moving - last.stopped)} minutes I saved on the course, {Math.round(((first.stopped - last.stopped) / (first.moving + first.stopped - last.moving - last.stopped)) * 100)}% came from shorter stops.</>}
+              leftNote={<>The course with its hills, and one runner for each year I ran it. When the fastest one finishes, you can see how far back the others still are.</>}
+              rightNote={<>The hatched end of each bar is time I spent stopped. Of the {n0(first.moving + first.stopped - last.moving - last.stopped)} minutes I saved on the course, {Math.round(((first.stopped - last.stopped) / (first.moving + first.stopped - last.moving - last.stopped)) * 100)}% came from shorter stops.</>}
               source="Kilimanjaro Half table and course profile · moving pace per half kilometre, elapsed and moving time per edition"
             />
           </>
@@ -384,7 +384,7 @@ export default function Goals() {
                   />
                 ),
               }}
-              leftNote={<>One stroke per trip, counted in fives the way you&rsquo;d keep a tally by hand, four upright and the fifth across. I ran the orange ones and walked the grey ones.</>}
+              leftNote={<>Fifty trips, kept as a tally the way you&rsquo;d count on paper. I ran the orange ones and walked the grey ones.</>}
               rightNote={<>I kept a steady count for the first three months. Then I did {rkTop.n} trips in {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} and the target was suddenly within reach.</>}
               source="Ras Kilomoni table · every trip with its date, sport and distance"
             />
@@ -431,7 +431,7 @@ export default function Goals() {
               />
             ),
           }}
-          leftNote={<>One string per year and one bead per month, sized by distance on foot. The orange beads are months over 100 km, and an empty ring is a month with no outing.</>}
+          leftNote={<>Every month since my log started, one line a year. The bigger the bead, the further I went that month. The orange ones passed 100 km, and the empty rings are months I didn&rsquo;t go out.</>}
           rightNote={<>{cur.year} has {centCur.n} so far, {centCur.n > centPrev ? 'more than any other year' : centCur.n === centPrev ? `the same as ${list(centByYear.filter((c) => c !== centCur && c.n === centPrev).map((c) => c.year))}` : `compared with ${centPrev} at best before`}. All the empty rings are from before the habit started.</>}
           source="Activity Log · outings and distance on foot in every calendar month"
         />

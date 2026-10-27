@@ -18,7 +18,6 @@
 .book .container { max-width: none; padding-inline: 0; }
 .book .bleed { margin-inline: 0; }
 /* what only works on a screen stays on the site */
-.book .bleed--edges,
 .book .sgrid:has(> .sgrid__head > #explore-title),
 .book .sgrid:has(> .sgrid__head > #sp-each),
 .book .sgrid:has(> .sgrid__head > #wh-places),

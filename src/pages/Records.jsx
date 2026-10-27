@@ -156,8 +156,8 @@ export default function Records() {
             <p className="section-head__sub">The longest outing on foot has stood since {fmtMonth(dNow.date)}.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Every time I go out on foot, I&rsquo;m up against my longest outing so far. My first record was a {k1(dP[0].km)} km {lower(dP[0].mode)} on day one.
-            {firstOver(10) ? ` I reached 10 km on day ${dayOf(firstOver(10).date)},` : ''}
+            Every time I go out on foot, I&rsquo;m up against my longest outing so far. My first record was a {k1(dP[0].km)} km {lower(dP[0].mode)}, the first time I went out on foot.
+            {firstOver(10) ? ` I reached 10 km ${dayOf(firstOver(10).date) === 2 ? 'the next day' : `${dayOf(firstOver(10).date) - 1} days later`},` : ''}
             {firstOver(21.0975) ? ` a half marathon in ${fmtMonth(firstOver(21.0975).date)},` : ''}
             {firstOver(30) ? ` 30 km in ${fmtMonth(firstOver(30).date)}` : ''} and {k1(dNow.km)} km on a {lower(dNow.mode).replace(' run', '')} on {fmtDay(dNow.date)}.
             {nearest ? ` In the ${n0(R.distStanding.outingsSince)} outings since then, the closest I’ve come is ${k1(nearest.km)} km, on ${an(lower(nearest.mode))}.` : ''}
@@ -172,7 +172,7 @@ export default function Records() {
             ]}
           />
           <div className="rst__head">
-            <p className="rst__key">Every outing on foot as a dot, by date and distance. The black line is my record at the time. It stays flat while the record stands and steps up when I break it.</p>
+            <p className="rst__key">Every outing on foot I&rsquo;ve logged. The black line is my longest so far, and it steps up each time I beat it.</p>
             <ul className="fmap__legend" aria-label="Colour key">
               {['tread', 'road', 'trail', 'walk', 'hike'].map((k) => <li key={k}><i className={`msw msw--${k}`} aria-hidden="true" />{MODE_NAME[k]}</li>)}
             </ul>
@@ -225,7 +225,7 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>My ten longest single outings, coloured by sport. Light orange is the treadmill.</>}
+          leftNote={<>My ten longest single outings. The light orange ones were on the treadmill.</>}
           rightNote={<>Here the outings on the same day are added together. Only the marathon got there in one go.</>}
           source="Activity Log · distance of single outings and of whole days on foot"
         />
@@ -270,7 +270,7 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>One dot per outing with any climbing, higher for more metres. The scale is stretched near the bottom so the small climbs can still be seen.</>}
+          leftNote={<>Every outing with some climbing in it. I stretched the bottom of the scale so the small climbs still show.</>}
           rightNote={<>My biggest single climbs and the region each one started in. The top three were hikes and the rest were trail runs.</>}
           source="Activity Log · elevation gain of single outings on foot; start region from Strava GPS"
         />
@@ -314,7 +314,7 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>Weeks run from Monday to Sunday. Each bar is my distance on foot that week, and the biggest week is in orange.</>}
+          leftNote={<>Every week on foot, Monday to Sunday. My biggest is in orange.</>}
           rightNote={<>The months when I climbed the most were hardly ever the months when I went the furthest. The climbing came from trips to the mountains and the distance mostly from the treadmill.</>}
           source="Activity Log · distance and climb on foot by week and by month"
         />
@@ -362,8 +362,8 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>The line adds up my kilometres on foot in order. Each dot is a milestone, with a line down to the date I passed it.</>}
-          rightNote={<>One bar for each Everest of climbing. The first one took years, and the latest took {n0(evLast.days)} days.</>}
+          leftNote={<>My kilometres on foot, added up as I went, with the date I passed each milestone.</>}
+          rightNote={<>How long each Everest of climbing took me. The first one took years, and the latest took {n0(evLast.days)} days.</>}
           source="Activity Log · running totals of distance and climb on foot"
         />
 
@@ -409,8 +409,8 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>All my personal records on foot, counted by year. The biggest year is in orange.</>}
-          rightNote={<>Dividing by the number of outings shows how often I beat my own earlier times. It&rsquo;s higher now than it&rsquo;s ever been.</>}
+          leftNote={<>My personal records on foot, year by year.</>}
+          rightNote={<>The same records per outing. I&rsquo;m beating my old times more often now than ever.</>}
           source="Activity Log · personal records (Strava segment bests) on runs, walks, trail runs and hikes"
         />
 
@@ -454,7 +454,7 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>Each bar is a run of days in a row with at least one outing of any kind. The one that&rsquo;s still going is in orange.</>}
+          leftNote={<>My longest runs of days in a row. The orange one is still going.</>}
           rightNote={<>No single sport keeps my streak going on its own. It lasts because some days are runs, some are walks and some are something else.</>}
           source="Activity Log · consecutive days and weeks with an outing (weeks run Monday to Sunday)"
         />
@@ -500,7 +500,7 @@ export default function Records() {
                   />
                 ),
               }}
-              leftNote={<>My biggest single climb in each region of Tanzania, coloured by sport.</>}
+              leftNote={<>My biggest climb in each region of Tanzania.</>}
               rightNote={<>My big climbs are bunched into a few mountain regions. The rest of the places I go are fairly flat.</>}
               source="Activity Log and Strava GPS start points · Tanzania regions"
             />
@@ -548,7 +548,7 @@ export default function Records() {
               />
             ),
           }}
-          leftNote={<>The bar is how many times a record broke. The ring is how many times it would break, on average, if the same outings were shuffled.</>}
+          leftNote={<>The bars are how often my records actually broke. The rings are what you&rsquo;d expect if the same outings came in a random order.</>}
           rightNote={<>Most of my records only lasted days. Before the current one, the longest-lasting record stood for {n0(stoodPrev.days)} days from {fmtMon(stoodPrev.date)}. The last one, in orange, is still standing.</>}
           source="Activity Log · record counts against the harmonic expectation for a random order"
         />

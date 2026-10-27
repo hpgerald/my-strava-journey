@@ -83,15 +83,6 @@ export default function Home() {
 
   const years = yearsBetween(meta.coverage_start, meta.coverage_end)
 
-  // consecutive calendar months with activity, for the month-streak record below
-  const activeMonthsH = [...new Set(monthlyTotals.map((mm) => mm.month).filter(Boolean))].sort()
-  let monthStreak = 0
-  if (activeMonthsH.length) {
-    const set = new Set(activeMonthsH)
-    let cur = activeMonthsH[activeMonthsH.length - 1]
-    while (set.has(cur)) { monthStreak += 1; let y = +cur.slice(0, 4), mo = +cur.slice(5, 7) - 1; if (mo < 1) { mo = 12; y -= 1 } cur = `${y}-${String(mo).padStart(2, '0')}` }
-  }
-
   // ---- Derived series for the front-page charts ----
   const hours = Array.from({ length: 24 }, () => 0)
   const daySet = new Set()
@@ -374,9 +365,9 @@ export default function Home() {
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
 
           <Reveal as="p" className="hero__statement">
-            Most of my days out are small ones. A usual outing for me is about {Math.round(medFootKm)} km and takes around
-            an hour, a walk or an easy run. It&rsquo;s how often I go that adds up. Over {years || 7} years I&rsquo;ve been out
-            on {pctActiveDays}% of all days, and right now I&rsquo;m on a run of {fmtInt(curStreak)} days in a row.
+            A usual outing for me is about {Math.round(medFootKm)} km and takes around an hour, mostly a walk or an easy run.
+            What adds up is going often. Over {years || 7} years I&rsquo;ve been out on {pctActiveDays}% of all days, and right now I&rsquo;ve gone{' '}
+            {fmtInt(curStreak)} days without missing one.
           </Reveal>
 
           {yearSummaries.length > 0 && (
@@ -424,14 +415,13 @@ export default function Home() {
                 <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} />
               </figure>
               <p className="sgrid__note sgrid__note--chart">
-                The dashed line is a day I went out. Moving right is one more day in a row, and moving left is one more day
-                off. The orange line climbs and levels off near {mDeep}%. The grey line falls quickly, and one day off is
-                already enough to bring it down to {pc(mOneOff.p)}%.
+                The orange line is my chance of going out again after a run of days in a row, and it levels off near {mDeep}%.
+                The grey line is the same after days off. One day off is already enough to bring it down to {pc(mOneOff.p)}%.
               </p>
               <p className="sgrid__note sgrid__note--mx">
-                Each row adds up to 100%. If those two numbers, {mAfter}% after a day out and {pc(momentum.after.p01)}% after
-                a day off, held for good, about {pc(mSteady)}% of my days would be active. Since 2021, {pc(momentum.activeFrac)}% of
-                them have been. Before the habit set in, a day out led to another only {mBefore}% of the time.
+                After a day out I went out again {mAfter}% of the time, and after a day off {pc(momentum.after.p01)}%. If that held
+                for good, about {pc(mSteady)}% of my days would be active, and since 2021 {pc(momentum.activeFrac)}% have been. Before the
+                habit set in, a day out led to another only {mBefore}% of the time.
               </p>
             </div>
             <p className="source">Source: Activity Log &middot; every day marked active or rest, measured since the habit caught in 2021</p>
@@ -447,7 +437,7 @@ export default function Home() {
               <div className="sgrid__head">
                 <p className="eyebrow">Big days and small days</p>
                 <h2 id="work-title" className="section-head__title">The long days carry a&nbsp;lot.</h2>
-                <p className="section-head__sub">My busiest tenth of days carry {pc(work.tenth)}% of the distance.</p>
+                <p className="section-head__sub">My busiest tenth of days carries {pc(work.tenth)}% of the distance.</p>
               </div>
 
               <Reveal as="p" className="sgrid__statement">
@@ -477,16 +467,14 @@ export default function Home() {
                   <DecileBars shares={work.shares} />
                 </figure>
                 <p className="sgrid__note sgrid__note--chart">
-                  My days run left to right from shortest to longest, and the line adds up their distance as it goes. If
-                  every day were the same length, the line would follow the dashed diagonal. The gap between the two is
-                  measured by the Gini coefficient, where 0 means every day was equal and 1 means one day did everything.
-                  Mine is {lorenzData.gini.toFixed(2)}.
+                  My days from shortest to longest, with the distance adding up as it goes. If every day were the same, the line
+                  would follow the dashed diagonal. The Gini number measures the gap, from 0 if every day were equal to 1 if one
+                  day did everything. Mine is {lorenzData.gini.toFixed(2)}.
                 </p>
                 <p className="sgrid__note sgrid__note--mx">
-                  If every day were equal, each tenth would carry 10%. My shortest tenth carries{' '}
-                  {(work.shares[0] * 100).toFixed(1)}% and my longest {(work.shares[9] * 100).toFixed(1)}%. Days of 10 km or
-                  more are {fmtInt(work.bigN)} of the {fmtInt(work.n)}, {work.bigN < work.n / 2 ? 'under half' : `${pc(work.bigN / work.n)}%`}, and they carry {pc(work.bigShare)}% of
-                  the distance. Most of my kilometres come from the longer days, and the short ones fill the gaps in between.
+                  My shortest tenth of days carries {(work.shares[0] * 100).toFixed(1)}% of my distance and my longest tenth{' '}
+                  {(work.shares[9] * 100).toFixed(1)}%. Days of 10 km or more are {fmtInt(work.bigN)} of the {fmtInt(work.n)}, {work.bigN < work.n / 2 ? 'under half' : `${pc(work.bigN / work.n)}%`}, and they carry {pc(work.bigShare)}% of
+                  it. Most of my kilometres come from the longer days, and the short ones fill the gaps.
                 </p>
               </div>
               <p className="source">Source: Activity Log &middot; daily distance on foot (run, walk, trail run, hike), {fmtInt(work.n)} days</p>
@@ -535,10 +523,7 @@ export default function Home() {
                 />
               ),
             }}
-            leftNote={<>
-              Each row is a year. The bar shows the minutes I moved on an average active day, and each block inside it is
-              one average outing. Several short blocks mean I often went out twice. One long block means one long outing.
-            </>}
+            leftNote={<>How long I&rsquo;m out on a typical day, year by year. Lots of short blocks means I often went out twice that day.</>}
             rightNote={<>
               The time I give it each day hasn&rsquo;t moved much since the start. I used to split it into two shorter
               outings, and now I tend to do one longer one.
@@ -585,17 +570,8 @@ export default function Home() {
               node: <PairBars rows={regionRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                 aria={`Tanzania regions, share of outings and share of climb: ${regionRows.map((r) => `${r.label} ${pc(r.a)}% and ${pc(r.b)}%`).join('; ')}.`} />,
             }}
-            leftNote={<>
-              Only outings with a GPS start can go on a map. Treadmill sessions and other indoor ones can&rsquo;t, so{' '}
-              {fmtInt(activityLog.length - locN)} outings aren&rsquo;t in this view. The disc is Tanzania, and the list shows
-              where else I went, with the year I first went out there.
-            </>}
-            rightNote={<>
-              Each row is a region. The grey ring is its share of my outings in Tanzania, the orange dot its share of the
-              climb, and the number on the right is the difference between them.
-              {busiestRegion ? ` ${busiestRegion.region}, where I’m out most days, is fairly flat.` : ''} Most of my metres
-              come from trips to the mountains.
-            </>}
+            leftNote={<>Treadmill sessions and other indoor ones can&rsquo;t go on a map, so {fmtInt(activityLog.length - locN)} outings are missing here. The list shows the other countries and the year I first went out in each.</>}
+            rightNote={<>Where the orange dot is ahead of the grey ring, I climbed more in that region than my share.{busiestRegion ? ` ${busiestRegion.region}, where I’m out most days, is fairly flat.` : ''} Most of my climbing comes from trips to the mountains.</>}
             source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
           />
         )}
@@ -628,10 +604,7 @@ export default function Home() {
               cross={walkLeadIdx} crossLabel={walkLeadYear ? `walks lead from ${walkLeadYear}` : null}
               aria={`Walks and runs per year. ${gridYears.map((y, i) => `${y}: ${walkByYear[i]} walks, ${runByYear[i]} runs`).join('. ')}.`} />,
           }}
-          leftNote={<>
-            Each tile is a sport, sized by how many outings it has. The four sports on foot have their own tiles, and
-            everything else shares one tile marked other.
-          </>}
+          leftNote={<>The bigger the box, the more often I&rsquo;ve done it. Everything that isn&rsquo;t on foot goes in one box, marked other.</>}
           rightNote={<>
             Running was most of what I did in the first years. Once the habit set in, walking took over and it&rsquo;s
             stayed in front. Trail runs are counted on their own, so they aren&rsquo;t part of the run line.
@@ -677,10 +650,7 @@ export default function Home() {
               />
             ),
           }}
-          leftNote={<>
-            Midnight is at the top and the hours go round clockwise. Each spoke is an hour, and the longer and darker it
-            is, the more outings started then. The two bulges are the early morning and the evening.
-          </>}
+          leftNote={<>The day as a clock, with midnight at the top. The two bulges are my early mornings and my evenings.</>}
           rightNote={<>
             {WEEK[weekN.indexOf(weekMax)]} is my busiest day and {WEEK[weekN.indexOf(weekMin)]} my quietest, but there
             isn&rsquo;t much between them. I fit my outings around work, in the morning or the evening, whatever the day.
@@ -733,10 +703,7 @@ export default function Home() {
                 node: <MonthGrid years={gridYears} cells={monthCellsGrid} mark={dipIdx}
                   markLabel={`${MONTH_NAME[dipIdx[0]].slice(0, 3)} and ${MONTH_NAME[dipIdx[1]].slice(0, 3)}`} />,
               }}
-              leftNote={<>
-                Each bar is the share of days in that month when I went out at least once, across the full years. The
-                dashed line is the whole year, and the two lowest months are in orange.
-              </>}
+              leftNote={<>How often I went out in each month of the year, over my full years. The two orange months are the lowest.</>}
               rightNote={<>
                 The dip shows up in {dipYears === fullYears.length ? 'every one' : `${dipYears}`} of the{' '}
                 {fullYears.length === 4 ? 'four' : fullYears.length} full years, with both months below that year&rsquo;s own
@@ -789,10 +756,7 @@ export default function Home() {
                   />
                 ),
               }}
-              leftNote={<>
-                Each year is split into indoor and outdoor sessions, stacked to 100%. Below the orange line is outdoors and
-                above it is indoors. Indoor means Strava marked the session as done on a machine or inside.
-              </>}
+              leftNote={<>Outdoor sessions are below the orange line and indoor ones above it. Indoor is whatever Strava marked as done on a machine or inside.</>}
               rightNote={<>
                 My walks, trail runs and hikes nearly all happen outside. Running is the one I did indoors, so as the indoor
                 share falls, it&rsquo;s mostly my running moving out onto roads and trails.
@@ -843,13 +807,10 @@ export default function Home() {
               />
             ),
           }}
-          leftNote={<>
-            The left column splits all my distance on foot by sport, and the right column splits all my climb. Each band
-            joins a sport&rsquo;s two shares, so running starts thick on the left and ends thin on the right.
-          </>}
+          leftNote={<>My distance on the left and my climbing on the right. Running is most of the distance but only a small part of the climb.</>}
           rightNote={<>
             For every kilometre, a hike climbs {Math.round(mPerKm('Hike'))} m, a trail run {Math.round(mPerKm('TrailRun'))} m,
-            a walk {Math.round(mPerKm('Walk'))} m and a run {mPerKm('Run').toFixed(1)} m. Nearly all my height came slowly,
+            a walk {Math.round(mPerKm('Walk'))} m and a run {mPerKm('Run').toFixed(1)} m. Nearly all my climbing came slowly,
             uphill, at a walking pace or close to it.
           </>}
           source="Activity Log · distance and climb on foot (run, walk, trail run, hike)"
@@ -859,55 +820,6 @@ export default function Home() {
       <Container>
         <FieldNote seed="/home" align="wide" />
       </Container>
-
-      {/* ---- The far edges: greatest-hits teaser into the best pages --- */}
-      <div className="bleed bleed--edges">
-        <Container>
-          <section className="sgrid" aria-labelledby="edges-title">
-          <div className="sgrid__head">
-            <p className="eyebrow">A few highlights</p>
-            <h2 id="edges-title" className="section-head__title">Four that stand&nbsp;out.</h2>
-          </div>
-          <Reveal as="p" className="sgrid__statement">
-            These four stand out from everything else in the seven years. Each one has its own story on the Goals page.
-          </Reveal>
-          <ul className="edges">
-            <li><Link className="edgecard" to="/goals#marathon">
-              <span className="edgecard__stat">2:56:44</span>
-              <span className="edgecard__lbl">My only full marathon, in under three hours</span>
-              <span className="edgecard__foot">
-                <span className="edgecard__when mono">May 2022</span>
-                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
-              </span>
-            </Link></li>
-            <li><Link className="edgecard" to="/goals#kili-half">
-              <span className="edgecard__stat">4<span className="edgecard__unit">years</span></span>
-              <span className="edgecard__lbl">The Kilimanjaro Half, faster each time I ran it</span>
-              <span className="edgecard__foot">
-                <span className="edgecard__when mono">2023&ndash;2026</span>
-                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
-              </span>
-            </Link></li>
-            <li><Link className="edgecard" to="/goals#stage-race">
-              <span className="edgecard__stat">100<span className="edgecard__unit">km</span></span>
-              <span className="edgecard__lbl">A stage race over four evenings in a row</span>
-              <span className="edgecard__foot">
-                <span className="edgecard__when mono">Mar 2023</span>
-                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
-              </span>
-            </Link></li>
-            <li><Link className="edgecard" to="/goals#month-streak">
-              <span className="edgecard__stat">{monthStreak}<span className="edgecard__unit">months</span></span>
-              <span className="edgecard__lbl">Out at least once every month, and still going</span>
-              <span className="edgecard__foot">
-                <span className="edgecard__when mono">since Jun 2021</span>
-                <span className="edgecard__arrow mono" aria-hidden="true">&rarr;</span>
-              </span>
-            </Link></li>
-          </ul>
-          </section>
-        </Container>
-      </div>
 
       {/* ---- The quiet close, then the full index -------------------- */}
       <Container>
