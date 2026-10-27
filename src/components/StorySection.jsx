@@ -30,8 +30,8 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
           <figcaption className="sgrid__figtitle">{right.title}</figcaption>
           <div className="sgrid__chart">{right.node}</div>
         </figure>
-        <p className="sgrid__note sgrid__note--chart">{leftNote}</p>
-        <p className="sgrid__note sgrid__note--mx">{rightNote}</p>
+        {leftNote ? <p className="sgrid__note sgrid__note--chart">{leftNote}</p> : null}
+        {rightNote ? <p className="sgrid__note sgrid__note--mx">{rightNote}</p> : null}
       </div>
 
       {children}

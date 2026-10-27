@@ -142,7 +142,7 @@ nav=[
  ["05","Where","Five countries. Seventeen regions.","/where","geography","authored"],
  ["06","Timeline","From my first upload to now","/timeline","timeline","authored"],
  ["07","Goals","What I aim for each year","/goals","dashboard","authored"],
- ["08","What It Means","What I\u2019ve learned from it","/what-it-means","personas","authored"],
+ ["08","What It Means","What I have learned from it","/what-it-means","personas","authored"],
  ["09","My Book","The whole story, as a book","/book","book","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)

@@ -46,34 +46,32 @@ export default function About() {
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
             <p>
-              It covers {count(meta.total_activities)} activities from {day(meta.coverage_start)}{' '}
-              to {day(meta.coverage_end)}. Most of them are runs, walks, trail runs and hikes, and the rest I just call
-              other activities. Nearly all of it happened in Tanzania, with a few trips across the border. I update it
-              every week with my new activities.
+              This site covers {count(meta.total_activities)} activities from {day(meta.coverage_start)}{' '}
+              to {day(meta.coverage_end)}. Most are runs, walks, trail runs and hikes, and the rest I call other
+              activities. Nearly all of it happened here in Tanzania, with a few trips across the border. I add my new
+              activities every week.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
               A habit, counted over time
             </h2>
             <p>
-              The numbers follow a habit as it grows. A streak keeps counting until the day it breaks, and this
-              year&rsquo;s totals are for a year that isn&rsquo;t over yet. It&rsquo;s a record of showing up, more than
-              anything else.
+              I am not a professional athlete. This is just my own record of showing up. The streak keeps counting until
+              the day it breaks, and this year&rsquo;s totals are for a year that is not finished.
             </p>
 
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)', marginTop: 'var(--sp-4)' }}>
-              What counts, and what doesn&rsquo;t
+              What counts
             </h2>
             <p>
-              The figures are as logged on Strava. I made one choice that runs through the whole site: distance and
-              climb only count my sports on foot, which are running, walking, trail running and hiking. Everything else
-              still counts as an outing, and towards my hours and kudos, but its kilometres and climbing are left out,
-              because this is about what I do on foot. Countries and regions come from each activity&rsquo;s GPS start
-              point, so they can be a little off near a border. There&rsquo;s more on how it&rsquo;s put together on the{' '}
+              The numbers are as logged on Strava. Distance and climb count only my sports on foot: running, walking,
+              trail running and hiking. Everything else still counts as an outing, and in my hours and kudos, but not in
+              distance or climb. Countries and regions come from where each activity started, so they can be a little off
+              near a border. There is more on the{' '}
               <Link to="/data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
                 data page
               </Link>
-              . It&rsquo;s a personal record, kept out of interest. It isn&rsquo;t coaching, medical or training advice.
+              . This is a personal record. It is not coaching, medical or training advice.
             </p>
 
             <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-4)' }}>
@@ -109,7 +107,7 @@ export default function About() {
               Get in touch
             </h2>
             <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-3)', maxWidth: '28rem' }}>
-              I&rsquo;m Gerald. You can follow my training on Strava, or get in touch any time.
+              I am Gerald. You can follow my training on Strava, or get in touch any time. <i lang="sw">Karibu</i>, you are welcome.
             </p>
           </div>
 

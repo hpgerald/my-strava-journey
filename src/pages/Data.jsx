@@ -82,7 +82,7 @@ export default function Data() {
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Data' }]}
       title="The data"
       subtitle="The tables behind the site"
-      lede="Everything on the site comes from the tables below. Here&rsquo;s what each one holds and how it was put together. It&rsquo;s my own activity data, so I&rsquo;ve listed it here rather than offering it as a download."
+      lede="Everything on this site comes from the tables below. It is my own activity data, so I list it here and do not offer it as a download."
     >
       {GROUPS.map((g) => (
         <section key={g.title} style={{ paddingTop: 'var(--sp-6)' }}>
@@ -119,8 +119,8 @@ export default function Data() {
             and exact locations are removed before anything is published.
           </p>
           <p>
-            I never make numbers up. If a value wasn&rsquo;t available, I left it blank. The country and region totals
-            cover the {gpsCount.toLocaleString()} activities with GPS, because indoor sessions don&rsquo;t have any. The maps
+            I did not make up any number. If a value was not available, I left it blank. The country and region totals
+            cover the {gpsCount.toLocaleString()} activities with GPS, because indoor sessions do not have any. The maps
             are close but not exact, especially near borders.
           </p>
         </div>

@@ -19,7 +19,7 @@ import { buildBookFacts } from '../lib/bookFacts.js'
 // epilogue and a note on the data. The same page prints to an A4 book; a PDF of
 // it is rendered at deploy time and offered for download.
 export const BOOK_TITLE = 'Showing Up'
-export const BOOK_SUB = 'Seven years on foot, told by my own data'
+export const BOOK_SUB = 'Seven years on foot, from my own log'
 export const PDF_PATH = 'book/showing-up-gerald-tesha.pdf'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -184,7 +184,7 @@ function TitlePage({ F }) {
       <div className="bk-imprint">
         <p>This edition covers every activity I logged on Strava from {fmtDay(F.firstISO)} to {fmtDay(F.lastISO)}: {n0(F.n)} of them.</p>
         <p>Every number in this book comes from that log, and every chart is drawn from it. Distance and climb only count my four sports on foot: runs, walks, trail runs and hikes. I took out activity names and exact locations before publishing.</p>
-        <p>The book is my website, My Strava Journey, put together as one volume. The site redraws everything from the data each time it&rsquo;s opened, and I print a new PDF whenever the data is refreshed, so each edition matches the site on the day it was made.</p>
+        <p>The book is my website, My Strava Journey, put together as one volume. I print a new edition each time the data is refreshed.</p>
         <p>Annex A explains how I made it, and my contact details are on the page before the back cover.</p>
       </div>
     </section>
@@ -225,16 +225,15 @@ function Prologue({ F }) {
         Then I stopped for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
       </p>
       <p>
-        When I started again, I didn&rsquo;t stop. Since {fmtMonth(F.habitISO)} I&rsquo;ve been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest break has been {word(F.maxAfter)} days.
-        As I finish this edition, I&rsquo;m on {n0(F.streak)} days in a row.
+        When I started again, I did not stop. Since {fmtMonth(F.habitISO)} I have been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest break has been {word(F.maxAfter)} days.
+        As I finish this edition, I am on {n0(F.streak)} days in a row.
       </p>
       <p>
-        This book is me going back through that record. It&rsquo;s made from {n0(F.n)} activities and nothing else: {n0(F.footKm)} km on foot, {n0(F.footElev)} metres of climbing and {n0(F.hours)} hours on the move, in {F.countries} countries and {F.regions} regions of Tanzania.
-        Every number comes from my Strava log. When the log can&rsquo;t tell me why something happened, I say so rather than guess.
+        This book is me going back through that record. It is made from {n0(F.n)} activities and nothing else. Every number comes from my Strava log, and when the log cannot tell me why something happened, I say so and I do not guess.
       </p>
       <p>
-        There are five parts. The first looks at the habit as a whole, and the second goes through it year by year. The third is about my sports, my records and the places I went.
-        The fourth has the timeline and my goals, and the last part is what I think it all means.
+        There are five parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, and last, what I think it all means.
+        To everyone who gave me kudos along the way, <i lang="sw">asanteni sana</i>, thank you very much.
       </p>
     </section>
   )
@@ -272,13 +271,13 @@ function Epilogue({ F }) {
     <section className="bk-page bk-prose" id="bk-epilogue" aria-labelledby="bk-epi-t">
       <h2 id="bk-epi-t" className="bk-head">Epilogue</h2>
       <p className="bk-lead">
-        The last activity in this edition is from {fmtDay(F.lastISO)}. I&rsquo;m on {n0(F.streak)} days in a row, and the habit that started in {F.habitISO.slice(0, 4)} has now lasted {n0(F.habitDays)} days.
+        The last activity in this edition is from {fmtDay(F.lastISO)}. I am on {n0(F.streak)} days in a row, and the habit that started in {F.habitISO.slice(0, 4)} has now lasted {n0(F.habitDays)} days.
       </p>
       <p>
-        None of the totals in this book came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, fitted in early in the morning or in the evening on days like any other.
-        The log will keep growing after this edition, and the next one will have the new numbers.
+        None of these totals came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, early in the morning or in the evening, on days like any other.
+        The log will keep growing, and the next edition will have the new numbers.
       </p>
-      <p>I&rsquo;ll be out tomorrow.</p>
+      <p>I will be out tomorrow.</p>
       <p className="bk-sign">Gerald Tesha</p>
     </section>
   )
@@ -312,7 +311,7 @@ function HowMade({ F }) {
       <p className="bk-annex">Annex A</p>
       <h2 id="bk-made-t" className="bk-head">How this book was made</h2>
       <p className="bk-lead">
-        This book started as a website, My Strava Journey, where I laid out my Strava history so anyone could read it. None of the figures are typed in by hand. They&rsquo;re all worked out from my activity log, which I refresh every week.
+        This book started as a website, My Strava Journey, where I laid out my Strava history so anyone could read it. None of the figures are typed in by hand. They are all worked out from my activity log, which I refresh every week.
       </p>
       <div className="bk-made__cols">
         <div className="bk-prose">
@@ -355,8 +354,8 @@ function Contact() {
       <p className="bk-annex">The author</p>
       <h2 id="bk-contact-t" className="bk-contact__t">Get in touch.</h2>
       <p className="bk-lead">
-        I&rsquo;m Gerald Tesha. I work in monitoring, evaluation and data, and this book is what I did with my own numbers.
-        If you&rsquo;d like something like this made from your own data, want to work together, or want to feature this story, I&rsquo;d be happy to hear from you.
+        I am Gerald Tesha. I work in monitoring, evaluation and data, and this book is what I did with my own numbers.
+        If you would like something like this made from your own data, or would like to work together, I will be happy to hear from you.
       </p>
       <dl className="bk-contact__list">
         {CONTACTS.map(([k, v, href]) => (
@@ -377,7 +376,7 @@ function Notes({ glossary }) {
         <div>
           <h3>Where the numbers come from</h3>
           <p>Every activity comes from my Strava export: the date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and personal records. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
-          <p>Distance and climb only count the four sports on foot: runs, walks, trail runs and hikes. Everything else counts as other activities. Those still count as outings and days out, but they add no distance or climb, and I don&rsquo;t name them.</p>
+          <p>Distance and climb only count the four sports on foot: runs, walks, trail runs and hikes. Everything else counts as other activities. Those still count as outings and days out, but they add no distance or climb, and I do not name them.</p>
           <p>A treadmill run is one that Strava marks as done indoors. Those have no GPS, so they never show up on a map and set almost no segment records.</p>
         </div>
         <dl className="bk-gloss">
@@ -421,7 +420,7 @@ export default function Book() {
     number: '09',
     title: 'My Book',
     subtitle: 'The whole story, as a book',
-    lede: 'Everything on this site put together as one book, seven years on foot told from my own data, in five parts, from my first upload to today. You can read it here or download it as a PDF.',
+    lede: 'Everything on this site put together as one book. You can read it here or download it as a PDF.',
     prev,
     next,
   }
@@ -447,7 +446,7 @@ export default function Book() {
           <PartOpener p={PARTS[0]} />
           <section className="bk-ch" id="bk-ch-01" aria-labelledby="bk-ch-01-t">
             <div className="container">
-              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" lede="The whole habit at once: how the streak keeps going, how my distance is spread over my days, how my days are shaped, and six more things I found in the data." />
+              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" lede="The whole habit at once." />
             </div>
             <Home />
           </section>
@@ -455,7 +454,7 @@ export default function Book() {
           <PartOpener p={PARTS[1]} />
           <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">
             <div className="container">
-              <Opener number="02" title="Year in Sport" subtitle="One year at a time" lede={`Each year from ${years[0]} to ${years[years.length - 1]} on its own: the months, the sports, the time of day, the days out, a typical outing, the biggest days and where I went.`} />
+              <Opener number="02" title="Year in Sport" subtitle="One year at a time" lede={`Each year on its own, from ${years[0]} to ${years[years.length - 1]}.`} />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">

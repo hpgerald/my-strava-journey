@@ -110,7 +110,7 @@ export default function Where() {
   return (
     <DetailFrame
       {...frame}
-      lede="Where I went out. Five countries and seventeen regions of Tanzania on the map, and what I did in each: the distance at home, the climbing in the mountains, the trips across the border, how my home base moved over the years, and the outings that never went outside."
+      lede="Where I went out: five countries, and seventeen regions here at home in Tanzania."
     >
       <div className="yis-report">
         {/* ===== Africa ===== */}
@@ -118,11 +118,11 @@ export default function Where() {
           <div className="sgrid__head">
             <p className="eyebrow">Across Africa</p>
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
-            <p className="section-head__sub">Counting every outing that has a GPS start point.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            {n0(P.located)} of my {n0(P.n)} outings have a GPS start. The other {n0(P.indoor)} were indoors, most of them on a treadmill. Of the ones I can place,
-            {' '}{n0(tzC.n)} began in Tanzania. The rest were in {andList(awayNamed.map((c) => `${c.country} (${c.n})`))}{P.othersN ? `, plus ${P.othersN} that I count as others` : ''}.
+            Most of my outings never left home. Of the {n0(P.located)} I can put on a map, {n0(tzC.n)} were in Tanzania. The
+            rest were short trips to {andList(awayNamed.map((c) => c.country))}{P.othersN ? `, plus ${word(P.othersN)} that I count as others` : ''}.
+            The other {n0(P.indoor)} outings were indoors, so they have no place on the map.
           </Reveal>
           <OddsRow
             title="The outings by place"
@@ -168,12 +168,12 @@ export default function Where() {
           <div className="sgrid__head">
             <p className="eyebrow">{num()} · Tanzania</p>
             <h2 id="wh-tz" className="section-head__title">{R.length} regions of&nbsp;Tanzania.</h2>
-            <p className="section-head__sub">Three of them hold {pc(top3Share)}% of my outings.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Of my {n0(P.tzTot.n)} outings in Tanzania, {andList(top3.map((r) => `${n0(r.n)} were in ${r.region}`))}. {home.region} is where I&rsquo;ve had the most outings and the most days out ({n0(home.days)}),
-            and {n0(home.km)} km on foot. {reg('Kilimanjaro').n ? `Kilimanjaro has ${pc(reg('Kilimanjaro').elev / P.tzTot.elev)}% of all my climbing in Tanzania, ` : ''}
-            {reg('Morogoro').n ? `and Morogoro ${pc(reg('Morogoro').elev / P.tzTot.elev)}%. ` : ''}The other {word(R.length - 4)} regions together have {pc(R.slice(4).reduce((s, r) => s + r.n, 0) / P.tzTot.n)}% of my outings.
+            Inside Tanzania, three places carry most of it: {andList(top3.map((r) => r.region))}, with {pc(top3Share)}% of my
+            outings between them. {home.region} is where I have spent the most days out, {n0(home.days)} of them.
+            {reg('Kilimanjaro').n && reg('Morogoro').n ? ` For climbing it is Kilimanjaro and Morogoro, with ${pc(reg('Kilimanjaro').elev / P.tzTot.elev)}% and ${pc(reg('Morogoro').elev / P.tzTot.elev)}% of my climbing in Tanzania.` : ''}
+            {' '}The other {word(R.length - 4)} regions together have {pc(R.slice(4).reduce((s, r) => s + r.n, 0) / P.tzTot.n)}% of my outings.
           </Reveal>
           <OddsRow
             title="Inside Tanzania"
@@ -211,8 +211,7 @@ export default function Where() {
                 />
               </div>
             </figure>
-            <p className="sgrid__note sgrid__note--chart">Pick a measure above the map, or hover over a region to see all four. The pale grey regions are the ones I haven&rsquo;t been out in yet.</p>
-            <p className="sgrid__note sgrid__note--mx">My ten busiest regions by outings and by distance. The order hardly changes, and the same three places are at the top of both.</p>
+            <p className="sgrid__note sgrid__note--chart">The pale grey regions on the map are the ones I have not been out in yet.</p>
           </div>
           <p className="source">Source: Activity Log and Strava GPS start points · Natural Earth region outlines</p>
         </section>
@@ -223,11 +222,10 @@ export default function Where() {
           id="wh-steep"
           eyebrow={`${num()} · Flat at home, hilly away`}
           title={`The climbing is in ${word(steep.length)} regions.`}
-          sub={`${andList(steep.map((r) => r.region))} have ${pc(steepN)}% of my outings and ${pc(steepE)}% of my climbing.`}
           statement={<>
-            Across Tanzania I climbed {k1(tzMpk)} m for every kilometre on foot. In {home.region} it was {k1(home.mpk)} m and in Dar es Salaam {k1(reg('Dar es Salaam').mpk)} m, so the
-            places where I go out most are also the flattest. {andList(steep.map((r, i) => `${i ? 'in' : 'In'} ${r.region} I climbed ${n0(r.mpk)} m per km`))}, and
-            {' '}{steep.reduce((s, r) => s + r.trail, 0)} of my trail runs and hikes started there.
+            The places where I go out most are flat. In {home.region} I climbed about {k1(home.mpk)} m for every kilometre, and
+            in Dar es Salaam {k1(reg('Dar es Salaam').mpk)} m. {andList(steep.map((r, i) => `${i ? 'in' : 'In'} ${r.region} it was ${n0(r.mpk)} m`))}.
+            {' '}That is where {steep.reduce((s, r) => s + r.trail, 0)} of my trail runs and hikes started.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -251,8 +249,8 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>Where the orange dot is ahead of the grey ring, I climbed more in that region than my share. Those regions are at the top.</>}
-          rightNote={<>How hilly each region is for me. Past the dashed line, it&rsquo;s hillier than my average in Tanzania.</>}
+          leftNote={<>Where the orange dot is ahead of the grey ring, the region gave me more climbing than its share.</>}
+          rightNote={<>Past the dashed line, it is hillier than my average in Tanzania.</>}
           source="Activity Log and Strava GPS start points · climb and distance on foot"
         />
 
@@ -262,11 +260,9 @@ export default function Where() {
           id="wh-home"
           eyebrow={`${num()} · The busiest region, year by year`}
           title={`${runOf.region} led for ${word(Number(runOf.to) - Number(runOf.from) + 1)} ${Number(runOf.to) === Number(runOf.from) ? 'year' : 'years'}.`}
-          sub={runOf.after.length ? `Every year from ${runOf.from} to ${runOf.to}, and then it changed.` : `Every year since ${runOf.from}.`}
           statement={<>
-            The region where I went out most each year: {leaders.map((l) => `${l.year} ${l.region} (${l.n} of ${l.of})`).join(', ')}.
-            {' '}In {lastYear}{so} it&rsquo;s {leaders[leaders.length - 1].region}, with {pc(leaders[leaders.length - 1].n / leaders[leaders.length - 1].of)}% of my outings in Tanzania.
-            The number of regions I went out in changed too, from {P.byYear.find((y) => y.year === 2021)?.regionsN} in 2021 to {Math.max(...P.byYear.map((y) => y.regionsN))} in my widest years.
+            My home base has moved over the years.{' '}
+            {(() => { const runs = []; for (const l of leaders) { const last = runs[runs.length - 1]; if (last && last.region === l.region) last.to = l.year; else runs.push({ region: l.region, from: l.year, to: l.year }) } return runs.map((x, i) => `${x.from === x.to ? `In ${x.from}` : `From ${x.from} to ${x.to}`} ${i === 0 ? 'I went out most in' : 'it was'} ${x.region}`).join('. ') + '.' })()}
           </>}
           odds={{
             title: 'The lead, year by year',
@@ -293,8 +289,8 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>My outings in Tanzania each year, by region. The four busiest have their own colour.</>}
-          rightNote={<>How many regions I went out in each year. The years with the most are in orange.</>}
+          leftNote={<>The four busiest regions have their own colour.</>}
+          rightNote={<>The years with the most regions are in orange.</>}
           source="Activity Log and Strava GPS start points · outings in Tanzania by region and year"
         />
 
@@ -304,10 +300,9 @@ export default function Where() {
           id="wh-grow"
           eyebrow={`${num()} · New places`}
           title={`${disc.length} regions in ${lastYear - Number(disc[0].date.slice(0, 4))} years.`}
-          sub={`${cap(word(newLast.n))} ${newLast.n === 1 ? 'was' : 'were'} new in ${lastYear}.`}
           statement={<>
-            {newBy.filter((y) => y.n).map((y) => `In ${y.year} I added ${andList(y.names)}`).join('. ')}.
-            {' '}{cap(word(30 - disc.length))} of Tanzania’s 30 regions are still empty on my map.
+            New regions came when I travelled. {newBy.filter((y) => y.n).map((y) => `In ${y.year} I added ${andList(y.names)}`).join('. ')}.
+            {' '}{cap(word(30 - disc.length))} of Tanzania&rsquo;s 30 regions are still empty on my map, so there is still a lot to see.
           </>}
           odds={{
             title: 'New regions',
@@ -338,7 +333,6 @@ export default function Where() {
             ),
           }}
           leftNote={<>The line steps up each time I go out in a new region.</>}
-          rightNote={<>New regions come in bunches, when I travel. {lastYear}{so} has added {word(newLast.n)}.</>}
           source="Activity Log and Strava GPS start points · first outing in each region"
         />
 
@@ -348,12 +342,12 @@ export default function Where() {
           id="wh-abroad"
           eyebrow={`${num()} · Across the border`}
           title={`${n0(P.abroadN)} outings outside Tanzania.`}
-          sub={`${AB[0].country} has ${AB[0].n} of them.`}
           statement={<>
-            {kenya ? `My first outing outside Tanzania was in Kenya, in ${fmtMonth(kenya.first)}. My first one there on foot came in ${fmtMonth(P.abroadFirstFoot.Kenya)}, and my latest in ${fmtMonth(kenya.last)}. ` : ''}
-            {malawi ? `In Malawi I logged ${malawi.n} outings over ${malawi.days} days between ${fmtMon(malawi.first)} and ${fmtMon(malawi.last)}. ` : ''}
-            {sa ? `In South Africa I logged ${sa.n} in ${sa.days} days and set ${sa.prs} personal records. ` : ''}
-            {P.othersN ? `The other ${word(P.othersN)} I count as others.` : ''}
+            My trips outside Tanzania were short.
+            {kenya ? ` My first outing abroad was in Kenya, in ${fmtMonth(kenya.first)}, and I have been back a few times since.` : ''}
+            {malawi ? ` In Malawi I logged ${malawi.n} outings over ${malawi.days} days, between ${fmtMon(malawi.first)} and ${fmtMon(malawi.last)}.` : ''}
+            {sa ? ` In South Africa I had ${sa.n} outings in ${sa.days} days.` : ''}
+            {P.othersN ? ` The other ${word(P.othersN)} I count as others.` : ''}
           </>}
           odds={{
             title: 'Outside Tanzania',
@@ -382,8 +376,6 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>My outings outside Tanzania, by country.</>}
-          rightNote={<>My trips across the border were short. The most days I went out in any one country was {Math.max(...awayNamed.map((c) => c.days))}, in {awayNamed.reduce((b, c) => (c.days > b.days ? c : b), awayNamed[0]).country}.</>}
           source="Activity Log and Strava GPS start points · outings outside Tanzania"
         />
 
@@ -393,10 +385,10 @@ export default function Where() {
           id="wh-indoor"
           eyebrow={`${num()} · Indoors`}
           title="Fewer outings without GPS."
-          sub={`My outings with no GPS start fell from ${pc(iFirst.share)}% in ${iFirst.year} to ${pc(iLast.share)}% in ${iLast.year}.`}
           statement={<>
-            {n0(P.indoor)} of my outings have no start point because they were indoors. {n0(P.indoorBy.tread)} of them were runs on the treadmill.
-            {' '}In {iFirst.year} they made up {pc(iFirst.share)}% of the year{iy.every((y, i) => !i || y.share <= iy[i - 1].share + 0.005) ? ', and no year since has had a bigger share' : ''}. {iLast.year}{so} is down to {pc(iLast.share)}%.
+            {n0(P.indoor)} of my outings were indoors, most of them treadmill runs, so they have no start point. In{' '}
+            {iFirst.year} they were {pc(iFirst.share)}% of the year. As I moved outside the share came down, and in{' '}
+            {iLast.year}{so} it is {pc(iLast.share)}%.
           </>}
           odds={{
             title: 'Outings with no GPS start',
@@ -430,7 +422,6 @@ export default function Where() {
               />
             ),
           }}
-          leftNote={<>The share of each year&rsquo;s outings with no GPS start, so they can&rsquo;t go on the map.</>}
           rightNote={<>The maps above only show outings that went outside, so most of my treadmill years are missing from them.</>}
           source="Activity Log · outings without a GPS start point"
         />
@@ -439,14 +430,13 @@ export default function Where() {
         <hr className="rule rule--faint" />
         <StorySection
           id="wh-maths"
-          eyebrow={`${num()} · The maths of place`}
+          eyebrow={`${num()} · How spread out`}
           title="How widely they spread."
-          sub={`In ${effBest.year} my outings were spread like ${k1(effBest.effective)} equal regions, and in ${effLow.year} like ${k1(effLow.effective)}.`}
           statement={<>
-            I wanted one number for how spread out my outings were, so I used the effective number of regions. It asks how many equally busy regions would give the same spread,
-            and it&rsquo;s one divided by the sum of each region&rsquo;s squared share of my outings. Seventeen regions with one doing almost everything count as close to one. Four regions with a quarter each count as four.
-            My narrowest year since the habit started was {effLow.year}, at {k1(effLow.effective)}, when {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings. The widest was {effBest.year}, at {k1(effBest.effective)}.
-            Over the whole record my outings are spread like {k1(P.lifeEffective)} regions, and the busiest three have {pc(top3Share)}% of them.
+            I wanted one number for how spread out my outings were across Tanzania. I used the effective number of regions.
+            If a year counts as four, it is as if my outings were shared equally between four regions. My narrowest year was{' '}
+            {effLow.year}, about {k1(effLow.effective)}, when {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my
+            outings. The widest was {effBest.year}, about {k1(effBest.effective)}.
           </>}
           odds={{
             title: 'How the outings spread',
@@ -478,7 +468,6 @@ export default function Where() {
             ),
           }}
           leftNote={<>How spread out each year was across regions. I left out years with fewer than 50 outings in Tanzania.</>}
-          rightNote={<>The other side of it. This is how much of each year came from its three busiest regions.</>}
           source="Activity Log and Strava GPS start points · inverse Simpson index of outings by region"
         />
 

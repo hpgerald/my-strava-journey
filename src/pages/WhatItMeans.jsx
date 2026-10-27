@@ -38,7 +38,7 @@ export default function WhatItMeans() {
   const { prev, next } = useSectionPaging('/what-it-means')
   const M = useMemo(() => (activities.length ? buildMeaningReport(activities) : null), [activities])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'What It Means' }], number: '08', title: 'What It Means', subtitle: 'What I’ve learned from it', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'What It Means' }], number: '08', title: 'What It Means', subtitle: 'What I have learned from it', prev, next }
   if (!M) return <DetailFrame {...frame} />
 
   let secN = 0
@@ -87,7 +87,7 @@ export default function WhatItMeans() {
   return (
     <DetailFrame
       {...frame}
-      lede="What seven years of logging have taught me, in my own words, with the numbers behind each point: how much time it takes, why I count days more than kilometres, the small days, keeping a floor under my weeks, how the long days come, and what makes a year add up."
+      lede="What seven years of logging have taught me. I am not an expert. These are only my own lessons, from my own numbers."
     >
       <div className="yis-report">
         {/* ===== the cost ===== */}
@@ -95,13 +95,11 @@ export default function WhatItMeans() {
           <div className="sgrid__head">
             <p className="eyebrow">Seven years, read back</p>
             <h2 id="wm-title" className="section-head__title">{n0(habitPerDay)} minutes a&nbsp;day.</h2>
-            <p className="section-head__sub">That&rsquo;s what this has taken since {habitYear}. This year it&rsquo;s {n0(cur.minPerDay)}.</p>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            If you asked me what all this costs, I&rsquo;d say time. Since the habit started in {habitYear} I&rsquo;ve spent {n0(habitPerDay)} minutes a day on the move, and that&rsquo;s counting the rest days too.
-            If I add up every outing since my first upload, it comes to {n0(hours)} hours, which is {n0(hours / 24)} days and nights without stopping.
-            This year it went up to {n0(cur.minPerDay)} minutes a day, and I&rsquo;ve been out on {cur.days === cur.ndays ? `every one of the ${n0(cur.ndays)} days so far` : `${n0(cur.days)} of the ${n0(cur.ndays)} days so far`}.
-            The rest of this page is what I think all that time has taught me.
+            If you ask me what this has cost, I will say time. Since {habitYear} I have given it about {n0(habitPerDay)} minutes a
+            day, counting the rest days too. All together it is {n0(hours)} hours since my first upload, about {n0(hours / 24)} days
+            and nights. This year it is {n0(cur.minPerDay)} minutes a day. These are the lessons I took from that time.
           </Reveal>
           <OddsRow
             title="What it cost"
@@ -109,7 +107,7 @@ export default function WhatItMeans() {
               { num: hours, unit: ' hours', label: 'on the move since the first upload', tone: 'move' },
               { num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
               { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, rest days included`, tone: 'move' },
-              { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}, the most yet`, tone: 'move' },
+              { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}`, tone: 'move' },
             ]}
           />
           <DayClocks
@@ -128,11 +126,11 @@ export default function WhatItMeans() {
           id="wm-days"
           eyebrow={`${num()} · Count the days`}
           title="Keep the days."
-          sub={`In my slowest year my distance fell by ${pc(kmDrop)}%, but my days out only fell by ${pc(dayDrop)}%.`}
           statement={<>
-            {peak.year} was my biggest year for distance, {n0(peak.km)} km on foot over {n0(peak.days)} days. By {low.year} I was down to {n0(low.km)} km.
-            The long days went first. I had {n0(peak.long)} days of {LONG_KM} km or more in {peak.year} and {word(low.long)} in {low.year}. My days out hardly changed, from {n0(peak.days)} to {n0(low.days)}.
-            If I could only keep one thing, I&rsquo;d keep the days. When the distance came back in {cur.year}, it had something to build on: {n0(cur.km)} km so far, with an outing on {cur.days === cur.ndays ? `all ${n0(cur.ndays)} days` : `${n0(cur.days)} of ${n0(cur.ndays)} days`}.
+            {peak.year} was my biggest year for distance, {n0(peak.km)} km. By {low.year} I was down to {n0(low.km)} km. The long
+            days were the first to go, from {n0(peak.long)} to {word(low.long)}. But my days out hardly changed, {n0(peak.days)} to{' '}
+            {n0(low.days)}. If I could keep only one thing, I would keep the days. When the distance came back in {cur.year}, the
+            days were already there to build on.
           </>}
           odds={{
             title: `${peak.year} against ${low.year}`,
@@ -163,8 +161,7 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>Both lines start level in {peak.year}. The black line is how often I went out and the orange one is how far. The shaded gap is how far the distance fell behind.</>}
-          rightNote={<>Most of my distance comes from the long days. They fell from {longTop.long} in {longTop.year} to {low.long} in {low.year}, and {cur.year} is back up to {cur.long}.</>}
+          leftNote={<>Both lines start level in {peak.year}. The black line is how often I went out, the orange one how far.</>}
           source="Activity Log · days with any activity, and distance on foot, per calendar year"
         />
 
@@ -174,11 +171,12 @@ export default function WhatItMeans() {
           id="wm-small"
           eyebrow={`${num()} · Do the small version`}
           title="The small days count."
-          sub={`About one day out in ${word(Math.round(1 / smallShare))} was hardly anything, and those days kept me going.`}
           statement={<>
-            Since {habitYear} I&rsquo;ve had {n0(M.habitActive)} days out, and on {n0(M.smallDays)} of them I covered less than {SMALL_KM} km on foot. {K.foot || 0} of those were short walks or runs, and the other {(K.other || 0)} were other activities.
-            Together they add up to {n0(M.smallKm)} km, less than 1% of my distance, and I&rsquo;m fine with that. They&rsquo;re for the days I&rsquo;d otherwise skip, and they help the next day too.
-            After one of those small days I went out again {pc(M.smallNextActive)}% of the time. After a full rest day it was {pc(M.restNextActive)}%. I had the most of them in {smallTop.year}, {smallTop.small}, which was also my lowest year for distance. On a bad day I just do a small version.
+            <i lang="sw">Haba na haba hujaza kibaba</i>, little by little fills the measure. Many of my days were small ones, less
+            than {SMALL_KM} km on foot, {n0(M.smallDays)} of them since {habitYear}. They add almost nothing to my distance, but I
+            logged them all the same. Later the numbers showed me why they matter. After a small day, I went out again the next
+            day {pc(M.smallNextActive)}% of the time. After a full rest day, it was only {pc(M.restNextActive)}%. On a bad day, I
+            try to do a small version.
           </>}
           odds={{
             title: `Small days since ${habitYear}`,
@@ -209,7 +207,6 @@ export default function WhatItMeans() {
             ),
           }}
           leftNote={<>All my days out, by how far I went on foot. The orange ones on the left are the days under {SMALL_KM} km.</>}
-          rightNote={<>The small days went up as the distance came down. {smallTop.year} had the most of them and the least distance, and I still kept going.</>}
           source="Activity Log · every day with an activity since the habit began, distance on foot only"
         />
 
@@ -221,12 +218,10 @@ export default function WhatItMeans() {
               id="wm-floor"
               eyebrow={`${num()} · Keep a floor`}
               title={`No week under ${n0(Math.floor(wNow.min))} km.`}
-              sub={`That’s ${cur.year} so far. From ${between[0].year} to ${between[between.length - 1].year}, ${n0(under10Between)} weeks were under 10 km.`}
               statement={<>
-                When I look at my weeks, the big ones haven&rsquo;t changed much. My biggest week of {peak.year} was {n0(wPeak.max)} km and this year&rsquo;s is {n0(wNow.max)} km.
-                The change is in the quiet weeks. From {between[0].year} to {between[between.length - 1].year} I had {n0(under10Between)} weeks with less than 10 km on foot. In {cur.year} my lowest week is {n0(Math.floor(wNow.min))} km, and the middle half of my weeks are between {n0(wNow.q25)} and {n0(wNow.q75)} km.
-                {wFirst ? ` The first half-year of the habit had a floor too, with no week in ${habitYear} under ${n0(Math.floor(wFirst.min))} km.` : ''}
-                {' '}{bestPerDay === cur ? `With the same top and a higher floor, ${cur.year} is my best year for distance per day, ${k1(cur.kmPerDay)} km. ` : ''}If the bad weeks aren&rsquo;t too bad, the year mostly takes care of itself.
+                My big weeks have not changed much over the years. What changed is the quiet weeks. From {between[0].year} to{' '}
+                {between[between.length - 1].year} I had {n0(under10Between)} weeks under 10 km. In {cur.year} my lowest week so far
+                is {n0(Math.floor(wNow.min))} km. If the bad weeks are not too bad, the year takes care of itself.
               </>}
               odds={{
                 title: 'Weeks on foot',
@@ -256,8 +251,7 @@ export default function WhatItMeans() {
                   />
                 ),
               }}
-              leftNote={<>Every full week, year by year. The grey strip on the left is weeks under 10 km.</>}
-              rightNote={<>The years at zero are the ones where I kept a floor, the first half-year of the habit and {cur.year}. In every year in between, some weeks slipped.</>}
+              leftNote={<>The grey strip on the left is weeks under 10 km.</>}
               source="Activity Log · distance on foot per full week since the habit began"
             />
           </>
@@ -269,11 +263,10 @@ export default function WhatItMeans() {
           id="wm-long"
           eyebrow={`${num()} · Long days together`}
           title="Long days come in bunches."
-          sub={`The day after one averages ${k1(after.km)} km, about double a normal day.`}
           statement={<>
-            Since {habitYear} I&rsquo;ve had {n0(M.longDays)} days of {LONG_KM} km or more on foot, which is half-marathon distance or more. {n0(M.longNextActive)} of them, {pc(M.longNextActive / M.longDays)}%, were followed by another day out,
-            and that next day averaged {k1(after.km)} km, compared with {k1(M.avgDayKm)} km on a typical day. The three days before a long day were bigger than usual too.
-            So my long days tend to come in the middle of a busy patch, with big days either side. Long runs are the same. After a run of {LONG_RUN_KM} km or more, I ran again the next day {pc(lrShare('run'))}% of the time and took a full rest {pc(lrShare('rest'))}% of the time.
+            My long days, {LONG_KM} km or more, do not come alone. The day after one, I usually go out again, and that day
+            averages {k1(after.km)} km, about double a normal day. The days before are bigger too. So for me the long days come
+            in the middle of a busy time.
           </>}
           odds={{
             title: `Days of ${LONG_KM} km or more since ${habitYear}`,
@@ -307,7 +300,7 @@ export default function WhatItMeans() {
             ),
           }}
           leftNote={<>My average long day in orange, with the three days before it and the seven after. The dashed line is an ordinary day.</>}
-          rightNote={<>What I did the day after each run of {LONG_RUN_KM} km or more. Most of the time I went straight back out, partly because long days tend to come in busy months.</>}
+          rightNote={<>What I did the day after each run of {LONG_RUN_KM} km or more.</>}
           source={`Activity Log · days of ${LONG_KM} km or more on foot and runs of ${LONG_RUN_KM} km or more since the habit began`}
         />
 
@@ -317,11 +310,12 @@ export default function WhatItMeans() {
           id="wm-maths"
           eyebrow={`${num()} · Days and distance`}
           title="How a year adds up."
-          sub="A year&rsquo;s total depends on how often I go and how far I go each time."
           statement={<>
-            Every year&rsquo;s total is the number of days out times the distance per day out. 1,000 km is {k1(1000 / 365)} km a day if you go every day, or {k1(twoThirds)} km a day if you go two days in three. I&rsquo;ve done it both ways.
-            {' '}{longYear.year} was the year of long days, {k1(longYear.kmPerActive)} km per day out on {pc(longYear.share)}% of days. {cur.year} is the year of going every day, {k1(cur.kmPerActive)} km on {pc(cur.share)}% of days.
-            {' '}{lowYear.year} was low on both, {pc(lowYear.share)}% of days at {k1(lowYear.kmPerActive)} km, and ended at {n0(lowYear.km)} km. The curves on the chart are yearly totals, so you can see what lifted each year.
+            A year&rsquo;s total is just two things: how often I go out, and how far I go each time. 1,000 km is{' '}
+            {k1(1000 / 365)} km a day if you go every day, or {k1(twoThirds)} km if you go two days in three. {longYear.year} was a
+            year of long days, {n0(longYear.kmPerActive)} km each time, on {pc(longYear.share)}% of days. {cur.year} is a year of
+            going every day, about {n0(cur.kmPerActive)} km each time. {lowYear.year} was low on both, and it ended at{' '}
+            {n0(lowYear.km)} km.
           </>}
           odds={{
             title: 'The two levers',
@@ -351,8 +345,7 @@ export default function WhatItMeans() {
               />
             ),
           }}
-          leftNote={<>How often I went out against how far I went each time. The dashed curves are yearly totals, and a year above a curve beat it.</>}
-          rightNote={<>From {habitYear} to {lowYear.year} my distance per day out kept falling while my days out stayed level or went up. {cur.year} sits in between, with more distance per day than {lowYear.year} and far more days.</>}
+          leftNote={<>The dashed curves are yearly totals. A year above a curve beat it.</>}
           source="Activity Log · days with any activity and distance on foot per calendar year"
         />
 
@@ -360,9 +353,9 @@ export default function WhatItMeans() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="wm-close">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · What I&rsquo;d tell you</p>
-            <h2 id="wm-close" className="section-head__title">If you&rsquo;re starting&nbsp;out.</h2>
-            <p className="section-head__sub">Four things I&rsquo;d pass on.</p>
+            <p className="eyebrow">{num()} · What I would tell you</p>
+            <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
+            <p className="section-head__sub">Four things I would pass on.</p>
           </div>
           <ul className="yrecs">
             <Card kicker="Count the days" value={low.days} unit="days" label={`out in ${low.year}, my lowest year for distance`} sub={`${pc(dayDrop)}% fewer than ${peak.year}`} tone="hot" />
@@ -371,8 +364,9 @@ export default function WhatItMeans() {
             <Card kicker="Long days together" value={after.km} decimals={1} unit="km" label="the day after a long day, on average" sub={`a typical day is ${k1(M.avgDayKm)} km`} tone="hot" />
           </ul>
           <Reveal as="p" className="sgrid__statement">
-            That&rsquo;s what seven years of logging say to me. All the big numbers on the other pages came from fairly small things: about an hour a day, a short version on the bad days, not letting a week get too thin, and long days in the middle of busy weeks.
-            {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left. I’ll be out tomorrow.` : ' I’ll be out tomorrow.'}
+            That is what seven years of logging say to me. Nothing here is special. It is about an hour a day, a small version
+            on the bad days, not letting a week get too thin, and long days in the middle of busy weeks.
+            {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<i lang="sw">Kesho tena</i>, tomorrow again.
           </Reveal>
           <p className="source">Source: Activity Log · every activity since the first upload</p>
         </section>
