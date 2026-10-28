@@ -125,9 +125,9 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Count the days`}
           title="Keep the days."
           statement={<>
-            In {low.year} I covered less than half the distance of {peak.year}, and the long days almost disappeared. But I still went
-            out on {n0(low.days)} days. The days held when the distance did not. If I could keep only one thing, I would keep the days.
-            When the distance came back in {cur.year}, the days were already there to build on.
+            If I could keep only one thing, I would keep the days. In {low.year} I covered less than half the distance of{' '}
+            {peak.year}, and the long days almost disappeared, but I still went out on {n0(low.days)} days. When the distance came
+            back in {cur.year}, the days were already there to build on.
           </>}
           odds={{
             title: `${peak.year} against ${low.year}`,

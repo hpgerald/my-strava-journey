@@ -48,7 +48,7 @@ export default function YearMoment({ year, stats }) {
   if (year <= 2019) {
     kicker = 'First steps'
     title = 'Where it began.'
-    body = `My first upload was in August. Most of it was runs on a treadmill. Looking at it now, nothing there looked like the start of a habit.`
+    body = `Looking at it now, nothing there looked like the start of a habit.`
     figure = <div className="ymom__chips">{chip('activities', s.n)}{chip('active days', s.activeDays)}{chip('kilometres on foot', Math.round(s.footKm))}</div>
   } else if (year === 2020) {
     kicker = 'The quiet year'

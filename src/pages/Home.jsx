@@ -383,12 +383,9 @@ export default function Home() {
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
 
           <Reveal as="p" className="hero__statement">
-            {streakFirst ? <>On {fmtDayLong(edStreak.start)} I went out for a {(toNum(streakFirst.distance_km) || 0).toFixed(0)} km{' '}
-            {streakFirst.sport_type === 'Walk' ? 'walk' : streakFirst.sport_type === 'Run' ? 'run' : 'outing'}{parseInt(streakFirst.hour, 10) < 9 ? ' early in the morning' : ''}. I have not
-            missed a day since. </> : null}
-            In {gridYears[0]} I logged {firstYearN} activities in the whole year. In {gridYears[gridYears.length - 1]} I have done
-            {nowMonthsMin >= firstYearN ? ' at least that many in every single month' : ' almost that many in a single month'}. Most of my
-            outings are simple, a walk or an easy run of about an hour. What changed is that I go out often.
+            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
+            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
+            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
           </Reveal>
 
           {yearSummaries.length > 0 && (
@@ -408,10 +405,8 @@ export default function Home() {
             </div>
 
             <Reveal as="p" className="sgrid__statement">
-              <i lang="sw">Usipoziba ufa utajenga ukuta</i>: if you do not fill a crack, you will end up building a wall. On 8 July
-              2020 I went out in Arusha, and then I did not go out again for 353 days. One day off became almost a year. Today it
-              works the other way: after a week in a row, I almost always go out again. So I protect the chain, and on a tired day a
-              short walk is enough.
+              The hardest day to go out is the day after a break. One missed day once grew into almost a year without going out.
+              Now, after a week in a row, I almost never skip the next day. On a tired day, a short walk is enough to keep the chain.
             </Reveal>
 
             <OddsRow
@@ -449,9 +444,9 @@ export default function Home() {
               </div>
 
               <Reveal as="p" className="sgrid__statement">
-                On 1 May 2022 I ran a full marathon on the treadmill, the biggest day in my log. It is not even half of one percent of
-                my distance. My total was built by ordinary days of 10 km or more, {work.bigN < work.n / 2 ? 'less than half' : 'about half'} of
-                my days on foot. The short days fill the gaps between them and keep the habit alive.
+                A big day feels good, but the ordinary days make the total. My marathon, the longest day I have, is less than half
+                of one percent of all my distance. Most of it came from plain days of 10 km or more, and the short days in between
+                kept the habit going.
               </Reveal>
 
               <OddsRow
@@ -488,9 +483,9 @@ export default function Home() {
             eyebrow="How my days are shaped"
             title="Same time, fewer outings."
             statement={<>
-              On 18 July 2021 I ran 11 km at ten to five in the morning and went for a walk again after five in the evening. That
-              was a normal day then, two sessions. Today it is usually one outing, and it is longer. The time I give each day has
-              hardly changed, about {Math.round(perDayLo)} to {Math.round(perDayHi)} minutes on a day out. I just use it in one go now.
+              My time each day has stayed the same. I just use it differently now. A day out has always been about{' '}
+              {Math.round(perDayLo)} to {Math.round(perDayHi)} minutes. In the early years I split it, a run in the morning and a walk
+              in the evening. Now it is usually one longer outing.
             </>}
             odds={{
               title: 'How the days were split',
@@ -536,9 +531,8 @@ export default function Home() {
             eyebrow="1 · Where I go"
             title="The climbing is in two&nbsp;regions."
             statement={<>
-              On 29 March 2025 I climbed almost 2,000 m on one hike in Morogoro. In {busiestRegion && busiestRegion.region}, where I go
-              out most, it would take me about sixty outings to climb that much. That is the story of my map. I live and train on
-              flat ground, and the hills are something I travel to.
+              If I want to climb, I have to travel. Where I live, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
+              and in {busiestRegion && busiestRegion.region}, where I go out most, it would take me about sixty outings to climb that much.
             </>}
             odds={{
               title: 'Where the outings happen',
@@ -566,9 +560,9 @@ export default function Home() {
           eyebrow="2 · Walking and running"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
-            On 19 February 2025 I walked 30 km in one go in Kilimanjaro, with more than 800 m of climbing. In 2021 my usual walk was
-            under {Math.ceil(walkMedOf(2021))} km. Walking slowly became my main thing, and since {walkLeadYear || 'then'} I have walked
-            more often than I have run, every year. I did not plan it. The log only showed it to me later.
+            I did not plan to become a walker. It happened slowly. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
+            and this year it is about {Math.round(walkMedOf(gridYears[gridYears.length - 1]))} km. Since {walkLeadYear || 'then'} I have
+            walked more often than I have run, every year.
           </>}
           odds={{
             title: 'Share of all outings',
@@ -596,10 +590,9 @@ export default function Home() {
           eyebrow="3 · Time of day"
           title="Mornings and evenings."
           statement={<>
-            My earliest outing in this log started just before two in the morning, a walk in July 2022. My latest started almost at
-            midnight, a run in December 2024. Most days are calmer than that: early in the morning or in the evening, around the
-            working day, with {fmtHour(peakHour)} the busiest hour. The days of the week are almost the same, because the habit does
-            not wait for the weekend.
+            The habit fits around my work, so it does not wait for the weekend. Most outings start early in the morning or in the
+            evening, with {fmtHour(peakHour)} the busiest hour, and every day of the week gets about the same share. Once in a while
+            it is very early or very late: one walk started just before two in the morning, and one run almost at midnight.
           </>}
           odds={{
             title: 'When outings start',
@@ -637,9 +630,10 @@ export default function Home() {
               eyebrow="4 · Through the year"
               title="Two quieter months."
               statement={<>
-                In September 2024 I went out on only eight days, my quietest month since the habit started.{' '}
-                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my weakest months {dipYears === fullYears.length ? 'every year' : 'most years'}.
-                My log does not tell me why, and I do not want to guess. In {gridYears[gridYears.length - 1]} I went out on every day of both.
+                Every year has a soft spot, and mine is {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]}. They have been my weakest
+                months {dipYears === fullYears.length ? 'every year' : 'most years'}, and the quietest of all was September 2024, with
+                only eight days out. My log does not say why, and I do not want to guess. In {gridYears[gridYears.length - 1]} I went
+                out on every day of both.
               </>}
               odds={{
                 title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
@@ -684,9 +678,8 @@ export default function Home() {
               eyebrow="5 · Indoors and out"
               title="Less treadmill every year."
               statement={<>
-                My first outing on foot, on 18 August 2019, was a 5 km run on a treadmill. For years that is where most of my running
-                happened, early in the morning or late in the evening, and my only full marathon was run there too. Only recently has
-                more of my running been outside than inside. Of the {fmtInt(runKm)} km I have run, {fmtInt(runKmIn)} km were still on the treadmill.
+                The treadmill is where I learned to run. Of the {fmtInt(runKm)} km I have run, {fmtInt(runKmIn)} km were on it, and my
+                only full marathon too. Only recently has more of my running moved outside.
               </>}
               odds={{
                 title: 'Share of sessions indoors',
@@ -726,10 +719,9 @@ export default function Home() {
           eyebrow="6 · Distance and climb"
           title="Where the height comes from."
           statement={<>
-            My biggest climb, a hike in Morogoro in March 2025, went up almost 2,000 m in 16 km. At my running rate of about{' '}
-            {mPerKm('Run').toFixed(1)} m for every kilometre, I would need to run more than{' '}
-            {fmtInt(Math.floor(1979 / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to climb that much. That is why running gives me
-            the kilometres, and walking and the hills give me the height.
+            Running gives me the kilometres, and walking and the hills give me the height. I climb about{' '}
+            {mPerKm('Run').toFixed(1)} m for every kilometre I run. At that rate I would need to run more than{' '}
+            {fmtInt(Math.floor(1979 / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to match my biggest hike, almost 2,000 m in Morogoro.
           </>}
           odds={{
             title: 'Share of distance and climb on foot',

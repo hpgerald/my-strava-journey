@@ -221,7 +221,7 @@ function Prologue({ F }) {
     <section className="bk-page bk-prose" id="bk-prologue" aria-labelledby="bk-pro-t">
       <h2 id="bk-pro-t" className="bk-head">Prologue</h2>
       <p className="bk-lead">
-        I uploaded my first activity on {fmtDay(F.firstISO)}. Over the next months I logged {n0(F.beforeSilence)} outings, most of them runs on a treadmill.
+        This habit nearly ended before it started. In my first months I logged {n0(F.beforeSilence)} outings, most of them runs on a treadmill.
         Then I stopped for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
       </p>
       <p>

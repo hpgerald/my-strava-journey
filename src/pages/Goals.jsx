@@ -172,11 +172,12 @@ export default function Goals() {
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
+            Simple targets work best for me. Every year I aim for the same three: {unitOf(W, W.target)} walking,{' '}
+            {unitOf(R, R.target)} running and {unitOf(E, E.target)} of climbing on foot.{' '}
+            {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
             {closedYears('walk').length && closedYears('run').length && doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed).slice(5) === doy(closedYears('run')[0].year, closedYears('run')[0].run.closed).slice(5)
-              ? `My first running ring closed on ${fmtDayL(doy(closedYears('run')[0].year, closedYears('run')[0].run.closed))}. ${cap(word(closedYears('walk')[0].year - closedYears('run')[0].year))} years later, to the day, my first walking ring closed. `
+              ? ` My first running ring closed on ${fmtDayL(doy(closedYears('run')[0].year, closedYears('run')[0].run.closed))}, and ${word(closedYears('walk')[0].year - closedYears('run')[0].year)} years later, to the day, my first walking ring closed.`
               : ''}
-            Every year I aim for the same three: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
-            {unitOf(E, E.target)} of climbing on foot. {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
           </Reveal>
           <OddsRow
             title={`${cur.year}${so}`}
@@ -295,9 +296,8 @@ export default function Goals() {
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
               statement={<>
-                In {first.year} I stood still for {n0(first.stopped)} minutes during the Kilimanjaro Half. In {last.year} I stood still for
-                less than {word(Math.ceil(last.stopped))}. It is the same half marathon each time{faster ? ', and each time I was a little quicker' : ''},
-                and most of the time I saved came from stopping less.
+                Most of the time I saved on this race came from stopping less. In {first.year} I stood still for{' '}
+                {n0(first.stopped)} minutes during the Kilimanjaro Half. In {last.year} it was less than {word(Math.ceil(last.stopped))}.
               </>}
               odds={{
                 title: `${cap(word(race.length))} editions of one race`,
