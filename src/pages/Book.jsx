@@ -233,7 +233,7 @@ function Prologue({ F }) {
       </p>
       <p>
         There are five parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, and last, what I think it all means.
-        To everyone who gave me kudos along the way, <i lang="sw">asanteni sana</i>, thank you very much.
+        To everyone who gave me kudos along the way, <span lang="sw">asanteni sana</span>, thank you very much.
       </p>
     </section>
   )

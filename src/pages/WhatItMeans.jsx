@@ -168,7 +168,7 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Do the small version`}
           title="The small days count."
           statement={<>
-            <i lang="sw">Haba na haba hujaza kibaba</i>, little by little fills the measure. Many of my days were small ones,
+            <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Many of my days were small ones,
             less than {SMALL_KM} km on foot. They add almost nothing to my distance, but I logged them all the same. Later the
             numbers showed me why they matter: after a small day, I was much more likely to go out again than after a full rest.
             On a bad day, I try to do a small version.
@@ -347,7 +347,7 @@ export default function WhatItMeans() {
           <Reveal as="p" className="sgrid__statement">
             That is what seven years of logging say to me. Nothing here is special. It is about an hour a day, a small version
             on the bad days, not letting a week get too thin, and long days in the middle of busy weeks.
-            {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<i lang="sw">Kesho tena</i>, tomorrow again.
+            {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<span lang="sw">Kesho tena</span>, tomorrow again.
           </Reveal>
         </section>
       </div>

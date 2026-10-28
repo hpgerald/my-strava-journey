@@ -106,7 +106,7 @@ export default function About() {
               Get in touch
             </h2>
             <p className="text-muted" style={{ fontSize: 'var(--fs-sm)', marginTop: 'var(--sp-3)', maxWidth: '28rem' }}>
-              I am Gerald. You can follow my training on Strava, or get in touch any time. <i lang="sw">Karibu</i>, you are welcome.
+              I am Gerald. You can follow my training on Strava, or get in touch any time. <span lang="sw">Karibu</span>, you are welcome.
             </p>
           </div>
 

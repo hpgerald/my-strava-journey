@@ -314,7 +314,7 @@ export default function Records() {
           eyebrow={`${num()} · Milestones`}
           title="The kilometres came faster."
           statement={<>
-            <i lang="sw">Pole pole ndio mwendo</i>, slowly is the way. The kilometres come faster now than they used to. The first
+            <span lang="sw">Pole pole ndio mwendo</span>, slowly is the way. The kilometres come faster now than they used to. The first
             1,000 km took me two years, with the long gap inside them. The last {n0(lastKm.mark - prevKm.mark)} km took about a year,
             and each Everest of climbing now comes much quicker than the first.
           </>}

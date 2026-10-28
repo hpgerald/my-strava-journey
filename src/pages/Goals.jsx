@@ -340,7 +340,7 @@ export default function Goals() {
               eyebrow={`${num()} · One place, ${n0(rk.length)} times`}
               title={`${rk.length === 50 ? 'Fifty' : n0(rk.length)} trips to Ras Kilomoni.`}
               statement={<>
-                <i lang="sw">Bandu bandu huisha gogo</i>, chip by chip finishes the log. In {rk[0].date.slice(0, 4)} I set myself a
+                <span lang="sw">Bandu bandu huisha gogo</span>, chip by chip finishes the log. In {rk[0].date.slice(0, 4)} I set myself a
                 different kind of target: to reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times. I counted
                 the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs. For the first
                 three months I kept a steady count. Then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} came with {rkTop.n} trips, and after
