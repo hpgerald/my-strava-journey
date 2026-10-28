@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { DataProvider } from './context/DataContext.jsx'
-import '@fontsource-variable/archivo'
+
+import '@fontsource-variable/archivo/wdth.css'
 import '@fontsource-variable/inter'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -15,6 +16,7 @@ import './styles/timeline.css'
 import './styles/goals.css'
 import './styles/meaning.css'
 import './styles/book.css'
+import './styles/studio.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

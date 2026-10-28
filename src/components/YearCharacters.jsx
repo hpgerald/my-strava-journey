@@ -14,7 +14,7 @@ export default function YearCharacters({ summaries, quietUntil, current }) {
       <ol className="ycards__row">
         {summaries.map((y, i) => (
           <li key={y.year} className="ycards__cell" style={{ transitionDelay: `${i * 70}ms` }}>
-            <Link to={`/numbers/${y.year}`} className={`ycard${y.year <= quietUntil ? ' ycard--quiet' : y.year === current ? ' ycard--now' : ''}`}
+            <Link to={`/numbers/${y.year}`} data-cursor="Read" className={`ycard${y.year <= quietUntil ? ' ycard--quiet' : y.year === current ? ' ycard--now' : ''}`}
               aria-label={`${y.year}, ${y.label}: ${y.line} Open the ${y.year} report.`}>
               <span className="ycard__top">
                 <span className="ycard__year">{y.year}</span>

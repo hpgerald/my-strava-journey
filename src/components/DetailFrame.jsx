@@ -54,85 +54,50 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 
   return (
     <Layout>
-      <Container>
-        <nav aria-label="Breadcrumb" className="crumbs" style={{ paddingTop: 'var(--sp-6)' }}>
-          <ol
-            className="mono"
-            style={{
-              listStyle: 'none',
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.5ch',
-              margin: 0,
-              padding: 0,
-              fontSize: 'var(--fs-2xs)',
-              letterSpacing: 'var(--tr-wide)',
-              textTransform: 'uppercase',
-              color: 'var(--fg-faint)',
-            }}
-          >
-            {crumbs.map((c, i) => (
-              <li key={i}>
-                {c.to ? (
-                  <Link to={c.to} style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                    {c.label}
-                  </Link>
-                ) : (
-                  c.label
-                )}
-                {i < crumbs.length - 1 ? <span aria-hidden="true"> / </span> : null}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <header className="section-head detail-head" style={{ paddingTop: 'var(--sp-4)' }}>
-          <div className="detail-head__main">
-            {number ? (
-              <div className="chapter">
-                <span className="chapter__ghost" aria-hidden="true" data-num={number} />
-                <p className="chapter__kicker">
-                  Chapter&nbsp;<b>{number}</b>
-                </p>
-                <h1 className="section-head__title">{title}</h1>
-                {subtitle ? (
-                  <p className="text-muted" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-2)' }}>
-                    {subtitle}
-                  </p>
-                ) : null}
-              </div>
-            ) : (
-              <>
-                <h1 className="section-head__title">{title}</h1>
-                {subtitle ? (
-                  <p className="text-muted" style={{ fontSize: 'var(--fs-md)', marginTop: 'var(--sp-2)' }}>
-                    {subtitle}
-                  </p>
-                ) : null}
-              </>
-            )}
+      <section className={`sopen${number ? '' : ' sopen--sub'}`} aria-labelledby="sopen-title">
+        <div className="sopen__in">
+          <div className="sopen__top">
+            <nav aria-label="Breadcrumb" className="crumbs sopen__crumbs">
+              <ol>
+                {crumbs.map((c, i) => (
+                  <li key={i}>
+                    {c.to ? <Link to={c.to}>{c.label}</Link> : <span aria-current="page">{c.label}</span>}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+            {number ? <p className="sopen__k">/ Chapter {number}</p> : null}
           </div>
-          {lede ? (
-            <p className="detail-head__lede" style={{ fontSize: 'var(--fs-md)' }}>
-              {lede}
-            </p>
-          ) : null}
-        </header>
+          {number ? <span className="sopen__num" aria-hidden="true" data-speed="0.18">{number}</span> : null}
+          <h1 id="sopen-title" className="sopen__t">
+            <span className="visually-hidden">{title}</span>
+            <span aria-hidden="true">
+              {String(title || '').split(' ').map((w, wi, ws) => (
+                <span key={wi} className="sopen__w">
+                  {[...w].map((ch, ci) => <span key={ci} className="sopen__ch" style={{ '--i': wi * 4 + ci }}>{ch}</span>)}
+                  {wi < ws.length - 1 ? '\u00a0' : ''}
+                </span>
+              ))}
+            </span>
+          </h1>
+          <div className="sopen__foot">
+            {subtitle ? <p className="sopen__sub">{subtitle}</p> : <span />}
+            {lede ? <p className="sopen__lede">{lede}</p> : null}
+            <span className="sopen__cue" aria-hidden="true">Scroll <i>↓</i></span>
+          </div>
+        </div>
+      </section>
 
+      <Container>
         {children}
 
         <FieldNote seed={location.pathname} align="wide" />
 
         {(prev || next) && (
-          <>
-            <hr className="rule" style={{ marginTop: 0 }} />
-            <nav aria-label="Pagination" className="prevnext">
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 0 }}>
-                <PagingLink item={prev} dir="prev" />
-                <PagingLink item={next} dir="next" />
-              </div>
-            </nav>
-          </>
+          <nav aria-label="Pagination" className="prevnext sturn">
+            <PagingLink item={prev} dir="prev" />
+            <PagingLink item={next} dir="next" />
+          </nav>
         )}
       </Container>
     </Layout>
@@ -143,25 +108,17 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 const BOOK_SEED = { '02': '/numbers', '03': '/sports', '04': '/records', '05': '/where', '06': '/timeline', '07': '/goals', '08': '/what-it-means' }
 
 export function PagingLink({ item, dir }) {
-  if (!item) return <span />
+  if (!item) return <span className="sturn__gap" />
   const isNext = dir === 'next'
   return (
-    <Link
-      to={item.to}
-      className={`u-invert chapterturn chapterturn--${dir}`}
-      style={{
-        textAlign: isNext ? 'right' : 'left',
-        borderRight: isNext ? 'none' : '1px solid var(--rule)',
-      }}
-    >
-      <span className="chapterturn__eyebrow">
-        {isNext ? 'Next chapter →' : '← Previous chapter'}
+    <Link to={item.to} className={`sturn__link sturn__link--${dir}`} data-cursor={isNext ? 'Next' : 'Back'}>
+      <span className="sturn__k">{isNext ? '/ Next chapter' : '/ Previous chapter'}</span>
+      <span className="sturn__row">
+        {item.number ? <span className="sturn__num">{item.number}</span> : null}
+        <span className="sturn__title">{item.label}</span>
+        <span className="sturn__arrow" aria-hidden="true">{isNext ? '→' : '←'}</span>
       </span>
-      <span className="chapterturn__row">
-        {item.number ? <span className="chapterturn__num">{item.number}</span> : null}
-        <span className="chapterturn__title">{item.label}</span>
-      </span>
-      {item.subtitle ? <span className="chapterturn__sub">{item.subtitle}</span> : null}
+      {item.subtitle ? <span className="sturn__sub">{item.subtitle}</span> : null}
     </Link>
   )
 }

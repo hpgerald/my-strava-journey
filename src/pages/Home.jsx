@@ -31,6 +31,8 @@ import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
+import { useBook } from '../components/BookContext.js'
+import Marquee from '../motion/Marquee.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -50,6 +52,7 @@ const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 const fmtDayLong = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTHS_FULL[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 
 export default function Home() {
+  const book = useBook()
   useEffect(() => {
     document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
   }, [])
@@ -397,6 +400,25 @@ export default function Home() {
 
   return (
     <Layout>
+      {!book && (
+        <section className="shero" aria-hidden="true">
+          <div className="shero__in">
+            <p className="shero__k"><span>/ My Strava Journey</span><span>Gerald Tesha, Tanzania</span></p>
+            <p className="shero__t">
+              {['Showing', 'Up'].map((w, wi) => (
+                <span key={w} className="shero__line">
+                  {[...w].map((ch, ci) => <span key={ci} className="shero__ch" style={{ '--i': wi * 7 + ci }}>{ch}</span>)}
+                  {wi === 1 ? <b className="shero__ch" style={{ '--i': 10 }}>.</b> : null}
+                </span>
+              ))}
+            </p>
+            <div className="shero__foot">
+              <p className="shero__sub">Seven years of one habit, from my own Strava log.</p>
+              <span className="shero__cue">Scroll <i>↓</i></span>
+            </div>
+          </div>
+        </section>
+      )}
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
         <section className="hero" aria-labelledby="hero-title">
@@ -422,6 +444,7 @@ export default function Home() {
           ]}</BookStory>
         </section>
       </Container>
+      {!book && <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu huisha gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
 
       {/* ===== How the streak holds: momentum + today/tomorrow grid ===== */}
       {momentum && mWeek && mOneOff && mFiveOff && (
@@ -876,7 +899,7 @@ export default function Home() {
               {cap(NUMWORD[menuItems.length] || String(menuItems.length))} more chapters.
             </h2>
           </div>
-          <IndexHub items={menuItems} compact />
+          <IndexHub items={menuItems} />
         </section>
       </Container>
     </Layout>

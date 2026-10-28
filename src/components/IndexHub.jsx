@@ -1,32 +1,26 @@
 import { Link } from 'react-router-dom'
 import { useTable } from '../context/DataContext.jsx'
 
-// The primary navigation: a large NUMBERED INDEX (01, 02, ...) that inverts on
-// hover/focus. Driven entirely by nav_index.csv.
-export default function IndexHub({ items, compact = false }) {
+// The chapter index, set like a studio's list of work: one tall row per chapter
+// with its number, its name in condensed capitals and its line, filling with
+// orange from below on hover. Driven entirely by nav_index.csv.
+export default function IndexHub({ items }) {
   const rows = useTable('nav_index')
   const list = items || rows
-
   return (
     <nav aria-label="Sections">
-      <ul className={`index${compact ? ' index--compact' : ''}`}>
+      <ol className="slist">
         {list.map((item) => (
-          <li className="index__item" key={item.number}>
-            <Link className="index__link" to={item.route}>
-              <span className="index__num mono" aria-hidden="true">
-                {item.number}
-              </span>
-              <span>
-                <span className="index__title">{item.title}</span>
-                <span className="index__sub">{item.subtitle}</span>
-              </span>
-              <span className="index__arrow mono" aria-hidden="true">
-                →
-              </span>
+          <li className="slist__item" key={item.number}>
+            <Link className="slist__link" to={item.route} data-cursor="Open">
+              <span className="slist__num">{item.number}</span>
+              <span className="slist__t">{item.title}</span>
+              <span className="slist__s">{item.subtitle}</span>
+              <span className="slist__arrow" aria-hidden="true">↗</span>
             </Link>
           </li>
         ))}
-      </ul>
+      </ol>
     </nav>
   )
 }
