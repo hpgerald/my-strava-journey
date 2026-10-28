@@ -144,6 +144,22 @@ export default function Records() {
   const stoodPrev = R.distStood.filter((s) => !s.standing).reduce((b, s) => (s.days > b.days ? s : b), { days: 0 })
   const stoodTicks = []; for (let t = 0; t <= stoodMax * 1.08; t += stoodMax > 1200 ? 500 : 200) stoodTicks.push(t)
 
+  // ---- My Book: facts for the longer stories ----
+  const y0 = Number(R.firstISO.slice(0, 4))
+  const firstYearRecs = dP.filter((r) => Number(r.date.slice(0, 4)) === y0).length
+  const day2 = R.topDaysKm[1]
+  const longTread = R.longest.filter((f) => f.mode === 'tread')
+  const longOut = R.longest.filter((f) => f.mode !== 'tread')
+  const evQuick = ev.reduce((b, x) => (x.days < b.days ? x : b), ev[0])
+  const regsNow = regs.filter((f) => (f.date || '').startsWith(String(lastYear)))
+  const wkOld = R.topWeeksKm.slice(1)
+  const recentClimbMonths = R.topMonthsClimb.filter((m) => Number(m.month.slice(0, 4)) >= lastYear - 1).length
+  const mile = (k) => R.kmMiles.find((x) => x.mark === k)
+  const homeInTop = Object.keys(R.top20Regions).filter((k) => k === 'Dodoma' || k === 'Dar es Salaam').length
+  const stoodLong = R.distStood.filter((s) => !s.standing).reduce((b, s) => (s.days > b.days ? s : b), { days: 0 })
+  const stoodIdx = R.distStood.indexOf(stoodLong)
+  const stoodRec = stoodIdx >= 0 ? dP[stoodIdx] : null
+
   return (
     <DetailFrame
       {...frame}
@@ -221,6 +237,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'My ten longest single outings, longest at the top, with the date, the kind of outing and the climb where there was any.',
+              'My biggest days on foot, adding up every outing of the day. The line under each date gives the number of outings and the time moving.',
+            ]}
+          story={[
+              `${cap(word(longTread.length))} of my ten longest outings were on the treadmill, all from ${fmtMonth(longTread.map((f) => f.date).sort()[0])} to ${fmtMonth(longTread.map((f) => f.date).sort().slice(-1)[0])}, the months when I was building distance indoors. The others are newer, and they came outside: ${longOut.map((f) => `${an(lower(f.mode))} in ${fmtMonth(f.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`,
+              day2 ? `My biggest days are not always one outing. The second biggest, ${fmtDay(day2.date)}, was ${word(day2.n)} outings that added up to ${k1(day2.km)} km. Only one day has ever gone past 42 km, and that is the marathon.` : '',
+            ]}
           source="Activity Log · distance of single outings and of whole days on foot"
         />
 
@@ -263,6 +287,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'Every outing that climbed, placed by its date and its metres up, with the record as a staircase. The scale squeezes the top so the small climbs can still be seen.',
+              'My eight biggest single climbs, biggest at the top, with the date, the kind of outing and the region.',
+            ]}
+          story={[
+              cP[walkLed] ? `For a long time the climbing record belonged to walks, and it grew a little at a time. The first hike changed that in one day: in ${fmtMonth(cP[walkLed].date)} it ${cP[walkLed].elev > 2 * cP[walkLed - 1].elev ? 'more than doubled the record' : 'lifted the record'}, to ${n0(cP[walkLed].elev)} m.` : '',
+              `${cap(word(R.climbs.slice(0, 8).filter((c) => c.region === 'Morogoro').length))} of my eight biggest climbs started in Morogoro. The hills there are where I went to climb, again and again.`,
+            ]}
           source="Activity Log · elevation gain of single outings on foot; start region from Strava GPS"
         />
 
@@ -304,6 +336,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'My biggest weeks by distance on foot, biggest at the top. The line under each week is the number of outings it took.',
+              'My biggest months by climbing, with the distance and the number of outings that month.',
+            ]}
+          story={[
+              `My biggest week is a recent one, and it took only ${word(wk.n)} outings. The weeks just behind it are from 2021 and 2022, and they needed ${n0(Math.min(...wkOld.map((w) => w.n)))} to ${n0(Math.max(...wkOld.map((w) => w.n)))} outings each. The distance is the same, now in fewer and longer pieces.`,
+              `${cap(word(recentClimbMonths))} of my six biggest climbing months come from the last two years. The hills used to be a 2023 story, and now they are a regular part of my year.`,
+            ]}
           source="Activity Log · distance and climb on foot by week and by month"
         />
 
@@ -348,6 +388,15 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'The line adds up every kilometre on foot from the first day. Flat stretches are quiet times and steep stretches are busy ones. Each mark is a milestone, with the day it was passed.',
+              'Each bar is one Everest of climbing, 8,849 m, and its height is the days it took me to climb it. The lower the bar, the quicker it came.',
+            ]}
+          story={[
+              mile(1000) && mile(2500) ? `The line is almost flat for its first two years. Then it turns steep: from 1,000 km on ${fmtDay(mile(1000).date)} to 2,500 km on ${fmtDay(mile(2500).date)}, 1,500 km in about three months. That was the start of the habit, and it is still the steepest stretch of the whole line.` : '',
+              'In 2023 and 2024 the line eases, the years of fewer kilometres and more hills. From 2025 it steepens again.',
+              `The Everests show the climbing side. The first took the longest by far, and most of those days came before I had ever climbed a hill. ${evQuick === evLast ? 'The latest came the quickest of all.' : `The quickest was the ${ORD[evQuick.k] || ordS(evQuick.k)}.`}`,
+            ]}
           source="Activity Log · running totals of distance and climb on foot"
         />
 
@@ -391,6 +440,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'The number of personal records I set each year on Strava segments.',
+              'The same records divided by the outings of that year, so a busy year does not look better only because it had more outings.',
+            ]}
+          story={[
+              `Two years stand out, 2023 and ${lastYear}. In 2023 I went to the trails and the hills, and I ran the Kilimanjaro Half for the first time. In ${lastYear} more of my running moved outside than ever before, and the records followed, the most of any year.`,
+              'The right chart is the fair one. In 2021 and 2022 I did many outings, and almost all were on the treadmill, where there are no segments to beat. Per outing, those years are the lowest of the habit.',
+            ]}
           source="Activity Log · personal records (Strava segment bests) on runs, walks, trail runs and hikes"
         />
 
@@ -432,6 +489,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'My eight longest runs of days in a row with an outing, longest at the top, with the month each began and the day it ended.',
+              'The best run of days for each kind of streak: any outing, any outing on foot, a run every day, and a walk every day.',
+            ]}
+          story={[
+              S.foot.len < S.any.len ? `The ${S.any.len} days were never one sport. My longest run of days on foot is ${S.foot.len}, so on some days of this streak the only outing was one of the other activities. It still counts as a day out, and it kept the chain.` : '',
+              `Running and walking alone never come close. My longest running streak is ${S.run.len} days and my longest walking streak ${S.walk.len}. The habit holds because I can choose, day by day, whatever fits.`,
+            ]}
           source="Activity Log · consecutive days and weeks with an outing (weeks run Monday to Sunday)"
         />
 
@@ -475,6 +540,14 @@ export default function Records() {
                   />
                 ),
               }}
+              read={[
+              'The biggest single climb in each region of Tanzania, with the kind of outing and the month.',
+              'Where my twenty biggest climbs started, counted by region.',
+            ]}
+              story={[
+              `${homeInTop ? 'Very few of my big climbs started at home.' : 'None of my twenty biggest climbs started in my home regions, Dodoma and Dar es Salaam.'} Every one of them needed a trip, to ${regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`,
+              regsNow.length ? `${regsNow.map((f) => f.region).join(' and ')} ${regsNow.length > 1 ? 'are' : 'is'} on the list because of trips in ${lastYear}. Each new region I visit can add a line to this chart.` : '',
+            ]}
               source="Activity Log and Strava GPS start points · Tanzania regions"
             />
           </>
@@ -519,6 +592,14 @@ export default function Records() {
               />
             ),
           }}
+          read={[
+              'Each row is a kind of record. The bar is how many times it actually broke, and the ring is how many times it would break, on average, if the same outings had come in a random order. A bar past its ring broke more often than chance.',
+              'Each bar is one distance record, in order, and its height is the days it stood before the next one beat it. The last bar, still standing, is the marathon.',
+            ]}
+          story={[
+              `Runs broke their record almost twice as often as chance would give. That is the shape of real progress: I was going further over time, so new bests kept coming. Walks are the exception, ${SR.Walk.broken} times against ${SR.Walk.expected.toFixed(1)}, close to chance.`,
+              stoodRec ? `The tall bar in the middle is the ${k1(stoodRec.km)} km run of ${fmtMonth(stoodRec.date)}. It stood for ${n0(stoodLong.days)} days, right through the long pause, until I came back and beat it.` : '',
+            ]}
           source="Activity Log · record counts against the harmonic expectation for a random order"
         />
 

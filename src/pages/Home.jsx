@@ -30,6 +30,7 @@ import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { Reveal } from '../components/Reveal.jsx'
+import BookStory, { BookRead } from '../components/BookStory.jsx'
 
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -367,6 +368,29 @@ export default function Home() {
   const fShare = (k, f) => (flipTot[f] ? flipOf(k)[f] / flipTot[f] : 0)
   const mPerKm = (k) => (flipOf(k).dist ? flipOf(k).elev / flipOf(k).dist : 0)
 
+  // ---- My Book: the facts behind the longer story under each section ----
+  const nowYear = gridYears[gridYears.length - 1]
+  const n0 = (v) => fmtInt(Math.round(v || 0))
+  const pcs = (v) => Math.round((v || 0) * 100)
+  const habitBreaks = habitDays.map((d, i) => (i ? Math.round((Date.parse(d) - Date.parse(habitDays[i - 1])) / DAY) - 1 : 0)).filter((g) => g > 0)
+  const breaksOne = habitBreaks.filter((g) => g === 1).length
+  const breaksFive = habitBreaks.filter((g) => g >= 5).length
+  const preDays = sortedDays.filter((d) => d < habitStartISO).length
+  const nowDays = sortedDays.filter((d) => d.startsWith(`${nowYear}-`)).length
+  const dayKm = [...dailyFootKm].sort((x, z) => x - z)
+  const dayKmTot = dayKm.reduce((t, v) => t + v, 0) || 1
+  const medDayKm = dayKm.length ? dayKm[Math.floor(dayKm.length / 2)] : 0
+  const bigDays = dayKm.filter((v) => v >= 20)
+  const smallDays = dayKm.filter((v) => v < 5)
+  const sumKm = (xs) => xs.reduce((t, v) => t + v, 0)
+  const sportKm = (t, y, indoor) => activityLog.filter((a) => a.sport_type === t && Number(a.year) === y && (indoor == null || trainerTrue(a.trainer) === indoor)).reduce((s2, a) => s2 + (toNum(a.distance_km) || 0), 0)
+  const peakHourOf = (y) => { const c = Array(24).fill(0); for (const a of activityLog) if (Number(a.year) === y) { const h = parseInt(a.hour, 10); if (h >= 0 && h < 24) c[h] += 1 } return c.indexOf(Math.max(...c)) }
+  const shapeOf = (y) => shapeRows.find((r) => r.year === y)
+  const indoorRunShare = (y) => { const all = sportKm('Run', y); return all ? sportKm('Run', y, true) / all : 0 }
+  const runPeakYear = gridYears.reduce((b, y) => (sportKm('Run', y) > sportKm('Run', b) ? y : b), gridYears[0])
+  const hikeN = activityLog.filter((a) => a.sport_type === 'Hike').length
+  const km30Top = (() => { const m = {}; const byDay = {}; for (const a of activityLog) if (FOOT_HOME.has(a.sport_type)) { const d = (a.date || '').slice(0, 10); byDay[d] = (byDay[d] || 0) + (toNum(a.distance_km) || 0) } for (const [d, v] of Object.entries(byDay)) if (v >= 30) m[d.slice(0, 4)] = (m[d.slice(0, 4)] || 0) + 1; return Object.entries(m).sort((x, z) => z[1] - x[1])[0]?.[0] || '' })()
+
   // use each chapter's own number from nav_index so the index matches the number
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
   const menuItems = nav.filter((r) => r.route !== '/')
@@ -391,6 +415,11 @@ export default function Home() {
           {yearSummaries.length > 0 && (
             <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
           )}
+          <BookStory>{[
+            `Seven years sounds long, but most of this record comes from the last five. Before the long pause I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
+            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long pause. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
+            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
+          ]}</BookStory>
         </section>
       </Container>
 
@@ -429,6 +458,15 @@ export default function Home() {
                 <TransitionMatrix p11={momentum.after.p11} p01={momentum.after.p01} />
               </figure>
             </div>
+            <BookRead items={[
+              ['The odds, day by day', 'The middle point is a day I went out. Going right, each step is one more day in a row, and the orange line is the chance I go out again the next day. Going left, each step is one more day off, and the grey line is the chance I come back the next day. The gap between the two sides is the lesson: a chain is easier to keep than to restart.'],
+              ['Given today, the chance of tomorrow', 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I go out tomorrow and the right box the chance I rest, and the two add up to 100%. The darker the box, the more likely that next day.'],
+            ]} />
+            <BookStory>{[
+              `Since I came back I have taken ${n0(habitBreaks.length)} breaks of one day or more. ${n0(breaksOne)} of them were a single day, and only ${n0(breaksFive)} lasted five days or more. The longest was ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`,
+              'The left side of the chart is the part I watch. Each extra day of rest makes the next one easier to take, and after five days off I am more likely to stay in than to go out. So a short walk on a tired day is worth more than it looks.',
+              `The right side is the reward. The longer the chain, the closer the next day comes to certain. In ${nowYear} I have not had a single rest day, so this year the whole story sits on the right.`,
+            ]}</BookStory>
           </section>
         </Container>
       )}
@@ -469,6 +507,15 @@ export default function Home() {
                   <DecileBars shares={work.shares} />
                 </figure>
               </div>
+              <BookRead items={[
+                ['Every day, added up', 'Every day I went out on foot is lined up from the shortest on the left to the longest on the right, and the line adds up the distance as it goes. If every day were the same size, the line would follow the dashed diagonal. The more it sags below the diagonal, the more of the total comes from the long days.'],
+                ['Each tenth of days, by its share', 'The same days, cut into ten equal groups from the shortest tenth on the left to the longest on the right. Each bar is that group\u2019s share of all my distance on foot. If every day were equal, every bar would stop at the dashed 10% line.'],
+              ]} />
+              <BookStory>{[
+                `My usual day on foot is about ${medDayKm.toFixed(1)} km. Half of my days out are shorter than that and half are longer. The very long days carry a lot for how few they are: ${n0(bigDays.length)} days of 20 km or more gave ${pcs(sumKm(bigDays) / dayKmTot)}% of all my kilometres.`,
+                `${n0(dayKm.filter((v) => v >= 30).length)} of my days on foot reached 30 km or more, and the year with the most of them was ${km30Top}.`,
+                `At the other end are ${n0(smallDays.length)} days under 5 km. Together they gave only ${pcs(sumKm(smallDays) / dayKmTot)}% of the distance, so on a chart of kilometres they almost disappear. On a chart of days they count the same as a marathon. Each one kept the chain going, and the chain is what made the long days possible.`,
+              ]}</BookStory>
             </section>
           </Container>
         </div>
@@ -511,6 +558,15 @@ export default function Home() {
                 />
               ),
             }}
+            read={[
+              'One row for each year. The length of the bar is the minutes I spent moving on a day I went out. The bar is cut into blocks, one for each outing on a typical day, so many short blocks mean I split the day and one long block means one longer outing. Grey rows are the years before the long pause, and orange is this year.',
+              'Each bar is a year, and its height is the share of my days out that had two or more outings. The higher the bar, the more often I split the day.',
+            ]}
+            story={[
+              `In 2021 I did about ${shapeOf(2021) ? shapeOf(2021).outings.toFixed(1) : ''} outings on an average day out. In ${nowYear} it is ${shapeNow.outings.toFixed(1)}. The time stayed about the same, and only the number of pieces changed.`,
+              `Much of the change came from walking. My usual walk in 2021 was under ${Math.ceil(walkMedOf(2021))} km, a short walk that fits between other things. Now my usual walk is about ${Math.round(walkMedOf(nowYear))} km, and a walk like that takes one long block of the day. My runs moved the same way, from short treadmill sessions to longer runs outside.`,
+              'One long outing also means one start, one finish and one upload, and then the day is done.',
+            ]}
             source="Activity Log · moving time and outings per active day, by year"
           />
         </Container>
@@ -549,6 +605,15 @@ export default function Home() {
               node: <PairBars rows={regionRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                 aria={`Tanzania regions, share of outings and share of climb: ${regionRows.map((r) => `${r.label} ${pc(r.a)}% and ${pc(r.b)}%`).join('; ')}.`} />,
             }}
+            read={[
+              'The big disc is Tanzania, and the number in it is the share of my outings with a GPS start that began there. The other African countries are listed beside it with the year I first went out there. Anything outside Africa is counted together as others.',
+              'Each region of Tanzania has two bars: the first is its share of my outings there, the second its share of my climbing. The number at the end is the gap. A region with more climbing than outings is where the hills are.',
+            ]}
+            story={[
+              `My two homes, ${regSorted[0] ? regSorted[0].region : ''} and ${regSorted[1] ? regSorted[1].region : ''}, hold ${pcs(((toNum(regSorted[0]?.activities) || 0) + (toNum(regSorted[1]?.activities) || 0)) / regTotA)}% of my outings in Tanzania and only ${pcs(((toNum(regSorted[0]?.elevation_m) || 0) + (toNum(regSorted[1]?.elevation_m) || 0)) / regTotE)}% of the climbing. That is what flat ground looks like in a log.`,
+              `${climbTop2.map((r) => r.region).join(' and ')} are the other way round. I go there less, but most of my metres up were done there. Every big climb in this record came on a trip away from home.`,
+              awayRows.length ? `Outside Tanzania I have gone out in ${andList(awayRows.map((r) => r.country))}. ${awayRows[0].country} comes first, with ${n0(toNum(awayRows[0].activities))} outings over a few visits.` : '',
+            ]}
             source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
           />
         )}
@@ -580,6 +645,15 @@ export default function Home() {
               cross={walkLeadIdx} crossLabel={walkLeadYear ? `walks lead from ${walkLeadYear}` : null}
               aria={`Walks and runs per year. ${gridYears.map((y, i) => `${y}: ${walkByYear[i]} walks, ${runByYear[i]} runs`).join('. ')}.`} />,
           }}
+          read={[
+              'Each block is a kind of outing, sized by how many times I did it. Walks and runs are the two big blocks. Everything that is not on foot sits together in one grey block called other activities.',
+              'Two lines count my walks and my runs each year. Where the walk line rises above the run line, walking became my more common outing, and the mark shows the year it happened.',
+            ]}
+          story={[
+              `Walking grew in number first. ${walkLeadYear ? `From ${walkLeadYear} on, every year has had more walks than runs.` : ''} In ${nowYear} I have done ${n0(walkByYear[walkByYear.length - 1])} walks and ${n0(runByYear[runByYear.length - 1])} runs so far.`,
+              sportKm('Walk', nowYear) > sportKm('Run', nowYear) ? `Then it grew in distance. ${nowYear} is the first year my walks covered more kilometres than my runs, ${n0(sportKm('Walk', nowYear))} km against ${n0(sportKm('Run', nowYear))} km.` : `Then it grew in distance. My walks have covered ${n0(sportKm('Walk', nowYear))} km in ${nowYear}.`,
+              `Running is still a big part of my week. My biggest running year was ${runPeakYear}, with ${n0(sportKm('Run', runPeakYear))} km, most of it on the treadmill.`,
+            ]}
           source="Activity Log · outings by sport type"
         />
 
@@ -618,6 +692,14 @@ export default function Home() {
               />
             ),
           }}
+          read={[
+              'A 24-hour clock with midnight at the top and noon at the bottom. Each spoke is one hour, and its length is the number of outings that started in that hour. The long spokes on the left and right are my mornings and evenings.',
+              'One bar for each day of the week, counting every outing that started on it. The orange bar is the busiest day and the grey bar the quietest.',
+            ]}
+          story={[
+              `${(() => { const hs = gridYears.filter((y) => y > quietUntil && y < nowYear).map(peakHourOf); return hs.length && hs.every((h) => h >= 16) ? `From ${gridYears.find((y) => y > quietUntil)} to ${nowYear - 1} my busiest hour was always in the late afternoon or evening, after the working day.` : 'For most years my busiest hour was in the evening, after the working day.' })()} ${peakHourOf(nowYear) < 12 ? `In ${nowYear} it moved to ${fmtHour(peakHourOf(nowYear))}, and the mornings took the lead.` : `In ${nowYear} it is ${fmtHour(peakHourOf(nowYear))}.`}`,
+              `The weekend holds ${pcs((weekN[5] + weekN[6]) / (activityLog.length || 1))}% of all my outings, close to the 29% an even week would give. Saturday is a little busier than the rest, and the gap between the busiest and quietest day is ${n0(weekMax - weekMin)} outings over seven years.`,
+            ]}
           source="Activity Log · start hour and weekday of every outing"
         />
 
@@ -664,6 +746,15 @@ export default function Home() {
                 node: <MonthGrid years={gridYears} cells={monthCellsGrid} mark={dipIdx}
                   markLabel={`${MONTH_NAME[dipIdx[0]].slice(0, 3)} and ${MONTH_NAME[dipIdx[1]].slice(0, 3)}`} />,
               }}
+              read={[
+              `One bar for each month, showing the share of its days that had an outing, from ${fullYears[0]} to ${fullYears[fullYears.length - 1]}. The dashed line is the level for the whole year. The two orange bars are the quieter months.`,
+              'Years run down and months run across. Each cell is one month, shaded by the share of its days with an outing: pale is a thin month and deep orange is a month with something almost every day. The bracket marks the two quieter months.',
+            ]}
+              story={[
+              `The start of the year is my strongest time. ${MONTH_NAME[bestIdx]} has the highest share of active days, and ${[0, 1, 2].every((m) => monthShare[m] > fullShare) ? 'January, February and March are all above the level for the whole year' : 'the first months of the year are mostly above the level for the whole year'}.`,
+              `The months grow fuller as the years go on. In the grid, the rows from 2021 on are much darker than the first two, and the row for ${nowYear} is solid, every month with something every day.`,
+              'The end of 2024 shows how quickly it can turn. September 2024 was my quietest month since the comeback, and from the last day of October I went out every day to the end of the year.',
+            ]}
               source="Activity Log · days with at least one activity, by month"
             />
           </>
@@ -707,6 +798,15 @@ export default function Home() {
                   />
                 ),
               }}
+              read={[
+              'Each year is split in two and always adds up to 100%: outings indoors on a machine at the top, outings outside at the bottom. When the line between them climbs, more of that year moved outside.',
+              'The share of each kind of outing that was done indoors. Runs are mostly indoors, while walks, trail runs and hikes almost never are.',
+            ]}
+              story={[
+              `${pcs(indoorRunShare(2021)) === pcs(indoorRunShare(2022)) ? `In both 2021 and 2022, ${pcs(indoorRunShare(2021))}%` : `In 2021 and 2022, ${pcs(indoorRunShare(2021))}% and ${pcs(indoorRunShare(2022))}%`} of my running kilometres were on the treadmill, more than 2,000 km a year. In 2025 the share fell to ${pcs(indoorRunShare(2025))}%, and in ${nowYear} it is ${pcs(indoorRunShare(nowYear))}%.`,
+              `The treadmill has not gone away. I have run ${n0(sportKm('Run', nowYear, true))} km on it in ${nowYear}. The long runs are the ones that moved outside.`,
+              'Walks almost never happen indoors. For me a walk means going outside, and that is part of why the outside grew as walking grew.',
+            ]}
               source="Activity Log · trainer flag on each session"
             />
           </>
@@ -750,6 +850,15 @@ export default function Home() {
               />
             ),
           }}
+          read={[
+              'Two stacked columns: on the left each sport\u2019s share of my distance on foot, on the right its share of my climbing. A ribbon joins the two shares of the same sport. A ribbon that narrows climbs less than its distance, and one that widens climbs more.',
+              'The average metres climbed for every kilometre, for each sport. A taller bar means steeper ground.',
+            ]}
+          story={[
+              `A kilometre of hiking climbs about ${Math.round(mPerKm('Hike') / Math.max(0.1, mPerKm('Run')))} times more than a kilometre of running. Hikes are rare in my log, only ${n0(hikeN)} of them, and still they gave ${pcs(fShare('Hike', 'elev'))}% of all my climbing.`,
+              `If I had only run, seven years would have given me ${n0(flipOf('Run').elev)} m of climbing, about ${(flipOf('Run').elev / 8849).toFixed(1)} times the height of Everest. With the walks and the hills, the total is ${Math.floor(flipTot.elev / Math.max(1, flipOf('Run').elev))} times as much.`,
+              `Trail runs sit in between. They are ${pcs(fShare('TrailRun', 'dist'))}% of my distance and ${pcs(fShare('TrailRun', 'elev'))}% of my climbing. Walks are the quiet worker: they gave more climbing than any other sport, because there are so many of them.`,
+            ]}
           source="Activity Log · distance and climb on foot (run, walk, trail run, hike)"
         />
       </Container>

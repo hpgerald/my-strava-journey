@@ -134,6 +134,21 @@ export default function Sports() {
   const wkMaxX = Math.max(...WF.points.map((p) => p.x)), wkMaxY = Math.max(...WF.points.map((p) => p.y))
   const strength = (v) => { const a = Math.abs(v); return a < 0.1 ? 'close to none' : a < 0.3 ? 'weak' : a < 0.5 ? 'moderate' : 'strong' }
 
+  // ---- My Book: facts for the longer stories ----
+  const isTread = (a) => ['yes', 'true', '1'].includes(String(a.trainer).trim().toLowerCase())
+  const roadRunsIn = (y) => activities.filter((a) => a.sport_type === 'Run' && !isTread(a) && Number(a.year) === y).length
+  const walkTen = (b) => (b.walkKms || []).filter((k) => k >= 10).length
+  const walkTwenty = BY.filter((b) => (b.walkKms || []).some((k) => k >= 20)).map((b) => b.year)
+  const pastWalkTenMax = Math.max(0, ...BY.filter((b) => b.year < 2025).map(walkTen))
+  const yearKm = (b) => SPORTS.reduce((t, s) => t + b.km[s], 0)
+  const lowYear = habit.filter((b) => b.year < LY).reduce((m, b) => (yearKm(b) < yearKm(m) ? b : m), habit[0])
+  const trailRank = BY.slice().sort((a, b) => b.km.TrailRun - a.km.TrailRun).findIndex((b) => b.year === LY) + 1
+  const binAt = (k) => (r.treadBins.find((b) => b.km === k) || {}).count || 0
+  const kudosYear = (y) => { const xs = activities.filter((a) => Number(a.year) === y); return xs.length ? xs.reduce((t, a) => t + (Number(a.kudos) || 0), 0) / xs.length : 0 }
+  const trail2023 = r.climbs.filter((c) => c.mode === 'trail' && c.date.startsWith('2023') && c.elev >= 1000).length
+  const hikeTop = r.climbs.slice(0, 3).every((c) => c.mode === 'hike')
+  const ORDW = ['', 'first', 'second', 'third', 'fourth', 'fifth']
+
   // ticks
   const stepOf = (max) => (max > 2000 ? 1000 : max > 800 ? 500 : max > 200 ? 100 : max > 60 ? 20 : max > 20 ? 5 : 2)
   const ticksTo = (max) => { const st = stepOf(max); const out = []; for (let t = 0; t <= max * 1.04; t += st) out.push(t); return out }
@@ -216,6 +231,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Each row is one thing I can count, and the bar is cut into the four sports so the parts add up to the total on the right. Run your eye down one colour and watch it change: runs own the distance, walks the hours and the climb, and the small trail and hike parts grow big on the climb row.',
+              'The usual outing of each kind, by distance, longest at the top. The line under each name is the usual time moving for that kind of outing.',
+            ]}
+          story={[
+              'Which sport matters most depends on what I count. By outings, walks lead. By distance, runs lead by far. By hours, walks and runs are almost level. By climb, walks lead again, and trail runs and hikes come close behind.',
+              `Personal records lean heavily to running: ${pc(share('prs', 'Run'))}% of them came on runs and ${pc(share('prs', 'Walk'))}% on walks. Kudos follow the outings more evenly, with runs and walks taking almost the same share.`,
+            ]}
           source="Activity Log · runs, walks, trail runs and hikes; distance and climb on foot only"
         />
 
@@ -264,6 +287,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Each column is a year, stacked by sport, and the number on top is the total kilometres on foot. The column with a star is the year still running.',
+              'Two lines: the kilometres I walked each year and the kilometres I ran. The mark shows the year the walking line first went above the running line.',
+            ]}
+          story={[
+              `My two biggest years on foot were 2021 and 2022, both close to 2,900 km, and both were built on running, most of it on the treadmill. ${lowYear.year} was my smallest year since the comeback, at ${n0(yearKm(lowYear))} km. Since then each year has grown again, and ${LY} is already at ${n0(yearKm(latest))} km${so ? ' with the year not finished' : ''}.`,
+              `The trail kilometres come and go with my trips to the hills. There was almost nothing before 2022, then a peak in 2023, and ${LY} is ${trailRank === 1 ? 'my biggest trail year' : `my ${ORDW[trailRank] || `${trailRank}th`} biggest trail year`} so far.`,
+            ]}
           source="Activity Log · distance on foot by sport and year"
         />
 
@@ -309,6 +340,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Each column is a year of running, split into kilometres on the treadmill and kilometres outside. The number on top is the share that was on the treadmill.',
+              'Every treadmill run counted by its distance, rounded to the nearest kilometre. The tall spikes stand on 5, 10, 15 and 21 km, the round numbers where I tend to stop.',
+            ]}
+          story={[
+              `The spikes are my habits on the screen. Rounded to the nearest kilometre, ${n0(binAt(5))} treadmill runs come out at 5 km and ${n0(binAt(10))} at 10 km. Those two numbers alone hold ${pc((binAt(5) + binAt(10)) / Math.max(1, M.tread.n))}% of all my treadmill runs.`,
+              `Outside, my running grew quickly once it started. In 2024 I ran outside only ${n0(roadRunsIn(2024))} times. In 2025 it was ${n0(roadRunsIn(2025))}, and in ${LY}${so} ${n0(roadRunsIn(LY))}. That is how the outdoor part of the columns finally passed the treadmill.`,
+            ]}
           source="Activity Log · runs marked as treadmill (trainer) against runs outdoors"
         />
 
@@ -355,6 +394,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'One ridge for each way of moving, showing how many outings went at each pace. Left is quicker and right is slower, and the mark is the usual pace. The treadmill sits far to the left on its own.',
+              'One column per year for my treadmill runs. The bold tick is the usual pace that year and the band covers the middle half of my runs. The axis is upside down, so a quicker year stands taller.',
+            ]}
+          story={[
+              `My quickest treadmill year was ${quickYear.year}, at a usual ${pace(quickYear.treadPace.med)} a kilometre. After that the usual pace slowed year by year, to ${yr(2025) && yr(2025).treadPace ? pace(yr(2025).treadPace.med) : ''} in 2025, and in ${LY} it came back to ${latest.treadPace ? pace(latest.treadPace.med) : ''}.`,
+              `The slower kilometres outside are real work too. Each outdoor running kilometre climbs about ${n0(M.road.mPerKm)} m on average, and a treadmill kilometre climbs nothing. The ridges show the result: outside, my running sits much closer to my walking than to the treadmill.`,
+            ]}
           source={`Activity Log · moving time over distance; ${r.oddTread} treadmill runs logged quicker than ${pace(TREAD_MIN)} a km left out of pace as likely misreadings`}
         />
 
@@ -402,6 +449,15 @@ export default function Sports() {
                   />
                 ),
               }}
+              read={[
+              'One ridge for each year, showing how many walks I did at each distance from 0 to 20 km. The mark is the usual walk of that year. Read down the years and the hump moves to the right.',
+              'The share of each year\u2019s walks that were shorter than 3 km. The bars fall almost to nothing in the last year.',
+            ]}
+              story={[
+              `In ${LY}${so}, ${n0(walkTen(latest))} of my ${n0(latest.walkN)} walks were 10 km or more. Before 2025, no year had more than ${n0(pastWalkTenMax)} walks that long.`,
+              walkTwenty.length ? `The longest walks are new as well. Every walk of 20 km or more in my log came in ${walkTwenty.join(' or ')}.` : '',
+              'A walk used to fill a gap in the day. Now it is the main outing of the day.',
+            ]}
               source="Activity Log · walks, indoor and outdoor"
             />
           </>
@@ -447,6 +503,15 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Each column counts the outings of a half marathon or more in one year, split by how I did them: treadmill, outdoor run, trail run, walk or hike.',
+              'The longest single outing of each kind, with the month it happened.',
+            ]}
+          story={[
+              `My long days came in two waves. The first was 2021 and 2022, with ${n0(yr(2021) ? yr(2021).longN : 0)} and ${n0(yr(2022) ? yr(2022).longN : 0)}, almost all on the treadmill. Then they became rare, only ${n0(yr(2024) ? yr(2024).longN : 0)} in 2024. The second wave is now, and this time most of them are outside.`,
+              latest.long.walk ? `Walks now count among my long days too. ${cap(word(latest.long.walk))} of my walks in ${LY}${so} reached 21.1 km or more.` : '',
+              'The longest of each kind tells the same story. Only the treadmill marathon is from the first wave. The longest trail run, outdoor run and walk all came later, once the long days had moved outside.',
+            ]}
           source="Activity Log · outings of 21.1 km or more by way of moving"
         />
 
@@ -489,6 +554,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Each line is a road one kilometre long, climbing at that sport\u2019s real average slope. I drew the rise steeper than it really is so the gentle ones can be told apart, and the number at the end is the true metres climbed.',
+              'My biggest single climbs, largest at the top, with the month, the sport and the distance.',
+            ]}
+          story={[
+              `${hikeTop ? 'My three biggest climbs are all hikes.' : 'My biggest climbs are hikes and trail runs.'} After them come the trail runs of 2023, my year of the hills, with ${word(trail2023)} climbs of more than 1,000 m in that year alone.`,
+              'Walks did the most climbing in total, and no single walk comes near the top of the list. A walk climbs a little at a time, and over hundreds of walks that adds up to more than any other sport.',
+            ]}
           source="Activity Log · elevation gain on foot over distance on foot"
         />
 
@@ -536,6 +609,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'One ridge for each way of moving, showing the hour its outings started, from midnight on the left to midnight on the right. The mark is the busiest hour.',
+              'The share of each kind of outing that fell on a Saturday or Sunday. The dashed line is 29%, what an even week would give.',
+            ]}
+          story={[
+              `Hikes lean on the weekend even more than trail runs, with ${pc(M.hike.weekend)}% of them on a Saturday or Sunday. A hike needs a whole day and a trip, and the weekend is when I have both.`,
+              'The treadmill is the opposite. It is my weekday tool, and it works at hours when the road is dark, late in the evening or before dawn. The walks fill the evening, after the working day.',
+            ]}
           source="Activity Log · local start hour and weekday of every outing on foot"
         />
 
@@ -579,6 +660,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'The number of days in each year with both a run and a walk.',
+              'The same days, sorted by the time from the end of the first outing to the start of the second. The tallest bar, eight hours or more, is one outing in the morning and the other in the evening.',
+            ]}
+          story={[
+              `Most pairs were far apart. ${n0(far8)} of the ${n0(D.total)} days had eight hours or more between the two, so these were two separate parts of the day. Only ${word(under30)} pairs came close together, one straight after the other.`,
+              `The doubles belong to the years when I was building the habit. ${dblPeak[0]} had the most, and in ${LY}${so} there have been ${n0(D.perYear[LY] || 0)}.`,
+            ]}
           source="Activity Log · start time and moving time of runs and walks on the same date"
         />
 
@@ -620,6 +709,15 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Strava\u2019s relative effort, a score from my heart rate, divided by the hours moving, for each way of moving with enough scored outings. A longer bar means my heart worked harder for each hour.',
+              'The average kudos each kind of outing received. The line under each name is the personal records it set per outing.',
+            ]}
+          story={[
+              `Kudos grew over the years. In 2021 an outing got about ${n0(kudosYear(2021))} kudos on average. Since 2022 it has stayed between ${n0(Math.min(...[2022, 2023, 2024, 2025, LY].map(kudosYear)))} and ${n0(Math.max(...[2022, 2023, 2024, 2025, LY].map(kudosYear)))}.`,
+              unrated.length ? `${cap(unrated.map((k) => ofModeName(k)).join(' and '))} are left off the effort chart, because too few of them have a heart-rate score.` : '',
+              'The two charts point in different directions. The treadmill is where my heart works hardest for each hour, and it gets fewer kudos than the trail runs. The trail runs score lower per hour, and they get the most cheers.',
+            ]}
           source="Activity Log · Strava relative effort (heart rate), kudos and personal records"
         />
 
@@ -667,6 +765,14 @@ export default function Sports() {
               />
             ),
           }}
+          read={[
+              'Every treadmill run as a dot: across is the distance and up is the pace, with quicker kilometres higher. The line is the best straight fit through the dots, and the number on it shows how strong the link is, from 0 for none to 1 for a perfect line.',
+              'Every week since 2021 as a dot: across is the kilometres I ran that week and up is the kilometres I walked. A flat line and a number near zero mean the two did not move together.',
+            ]}
+          story={[
+              `The link on the treadmill is ${strength(F.r)}, so it is a tendency and not a rule. Plenty of short runs were quick and some long ones were slow. On average, each extra kilometre came with about ${secPerKm} seconds quicker per kilometre.`,
+              'The weeks show a calm picture. A week with a lot of running could have almost any amount of walking. My walking did not wait for a quiet running week, and my running did not wait for a quiet walking week.',
+            ]}
           source={`Activity Log · least-squares fits; treadmill runs quicker than ${pace(TREAD_MIN)} a km left out`}
         />
 

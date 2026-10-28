@@ -31,7 +31,6 @@ await page.evaluate((k) => { document.documentElement.classList.add('pdf-scaled'
 await page.evaluate(() => { document.title = 'Showing Up · Gerald Tesha' })
 await page.waitForTimeout(500)
 
-const lastDay = await page.evaluate(() => (document.querySelector('.bk-cover__d') || {}).textContent || '')
 const footer = `<div style="width:100%;padding:0 15mm;display:flex;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;font-size:7px;letter-spacing:0.08em;text-transform:uppercase;color:#6b6b6b;"><span>Showing Up &middot; Gerald Tesha</span><span class="pageNumber"></span></div>`
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true })
@@ -57,4 +56,4 @@ if (has('qpdf') && has('pdftotext')) {
 }
 await browser.close()
 const mb = (fs.statSync(OUT).size / 1048576).toFixed(1)
-console.log(`wrote ${OUT} (${mb} MB) · ${lastDay}`)
+console.log(`wrote ${OUT} (${mb} MB)`)

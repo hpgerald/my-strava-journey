@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import BookStory from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { DayClocks, TwoPaths, DayPile, WeekStrips, NextGrid, IsoKm } from '../charts/MeaningCharts.jsx'
@@ -84,6 +85,18 @@ export default function WhatItMeans() {
   const longYear = habitYears.reduce((b, r) => (r.kmPerActive > b.kmPerActive ? r : b), habitYears[0])
   const lowYear = habitYears.filter((r) => !r.partial).reduce((b, r) => (r.km < b.km ? r : b), habitYears[0])
 
+  // ---- My Book: facts for the longer stories ----
+  const early = M.perYear.filter((r) => r.year < habitYear)
+  const steady = habitYears.filter((r) => !r.partial && r.year > habitYear - 1)
+  const steadyLo = Math.min(...steady.map((r) => r.minPerDay)), steadyHi = Math.max(...steady.map((r) => r.minPerDay))
+  const rel = (r, f) => (peak[f] ? r[f] / peak[f] : 0)
+  const widestGap = pathYears.filter((r) => r.year > peak.year).reduce((b, r) => (!b || rel(r, 'share') - rel(r, 'kmPerDay') > rel(b, 'share') - rel(b, 'kmPerDay') ? r : b), null)
+  const bothAbove = cur !== peak && rel(cur, 'share') >= 1 && rel(cur, 'kmPerDay') >= 1
+  const weekAbove = M.echo.filter((x) => x.o > 0).every((x) => x.km > M.avgDayKm)
+  const lrOut = 1 - lrShare('rest')
+  const projKm = cur.km + (cur.partial ? cur.kmPerActive * cur.share * daysLeft : 0)
+  const wLowYear = W.filter((w) => w.year < cur.year).reduce((b, w) => (w.under10 > b.under10 ? w : b), W[0])
+
   return (
     <DetailFrame
       {...frame}
@@ -116,6 +129,11 @@ export default function WhatItMeans() {
           <ul className="chron__key" aria-hidden="true">
             <li>A full circle is one day.</li>
           </ul>
+          <BookStory>{[
+            `Each clock is one year, and the filled wedge is the time I spent moving on an average day, rest days included. ${early.length ? `In ${early.map((r) => r.year).join(' and ')} the wedges are thin slivers of ${early.map((r) => `${n0(r.minPerDay)}`).join(' and ')} minutes a day.` : ''}`,
+            `From ${steady[0] ? steady[0].year : habitYear} to ${steady.length ? steady[steady.length - 1].year : habitYear} the clocks are almost the same size, between ${n0(steadyLo)} and ${n0(steadyHi)} minutes a day. The habit was steady long before it became every day. ${cur.partial ? `In ${cur.year} the wedge is the biggest of all, more than an hour and a half of every day.` : ''}`,
+            'Spread over a day, it is not a lot of time. That is the first lesson, and the rest of this chapter follows from it.',
+          ]}</BookStory>
         </section>
 
         {/* ===== 1. count the days ===== */}
@@ -158,6 +176,14 @@ export default function WhatItMeans() {
               />
             ),
           }}
+          read={[
+              `Two lines against ${peak.year}, my best year for distance per day. The black line is the share of days I went out and the orange line is the distance per calendar day, both as a percentage of ${peak.year}. The shaded gap shows how far the distance fell while the days held.`,
+              `The number of days each year with ${LONG_KM} km or more on foot. The orange bar is the year in progress.`,
+            ]}
+          story={[
+              widestGap ? `The gap was widest in ${widestGap.year}. That year I went out on ${pc(rel(widestGap, 'share'))}% as many days as in ${peak.year}, and covered only ${pc(rel(widestGap, 'kmPerDay'))}% of the distance per day.` : '',
+              bothAbove ? `In ${cur.year} both lines have climbed back above where they started. I go out on more days than in ${peak.year} and I cover a little more each day. The days came back first, and the distance followed them.` : 'The days came back first, and the distance followed them.',
+            ]}
           source="Activity Log · days with any activity, and distance on foot, per calendar year"
         />
 
@@ -201,6 +227,14 @@ export default function WhatItMeans() {
               />
             ),
           }}
+          read={[
+              `Every day out since ${habitYear} is a dot, stacked in the 1 km band its distance on foot fell in. The orange dots on the left are the small days under ${SMALL_KM} km, and the tall stacks show my usual days.`,
+              `The number of small days under ${SMALL_KM} km in each year.`,
+            ]}
+          story={[
+              `The small days were most common in ${smallTop.year}, with ${n0(smallTop.small)} of them${smallTop === low || smallTop === lowYear ? ', in my lowest year' : ''}. In ${cur.year}${cur.partial ? ' so far' : ''} there have been ${n0(cur.small)}, in a year with no rest day at all.`,
+              'On those days the outing was short, or it was one of the other activities. Either way, it counted as a day out, and it kept the chain going for the next day.',
+            ]}
           source="Activity Log · every day with an activity since the habit began, distance on foot only"
         />
 
@@ -245,6 +279,14 @@ export default function WhatItMeans() {
                   />
                 ),
               }}
+              read={[
+              'Every full week as a dot, one row per year, placed by its distance on foot. The shaded band holds the middle half of the weeks and the tick is the usual week. The year in progress is orange.',
+              'The number of weeks in each year with less than 10 km on foot.',
+            ]}
+              story={[
+              `The left edge of each row is where a year was won or lost. In ${wLowYear.year}, ${n0(wLowYear.under10)} weeks fell under 10 km, more than in any other year. In ${cur.year} the whole row has moved to the right, and the quiet weeks are gone.`,
+              'A floor is easier to keep than a peak. A week of 20 km is three ordinary walks, and I can almost always find time for that.',
+            ]}
               source="Activity Log · distance on foot per full week since the habit began"
             />
           </>
@@ -291,6 +333,14 @@ export default function WhatItMeans() {
               />
             ),
           }}
+          read={[
+              `The average distance on foot on the days around a long day of ${LONG_KM} km or more, from three days before to seven days after. The tall bar is the long day itself, and the dashed line is a typical day.`,
+              `One square for each run of ${LONG_RUN_KM} km or more, grouped by what I did the next day: ran again, walked, did something else, or rested.`,
+            ]}
+          story={[
+              weekAbove ? 'Even a full week after a long day, my daily distance stays above a typical day. The long days come in my strongest weeks, and those weeks stay strong after them.' : 'In the days after a long day, my distance stays above a typical day for most of the week.',
+              `After a long run I went out again the next day ${pc(lrOut)}% of the time. Rest after a long run is the exception for me.`,
+            ]}
           source={`Activity Log · days of ${LONG_KM} km or more on foot and runs of ${LONG_RUN_KM} km or more since the habit began`}
         />
 
@@ -334,6 +384,14 @@ export default function WhatItMeans() {
               />
             ),
           }}
+          read={[
+              'Across is the share of days I went out, and up is the distance per day out. Each curve is one yearly total, and each year sits where its two levers put it. A year can reach the same total by going further or by going more often.',
+              'The distance I covered on an average day out, each year.',
+            ]}
+          story={[
+              `The distance per day out fell year after year from 2021 to 2024, and it has climbed again since. ${cur.partial ? `At this year\u2019s pace, ${cur.year} would finish near ${n0(Math.round(projKm / 10) * 10)} km.` : ''}`,
+              'For me the easier lever is the days. I cannot always go far, but I can almost always go.',
+            ]}
           source="Activity Log · days with any activity and distance on foot per calendar year"
         />
 

@@ -166,7 +166,6 @@ function Cover({ F }) {
         </dl>
       </div>
       <div className="bk-cover__foot">
-        <p className="bk-cover__d">{fmtShort(F.firstISO)} to {fmtShort(F.lastISO)}</p>
         <p className="bk-cover__d">My Strava Journey</p>
       </div>
     </section>

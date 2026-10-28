@@ -82,6 +82,12 @@ export default function Timeline() {
   const firstsBy = firstYears.map((y) => ({ year: y, n: F.filter((f) => f.date.slice(0, 4) === String(y)).length }))
   const lastFirst = F[F.length - 1]
 
+  // ---- My Book: facts for the longer stories ----
+  const monthsSince = C.monthly.filter((m) => m.m > (S.end || '').slice(0, 7)).length
+  const lastStep = steps[steps.length - 1]
+  const firstsNow = (firstsBy.find((y) => y.year === lastYear) || { n: 0 }).n
+  const firstsEarly = F.filter((f) => Number(f.date.slice(0, 4)) <= 2022).length
+
   // ---- the rail ----
   const byYear = firstYears.map((y) => ({ year: y, items: C.events.filter((e) => e.date.slice(0, 4) === String(y)) }))
 
@@ -177,6 +183,15 @@ export default function Timeline() {
               />
             ),
           }}
+          read={[
+              'Each bar is the number of days it took me to log 250 more outings, in order from the first 250 to the latest. A shorter bar means those outings came faster.',
+              'The longest gap between two outings in each year. The grey years are before the comeback, and the scale stops at 40 days so the small gaps can still be seen.',
+            ]}
+          story={[
+              `The faint bars under the chronicle above are my outings in each month. In the first two years they are thin and broken, and then comes the empty stretch of the long pause. After I came back the row never drops to zero again: ${n0(monthsSince)} months in a row, each with at least one outing.`,
+              `Since the comeback my longest break in any year has been ${word(C.maxAfter)} days, and breaks of a week or more have happened ${n0(C.after.length)} times in all. In ${lastYear}${so} there has been none.`,
+              `At my pace now, 250 outings take about ${Math.round(lastStep.days / 30.44)} months. The bars are not getting shorter every time, and that is fine. Since I took on longer outings, a day of one outing counts the same as a day of two, and the chain matters more than the count.`,
+            ]}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
         />
 
@@ -222,6 +237,14 @@ export default function Timeline() {
               />
             ),
           }}
+          read={[
+              'Each bar is one first on foot, and its length is how many days into my log it came. The colour shows how I did it, and the line under each name gives the detail and the day of the log.',
+              'The number of firsts in each year. Years with none are grey.',
+            ]}
+          story={[
+              `${cap(word(firstsEarly))} of my ${word(F.length)} firsts came by the end of 2022. Since then they have come one at a time, each one needing a trip or a long day.`,
+              firstsNow ? '' : `There has been no new first in ${lastYear} yet. This year is about the days, and every day so far has had an outing.`,
+            ]}
           source="Activity Log · the first outing on foot to pass each mark"
         />
 

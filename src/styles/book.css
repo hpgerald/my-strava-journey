@@ -59,12 +59,12 @@
 .bk-cover__cap { margin: 0; max-width: 62ch; text-align: center; font-family: var(--font-mono); font-size: max(0.62rem, 1.45cqw); line-height: 1.5; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
 .bk-cover__cap span { color: var(--accent-ink); }
 .bk-cover__base { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 4cqw; border-top: 1px solid var(--ink); padding-top: 3cqw; }
-.bk-cover__t { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 14.5cqw; line-height: 0.84; letter-spacing: -0.04em; }
+.bk-cover__t { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 19cqw; line-height: 0.84; letter-spacing: -0.04em; }
 .bk-cover__t span { color: var(--accent); }
-.bk-cover__nums { margin: 0; display: grid; gap: 1.6cqw; }
+.bk-cover__nums { margin: 0; display: grid; gap: 1.2cqw; }
 .bk-cover__nums div { display: flex; flex-direction: column; margin: 0; }
-.bk-cover__nums dd { order: 1; margin: 0; font-family: var(--font-display); font-weight: 800; font-size: max(1.05rem, 3.6cqw); line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
-.bk-cover__nums dt { order: 2; font-family: var(--font-mono); font-size: max(0.6rem, 1.3cqw); letter-spacing: var(--tr-caps); text-transform: uppercase; color: var(--fg-muted); text-align: right; margin-top: 0.3cqw; }
+.bk-cover__nums dd { order: 1; margin: 0; font-family: var(--font-display); font-weight: 800; font-size: max(0.9rem, 2.5cqw); line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+.bk-cover__nums dt { order: 2; font-family: var(--font-mono); font-size: max(0.55rem, 1.05cqw); letter-spacing: var(--tr-caps); text-transform: uppercase; color: var(--fg-muted); text-align: right; margin-top: 0.3cqw; }
 .bk-cover__nums div:last-child dd { color: var(--accent-ink); }
 .bk-cover__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem 2cqw; margin-top: 3.4cqw; }
 
@@ -126,6 +126,21 @@
 .bk-open__t { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(2.4rem, 1.5rem + 3.6vw, 4.6rem); line-height: 0.95; letter-spacing: -0.02em; }
 .bk-open__s { margin: var(--sp-2) 0 0; font-size: var(--fs-md); color: var(--fg-muted); }
 .bk-open__lede { grid-column: 1 / -1; margin: var(--sp-5) 0 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.2rem, 1rem + 0.8vw, 1.7rem); line-height: 1.32; text-wrap: pretty; }
+
+/* ---- how to read and the story: book only, under the charts ---- */
+.bk-read { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3) var(--grid-gap); margin-top: var(--sp-5); border-top: 1px solid var(--rule); padding-top: var(--sp-3); }
+.bk-read__k, .bk-story__k { margin: 0 0 var(--sp-1); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; font-weight: 700; color: var(--accent-ink); }
+.bk-read__t { margin: 0; font-size: var(--fs-sm); line-height: 1.5; color: var(--fg); text-wrap: pretty; }
+.bk-story { margin-top: var(--sp-5); border-top: 2px solid var(--ink); padding-top: var(--sp-3); }
+.bk-story__body { column-count: 2; column-gap: var(--sp-6); }
+.bk-story__body p { margin: 0 0 var(--sp-3); font-size: var(--fs-base); line-height: 1.6; text-wrap: pretty; break-inside: avoid-column; }
+/* the year pages have more room under their charts, so their story reads larger */
+.bk-yr .bk-story__body p { font-size: var(--fs-md); line-height: 1.55; }
+.bk-yr .bk-read__t { font-size: var(--fs-base); }
+@media (max-width: 47.999rem) {
+  .bk-read { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .bk-story__body { column-count: 1; }
+}
 
 /* ---- year openers inside chapter 2 ---- */
 .bk-year { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); margin-top: var(--sp-8); padding-top: var(--sp-3); border-top: 3px solid var(--ink); }

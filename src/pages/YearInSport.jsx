@@ -4,6 +4,7 @@ import DetailFrame from '../components/DetailFrame.jsx'
 import { useBook } from '../components/BookContext.js'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import BookStory from '../components/BookStory.jsx'
 import OutingSky from '../charts/OutingSky.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import YearMonths from '../charts/YearMonths.jsx'
@@ -42,6 +43,7 @@ const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); 
 const ORD = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
 const WORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const word = (n) => WORD[n] || String(n)
+const cap = (t) => (t ? t.charAt(0).toUpperCase() + t.slice(1) : t)
 const chg = (cur, prv) => (prv > 0 ? (cur - prv) / prv : null)
 const chgTxt = (c) => (c == null ? '' : c >= 0 ? `up ${pc(c)}%` : `down ${pc(-c)}%`)
 const more = (c, up, down) => (c == null ? 'no comparable' : c >= 1 ? `${Math.round(1 + c)} times as ${up === 'more' ? 'much' : up}` : c >= 0 ? `${pc(c)}% ${up}` : `${pc(-c)}% ${down}`)
@@ -184,6 +186,62 @@ export default function YearInSport({ year: bookYear } = {}) {
   const nCountries = r.countries.filter((c) => isNamedCountry(c.country)).length
   const othersN = r.countries.filter((c) => !isNamedCountry(c.country)).reduce((t, c) => t + c.activities, 0)
 
+  // ---- My Book: facts for the longer story under each section ----
+  const kmOf = (a) => Number(a.distance_km) || 0
+  const FOOTS = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+  const footActs = yearActs.filter((a) => FOOTS.has(a.sport_type))
+  const allFootKm = allStats.reduce((t, x) => t + x.footKm, 0) || 1
+  const kudosPer = s.n ? s.kudos / s.n : 0
+  const avgKm = (t) => { const xs = yearActs.filter((a) => a.sport_type === t); return xs.length ? xs.reduce((u, a) => u + kmOf(a), 0) / xs.length : 0 }
+  const half = Math.ceil(moIdx.length / 2)
+  const kmFirst = moIdx.slice(0, half).reduce((t, i) => t + s.monthsKm[i], 0)
+  const kmSecond = moIdx.slice(half).reduce((t, i) => t + s.monthsKm[i], 0)
+  const months100 = moIdx.filter((i) => s.monthsKm[i] >= 100).length
+  const tOf = (a) => { const t = (a.date || '').slice(11, 16); return t }
+  const byClock = yearActs.filter((a) => (a.date || '').length >= 16).slice().sort((a, b) => (tOf(a) < tOf(b) ? -1 : 1))
+  const earliest = byClock[0], latestOut = byClock[byClock.length - 1]
+  const isWkend = (a) => a.weekday === 'Saturday' || a.weekday === 'Sunday'
+  const wkendFoot = footActs.filter(isWkend), wkdayFoot = footActs.filter((a) => !isWkend(a))
+  const avgOf = (xs) => (xs.length ? xs.reduce((u, a) => u + kmOf(a), 0) / xs.length : 0)
+  const restByDay = (() => {
+    const c = Array(7).fill(0)
+    const d0 = Date.parse(r.startISO + 'T00:00:00Z'), d1 = Date.parse(r.endISO + 'T00:00:00Z')
+    for (let t = d0; t <= d1; t += 86400000) { const iso = new Date(t).toISOString().slice(0, 10); if (!s.activeSet.has(iso)) c[(new Date(t).getUTCDay() + 6) % 7] += 1 }
+    return c
+  })()
+  const restTop = restByDay.indexOf(Math.max(...restByDay))
+  const halfUp = footActs.filter((a) => kmOf(a) >= 21.0975).length
+  const tenUp = footActs.length ? footActs.filter((a) => kmOf(a) >= 10).length / footActs.length : 0
+  const wkKms = r.weekly.series.map((w) => w.km)
+  const under10wk = wkKms.filter((k) => k < 10).length
+  const noGps = s.n - r.located
+  const rankH = rankOf((x) => x.hours), rankP = rankOf((x) => x.prs), rankK = rankOf((x) => x.kudos)
+  const elevTop = moIdx.reduce((b, i) => (s.monthsElev[i] > s.monthsElev[b] ? i : b), moIdx[0])
+  const moreThanPrev = ps ? moIdx.filter((i) => s.monthsActivities[i] > ps.monthsActivities[i]).length : 0
+  const runsAll = yearActs.filter((a) => a.sport_type === 'Run')
+  const runsTread = runsAll.filter((a) => ['yes', 'true', '1'].includes(String(a.trainer).trim().toLowerCase())).length
+  const trailN = yearActs.filter((a) => a.sport_type === 'TrailRun').length, hikeN = yearActs.filter((a) => a.sport_type === 'Hike').length
+  const hourOf = (a) => parseInt(a.hour, 10)
+  const amActs = yearActs.filter((a) => hourOf(a) < 10), pmActs = yearActs.filter((a) => hourOf(a) >= 16 && hourOf(a) < 21)
+  const shareOf = (xs, t) => (xs.length ? xs.filter((a) => a.sport_type === t).length / xs.length : 0)
+  const before6 = yearActs.filter((a) => hourOf(a) < 6).length
+  const fullWeeks = (() => { let n = 0; const d0 = Date.parse(r.startISO + 'T00:00:00Z'), d1 = Date.parse(r.endISO + 'T00:00:00Z'); for (let t = d0; t + 6 * 86400000 <= d1; t += 86400000) { const dow = (new Date(t).getUTCDay() + 6) % 7; if (dow) continue; let all = true; for (let k = 0; k < 7; k++) if (!s.activeSet.has(new Date(t + k * 86400000).toISOString().slice(0, 10))) { all = false; break } if (all) n++ } return n })()
+  const twoDays = r.multi.two + r.multi.more
+  const under3 = footActs.filter((a) => kmOf(a) < 3).length
+  const km10Share = (() => { const t = footActs.reduce((u, a) => u + kmOf(a), 0) || 1; return footActs.filter((a) => kmOf(a) >= 10).reduce((u, a) => u + kmOf(a), 0) / t })()
+  const bestWk = r.weekly.series.reduce((b, w) => (w.km > b.km ? w : b), r.weekly.series[0] || { w: 0, km: 0 })
+  const bestWkISO = new Date((bestWk.w * 7 + 4) * 86400000).toISOString().slice(0, 10)
+  const wk50 = wkKms.filter((k) => k >= 50).length
+  const firstSeen = (() => { const m = {}; for (const a of activities) { const g = geoByKey[a.activity_key]; if (g && g.country === 'Tanzania' && g.region && (!m[g.region] || a.date < m[g.region])) m[g.region] = a.date } return m })()
+  const newRegs = Object.entries(firstSeen).filter(([, d]) => Number(d.slice(0, 4)) === Y).map(([k]) => k)
+  const abroadN = r.countries.filter((c) => c.country !== 'Tanzania').reduce((t, c) => t + c.activities, 0)
+  const bestKmYear = allStats.reduce((b, x) => (x.footKm > b.footKm ? x : b), allStats[0])
+  const kmPerOut = (x) => (x.footN ? x.footKm / x.footN : 0)
+  const rankKpo = rankOf((x) => kmPerOut(x))
+  const hillShare = (() => { const tot = r.flip.reduce((t, d) => t + d.elev, 0); return tot ? r.flip.filter((d) => d.key === 'TrailRun' || d.key === 'Hike').reduce((t, d) => t + d.elev, 0) / tot : 0 })()
+  const domOf = (xs) => { const c = { runs: 0, walks: 0, 'other activities': 0, 'trail runs and hikes': 0 }; for (const a of xs) c[a.sport_type === 'Run' ? 'runs' : a.sport_type === 'Walk' ? 'walks' : a.sport_type === 'TrailRun' || a.sport_type === 'Hike' ? 'trail runs and hikes' : 'other activities'] += 1; const k = Object.keys(c).sort((x, z) => c[z] - c[x])[0]; return [k, xs.length ? c[k] / xs.length : 0] }
+  const sportWord = (sp) => ({ Run: 'run', Walk: 'walk', 'Trail Run': 'trail run', TrailRun: 'trail run', Hike: 'hike' }[sp] || 'outing')
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]}
@@ -219,6 +277,10 @@ export default function YearInSport({ year: bookYear } = {}) {
             ]}
           />
           <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} />
+          <BookStory>{[
+            `Each dot above is one outing of ${Y}, placed by its day across the year and by the hour it started, and a bigger dot is a longer distance. The marks pick out the longest silence of the year, the longest run of days and the three biggest days.`,
+            `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} personal records on Strava segments` : ''}.`}`,
+          ]}</BookStory>
         </section>
 
         {/* ===== 1. month by month ===== */}
@@ -248,6 +310,16 @@ export default function YearInSport({ year: bookYear } = {}) {
           }}
           left={{ title: 'Outings, month by month', node: <YearMonths months={monthsData} /> }}
           right={{ title: 'The kilometres adding up', node: <YearProgress cum={s.cumByMonth} lastMonth={s.lastActiveMonth} total={s.footKm} /> }}
+          read={[
+              'One bar for each month, as tall as the number of outings that month. The busiest month is labelled.',
+              'The line adds up my kilometres on foot through the year, month by month. A steep part is a big month and a flat part is a quiet one.',
+            ]}
+          story={[
+              moIdx.length > 1 ? `In the first ${word(half)} months I covered ${n0(kmFirst)} km on foot, and in the last ${word(moIdx.length - half)} ${n0(kmSecond)} km.${isPartial ? ' The last month is not finished yet.' : kmSecond > kmFirst * 1.15 ? ' The line gets steeper as the year goes on.' : kmFirst > kmSecond * 1.15 ? ' The line flattens as the year goes on.' : ' The line climbs at an even slope.'}` : '',
+              months100 ? (months100 === moIdx.length ? `Every month${so} passed 100 km on foot.` : `${cap(word(months100))} of the ${word(moIdx.length)} months passed 100 km on foot.`) : 'No month reached 100 km on foot. The distance was still to come.',
+              s.monthsElev[elevTop] >= 100 ? `My biggest month for climbing was ${MONTH_F[elevTop]}, with ${n0(s.monthsElev[elevTop])} m on foot.` : '',
+              ps ? `Month against month, ${word(moreThanPrev)} of the ${word(moIdx.length)} months had more outings than the same month of ${prevYear}.` : '',
+            ]}
           source="Activity Log · outings and distance on foot, by month"
         />
 
@@ -277,6 +349,16 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing, by sport', node: <SportTreemap rows={r.sportRows} /> }}
               right={{ title: 'Distance against climb, on foot', node: r.flip.length >= 2 ? <FootFlip items={r.flip} /> : <p className="yis-empty">Only one sport on foot this year.</p> }}
+              read={[
+              'Each block is a kind of outing, sized by how many times I did it. Everything that is not on foot sits together in one grey block called other activities.',
+              'Two stacked columns: on the left each sport\u2019s share of my distance on foot that year, on the right its share of the climbing. A ribbon joins the two shares of the same sport, so a ribbon that widens climbs more than its distance.',
+            ]}
+              story={[
+              `My average walk this year was ${avgKm('Walk').toFixed(1)} km and my average run ${avgKm('Run').toFixed(1)} km.${s.longestWalk && s.longestWalk.km >= 10 ? ` The longest walk was ${s.longestWalk.km.toFixed(1)} km.` : ''}`,
+              runsAll.length ? `${cap(word(runsTread))} of my ${word(runsAll.length)} runs were on the treadmill${runsTread === runsAll.length ? ', every single one' : runsTread / runsAll.length < 0.5 ? ', fewer than half' : ''}.` : '',
+              trailN + hikeN ? `I did ${trailN ? `${word(trailN)} trail ${trailN === 1 ? 'run' : 'runs'}` : ''}${trailN && hikeN ? ' and ' : ''}${hikeN ? `${word(hikeN)} ${hikeN === 1 ? 'hike' : 'hikes'}` : ''}. ${hillShare >= 0.25 ? `Together they gave ${pc(hillShare)}% of the year\u2019s climbing.` : 'They added only a little to the climbing that year.'}` : 'There were no trail runs or hikes this year, so the climbing came from walks and runs.',
+              mix.other ? `The other activities were ${pc(mix.other / s.n)}% of my outings. They count as days out, and they add nothing to the distance or the climb.` : '',
+            ]}
               source="Activity Log · outings by sport, distance and climb on foot"
             />
           </>
@@ -316,6 +398,16 @@ export default function YearInSport({ year: bookYear } = {}) {
                   />
                 ),
               }}
+              read={[
+              'A 24-hour clock with midnight at the top and noon at the bottom. Each spoke is one hour, and its length is the number of outings that started in that hour.',
+              'One bar for each day of the week, counting every outing that started on it. The orange bar is the busiest day and the grey bar the quietest.',
+            ]}
+              story={[
+              earliest && latestOut ? `The earliest start of the year was at ${tOf(earliest)} on ${fmtDay(earliest.date)}, and the latest at ${tOf(latestOut)} on ${fmtDay(latestOut.date)}.` : '',
+              amActs.length >= 5 && pmActs.length >= 5 ? (domOf(amActs)[0] !== domOf(pmActs)[0] ? `The mornings and the evenings held different outings. ${cap(domOf(amActs)[0])} were ${pc(domOf(amActs)[1])}% of my outings before 10am, and ${domOf(pmActs)[0]} were ${pc(domOf(pmActs)[1])}% of my outings between 4 and 9pm.` : `${cap(domOf(amActs)[0])} led both ends of the day: ${pc(domOf(amActs)[1])}% of my outings before 10am and ${pc(domOf(pmActs)[1])}% of those between 4 and 9pm.`) : '',
+              before6 ? `${cap(word(before6))} ${before6 === 1 ? 'outing' : 'outings'} started before 6am.` : '',
+              wkendFoot.length >= 5 && wkdayFoot.length >= 5 ? `My outings on foot at the weekend averaged ${avgOf(wkendFoot).toFixed(1)} km, against ${avgOf(wkdayFoot).toFixed(1)} km on a weekday.${avgOf(wkendFoot) > avgOf(wkdayFoot) * 1.2 ? ' The weekend is when the longer outings fit.' : ''}` : '',
+            ]}
               source="Activity Log · start hour and weekday of every outing"
             />
           </>
@@ -373,6 +465,16 @@ export default function YearInSport({ year: bookYear } = {}) {
               />
             ),
           }}
+          read={[
+              `Every day of ${Y} as a wall calendar, one small month per block with Monday first. Orange days had an outing, deep orange marks the longest run of days in a row, and faint days are rest days.${isPartial ? ' Days still to come are left as outlines.' : ''}`,
+              r.restDays === 0 ? 'The share of days that held one outing, two, or three or more.' : 'After each day out, how soon the next outing came: the next day, two days later, or three days or more.',
+            ]}
+          story={[
+              r.restDays === 0 ? 'There is no faint day in the calendar. Some of those days held only a short walk or one of the other activities, and each one counted.' : `There were ${n0(r.restDays)} rest days in ${Y}${so}. More of them fell on a ${WEEK[restTop]} than on any other day of the week.`,
+              s.streakLen >= 7 ? `The longest run of days in a row was ${n0(s.streakLen)} days. In the calendar it is the deep orange stretch.` : 'The days were scattered, with no long run of days in a row yet.',
+              fullWeeks ? `${cap(word(fullWeeks))} full ${fullWeeks === 1 ? 'week' : 'weeks'}, Monday to Sunday, had an outing on every day.` : 'No week of the year had an outing on every day.',
+              twoDays ? `On ${n0(twoDays)} days I went out more than once.` : '',
+            ]}
           source="Activity Log · days with at least one outing"
         />
 
@@ -400,6 +502,15 @@ export default function YearInSport({ year: bookYear } = {}) {
               }}
               left={{ title: 'Every outing on foot, by distance', node: <YearDistances bins={s.footBins} peaks={s.peakBins} /> }}
               right={{ title: 'Each tenth of days, by its share', node: r.deciles ? <DecileBars shares={r.deciles} /> : <p className="yis-empty">Too few days on foot to split into tenths.</p> }}
+              read={[
+              'Every outing on foot grouped by its distance, rounded to the nearest kilometre, one bar each. The orange bars are the distances I came back to most, and the last bar gathers everything of 25 km or more.',
+              'All my days on foot that year, cut into ten equal groups from the shortest to the longest. Each bar is that group\u2019s share of the year\u2019s distance, and the dashed line at 10% is what equal days would give.',
+            ]}
+              story={[
+              `${pc(tenUp)}% of my outings on foot this year were 10 km or more${halfUp ? `, and ${word(halfUp)} ${halfUp === 1 ? 'was' : 'were'} a half marathon or longer` : ''}.`,
+              footActs.length ? `The outings of 10 km or more gave ${pc(km10Share)}% of the year\u2019s distance on foot. At the other end, ${word(under3)} ${under3 === 1 ? 'outing was' : 'outings were'} shorter than 3 km.` : '',
+              s.biggestFoot ? `The longest was ${s.biggestFoot.val.toFixed(1)} km, ${sportWord(s.biggestFoot.sport) === 'outing' ? 'an outing' : `${sportWord(s.biggestFoot.sport) === 'outdoor run' ? 'an' : 'a'} ${sportWord(s.biggestFoot.sport)}`} in ${fmtMonth(s.biggestFoot.date)}.` : '',
+            ]}
               source="Activity Log · distance on foot (run, walk, trail run, hike)"
             />
           </>
@@ -442,6 +553,15 @@ export default function YearInSport({ year: bookYear } = {}) {
                 ),
               } : { title: 'Given today, the chance of tomorrow', node: <TransitionMatrix p11={r.p11} p01={r.p01} /> }}
               right={{ title: 'The longest outing against all the others', node: <TailOutlier values={r.tail.values} mark={r.tail.mark} mean={r.tail.mean} sd={r.tail.sd} z={r.tail.z} pct={r.tail.pct} unit="km" markLabel="the longest" /> }}
+              read={[
+              r.restDays === 0 ? 'Each bar is one week of the year, as tall as my distance on foot that week. Orange weeks were above the average week, and the dashed line is the average.' : 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I went out the next day and the right box the chance I rested.',
+              'Every outing on foot as a small histogram by distance. The shaded band is the normal range, and the orange mark is the longest outing of the year, with how many times the average it was.',
+            ]}
+              story={[
+              `${under10wk ? `${cap(word(under10wk))} ${under10wk === 1 ? 'week' : 'weeks'} of the year had less than 10 km on foot${Math.min(...wkKms) < 0.5 ? ', and some had none at all' : `, and the quietest had ${n0(Math.min(...wkKms))} km`}.` : `Not one week of the year fell under 10 km on foot. The quietest had ${n0(Math.min(...wkKms))} km.`}`,
+              bestWk.km ? `The biggest week began on ${fmtDay(bestWkISO)}, and ${word(wk50)} ${wk50 === 1 ? 'week' : 'weeks'} of the year passed 50 km.` : '',
+              r.tail ? `The longest outing stands far out on its own, ${(r.tail.mark / r.tail.mean).toFixed(1)} times my average outing. Days like that are rare, and they are what the normal days make possible.` : '',
+            ]}
               source="Activity Log · daily active series, weekly and per-outing distance on foot"
             />
           </>
@@ -493,6 +613,16 @@ export default function YearInSport({ year: bookYear } = {}) {
                 node: r.regRows ? <PairBars rows={r.regRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
                   aria={`Tanzania regions in ${Y}: ${r.regRows.map((x) => `${x.label} ${pc(x.a)}% of outings, ${pc(x.b)}% of climb`).join('; ')}.`} /> : <p className="yis-empty">Only one region this year.</p>,
               }}
+              read={[
+              'The big disc is Tanzania, and the number in it is the share of the year\u2019s outings with a GPS start that began there. Other African countries are listed beside it, and anything outside Africa is counted as others.',
+              'Each region of Tanzania has two bars: the first is its share of my outings there that year, the second its share of the climbing. The number at the end is the gap.',
+            ]}
+              story={[
+              noGps ? `${n0(noGps)} outings this year had no GPS start, mostly on the treadmill, so they are not part of these two charts.` : 'Every outing this year had a GPS start, so all of them are on these charts.',
+              r.regionCount > 1 ? `I went out in ${word(r.regionCount)} regions of Tanzania this year.` : '',
+              newRegs.length ? `${newRegs.length === 1 ? 'One region was' : `${cap(word(newRegs.length))} regions were`} new to my log this year: ${newRegs.join(', ').replace(/, ([^,]*)$/, ' and $1')}.` : 'No region of Tanzania was new to my log this year.',
+              abroadN ? `${cap(word(abroadN))} ${abroadN === 1 ? 'outing' : 'outings'} began outside Tanzania.` : '',
+            ]}
               source="Strava GPS start points · countries and Tanzania regions"
             />
           </>
@@ -535,6 +665,16 @@ export default function YearInSport({ year: bookYear } = {}) {
               ]} />
             ) : <p className="yis-empty">{Y} is where my record starts.</p>,
           }}
+          read={[
+              `Every year of my record by its number of outings, with ${Y} in orange.`,
+              ps ? `${Y} against ${prevYear}, measure by measure: orange is ${Y}, grey is ${prevYear}, and the number is the change.${isPartial ? ` ${Y} is not finished, so it is compared with a full year.` : ''}` : 'The first year has no year before it to compare with.',
+            ]}
+          story={[
+              `By hours moving it comes ${ORD[rankH - 1]}, by personal records ${ORD[rankP - 1]} and by kudos ${ORD[rankK - 1]}.`,
+              bestKmYear && bestKmYear.year !== Y ? `Against my best year for distance, ${bestKmYear.year}, it covered ${pc(s.footKm / bestKmYear.footKm)}% as many kilometres on foot.` : `It is my best year for distance on foot.`,
+              `For distance per outing on foot, it comes ${ORD[rankKpo - 1]} of the ${word(years.length)} years, at ${kmPerOut(s).toFixed(1)} km each.`,
+              isPartial ? 'The year is not finished, so it can still move up these lists.' : '',
+            ]}
           source="Activity Log · yearly totals"
         />
 

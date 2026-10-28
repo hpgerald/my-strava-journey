@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import BookStory from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import GoalRace from '../charts/GoalRace.jsx'
 import GhostRace from '../charts/GhostRace.jsx'
@@ -160,6 +161,21 @@ export default function Goals() {
   const centTop = Math.max(...centByYear.map((c) => c.n))
   const centPrev = Math.max(...centByYear.filter((c) => c !== centCur).map((c) => c.n))
 
+  // ---- My Book: facts for the longer stories ----
+  const sumTo = (arr, n) => (arr || []).slice(0, n).reduce((s, v) => s + v, 0)
+  const elevAtNow = (y) => sumTo(y.elev.daily, cur.upTo)
+  const elevBest = habit.filter((y) => y !== cur).reduce((b, y) => (y.elev.total > b.elev.total ? y : b), habit[0])
+  const aheadOf = habit.filter((y) => y !== cur && elevAtNow(y) < cur.elev.total).length
+  const fullMonths = curMonths.filter((m) => !m.partial)
+  const goodRun = (() => { let i = 0; while (i < fullMonths.length && fullMonths[i].v >= 1400) i++; return i })()
+  const lateMonths = fullMonths.slice(goodRun).concat(curMonths.filter((m) => m.partial))
+  const lateSum = lateMonths.reduce((s, m) => s + m.v, 0)
+  const bigMonths = fullMonths.filter((m) => m.v >= 3000)
+  const steps = race.slice(1).map((r, i) => race[i].moving - r.moving)
+  const rkAvg = (sp) => { const xs = rk.filter((r) => (sp === 'Walk' ? r.sport === 'Walk' : r.sport !== 'Walk')); return xs.length ? xs.reduce((s, r) => s + r.km, 0) / xs.length : 0 }
+  const allCentury = centCur.n === centCur.of && centCur.of > 0
+  const walkYearsLow = habit.filter((y) => y !== cur && y.walk.closed == null).length
+
   return (
     <DetailFrame
       {...frame}
@@ -198,6 +214,10 @@ export default function Goals() {
             <li><i className="grace__kgoal" />the target</li>
             <li><i className="grace__khit" />the day it was crossed</li>
           </ul>
+          <BookStory>{[
+            'Each small panel is one target. The year runs from left to right and the line climbs as the total grows. Every earlier year is a grey line, this year is orange, and the dashed level is the target. Where a line crosses the dashed level, the ring for that year closed.',
+            `The climbing panel is the one still open this year. At this point of the year, ${cur.year} is ahead of ${word(aheadOf)} of the ${word(habit.length - 1)} earlier years${elevAtNow(elevBest) > cur.elev.total ? `, and only ${elevBest.year}, my best climbing year, had climbed more by this date` : ''}.`,
+          ]}</BookStory>
         </section>
 
         {/* ===== 1. the rings, year by year ===== */}
@@ -235,6 +255,14 @@ export default function Goals() {
               />
             ),
           }}
+          read={[
+              'Each year is drawn as three rings: walking on the outside, running in the middle and climbing inside. A ring fills as the year\u2019s total grows toward its target, and a closed ring is a full circle. For the year in progress, a small notch shows how far through the year we are.',
+              'One row for each year, with the calendar running across. A coloured ring sits on the day a target was crossed. Targets that were not met that year are listed at the end of the row with the share I reached.',
+            ]}
+          story={[
+              `Walking was my hardest 1,000 km for a long time, even though I walk more often than I run. For ${word(walkYearsLow)} years the walking ring stayed open, because my walks were short and the kilometres did not add up. It closed only when the walks got longer.`,
+              `Running closed in ${list(closedYears('run').filter((y) => y !== cur).map((y) => y.year))}, and then it stayed open for ${word(habit.filter((y) => y !== cur && y.run.closed == null).length)} years. When more of my running moved outside, the running ring came back${cur.run.closed != null ? ` and closed again in ${cur.year}` : ''}.`,
+            ]}
           source="Activity Log · yearly totals on foot against the three fixed targets"
         />
 
@@ -282,6 +310,14 @@ export default function Goals() {
                   />
                 ),
               }}
+              read={[
+              `I played out the rest of the year ${n0(S.finals.length)} times, each time picking days at random from my own days of ${cur.year}, and noted where the climb would finish. Each bar counts the finishes in that band. The dashed line is the target, and the orange bars are the finishes that reach it.`,
+              'The metres I climbed in each month of this year. The dashed line is what I need each month from here to reach the target, and the grey bar is the month still running.',
+            ]}
+              story={[
+              `The months show why the ring is still open. ${bigMonths.length ? `${bigMonths.map((m) => m.label).join(' and ')} each gave more than 3,000 m.` : ''} Then ${lateMonths.map((m) => m.label).join(', ').replace(/, ([^,]*)$/, ' and $1')} gave ${n0(lateSum)} m together.`,
+              'To close it, I need the climbing of my good months back in the weeks that are left. That means more trips to the hills, and the next weeks will decide it.',
+            ]}
               source={`Activity Log · climb on foot each day of ${cur.year}, resampled ${n0(S.finals.length)} times with a fixed seed`}
             />
           </>
@@ -326,6 +362,14 @@ export default function Goals() {
                   />
                 ),
               }}
+              read={[
+              'The course is drawn as its height profile, climbing to a turnaround and coming back down. Each edition is a runner on its own line, moving at the pace it really ran. When the quickest edition reached the finish, the others are marked where they were on the course.',
+              'One bar for each edition: the solid part is the time moving and the hatched end is the time I stood still.',
+            ]}
+              story={[
+              steps.length ? `The biggest step came between the first and the second edition, ${n0(steps[0])} minutes quicker on the move. After that each year brought only a few minutes, and the time stopped stayed low.` : '',
+              'It is the same course every time, the same climb out and the same long way back down. That makes it a fair test of one year against the next.',
+            ]}
               source="Kilimanjaro Half table and course profile · moving pace per half kilometre, elapsed and moving time per edition"
             />
           </>
@@ -374,6 +418,14 @@ export default function Goals() {
                   />
                 ),
               }}
+              read={[
+              'Every trip is one stroke, counted in fives the way a tally is kept by hand, and grouped by month. The colour shows whether I walked or ran there.',
+              'The number of trips in each month, from the first trip to the fiftieth.',
+            ]}
+              story={[
+              `A walk there and back was about ${k1(rkAvg('Walk'))} km on average, and a run about ${k1(rkAvg('Run'))} km. The same place gave me two kinds of outing, and I used both.`,
+              'A place is a good kind of target. It does not ask for a pace or a distance, only that I get there. Each trip was one more stroke, and fifty strokes later the target was done.',
+            ]}
               source="Ras Kilomoni table · every trip with its date, sport and distance"
             />
           </>
@@ -417,6 +469,14 @@ export default function Goals() {
               />
             ),
           }}
+          read={[
+              'One string for each year and one bead for each month. The size of a bead is the distance on foot that month, orange beads passed 100 km, and an empty ring is a month with no outing at all.',
+              'The number of months in each year with 100 km or more on foot.',
+            ]}
+          story={[
+              allCentury ? `${cur.year} is the first year in which every month so far has passed 100 km. The best before was ${centPrev} months in a year.` : `The best year so far had ${centTop} months past 100 km.`,
+              'The beads show the size of each year at a glance: big beads all through 2021 and 2022, smaller ones in 2023 and 2024, and big again lately. The empty rings are all in the first two years, before the habit.',
+            ]}
           source="Activity Log · outings and distance on foot in every calendar month"
         />
 

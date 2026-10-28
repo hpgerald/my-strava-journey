@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { Reveal, useInView } from '../components/Reveal.jsx'
 import PlaceMap from '../charts/PlaceMap.jsx'
 import HBars from '../charts/HBars.jsx'
@@ -105,6 +106,21 @@ export default function Where() {
   const eff = P.byYear.filter((y) => y.tzN >= 50)
   const effBest = eff.reduce((b, y) => (y.effective > b.effective + 1e-9 ? y : b), eff[0])
   const effLow = eff.reduce((b, y) => (y.effective < b.effective ? y : b), eff[0])
+
+  // ---- My Book: facts for the longer stories ----
+  const yOf = (iso) => Number((iso || '').slice(0, 4))
+  const firstAbroad = awayNamed.slice().sort((a, b) => (a.first < b.first ? -1 : 1))
+  const sameYearNew = (y) => awayNamed.filter((c) => yOf(c.first) === y)
+  const newAbroadPeak = [...new Set(awayNamed.map((c) => yOf(c.first)))].map((y) => ({ y, cs: sameYearNew(y) })).sort((a, b) => b.cs.length - a.cs.length)[0]
+  const returned = awayNamed.filter((c) => yOf(c.last) > yOf(c.first))
+  const oneTrip = awayNamed.filter((c) => yOf(c.last) === yOf(c.first))
+  const dar = reg('Dar es Salaam'), kili = reg('Kilimanjaro')
+  const everyYear = (name) => P.byYear.filter((y) => y.year >= 2021).every((y) => (y.shares[name] || 0) > 0)
+  const hillsEvery = ['Kilimanjaro', 'Morogoro'].filter((r) => P.topRegions.includes(r) && everyYear(r))
+  const widest = Math.max(...P.byYear.map((y) => y.regionsN))
+  const widestYears = P.byYear.filter((y) => y.regionsN === widest).map((y) => y.year)
+  const blankYears = newBy.filter((y) => y.year >= 2021 && y.year < lastYear && !y.n).map((y) => y.year)
+  const top3Min = Math.min(...eff.map((y) => y.top3))
 
   const placeCards = [...R.slice(0, 4).map((r) => ({ name: r.region, kind: 'Region', n: r.n, km: r.km, elev: r.elev })),
     ...P.abroad.filter((c) => ['Kenya', 'Malawi', 'South Africa', 'Rwanda'].includes(c.country)).map((c) => ({ name: c.country, kind: 'Country', n: c.n, km: c.km, elev: c.elev }))]
@@ -210,6 +226,14 @@ export default function Where() {
               </div>
             </figure>
           </div>
+          <BookRead items={[
+            ['Outings by region', 'My ten busiest regions by the number of outings that started there. The line under each name gives the days I went out there and the month of my first outing.'],
+            ['Kilometres on foot by region', 'The same regions ranked by the kilometres I covered on foot there. The line under each name gives the metres climbed.'],
+          ]} />
+          <BookStory>{[
+            `The map above is shaded by outings, so the darker a region, the more often I went out there. ${home.region}, Dar es Salaam and Kilimanjaro stand out, and most of the country is still pale or empty.`,
+            `${dar.region} and Kilimanjaro have almost the same number of outings, ${n0(dar.n)} and ${n0(kili.n)}. The difference is the ground. Kilimanjaro climbed ${n0(kili.elev)} m and Dar es Salaam ${n0(dar.elev)} m, so Kilimanjaro gave about ${Math.round(kili.elev / Math.max(1, dar.elev))} times as much. One is home and one is where I go for the hills.`,
+          ]}</BookStory>
         </section>
 
         {/* ===== 2. flat at home, steep away ===== */}
@@ -246,6 +270,14 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'Each region has two bars: the first is its share of my outings in Tanzania, the second its share of my climbing. The number at the end is the gap. A region with more climb than outings is hilly ground.',
+              'The metres I climbed for every kilometre on foot in each region, steepest at the top. The dashed line is the average for all of Tanzania. Regions with fewer than eight outings are left out.',
+            ]}
+          story={[
+              `${gradeRows[0].region} is the steepest region in my log, but I have been out there only ${word(gradeRows[0].n) || n0(gradeRows[0].n)} times. Morogoro is the steep region I know well, with ${n0(reg('Morogoro').n)} outings.`,
+              `${home.region}, where I have gone out the most, climbs ${k1(home.mpk)} m for every kilometre, below the Tanzania average of ${k1(tzMpk)} m.`,
+            ]}
           source="Activity Log and Strava GPS start points · climb and distance on foot"
         />
 
@@ -284,6 +316,14 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'Each column is a year of outings in Tanzania, split by region, with the busiest regions in their own colours and the rest together. The number on top is the year\u2019s total.',
+              'The number of regions of Tanzania I went out in each year. The orange bar is the widest year.',
+            ]}
+          story={[
+              hillsEvery.length ? `${hillsEvery.join(' and ')} ${hillsEvery.length > 1 ? 'appear' : 'appears'} in every year since the comeback. Those are my hill trips, and I go back each year.` : '',
+              `${widestYears.join(' and ')} ${widestYears.length > 1 ? 'were my widest years' : 'was my widest year'}, with outings in ${word(widest)} regions. Those were years of many short trips around the country.`,
+            ]}
           source="Activity Log and Strava GPS start points · outings in Tanzania by region and year"
         />
 
@@ -326,6 +366,14 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'The line counts the regions where I had gone out at least once, rising by one each time I went out in a new region. The labels name the first region and the newest ones.',
+              'The number of new regions in each year.',
+            ]}
+          story={[
+              `The map grew in bunches. 2021 brought ${word((newBy.find((y) => y.year === 2021) || { n: 0 }).n)} new regions as I came back and started to travel again: ${(newBy.find((y) => y.year === 2021) || { names: [] }).names.join(', ').replace(/, ([^,]*)$/, ' and $1')}.`,
+              blankYears.length ? `Then it went quiet. In ${blankYears.join(' and ')} there was no new region at all, because my trips went across the border or back to places I already knew.${newLast.n ? ` In ${lastYear} it grew again with ${newLast.names.join(', ').replace(/, ([^,]*)$/, ' and $1')}.` : ''}` : '',
+            ]}
           source="Activity Log and Strava GPS start points · first outing in each region"
         />
 
@@ -368,6 +416,15 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'My outings in each country outside Tanzania, busiest at the top. The line under each name gives the days out there and the months of the first and last outing.',
+              'The kilometres I covered on foot in each country, with the metres climbed underneath.',
+            ]}
+          story={[
+              firstAbroad.length ? `${firstAbroad[0].country} was my first country outside Tanzania, in ${fmtMonth(firstAbroad[0].first)}.${newAbroadPeak && newAbroadPeak.cs.length > 1 ? ` ${newAbroadPeak.y} brought ${word(newAbroadPeak.cs.length)} new countries in one year: ${newAbroadPeak.cs.map((c) => c.country).join(', ').replace(/, ([^,]*)$/, ' and $1')}.` : ''}` : '',
+              returned.length ? `${returned.map((c) => c.country).join(' and ')} ${returned.length > 1 ? 'are the countries' : 'is the country'} I have returned to, in more than one year.` : '',
+              oneTrip.length ? `${oneTrip.map((c) => c.country).join(', ').replace(/, ([^,]*)$/, ' and $1')} ${oneTrip.length > 1 ? 'each came in one year only' : 'came in one year only'}.` : '',
+            ]}
           source="Activity Log and Strava GPS start points · outings outside Tanzania"
         />
 
@@ -413,6 +470,14 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'The share of each year\u2019s outings that had no GPS start, so they could not be placed on a map.',
+              'What those outings were. Most are treadmill runs, then other activities, and only a few indoor walks.',
+            ]}
+          story={[
+              `Indoor walks are rare, only ${n0(P.indoorBy.walk)} in all, so almost every walk I have done has a place on the map. The treadmill runs are the big gap in the maps, and they are also the reason the first years look so empty there.`,
+              `As the share without GPS fell, every chart in this chapter grew more complete. In ${lastYear}${so}, ${pc(1 - iLast.share)}% of my outings have a place.`,
+            ]}
           source="Activity Log · outings without a GPS start point"
         />
 
@@ -458,6 +523,14 @@ export default function Where() {
               />
             ),
           }}
+          read={[
+              'The effective number of regions for each year. If a year shows four, my outings were spread as if they had been shared equally between four regions. Higher means more spread out.',
+              'The share of each year\u2019s outings in Tanzania that were in my three busiest regions of that year.',
+            ]}
+          story={[
+              'The two charts tell the same story from two sides. When the effective number goes up, the share of the top three goes down.',
+              `Even in my widest years, three regions held at least ${pc(top3Min)}% of my outings. Most of my life on foot happens in a few places, and the trips add a little colour around them.`,
+            ]}
           source="Activity Log and Strava GPS start points · inverse Simpson index of outings by region"
         />
 

@@ -1,5 +1,6 @@
 import { Reveal } from './Reveal.jsx'
 import OddsRow from './OddsRow.jsx'
+import BookStory, { BookRead } from './BookStory.jsx'
 
 // The home page section recipe, in one place: eyebrow and insight headline, a
 // full-width statement with the numbers, a four-cell number row, two figures side
@@ -8,7 +9,7 @@ import OddsRow from './OddsRow.jsx'
 // keep the last two words together so a wrapped headline never ends on one word
 const tie = (t) => (typeof t === 'string' ? t.replace(/ (\S+)$/, '\u00A0$1') : t)
 
-export default function StorySection({ id, eyebrow, title, sub, statement, odds, left, right, leftNote, rightNote, source, children }) {
+export default function StorySection({ id, eyebrow, title, sub, statement, odds, left, right, leftNote, rightNote, source, read, story, children }) {
   return (
     <section className="sgrid" aria-labelledby={id}>
       <div className="sgrid__head">
@@ -36,6 +37,8 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
 
       {children}
 
+      {read ? <BookRead items={[[left.title, read[0]], [right.title, read[1]]]} /> : null}
+      <BookStory>{story}</BookStory>
     </section>
   )
 }
