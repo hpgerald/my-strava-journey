@@ -229,7 +229,7 @@ function Prologue({ F }) {
         As I finish this edition, I am on {n0(F.streak)} days in a row.
       </p>
       <p>
-        This book is me going back through that record. It is made from {n0(F.n)} activities and nothing else. Every number comes from my Strava log, and when the log cannot tell me why something happened, I say so and I do not guess.
+        This book is me going back through that record, all {n0(F.n)} activities of it.
       </p>
       <p>
         There are five parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, and last, what I think it all means.

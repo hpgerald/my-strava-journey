@@ -106,7 +106,7 @@ export default function YearMoment({ year, stats }) {
     // 2026 and any later year: the unbroken streak
     kicker = 'Every day'
     title = 'One day at a time.'
-    body = `I do not know how long it will last.`
+    body = `Every day of the year so far, at home and away.`
     figure = <div className="ymom__chips">{chip('days in a row', s.streakLen)}{chip('hours moving', Math.round(s.hours))}</div>
   }
 

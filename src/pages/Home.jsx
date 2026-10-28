@@ -632,7 +632,7 @@ export default function Home() {
               statement={<>
                 Every year has a soft spot, and mine is {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]}. They have been my weakest
                 months {dipYears === fullYears.length ? 'every year' : 'most years'}, and the quietest of all was September 2024, with
-                only eight days out. My log does not say why, and I do not want to guess. In {gridYears[gridYears.length - 1]} I went
+                only eight days out. In {gridYears[gridYears.length - 1]} I went
                 out on every day of both.
               </>}
               odds={{

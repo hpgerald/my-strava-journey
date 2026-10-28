@@ -414,7 +414,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               eyebrow={`${num()} · How steady it was`}
               title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
               statement={<>
-                {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a rest day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it was less sure'}.`}
+                {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a rest day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it could go either way'}.`}
                 {r.weekly.cv < 0.6 ? ' My weeks were fairly steady.' : r.weekly.cv < 1 ? ' My weeks went up and down a fair bit.' : ' My weeks swung a lot, from almost nothing to very big.'}
                 {' '}My biggest week was {n0(Math.max(...r.weekly.series.map((w) => w.km)))} km on foot.
               </>}
