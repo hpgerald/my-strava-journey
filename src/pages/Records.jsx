@@ -206,8 +206,8 @@ export default function Records() {
           eyebrow={`${num()} · The longest outings`}
           title='The longest days.'
           statement={<>
-            My long days moved outside. All my runs past 30 km on the treadmill came between {fmtMon(treadOver30[0]?.date)} and{' '}
-            {fmtMon(treadOver30[treadOver30.length - 1]?.date)}. Since then every long day has been outside, and the longest of them
+            My long days moved outside. All my runs past 30 km on the treadmill came between {fmtMonth(treadOver30[0]?.date)} and{' '}
+            {fmtMonth(treadOver30[treadOver30.length - 1]?.date)}. Since then every long day has been outside, and the longest of them
             is 34.8 km on the trails of Kilimanjaro, with more than 800 m of climbing.
           </>}
           odds={{
@@ -456,7 +456,7 @@ export default function Records() {
         <StorySection
           id="rc-streaks"
           eyebrow={`${num()} · Streaks`}
-          title={S.any.current === S.any.len ? `Every day since ${fmtMon(S.any.startISO)}.` : `${n0(S.any.len)} days in a row.`}
+          title={S.any.current === S.any.len ? `Every day since ${fmtMonth(S.any.startISO)}.` : `${n0(S.any.len)} days in a row.`}
           statement={<>
             I do not take the streaks for granted.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, more than ${word(Math.floor(S.week.len / 52))} years now.` : ''}
             {' '}The other side of my record is the long gap, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}, when I did

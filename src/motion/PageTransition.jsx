@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { motionOK } from './env.js'
 import { useTable } from '../context/DataContext.jsx'
 
-// Between chapters an orange panel covers the page and lifts away, carrying the
+// Between chapters an ink panel covers the page and lifts away, carrying the
 // number and name of the chapter being opened.
 export default function PageTransition() {
   const { pathname } = useLocation()

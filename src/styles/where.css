@@ -44,7 +44,7 @@
 .wh-ledger__row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; gap: var(--sp-3); padding: var(--sp-3) 0; border-bottom: 1px solid var(--rule-faint); align-items: baseline;
   opacity: 0; transform: translateY(6px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
 .wh-ledger.is-in .wh-ledger__row { opacity: 1; transform: none; }
-.wh-ledger__n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); color: var(--accent); text-align: right; line-height: 1; }
+.wh-ledger__n { font-family: var(--font-display); font-weight: 560; font-size: var(--fs-xl); color: var(--accent); text-align: right; line-height: 1; }
 .wh-ledger__row:first-child .wh-ledger__n { color: var(--accent-ink); }
 .wh-ledger__c { display: grid; gap: 2px; }
 .wh-ledger__c b { font-size: var(--fs-md); }

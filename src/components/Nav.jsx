@@ -4,8 +4,8 @@ import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { lenisRef } from '../motion/env.js'
 
 // The studio nav: a slim bar with the mark, the chapter you are in and a Menu
-// button. The menu opens a full-screen ink index of every chapter, set in big
-// condensed type that rises in line by line.
+// button. The menu opens a full-screen ink index of every chapter, rising in
+// line by line.
 export default function Nav() {
   const rows = useTable('nav_index')
   const meta = useKeyed('meta', 'key', 'value')
@@ -44,10 +44,10 @@ export default function Nav() {
     <header className={`snav${open ? ' is-open' : ''}`}>
       <div className="snav__bar">
         <Link className="snav__mark" to="/" aria-label="My Strava Journey, home" data-magnetic>
-          Showing Up<b>.</b>
+          Showing up<b>.</b>
         </Link>
         <p className="snav__here" aria-hidden={!here}>
-          {here ? <><span className="snav__slash">/</span> {here.number} <span className="snav__here-t">{here.title}</span></> : null}
+          {here ? <><span className="snav__here-n">{here.number}</span>{here.title}</> : null}
         </p>
         <button
           ref={btn}
@@ -78,15 +78,15 @@ export default function Nav() {
           </ol>
         </nav>
         <aside className="smenu__side">
-          <p className="smenu__k">/ The log</p>
+          <p className="smenu__k">The log</p>
           <p className="smenu__big">{total.toLocaleString('en-US')}<span>outings so far</span></p>
-          <p className="smenu__k">/ More</p>
+          <p className="smenu__k">More</p>
           <ul className="smenu__more">
             <li><Link to="/about" onClick={() => setOpen(false)}>About ↗</Link></li>
             <li><Link to="/data" onClick={() => setOpen(false)}>The data ↗</Link></li>
             <li><a href="https://www.strava.com/athletes/gtesha" target="_blank" rel="noopener noreferrer">Strava ↗</a></li>
           </ul>
-          <p className="smenu__k">/ Say hi</p>
+          <p className="smenu__k">Say hi</p>
           <a className="smenu__mail" href="mailto:hpgerald@gmail.com">hpgerald@gmail.com</a>
         </aside>
       </div>

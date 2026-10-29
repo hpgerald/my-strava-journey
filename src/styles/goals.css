@@ -6,7 +6,7 @@
 
 /* ---- the race against the calendar ---- */
 .grace { width: 100%; margin: var(--sp-2) 0 0; }
-.grace__t { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); fill: var(--ink); }
+.grace__t { font-family: var(--font-display); font-weight: 560; font-size: var(--fs-md); fill: var(--ink); }
 .grace__u { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); fill: var(--fg-muted); text-transform: uppercase; }
 .grace__goal { stroke: var(--ink); stroke-width: 1.25; stroke-dasharray: 5 4; }
 .grace__line { fill: none; stroke: var(--grey-35); stroke-width: 1.5; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease); transition-delay: var(--d, 0ms); }
@@ -57,12 +57,12 @@
 .ghost__runner.is-now { fill: var(--accent); }
 .ghost__rl { font-family: var(--font-mono); font-size: 10px; font-weight: 600; fill: var(--fg-muted); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
 .ghost__rl.is-now { fill: var(--accent-ink); font-weight: 700; }
-.ghost__clock { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); fill: var(--ink); font-variant-numeric: tabular-nums; }
+.ghost__clock { font-family: var(--font-display); font-weight: 560; font-size: var(--fs-lg); fill: var(--ink); font-variant-numeric: tabular-nums; }
 .ghost__board { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); border-top: 1px solid var(--rule-faint); padding-top: var(--sp-2); }
 .ghost__row { display: grid; gap: 2px; }
 .ghost__row:not(.is-in) .mono { color: var(--fg-muted); font-weight: 600; }
 .ghost__row b { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--fg-muted); }
-.ghost__row .mono { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
+.ghost__row .mono { font-family: var(--font-display); font-weight: 560; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
 .ghost__row.is-now .mono { color: var(--accent-ink); }
 .ghost__row small { font-size: var(--fs-2xs); color: var(--fg-muted); line-height: 1.3; }
 .ghost__replay { margin-top: var(--sp-3); }

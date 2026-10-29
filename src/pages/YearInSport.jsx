@@ -37,6 +37,7 @@ const EVEREST = 8849
 const DAR_DODOMA_KM = 450 // Dar es Salaam to Dodoma by road, one way
 const pc = (v) => Math.round((v || 0) * 100)
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+const monthOf = (iso) => (iso ? MONTH_F[parseInt(iso.slice(5, 7), 10) - 1] : '')
 const fmtMonth = (iso) => (iso ? `${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
 const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); return h ? `${h} h ${m} min` : `${m} min` }
@@ -489,7 +490,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               statement={<>
                 {s.peakBins.length ? `Most of my outings on foot were around ${Math.min(...s.peakBins.slice(0, 2))} km${s.peakBins[1] ? ` or ${Math.max(...s.peakBins.slice(0, 2))} km` : ''}. ` : ''}
                 {meanFoot > s.medianFoot ? 'A few long days pulled my average above my usual outing.' : 'The short days pulled my average below my usual outing.'}
-                {s.biggestFoot ? ` The longest came in ${fmtMonth(s.biggestFoot.date)}.` : ''}
+                {s.biggestFoot ? ` The longest came in ${monthOf(s.biggestFoot.date)}.` : ''}
               </>}
               odds={{
                 title: 'Distance on foot',
@@ -509,7 +510,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               story={[
               `${pc(tenUp)}% of my outings on foot this year were 10 km or more${halfUp ? `, and ${word(halfUp)} ${halfUp === 1 ? 'was' : 'were'} a half marathon or longer` : ''}.`,
               footActs.length ? `The outings of 10 km or more gave ${pc(km10Share)}% of the year\u2019s distance on foot. At the other end, ${word(under3)} ${under3 === 1 ? 'outing was' : 'outings were'} shorter than 3 km.` : '',
-              s.biggestFoot ? `The longest was ${s.biggestFoot.val.toFixed(1)} km, ${sportWord(s.biggestFoot.sport) === 'outing' ? 'an outing' : `${sportWord(s.biggestFoot.sport) === 'outdoor run' ? 'an' : 'a'} ${sportWord(s.biggestFoot.sport)}`} in ${fmtMonth(s.biggestFoot.date)}.` : '',
+              s.biggestFoot ? `The longest was ${s.biggestFoot.val.toFixed(1)} km, ${sportWord(s.biggestFoot.sport) === 'outing' ? 'an outing' : `${sportWord(s.biggestFoot.sport) === 'outdoor run' ? 'an' : 'a'} ${sportWord(s.biggestFoot.sport)}`} in ${monthOf(s.biggestFoot.date)}.` : '',
             ]}
               source="Activity Log · distance on foot (run, walk, trail run, hike)"
             />

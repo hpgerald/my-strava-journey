@@ -147,7 +147,7 @@
 .sp-card--TrailRun a { border-top-color: var(--m-TrailRun); }
 .sp-card--Hike a { border-top-color: var(--m-Hike); }
 .sp-card__k { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
-.sp-card__v { margin: 4px 0 0; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); line-height: 1.05; }
+.sp-card__v { margin: 4px 0 0; font-family: var(--font-display); font-weight: 560; font-size: var(--fs-xl); line-height: 1.05; }
 .sp-card__u { font-family: var(--font-body, inherit); font-weight: 600; font-size: var(--fs-sm); color: var(--fg-muted); }
 .sp-card__l { margin: 4px 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
 .sp-card__go { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); font-weight: 700; color: var(--accent-ink); }

@@ -436,7 +436,7 @@ export default function Goals() {
         <StorySection
           id="month-streak"
           eyebrow={`${num()} · A goal I never set`}
-          title={`Every month since ${fmtMon(`${G.streakFrom.key}-01`)}.`}
+          title={`Every month since ${fmtMonth(`${G.streakFrom.key}-01`)}.`}
           statement={<>
             I never set this one as a target. It came on its own, from going out week after week. Even in the quiet months of
             the year, I went out at least once.

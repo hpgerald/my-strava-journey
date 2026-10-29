@@ -24,10 +24,10 @@ export default function Layout({ children }) {
     }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' })
 
     const scan = () => {
-      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head')
+      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *')
       nodes.forEach((el) => {
         if (el.dataset.areveal || el.closest('.book')) return
-        if (el.closest('.yis-report') && !el.classList.contains('sgrid__head')) return
+        if (el.closest('.yis-report') && !el.parentElement.classList.contains('sgrid__head')) return
         el.dataset.areveal = '1'
         el.classList.add('areveal')
         io.observe(el)

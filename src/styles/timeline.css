@@ -42,7 +42,7 @@
 .msw--ink { background: var(--ink); width: 9px; height: 9px; border-radius: 0; transform: rotate(45deg); }
 .trail { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
 .trail__year { display: grid; grid-template-columns: 7rem 1fr; gap: var(--grid-gap); padding: var(--sp-4) 0; border-bottom: 1px solid var(--rule-faint); }
-.trail__y { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem, 1.4rem + 2vw, 3rem); line-height: 1; color: var(--ink); }
+.trail__y { margin: 0; font-family: var(--font-display); font-weight: 560; font-size: clamp(2rem, 1.4rem + 2vw, 3rem); line-height: 1; color: var(--ink); }
 .trail__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3) var(--grid-gap); }
 .trail__ev { display: grid; grid-template-columns: 3.4rem 1fr; gap: var(--sp-2); opacity: 0; transform: translateY(6px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); transition-delay: var(--d, 0ms); }
 .trail__year.is-in .trail__ev { opacity: 1; transform: none; }

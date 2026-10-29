@@ -15,7 +15,7 @@
 .dclock__y.is-quiet .dclock__wedge { stroke: var(--grey-45); }
 .dclock__hub { fill: var(--ink); }
 .dclock__v { margin: var(--sp-1) 0 0; font-size: var(--fs-xs); color: var(--fg-muted); }
-.dclock__v b { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
+.dclock__v b { font-family: var(--font-display); font-weight: 560; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; }
 .dclock__y.is-now .dclock__v b { color: var(--accent-ink); }
 .dclock__l { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); text-transform: uppercase; }
 @media (max-width: 60rem) { .dclock { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

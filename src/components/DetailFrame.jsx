@@ -66,7 +66,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
                 ))}
               </ol>
             </nav>
-            {number ? <p className="sopen__k">/ Chapter {number}</p> : null}
+            {number ? <p className="sopen__k">Chapter <b>{number}</b></p> : null}
           </div>
           {number ? <span className="sopen__num" aria-hidden="true" data-speed="0.18">{number}</span> : null}
           <h1 id="sopen-title" className="sopen__t">
@@ -112,7 +112,7 @@ export function PagingLink({ item, dir }) {
   const isNext = dir === 'next'
   return (
     <Link to={item.to} className={`sturn__link sturn__link--${dir}`} data-cursor={isNext ? 'Next' : 'Back'}>
-      <span className="sturn__k">{isNext ? '/ Next chapter' : '/ Previous chapter'}</span>
+      <span className="sturn__k">{isNext ? 'Next chapter' : 'Previous chapter'}</span>
       <span className="sturn__row">
         {item.number ? <span className="sturn__num">{item.number}</span> : null}
         <span className="sturn__title">{item.label}</span>

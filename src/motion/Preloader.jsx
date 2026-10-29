@@ -33,7 +33,7 @@ export default function Preloader() {
   if (!show) return null
   return (
     <div className={`pre pre--${phase}`} aria-hidden="true">
-      <div className="pre__top"><span>Showing Up<b>.</b></span><span>Gerald Tesha</span></div>
+      <div className="pre__top"><span>Showing up<b>.</b></span><span>Gerald Tesha</span></div>
       <div className="pre__mid">
         <span className="pre__n">{n.toLocaleString('en-US')}</span>
         <span className="pre__l">outings, and counting</span>

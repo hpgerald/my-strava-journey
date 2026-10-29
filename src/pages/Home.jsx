@@ -403,9 +403,9 @@ export default function Home() {
       {!book && (
         <section className="shero" aria-hidden="true">
           <div className="shero__in">
-            <p className="shero__k"><span>/ My Strava Journey</span><span>Gerald Tesha, Tanzania</span></p>
+            <p className="shero__k"><span>My Strava Journey</span><span>{(meta.coverage_start || '').slice(0, 4)} to {(meta.coverage_end || '').slice(0, 4)}</span><span>Gerald Tesha, Tanzania</span></p>
             <p className="shero__t">
-              {['Showing', 'Up'].map((w, wi) => (
+              {['Showing', 'up'].map((w, wi) => (
                 <span key={w} className="shero__line">
                   {[...w].map((ch, ci) => <span key={ci} className="shero__ch" style={{ '--i': wi * 7 + ci }}>{ch}</span>)}
                   {wi === 1 ? <b className="shero__ch" style={{ '--i': 10 }}>.</b> : null}
