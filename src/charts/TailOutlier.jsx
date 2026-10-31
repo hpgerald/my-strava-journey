@@ -14,7 +14,7 @@ export default function TailOutlier({ values, mark, mean, sd, z, pct, unit = 'km
   if (!values || !values.length) return <div ref={ref} />
 
   const W = Math.max(320, width)
-  const H = 288
+  const H = W < 520 ? 288 : 360
   const m = { t: 36, r: 18, b: 46, l: 16 }
 
   const hi = Math.max(mark, ...values) * 1.04

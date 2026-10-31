@@ -10,14 +10,14 @@ const fmtDOY = (y, i) => { const d = new Date(Date.UTC(y, 0, 1) + i * 86400000);
 // far through the year the record runs. Targets never met that year are listed
 // at the row's end with their share.
 // props: rows [{ year, ndays, upTo, marks [{ key, label, day | null, share }] }], aria
-export function CloseDots({ rows, aria }) {
+export function CloseDots({ rows, aria, H: Hd = 360 }) {
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
   const m = { l: 44, r: narrow ? 8 : 12, t: 22, b: 26 }
-  const rowH = narrow ? 40 : 48
-  const H = m.t + rows.length * rowH + m.b
+  const rowH = narrow ? 40 : Math.min(84, (Hd - m.t - m.b) / Math.max(1, rows.length))
+  const H = narrow ? m.t + rows.length * rowH + m.b : Hd
   const X = (i, n) => m.l + (i / n) * (W - m.l - m.r)
   return (
     <div ref={ref} className="cb">
@@ -63,7 +63,7 @@ export function SimHist({ finals, target, unit = 'm', aria }) {
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 280 : 340
+  const H = narrow ? 280 : 360
   const m = { t: 40, r: 12, b: 44, l: 44 }
   const lo = Math.floor(Math.min(finals[0], target) / 500) * 500 - 500
   const hi = Math.ceil(Math.max(finals[finals.length - 1], target) / 500) * 500 + 500
@@ -169,8 +169,8 @@ export function MonthBeads({ months, aria }) {
   const narrow = W < 520
   const years = [...new Set(months.map((m) => m.year))]
   const m = { l: 44, r: 10, t: 22, b: 8 }
-  const rowH = narrow ? 32 : 40
-  const H = m.t + years.length * rowH + m.b
+  const rowH = narrow ? 32 : (360 - m.t - m.b) / Math.max(1, years.length)
+  const H = narrow ? m.t + years.length * rowH + m.b : 360
   const cw = (W - m.l - m.r) / 12
   const maxKm = Math.max(1, ...months.map((x) => x.km))
   const rOf = (km) => 2.5 + Math.sqrt(km / maxKm) * (Math.min(cw, rowH) / 2 - 3)

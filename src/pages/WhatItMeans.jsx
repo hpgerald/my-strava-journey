@@ -100,7 +100,6 @@ export default function WhatItMeans() {
   return (
     <DetailFrame
       {...frame}
-      lede="I am not an expert. These are only my own lessons."
     >
       <div className="yis-report">
         {/* ===== the cost ===== */}

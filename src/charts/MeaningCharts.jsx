@@ -103,9 +103,10 @@ export function DayPile({ kms, cut = 2, per = 5, aria }) {
   const m = { l: 10, r: 10, t: 30, b: 44 }
   const cw = (W - m.l - m.r) / (top + 1)
   const dot = Math.max(2.5, Math.min(7, cw - 2))
-  const step = dot + (narrow ? 1 : 1.5)
   const tallest = Math.max(...bins.map((b) => Math.ceil(b / per)))
-  const H = m.t + tallest * step + m.b
+  const step = narrow ? dot + 1 : Math.min(dot + 1.5, (360 - m.t - m.b) / Math.max(1, tallest))
+  const H = narrow ? m.t + tallest * step + m.b : 360
+  const dd = Math.max(2, Math.min(dot, step - 1))
   return (
     <div ref={ref} className="cb">
       <div ref={root} className={`cb__plot dpile${inView ? ' is-in' : ''}`}>
@@ -117,7 +118,7 @@ export function DayPile({ kms, cut = 2, per = 5, aria }) {
             return (
               <g key={i} className={`dpile__col${i < cut ? ' is-small' : ''}`} style={{ '--d': `${i * 30}ms` }}>
                 {Array.from({ length: nd }, (_, k) => (
-                  <rect key={k} x={cx - dot / 2} y={H - m.b - (k + 1) * step + 1} width={dot} height={dot} rx={dot / 2} />
+                  <rect key={k} x={cx - dd / 2} y={H - m.b - (k + 1) * step + 1} width={dd} height={dd} rx={dd / 2} />
                 ))}
               </g>
             )
@@ -142,9 +143,9 @@ export function WeekStrips({ years, now, aria }) {
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const rowH = narrow ? 42 : 52
   const m = { l: 44, r: 12, t: 16, b: 36 }
-  const H = m.t + years.length * rowH + m.b
+  const rowH = narrow ? 42 : (360 - m.t - m.b) / Math.max(1, years.length)
+  const H = narrow ? m.t + years.length * rowH + m.b : 360
   const hi = Math.max(160, ...years.flatMap((y) => y.weeks.map((w) => w.km)))
   const x = linScale([0, hi], [m.l, W - m.r])
   const ticks = [0, 25, 50, 75, 100, 125, 150].filter((v) => v <= hi && (!narrow || v % 50 === 0))
@@ -210,7 +211,7 @@ export function IsoKm({ years, totals = [1000, 2000, 3000], aria }) {
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 320 : 380
+  const H = narrow ? 320 : 360
   const m = { l: 44, r: 22, t: 30, b: 44 }
   const yMax = 20
   const x = linScale([0.4, 1], [m.l, W - m.r])

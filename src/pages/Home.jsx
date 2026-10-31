@@ -403,7 +403,6 @@ export default function Home() {
       {!book && (
         <section className="shero" aria-hidden="true">
           <div className="shero__in">
-            <p className="shero__k"><span>My Strava Journey</span><span>{(meta.coverage_start || '').slice(0, 4)} to {(meta.coverage_end || '').slice(0, 4)}</span><span>Gerald Tesha, Tanzania</span></p>
             <p className="shero__t">
               {['Showing', 'up'].map((w, wi) => (
                 <span key={w} className="shero__line">
@@ -412,10 +411,6 @@ export default function Home() {
                 </span>
               ))}
             </p>
-            <div className="shero__foot">
-              <p className="shero__sub">Seven years of one habit, from my own Strava log.</p>
-              <span className="shero__cue">Scroll <i>↓</i></span>
-            </div>
           </div>
         </section>
       )}

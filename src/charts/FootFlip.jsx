@@ -13,7 +13,7 @@ export default function FootFlip({ items }) {
   if (!items || !items.length) return <div ref={ref} />
 
   const W = Math.max(280, width)
-  const H = 300
+  const H = W < 520 ? 300 : 360
   const m = { t: 34, b: 22 }
   const ih = H - m.t - m.b
   const barW = 22

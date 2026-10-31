@@ -259,7 +259,6 @@ function Opener({ number, title, subtitle, lede }) {
       <p className="bk-open__k">Chapter <b>{Number(number)}</b></p>
       <span className="bk-open__n" aria-hidden="true">{number}</span>
       <h2 id={`bk-ch-${number}-t`} className="bk-open__t">{title}</h2>
-      {subtitle ? <p className="bk-open__s">{subtitle}</p> : null}
       {lede ? <p className="bk-open__lede">{lede}</p> : null}
     </header>
   )

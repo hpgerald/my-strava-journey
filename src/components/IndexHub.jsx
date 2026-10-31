@@ -15,7 +15,6 @@ export default function IndexHub({ items }) {
             <Link className="slist__link" to={item.route} data-cursor="Open">
               <span className="slist__num">{item.number}</span>
               <span className="slist__t">{item.title}</span>
-              <span className="slist__s">{item.subtitle}</span>
               <span className="slist__arrow" aria-hidden="true">↗</span>
             </Link>
           </li>

@@ -35,8 +35,8 @@ export default function GeoBubbles({ rows }) {
   const W = Math.max(300, width)
   const narrow = W < 460
   // home disc radius sized to fill its panel
-  const discPanel = narrow ? W - 8 : Math.round(W * 0.40)
-  const R = Math.min(narrow ? 78 : 104, discPanel / 2 - 6)
+  const discPanel = narrow ? W - 8 : Math.round(W * 0.46)
+  const R = Math.min(narrow ? 78 : 140, discPanel / 2 - 6)
 
   return (
     <div ref={ref} className="geo">

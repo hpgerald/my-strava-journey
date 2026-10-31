@@ -63,7 +63,7 @@ export default function SportTreemap({ rows }) {
     .sort((a, b) => b.value - a.value)
 
   const W = Math.max(300, width)
-  const H = W < 520 ? 260 : 300
+  const H = W < 520 ? 260 : 360
   const tiles = squarify(items, 0, 0, W, H)
 
   return (

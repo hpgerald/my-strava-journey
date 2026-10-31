@@ -232,7 +232,7 @@ export default function Timeline() {
             node: (
               <ColBars
                 items={firstsBy.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.n, display: String(y.n), tone: y.n === Math.max(...firstsBy.map((z) => z.n)) ? 'big' : y.n ? 'mid' : 'quiet' }))}
-                ticks={[0, 1, 2, 3, 4]} yCap="firsts &uarr;"
+                ticks={[0, 1, 2, 3, 4]} yCap="firsts &uarr;" H={Math.max(360, F.length * 52 + 24)}
                 aria={`Firsts on foot each year: ${firstsBy.map((y) => `${y.year} ${y.n}`).join(', ')}.`}
               />
             ),

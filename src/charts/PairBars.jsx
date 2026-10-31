@@ -10,14 +10,14 @@ import { linScale } from './primitives.js'
 const pc = (v) => `${Math.round(v * 100)}%`
 const pts = (v) => { const n = Math.round(v * 100); return n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0' }
 
-export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria }) {
+export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria, H: Hd = 360 }) {
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!rows || !rows.length) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = narrow ? 300 : Hd
   const sorted = [...rows].sort((p, q) => (q.b - q.a) - (p.b - p.a))
   const m = { t: 50, b: 14, l: narrow ? 110 : 140, r: narrow ? 42 : 56 }
   const room = narrow ? 34 : 40 // space for a value label past the last guide

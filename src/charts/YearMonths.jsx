@@ -17,7 +17,7 @@ export default function YearMonths({ months, metric = 'activities', unit = 'acti
   const [hi, setHi] = useState(null)
   const W = Math.max(300, w)
   const narrow = W < 520
-  const H = narrow ? 200 : 236
+  const H = narrow ? 200 : 360
   const pad = { t: 26, r: 12, b: 30, l: 12 }
   const vals = months.map((d) => (metric === 'km' ? d.km : d.activities))
   const peak = Math.max(1, ...vals)

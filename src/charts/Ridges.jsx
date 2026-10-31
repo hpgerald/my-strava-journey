@@ -19,7 +19,7 @@ export default function Ridges({ rows, domain, step, ticks = [], tickFmt = (v) =
   const W = Math.max(300, width)
   const narrow = W < 520
   const m = { t: 8, r: narrow ? 54 : 64, b: xCap ? 44 : 26, l: narrow ? 74 : 104 }
-  const rowH = narrow ? 44 : 52
+  const rowH = narrow ? 44 : (360 - m.t - 18 - m.b) / (1.35 + Math.max(0, rows.length - 1))
   const lift = rowH * 1.35
   const H = m.t + lift + rowH * (rows.length - 1) + 18 + m.b
   const [lo, hi] = domain

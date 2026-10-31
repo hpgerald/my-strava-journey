@@ -42,7 +42,6 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
             <p className="bk-open__k">Chapter <b>{Number(number)}</b></p>
             <span className="bk-open__n" aria-hidden="true">{number}</span>
             <h2 id={`bk-ch-${number}-t`} className="bk-open__t">{title}</h2>
-            {subtitle ? <p className="bk-open__s">{subtitle}</p> : null}
             {lede ? <p className="bk-open__lede">{lede}</p> : null}
           </header>
           {children}
@@ -56,7 +55,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
     <Layout>
       <section className={`sopen${number ? '' : ' sopen--sub'}`} aria-labelledby="sopen-title">
         <div className="sopen__in">
-          <div className="sopen__top">
+          {number ? null : (
             <nav aria-label="Breadcrumb" className="crumbs sopen__crumbs">
               <ol>
                 {crumbs.map((c, i) => (
@@ -66,8 +65,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
                 ))}
               </ol>
             </nav>
-            {number ? <p className="sopen__k">Chapter <b>{number}</b></p> : null}
-          </div>
+          )}
           {number ? <span className="sopen__num" aria-hidden="true" data-speed="0.18">{number}</span> : null}
           <h1 id="sopen-title" className="sopen__t">
             <span className="visually-hidden">{title}</span>
@@ -80,11 +78,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
               ))}
             </span>
           </h1>
-          <div className="sopen__foot">
-            {subtitle ? <p className="sopen__sub">{subtitle}</p> : <span />}
-            {lede ? <p className="sopen__lede">{lede}</p> : null}
-            <span className="sopen__cue" aria-hidden="true">Scroll <i>↓</i></span>
-          </div>
+          {lede ? <p className="sopen__lede">{lede}</p> : null}
         </div>
       </section>
 
@@ -118,7 +112,6 @@ export function PagingLink({ item, dir }) {
         <span className="sturn__title">{item.label}</span>
         <span className="sturn__arrow" aria-hidden="true">{isNext ? '→' : '←'}</span>
       </span>
-      {item.subtitle ? <span className="sturn__sub">{item.subtitle}</span> : null}
     </Link>
   )
 }

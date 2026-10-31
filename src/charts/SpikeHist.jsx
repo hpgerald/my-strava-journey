@@ -12,7 +12,7 @@ export default function SpikeHist({ bins, spikes = [], xCap, yCap, aria }) {
   if (!bins || !bins.length) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 280 : 340
+  const H = narrow ? 280 : 360
   const m = { t: 30, r: 10, b: 44, l: 40 }
   const max = Math.max(...bins.map((b) => b.count)) * 1.12
   const y = linScale([0, max], [H - m.b, m.t])

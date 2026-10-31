@@ -163,7 +163,6 @@ export default function Records() {
   return (
     <DetailFrame
       {...frame}
-      lede="Only my own records, measured against myself."
     >
       <div className="yis-report">
         {/* ===== the distance record ===== */}

@@ -15,7 +15,7 @@ export default function YearDistances({ bins, peaks = [] }) {
   if (!bins || !bins.length) return <div ref={ref} />
 
   const W = Math.max(320, width)
-  const H = 250
+  const H = W < 520 ? 250 : 360
   const m = { t: 24, r: 14, b: 40, l: 34 }
   const iw = W - m.l - m.r
   const ih = H - m.t - m.b

@@ -18,10 +18,10 @@ export default function YearCalendar({ activeSet, year, endISO, streak, firstISO
   const gapX = W < 420 ? 10 : 16
   const blockW = (W - gapX * (perRow - 1)) / perRow
   const g = 2
-  const cell = Math.floor(blockW / 7) - g
   const labelH = 18
-  const blockH = labelH + 6 * (cell + g)
   const rows = Math.ceil(12 / perRow)
+  const cell = perRow === 4 ? Math.min(Math.floor(blockW / 7) - g, Math.floor(((360 - 4 - (rows - 1) * 12) / rows - labelH) / 6) - g) : Math.floor(blockW / 7) - g
+  const blockH = labelH + 6 * (cell + g)
   const H = rows * blockH + (rows - 1) * 12 + 4
   const inStreak = (iso) => streak && streak.startISO && iso >= streak.startISO && iso <= streak.endISO
 

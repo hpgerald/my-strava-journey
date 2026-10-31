@@ -55,7 +55,6 @@ export default function Footer() {
         </div>
         <div className="sfoot__base">
           <span>Showing up<b>.</b> Gerald Tesha</span>
-          <span>Made in Tanzania from my Strava log</span>
         </div>
       </div>
     </footer>

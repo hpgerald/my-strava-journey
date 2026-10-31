@@ -71,7 +71,6 @@ export default function Nav() {
                 <Link to={r.route} className={`smenu__link${r.route === base ? ' is-here' : ''}`} aria-current={r.route === base ? 'page' : undefined} onClick={() => setOpen(false)}>
                   <span className="smenu__num">{r.number}</span>
                   <span className="smenu__t">{r.title}</span>
-                  <span className="smenu__s">{r.subtitle}</span>
                 </Link>
               </li>
             ))}
