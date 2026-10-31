@@ -158,13 +158,15 @@ function Cover({ F }) {
       </figure>
       <div className="bk-cover__base">
         <h2 className="bk-cover__t">Showing<br />Up<span>.</span></h2>
-        <dl className="bk-cover__nums">
-          <div><dt>outings</dt><dd>{n0(F.n)}</dd></div>
-          <div><dt>km on foot</dt><dd>{n0(F.footKm)}</dd></div>
-          <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
-          <div><dt>days in a row</dt><dd>{n0(F.streak)}</dd></div>
-        </dl>
-        <p className="bk-cover__d">My Strava Journey</p>
+        <div className="bk-cover__side">
+          <dl className="bk-cover__nums">
+            <div><dt>outings</dt><dd>{n0(F.n)}</dd></div>
+            <div><dt>km on foot</dt><dd>{n0(F.footKm)}</dd></div>
+            <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
+            <div><dt>days in a row</dt><dd>{n0(F.streak)}</dd></div>
+          </dl>
+          <p className="bk-cover__d">My Strava Journey</p>
+        </div>
       </div>
     </section>
   )
