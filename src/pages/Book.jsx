@@ -164,8 +164,6 @@ function Cover({ F }) {
           <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
           <div><dt>days in a row</dt><dd>{n0(F.streak)}</dd></div>
         </dl>
-      </div>
-      <div className="bk-cover__foot">
         <p className="bk-cover__d">My Strava Journey</p>
       </div>
     </section>
