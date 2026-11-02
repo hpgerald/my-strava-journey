@@ -1,5 +1,6 @@
 import { pickFieldNote } from '../lib/fieldNotes.js'
 import { useInView } from './Reveal.jsx'
+import Words from './Words.jsx'
 
 // A quiet margin note drawn from Gerald's own activity descriptions. One is
 // picked per page from a stable seed, so each page carries a different line.
@@ -13,7 +14,7 @@ export default function FieldNote({ seed, offset = 0, align = 'wide' }) {
   return (
     <figure ref={root} className={`fieldnote fieldnote--${align}${inView ? ' is-in' : ''}`}>
       <p className="fieldnote__eyebrow">From the logbook</p>
-      <blockquote className="fieldnote__quote">{String(note.text).replace(/ (\S+)$/, '\u00A0$1')}</blockquote>
+      <blockquote className="fieldnote__quote"><Words step={30}>{String(note.text).replace(/ (\S+)$/, '\u00A0$1')}</Words></blockquote>
       {note.author ? <figcaption className="fieldnote__by">{note.author}</figcaption> : null}
     </figure>
   )

@@ -1,4 +1,5 @@
 import { Reveal } from './Reveal.jsx'
+import Words from './Words.jsx'
 import OddsRow from './OddsRow.jsx'
 import BookStory, { BookRead } from './BookStory.jsx'
 
@@ -14,7 +15,7 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
     <section className="sgrid" aria-labelledby={id}>
       <div className="sgrid__head">
         <p className="eyebrow">{eyebrow}</p>
-        <h2 id={id} className="section-head__title">{tie(title)}</h2>
+        <h2 id={id} className="section-head__title"><Words>{tie(title)}</Words></h2>
         {sub && <p className="section-head__sub">{sub}</p>}
       </div>
 

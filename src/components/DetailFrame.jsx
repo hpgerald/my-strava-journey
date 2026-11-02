@@ -53,7 +53,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 
   return (
     <Layout>
-      <section className={`sopen${number ? '' : ' sopen--sub'}`} aria-labelledby="sopen-title">
+      <section className={`sopen${number ? '' : ' sopen--sub'}`} aria-labelledby="sopen-title" data-fx>
         <div className="sopen__in">
           {number ? null : (
             <nav aria-label="Breadcrumb" className="crumbs sopen__crumbs">

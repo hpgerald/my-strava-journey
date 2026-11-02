@@ -409,6 +409,7 @@ export default function Home() {
   return (
     <Layout>
       {!book && (
+        <div className="shero-scene" data-fx="pin">
         <section className="shero" aria-hidden="true">
           <div className="shero__in">
             <p className="shero__t">
@@ -421,6 +422,8 @@ export default function Home() {
             </p>
           </div>
         </section>
+        <div className="shero-scene__run" aria-hidden="true" />
+        </div>
       )}
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}

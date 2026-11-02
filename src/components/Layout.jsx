@@ -19,15 +19,16 @@ export default function Layout({ children }) {
 
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target) }
+        // thin things (a rule) count as in view as soon as they touch the screen
+        if (e.isIntersecting && (e.intersectionRatio >= 0.1 || e.boundingClientRect.height < 4)) { e.target.classList.add('is-in'); io.unobserve(e.target) }
       }
-    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' })
+    }, { threshold: [0, 0.1], rootMargin: '0px 0px -6% 0px' })
 
     const scan = () => {
-      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *')
+      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *, hr.rule, .sgrid__fig, .flip, .tm, .geo, .grings, .fieldnote__quote')
       nodes.forEach((el) => {
         if (el.dataset.areveal || el.closest('.book')) return
-        if (el.closest('.yis-report') && !el.parentElement.classList.contains('sgrid__head')) return
+        if (el.closest('.yis-report') && (el.matches('figure.fig, .section-head, .edges'))) return
         el.dataset.areveal = '1'
         el.classList.add('areveal')
         io.observe(el)

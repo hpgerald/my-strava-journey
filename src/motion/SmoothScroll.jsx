@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
 import { motionOK, lenisRef } from './env.js'
+import { createScrollFx } from './scrollFx.js'
 
 // Smooth, weighted scrolling for the whole site (Lenis), plus the small
 // scroll-linked layer the studio design leans on:
@@ -28,11 +29,17 @@ export default function SmoothScroll() {
     }
     const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true })
     lenisRef.current = lenis
+    const fx = createScrollFx()
     let last = 0
     let raf = 0
     const vh = () => window.innerHeight
+    const onResize = () => { fx.refresh(); fx.update() }
+    window.addEventListener('resize', onResize)
+    // a first pass, so the scenes start in place before anyone scrolls
+    requestAnimationFrame(() => fx.update())
     lenis.on('scroll', ({ scroll, velocity }) => {
       setDir(scroll, last); last = scroll
+      fx.update()
       root.style.setProperty('--vel', Math.max(-1, Math.min(1, velocity / 40)).toFixed(3))
       const h = vh()
       const max = Math.max(1, document.documentElement.scrollHeight - h)
@@ -53,7 +60,7 @@ export default function SmoothScroll() {
     })
     const loop = (t) => { lenis.raf(t); raf = requestAnimationFrame(loop) }
     raf = requestAnimationFrame(loop)
-    return () => { cancelAnimationFrame(raf); lenis.destroy(); lenisRef.current = null; root.style.removeProperty('--vel'); root.classList.remove('motion') }
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); fx.destroy(); lenis.destroy(); lenisRef.current = null; root.style.removeProperty('--vel'); root.classList.remove('motion') }
   }, [])
   return null
 }
