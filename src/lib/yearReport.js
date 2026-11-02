@@ -35,7 +35,22 @@ export function buildYearReport(year, acts, geo, recordFirstISO, recordLastISO) 
   for (let i = 1; i < days.length; i++) {
     const d = dayIdx(days[i]) - dayIdx(days[i - 1])
     if (d === 1) g1++; else if (d === 2) g2++; else g3++
-    if (d - 1 > longGap.len) longGap = { len: d - 1, from: days[i - 1], to: days[i] }
+  }
+  // the longest break of the year: the one with the most rest days inside the
+  // year, counted at its full length, so a break that crosses New Year carries
+  // its true size and dates (the same rule as the streaks)
+  {
+    const all = [...new Set(acts.map((a) => (a.date || '').slice(0, 10)).filter(Boolean))].sort()
+    const ys = dayIdx(`${year}-01-01`), ye = dayIdx(`${year}-12-31`)
+    let bestIn = 0
+    for (let i = 1; i < all.length; i++) {
+      const p = dayIdx(all[i - 1]), q = dayIdx(all[i])
+      const len = q - p - 1
+      if (len < 1) continue
+      const inYear = Math.min(q - 1, ye) - Math.max(p + 1, ys) + 1
+      if (inYear < 1) continue
+      if (inYear > bestIn || (inYear === bestIn && len > longGap.len)) { bestIn = inYear; longGap = { len, from: all[i - 1], to: all[i] } }
+    }
   }
   // the habit's memory inside the year: chance of a day out after a day out (p11)
   // and after a rest day (p01)

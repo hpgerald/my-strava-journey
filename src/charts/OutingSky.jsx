@@ -24,7 +24,7 @@ const parseT = (s0) => { const s = (s0 || '').replace(' ', 'T'); return Date.par
 // alive; motion stops off screen and for reduced-motion users.
 // props: activities (the year's only, when `year` is set), year?, recordFirstISO?,
 //   recordLastISO? (to know whether a streak is still going and what is still to come)
-export default function OutingSky({ activities, year, recordFirstISO, recordLastISO }) {
+export default function OutingSky({ activities, year, recordFirstISO, recordLastISO, fullStreak = null, fullGap = null }) {
   const [ref, width] = useWidth(960)
   const [stage, inView] = useInView({ threshold: 0.05, rootMargin: '0px' })
   const reduce = usePrefersReducedMotion()
@@ -71,6 +71,12 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
       const trail = lastJudged - days[days.length - 1]
       if (trail > gap.len) gap = { len: trail, from: days[days.length - 1], to: lastJudged + 1 }
     }
+    // a break that crosses into the year from outside it carries its full length;
+    // only the part inside the year is drawn
+    if (yearMode && fullGap && fullGap.from && fullGap.len > 0) {
+      const gf = dk(parseT(fullGap.from)), gt = dk(parseT(fullGap.to))
+      gap = { len: fullGap.len, from: Math.max(gf, dk(t0) - 1), to: Math.min(gt, lastJudged + 1) }
+    }
     // the streak: the one still running (whole record) or the year's longest
     const set = new Set(days)
     let sBest = { len: 0, start: days[0], end: days[0] }
@@ -85,7 +91,15 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
         if (run > sBest.len) sBest = { len: run, start: st, end: days[i] }
       }
     }
-    const stillGoing = sBest.end === recLast
+    // in a year, the year's longest run may begin before 1 January or carry on
+    // after 31 December: draw the part inside the year, count the whole run
+    let before = false
+    if (yearMode && fullStreak && fullStreak.startISO && fullStreak.len >= sBest.len) {
+      const fs = dk(parseT(fullStreak.startISO)), fe = dk(parseT(fullStreak.endISO))
+      const s0 = Math.max(fs, days[0]), e0 = Math.min(fe, days[days.length - 1])
+      if (s0 <= e0) { before = fs < s0; sBest = { len: fullStreak.len, start: s0, end: e0, fullEnd: fe } }
+    }
+    const stillGoing = (sBest.fullEnd != null ? sBest.fullEnd : sBest.end) === recLast
     // ticks: years for the record, months for a year
     const ticks = []
     if (!yearMode) {
@@ -126,8 +140,8 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
     for (const p of pts) { p.ph = rnd() * Math.PI * 2; p.ph2 = rnd() * Math.PI * 2; p.sp = 0.35 + rnd() * 0.55; p.amp = 0.6 + rnd() * 1.4 }
     const future = yearMode && recLast < dk(t1) - 1 ? { from: (recLast + 1) * DAY, to: t1 } : null
-    return { pts, t0, t1, gap, streak: sBest, stillGoing, ticks, hours, notes, future, firstT: pts[0].t, lastT: pts[pts.length - 1].t }
-  }, [activities, year, yearMode, recordFirstISO, recordLastISO])
+    return { pts, t0, t1, gap, streak: sBest, stillGoing, before, ticks, hours, notes, future, firstT: pts[0].t, lastT: pts[pts.length - 1].t }
+  }, [activities, year, yearMode, recordFirstISO, recordLastISO, fullStreak && fullStreak.startISO, fullStreak && fullStreak.endISO, fullStreak && fullStreak.len, fullGap && fullGap.from, fullGap && fullGap.to])
 
   const W = Math.max(300, width)
   const narrow = W < 640
@@ -214,7 +228,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
 
   if (!model) return <div ref={ref} className="sky"><div ref={stage} className="sky__stage"><div className="sky__plot" style={{ height: 380 }} /></div></div>
 
-  const { gap, streak, stillGoing, ticks, hours, notes, future } = model
+  const { gap, streak, stillGoing, before, ticks, hours, notes, future } = model
   const showGap = gap.len >= (yearMode ? 14 : 30)
   const gx0 = showGap ? X((gap.from + 1) * DAY) : 0, gx1 = showGap ? X(gap.to * DAY) : 0
   const sx0 = X(streak.start * DAY), sx1 = X((streak.end + 1) * DAY)
@@ -230,7 +244,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     return { ...n, x, y: Y(n.p.hour), lane }
   }).filter(Boolean) : []
   const fromJan = yearMode && streak.start * DAY <= model.t0
-  const streakTxt = `${streak.len} ${narrow ? 'days in a row' : fromJan && stillGoing ? 'days in a row, every day so far' : stillGoing ? 'days in a row, still going' : yearMode ? 'days in a row, the longest run' : 'days in a row'}`
+  const streakTxt = `${streak.len} ${narrow ? 'days in a row' : fromJan && stillGoing && !before ? 'days in a row, every day so far' : stillGoing ? 'days in a row, still going' : yearMode ? 'days in a row, the longest run' : 'days in a row'}`
   const first = new Date(model.firstT)
   // the streak label sits on its bracket: starting at the bracket when it fits,
   // ending at it otherwise, and never past either edge of the plot

@@ -98,6 +98,8 @@ for i, pr in enumerate(pub):
         bv = br[f][:10] if f == "date" else br[f]
         pv = (pr.get(f) or "")
         if f == "date": pv = pv[:10]
+        # public data folds every non-foot sport into "Other" (sanitize_public_data.py)
+        if f == "sport_type" and pv == "Other" and bv not in ("Run", "Walk", "TrailRun", "Hike"): continue
         if pv != (bv or ""):
             if mism < 12: print(f"  MISMATCH row{i} {pr.get('activity_key')} {f}: public={pr.get(f)!r} built={bv!r}")
             mism += 1

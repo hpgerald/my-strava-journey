@@ -54,7 +54,7 @@ everest = foot_elev / 8849
 kudos = int(fnum(life["Total Kudos"]))
 _ds = streaks.get("Longest consecutive-day streak") or str(life.get("Longest Streak (Days)", "0"))
 day_streak = int(re.search(r"\d+", _ds).group()) if re.search(r"\d+", _ds) else 0
-country_count = sum(1 for r in countries if r["country"] and "Indoor" not in r["country"])
+country_count = sum(1 for r in countries if r["country"] and "Indoor" not in r["country"] and r["country"] != "Other")
 region_count = len(regions)
 end_iso = meta["coverage_end"]
 end_month = f"{MONTHS[int(end_iso[5:7])]} {end_iso[:4]}"

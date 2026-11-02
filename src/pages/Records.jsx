@@ -115,6 +115,9 @@ export default function Records() {
   const prMax = Math.max(...R.prByYear.map((y) => y.prs))
   const prTicks = []; for (let t = 0; t <= prMax * 1.1; t += prMax > 60 ? 25 : 10) prTicks.push(t)
 
+  // the race I return to: its first edition and the later ones that matched it
+  const raceFirst = (R.race || []).filter((x) => x.prs != null).sort((x, z) => x.year - z.year)[0] || null
+  const raceMatch = raceFirst ? R.race.filter((x) => x.year > raceFirst.year && x.prs === raceFirst.prs) : []
   // ---- streaks ----
   const S = R.streaks
   const streakRows = [
@@ -406,8 +409,7 @@ export default function Records() {
           eyebrow={`${num()} · Personal records`}
           title="Beating my own times."
           statement={<>
-            Personal records come from going back to the same road. The Kilimanjaro Half gave me 18 in one morning in 2023, and I
-            matched that on the same course in 2025 and again in 2026. A personal record here means I beat my own earlier time on a
+            Personal records come from going back to the same road.{raceFirst ? ` The Kilimanjaro Half gave me ${raceFirst.prs} in one morning in ${raceFirst.year}${raceMatch.length === R.race.length - 1 && raceMatch.length > 1 ? ', and I matched that on the same course every year since' : raceMatch.length ? `, and I matched that on the same course in ${raceMatch.map((x) => x.year).join(' and ')}` : ''}.` : ''} A personal record here means I beat my own earlier time on a
             Strava segment, a short timed stretch of road or trail. The treadmill gives almost none, because segments need GPS.
           </>}
           odds={{

@@ -40,6 +40,8 @@ const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
 const monthOf = (iso) => (iso ? MONTH_F[parseInt(iso.slice(5, 7), 10) - 1] : '')
 const fmtMonth = (iso) => (iso ? `${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MONTH_L[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
+// a date in another year carries its year
+const fmtDayIn = (iso, Y) => (iso ? `${fmtDay(iso)}${Number(iso.slice(0, 4)) !== Y ? ` ${iso.slice(0, 4)}` : ''}` : '')
 const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); return h ? `${h} h ${m} min` : `${m} min` }
 const ORD = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
 const WORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
@@ -277,7 +279,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               { num: s.hours, unit: ' h', label: `moving${ps ? `, ${chgTxt(chg(s.hours, ps.hours))}` : ''}`, tone: 'move' },
             ]}
           />
-          <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} />
+          <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} fullStreak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} fullGap={r ? r.longGap : null} />
           <BookStory>{[
             `Each dot above is one outing of ${Y}, placed by its day across the year and by the hour it started, and a bigger dot is a longer distance. The marks pick out the longest silence of the year, the longest run of days and the three biggest days.`,
             `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} personal records on Strava segments` : ''}.`}`,
@@ -423,13 +425,13 @@ export default function YearInSport({ year: bookYear } = {}) {
           statement={<>
             {r.restDays === 0
               ? 'Not one day was skipped. Some days it was only something small, but it was something, and the days add up when none of them is skipped.'
-              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDay(s.streakStartISO)} to ${fmtDay(s.streakEndISO)}` : ' was short'}.${r.longGap.len >= 2 ? ` My longest break ended on ${fmtDay(r.longGap.to)}.` : ''}`}
+              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDayIn(s.streakStartISO, Y)} to ${fmtDayIn(s.streakEndISO, Y)}` : ' was short'}.${r.longGap.len >= 2 ? ` My longest break ended on ${fmtDayIn(r.longGap.to, Y)}.` : ''}`}
           </>}
           odds={{
             title: `The days of ${Y}`,
             items: [
               { num: s.activeDays, unit: ' days', label: `with an outing, of ${fmtInt(r.span)}`, tone: 'move' },
-              { num: s.streakLen, unit: ' days', label: 'the longest run in a row', tone: 'move' },
+              { num: s.streakLen, unit: ' days', label: s.streakGoing ? 'in a row, still going' : 'the longest run in a row', tone: 'move' },
               { num: r.longGap.len, unit: ' days', label: 'the longest break', tone: 'rest' },
               r.restDays === 0
                 ? { value: multiDays / Math.max(1, s.activeDays), label: 'of days held two outings or more', tone: 'move' }
@@ -472,7 +474,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             ]}
           story={[
               r.restDays === 0 ? 'There is no faint day in the calendar. Some of those days held only a short walk or one of the other activities, and each one counted.' : `There were ${n0(r.restDays)} rest days in ${Y}${so}. More of them fell on a ${WEEK[restTop]} than on any other day of the week.`,
-              s.streakLen >= 7 ? `The longest run of days in a row was ${n0(s.streakLen)} days. In the calendar it is the deep orange stretch.` : 'The days were scattered, with no long run of days in a row yet.',
+              s.streakLen >= 7 ? `The longest run of days in a row was ${n0(s.streakLen)} days, from ${fmtDayIn(s.streakStartISO, Y)} to ${s.streakGoing ? 'now, still going' : fmtDayIn(s.streakEndISO, Y)}.${s.streakLen > s.streakInYear ? ` ${n0(s.streakInYear)} of those days fall in ${Y}, the deep orange stretch in the calendar.` : ' In the calendar it is the deep orange stretch.'}` : 'The days were scattered, with no long run of days in a row yet.',
               fullWeeks ? `${cap(word(fullWeeks))} full ${fullWeeks === 1 ? 'week' : 'weeks'}, Monday to Sunday, had an outing on every day.` : 'No week of the year had an outing on every day.',
               twoDays ? `On ${n0(twoDays)} days I went out more than once.` : '',
             ]}

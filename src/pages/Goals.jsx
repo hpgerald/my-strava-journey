@@ -304,7 +304,7 @@ export default function Goals() {
                     items={curMonths.map((m) => ({ label: m.short, short: m.short.slice(0, 1), value: m.v, display: m.v >= 1000 ? `${(m.v / 1000).toFixed(1)}k` : n0(m.v), tone: m.partial ? 'quiet' : m.v >= needMonth ? 'big' : 'mid' }))}
                     max={Math.max(needMonth, ...curMonths.map((m) => m.v)) * 1.15}
                     ticks={[0, 1000, 2000, 3000, 4000]} tickFmt={(v) => (v ? `${v / 1000}k` : '0')}
-                    refLine={{ value: needMonth, label: `needed a month from here, ${n0(Math.round(needMonth / 10) * 10)} m`, short: `needed, ${n0(Math.round(needMonth / 10) * 10)} m` }}
+                    refLine={{ value: needMonth, label: `needed a month from here, ${n0(needMonth)} m`, short: `needed, ${n0(needMonth)} m` }}
                     yCap="metres climbed &uarr;"
                     aria={`Metres climbed on foot each month of ${cur.year}: ${curMonths.map((m) => `${m.label} ${n0(m.v)} m`).join(', ')}. About ${n0(needMonth)} m a month is needed from here.`}
                   />

@@ -113,7 +113,23 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
 
   // the longest break inside each year, and the longest since the habit began
   const yearGaps = {}
-  for (let i = 1; i < days.length; i++) { const g = days[i] - days[i - 1] - 1; const y = isoOf(days[i - 1]).slice(0, 4); yearGaps[y] = Math.max(yearGaps[y] || 0, g) }
+  // each year's longest break is the one with the most rest days inside that
+  // year, counted at its full length (a break across New Year keeps its size)
+  {
+    const inYr = {}
+    for (const d of days) { const y = isoOf(d).slice(0, 4); if (!(y in yearGaps)) { yearGaps[y] = 0; inYr[y] = 0 } }
+    for (let i = 1; i < days.length; i++) {
+      const g = days[i] - days[i - 1] - 1
+      if (g < 1) continue
+      for (let y = Number(isoOf(days[i - 1] + 1).slice(0, 4)); y <= Number(isoOf(days[i] - 1).slice(0, 4)); y++) {
+        const ys = Math.round(Date.parse(`${y}-01-01T00:00:00Z`) / 86400000), ye = Math.round(Date.parse(`${y}-12-31T00:00:00Z`) / 86400000)
+        const inside = Math.min(days[i] - 1, ye) - Math.max(days[i - 1] + 1, ys) + 1
+        const k = String(y)
+        if (!(k in yearGaps)) continue
+        if (inside > inYr[k] || (inside === inYr[k] && g > yearGaps[k])) { inYr[k] = inside; yearGaps[k] = g }
+      }
+    }
+  }
   const silence = breaks.reduce((b, x) => (x.len > b.len ? x : b), { len: 0 })
   const after = breaks.filter((b) => b.start > (silence.end || ''))
   const beforeSilence = silence.start ? acts.filter((a) => a.date < silence.start).length : acts.length

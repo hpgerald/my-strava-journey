@@ -83,7 +83,13 @@ export default function Timeline() {
   const lastFirst = F[F.length - 1]
 
   // ---- My Book: facts for the longer stories ----
-  const monthsSince = C.monthly.filter((m) => m.m > (S.end || '').slice(0, 7)).length
+  // months in a row with an outing, counted back from the latest month
+  const monthsSince = (() => {
+    const have = new Set(C.monthly.filter((m) => m.n > 0).map((m) => m.m))
+    let [y, mo] = (C.lastISO || '').slice(0, 7).split('-').map(Number), k = 0
+    while (have.has(`${y}-${String(mo).padStart(2, '0')}`)) { k++; mo--; if (!mo) { mo = 12; y-- } }
+    return k
+  })()
   const lastStep = steps[steps.length - 1]
   const firstsNow = (firstsBy.find((y) => y.year === lastYear) || { n: 0 }).n
   const firstsEarly = F.filter((f) => Number(f.date.slice(0, 4)) <= 2022).length
@@ -185,7 +191,7 @@ export default function Timeline() {
           }}
           read={[
               'Each bar is the number of days it took me to log 250 more outings, in order from the first 250 to the latest. A shorter bar means those outings came faster.',
-              'The longest gap between two outings in each year. The grey years are before the comeback, and the scale stops at 40 days so the small gaps can still be seen.',
+              'The longest gap between two outings in each year, counted in full even when it runs across New Year. The long pause covers parts of 2020 and 2021, so those two bars run off the top: the scale stops at 40 days so the small gaps can still be seen.',
             ]}
           story={[
               `The faint bars under the chronicle above are my outings in each month. In the first two years they are thin and broken, and then comes the empty stretch of the long pause. After I came back the row never drops to zero again: ${n0(monthsSince)} months in a row, each with at least one outing.`,

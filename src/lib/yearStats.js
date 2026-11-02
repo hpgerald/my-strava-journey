@@ -36,6 +36,21 @@ export function computeYearStats(year, acts, geo) {
     if (cur > best) { best = cur; bStart = curStart; bEnd = d }
     prev = dd
   }
+  // a streak does not stop at the end of a year: follow the year's longest run
+  // into the days before and after it, so it carries its true length and dates
+  const bestInYear = best
+  if (bStart) {
+    const allDays = new Set(acts.map((a) => (a.date || '').slice(0, 10)).filter(Boolean))
+    const iso = (t) => new Date(t).toISOString().slice(0, 10)
+    let t = Date.parse(bStart)
+    while (allDays.has(iso(t - 86400000))) t -= 86400000
+    bStart = iso(t)
+    t = Date.parse(bEnd)
+    while (allDays.has(iso(t + 86400000))) t += 86400000
+    bEnd = iso(t)
+    best = Math.round((Date.parse(bEnd) - Date.parse(bStart)) / 86400000) + 1
+  }
+  const recordLastISO = acts.reduce((m, a) => ((a.date || '') > m ? a.date : m), '').slice(0, 10)
 
   const monthsActivities = Array(12).fill(0)
   const monthsKm = Array(12).fill(0)
@@ -151,7 +166,7 @@ export function computeYearStats(year, acts, geo) {
 
   return {
     year, n: ya.length, footKm, hours, elev, kudos, prs, achievements, calories,
-    activeDays: dates.length, activeSet, streakLen: best, streakStartISO: bStart, streakEndISO: bEnd,
+    activeDays: dates.length, activeSet, streakLen: best, streakStartISO: bStart, streakEndISO: bEnd, streakInYear: bestInYear, streakGoing: bEnd === recordLastISO,
     endISO,
     weeksActive, weeksElapsed,
     monthsActivities, monthsKm, monthsElev, hours24, weekday7, mix, countries, countriesNamed,

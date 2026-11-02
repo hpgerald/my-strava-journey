@@ -67,6 +67,14 @@ export default function Home() {
   const nav = useTable('nav_index')
 
   // per-year character narrative (shared with the Year in Sport report)
+  // the biggest single climb of a hike, and where it started
+  const bigHike = useMemo(() => {
+    let best = null
+    for (const a of activityLog) if (a.sport_type === 'Hike' && (!best || (toNum(a.elevation_gain_m) || 0) > (toNum(best.elevation_gain_m) || 0))) best = a
+    if (!best) return { m: 0, region: '' }
+    const g = activityGeo.find((x) => x.activity_key === best.activity_key)
+    return { m: Math.round(toNum(best.elevation_gain_m) || 0), region: g && g.country === 'Tanzania' ? g.region : '' }
+  }, [activityLog, activityGeo])
   const geoByKey = useMemo(() => {
     const m = {}
     for (const g of activityGeo) m[g.activity_key] = g
@@ -839,7 +847,7 @@ export default function Home() {
           statement={<>
             Running gives me the kilometres, and walking and the hills give me the height. I climb about{' '}
             {mPerKm('Run').toFixed(1)} m for every kilometre I run. At that rate I would need to run more than{' '}
-            {fmtInt(Math.floor(1979 / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to match my biggest hike, almost 2,000 m in Morogoro.
+            {fmtInt(Math.floor(bigHike.m / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to match my biggest hike, {bigHike.m >= 1900 && bigHike.m < 2000 ? 'almost 2,000' : fmtInt(bigHike.m)} m{bigHike.region ? ` in ${bigHike.region}` : ''}.
           </>}
           odds={{
             title: 'Share of distance and climb on foot',
