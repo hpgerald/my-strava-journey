@@ -2317,8 +2317,6 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 }
 
 /* ---- Goals: Ras Kilomoni stamp wall + cadence ribbon --------------- */
-.rask { position: relative; }
-.rask__roman { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.02em; }
 .rask__grid { stroke: var(--rule-faint); stroke-width: 1; }
 .rask__mon { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-faint); }
 .rask__ribttl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; fill: var(--fg-faint); }

@@ -9,7 +9,8 @@ import GoalRace from '../charts/GoalRace.jsx'
 import GhostRace from '../charts/GhostRace.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import ColBars from '../charts/ColBars.jsx'
-import { CloseDots, SimHist, StopBars, Tally, MonthBeads } from '../charts/GoalCharts.jsx'
+import { CloseDots, SimHist, StopBars, MonthBeads } from '../charts/GoalCharts.jsx'
+import RasKilomoni from '../charts/RasKilomoni.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildGoalsReport, TARGETS } from '../lib/goalsReport.js'
@@ -396,16 +397,16 @@ export default function Goals() {
                   { num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
                   { num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
                   { num: rkKm, unit: ' km', label: `there and back, ${k1(rkKm / rk.length)} km a trip`, tone: 'move' },
-                  { num: rkOuting, unit: '', label: `outings in the record after trip ${rkLast.roman}`, tone: 'rest' },
+                  { num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
                 ],
               }}
               left={{
-                title: 'Every trip, kept as a tally',
+                title: 'Every trip, in the numbers I counted them',
                 node: (
-                  <>
-                    <Tally visits={rk} aria={`Tally of the ${rk.length} trips to Ras Kilomoni by month: ${rkMonths.map((m) => `${fmtMon(`${m.k}-01`)} ${m.n}`).join(', ')}.`} />
-                    <p className="chr__key tally__key" aria-hidden="true"><i className="tally__ksw is-walk" />walked <i className="tally__ksw is-run" />run</p>
-                  </>
+                  <RasKilomoni
+                    rows={rk}
+                    aria={`Fifty tiles numbered ${rk[0].roman} to ${rkLast.roman}, one for each trip to Ras Kilomoni: ${rkWalks} walks and ${rk.length - rkWalks} runs.`}
+                  />
                 ),
               }}
               right={{
@@ -413,18 +414,18 @@ export default function Goals() {
                 node: (
                   <ColBars
                     items={rkMonths.map((m) => ({ label: fmtMon(`${m.k}-01`), short: MON[parseInt(m.k.slice(5, 7), 10) - 1], value: m.n, display: String(m.n), tone: m === rkTop ? 'big' : 'mid' }))}
-                    ticks={[0, 5, 10, 15]} max={rkTop.n * 1.15} yCap="trips &uarr;"
+                    ticks={[0, 5, 10, 15]} max={rkTop.n * 1.15} yCap="trips &uarr;" H={330}
                     aria={`Trips to Ras Kilomoni each month: ${rkMonths.map((m) => `${fmtMon(`${m.k}-01`)} ${m.n}`).join(', ')}.`}
                   />
                 ),
               }}
               read={[
-              'Every trip is one stroke, counted in fives the way a tally is kept by hand, and grouped by month. The colour shows whether I walked or ran there.',
+              'One tile for each trip, numbered in Roman numerals the way I counted them, from I to L. An orange tile was a run there and back, a plain one a walk.',
               'The number of trips in each month, from the first trip to the fiftieth.',
             ]}
               story={[
               `A walk there and back was about ${k1(rkAvg('Walk'))} km on average, and a run about ${k1(rkAvg('Run'))} km. The same place gave me two kinds of outing, and I used both.`,
-              'A place is a good kind of target. It does not ask for a pace or a distance, only that I get there. Each trip was one more stroke, and fifty strokes later the target was done.',
+              'A place is a good kind of target. It does not ask for a pace or a distance, only that I get there. Each trip was one more number, and at L the target was done.',
             ]}
               source="Ras Kilomoni table · every trip with its date, sport and distance"
             />
