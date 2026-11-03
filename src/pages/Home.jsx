@@ -450,7 +450,7 @@ export default function Home() {
           ]}</BookStory>
         </section>
       </Container>
-      {!book && <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu huisha gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
+      {!book && <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
 
       {/* ===== How the streak holds: momentum + today/tomorrow grid ===== */}
       {momentum && mWeek && mOneOff && mFiveOff && (
