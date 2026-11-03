@@ -500,3 +500,15 @@ html.motion .odds__cell:hover:where(:not(.book *)) { transform: translateY(-3px)
 
 /* switching years in Year in Sport: the new report settles in softly */
 html.motion .yis-report:where(:not(.book *)) { animation: fadeUp 0.9s var(--ease-calm) both; }
+
+/* floating dots: each one sways a few pixels around its own place, slowly and
+   out of step with its neighbours; only while its chart is on screen */
+@keyframes float-dot {
+  0%   { translate: 0 0; }
+  25%  { translate: var(--fx) calc(var(--fy) * -1); }
+  50%  { translate: calc(var(--fx) * -0.5) var(--fy); }
+  75%  { translate: calc(var(--fx) * -1) calc(var(--fy) * -0.35); }
+  100% { translate: 0 0; }
+}
+html.motion .flt:where(:not(.book *)) { animation: float-dot var(--fd, 8s) ease-in-out var(--fp, 0s) infinite; animation-play-state: paused; }
+html.motion [data-float].is-live .flt:where(:not(.book *)) { animation-play-state: running; }

@@ -1,4 +1,5 @@
 import { useWidth } from './useWidth.js'
+import { floatStyle } from '../motion/drift.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
 
@@ -165,12 +166,12 @@ export function WeekStrips({ years, now, aria }) {
             const cy = m.t + yi * rowH + rowH / 2
             const isNow = y.year === now
             return (
-              <g key={y.year} className={`wstrip__row${isNow ? ' is-now' : ''}`} style={{ '--d': `${yi * 120}ms` }}>
+              <g key={y.year} className={`wstrip__row${isNow ? ' is-now' : ''}`} style={{ '--d': `${yi * 120}ms` }} data-float>
                 <text x={m.l - 8} y={cy + 4} textAnchor="end" className="cdots__y">{y.year}</text>
                 <rect x={x(y.q25)} y={cy - rowH * 0.36} width={Math.max(2, x(y.q75) - x(y.q25))} height={rowH * 0.72} rx="3" className="wstrip__band" />
                 {y.weeks.map((w, i) => {
                   const j = (((i * 7919) % 13) / 12 - 0.5) * rowH * 0.5
-                  return <circle key={w.start} cx={x(w.km)} cy={cy + j} r={narrow ? 2.6 : 3.2} className="wstrip__dot" />
+                  return <circle key={w.start} cx={x(w.km)} cy={cy + j} r={narrow ? 2.6 : 3.2} className="wstrip__dot flt" style={floatStyle(yi * 60 + i)} />
                 })}
                 <line x1={x(y.med)} x2={x(y.med)} y1={cy - rowH * 0.42} y2={cy + rowH * 0.42} className="wstrip__med" />
               </g>

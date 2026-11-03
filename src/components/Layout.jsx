@@ -24,7 +24,14 @@ export default function Layout({ children }) {
       }
     }, { threshold: [0, 0.1], rootMargin: '0px 0px -6% 0px' })
 
+    // floating dot clouds only move while they are on screen
+    const live = new IntersectionObserver((entries) => {
+      for (const e of entries) e.target.classList.toggle('is-live', e.isIntersecting)
+    }, { rootMargin: '10% 0px' })
+    const scanFloat = () => root.querySelectorAll('[data-float]').forEach((el) => { if (!el.dataset.floatOn) { el.dataset.floatOn = '1'; live.observe(el) } })
+
     const scan = () => {
+      scanFloat()
       const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *, hr.rule, .sgrid__fig, .flip, .tm, .geo, .grings, .fieldnote__quote')
       nodes.forEach((el) => {
         if (el.dataset.areveal || el.closest('.book')) return
@@ -38,7 +45,7 @@ export default function Layout({ children }) {
     // content loads from CSVs after mount, so catch figures added later too
     const mo = new MutationObserver(scan)
     mo.observe(root, { childList: true, subtree: true })
-    return () => { io.disconnect(); mo.disconnect() }
+    return () => { io.disconnect(); live.disconnect(); mo.disconnect() }
   }, [])
 
   // inside My Book a page is typeset as a chapter, so it brings no site chrome

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { seedDrift, drift } from '../motion/drift.js'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
 import { MODES, MODE_NAME, TREAD_MIN } from '../lib/footReport.js'
@@ -35,7 +36,7 @@ export default function FootMap({ rows }) {
       const pace = r.min / r.km
       if (r.mode === 'tread' && pace < TREAD_MIN) continue
       const mpk = r.elev / r.km
-      pts.push({ ...r, pace, mpk, flat: r.elev <= 0, jit: rnd(), ph: rnd() * Math.PI * 2, ph2: rnd() * Math.PI * 2, sp: 0.35 + rnd() * 0.5, amp: 0.5 + rnd() * 1.1 })
+      pts.push({ ...r, pace, mpk, flat: r.elev <= 0, jit: rnd(), ...seedDrift(rnd, 0.9) })
     }
     pts.sort((a, b) => a.t - b.t)
     const mid = {}
@@ -93,12 +94,13 @@ export default function FootMap({ rows }) {
         if (!reduce) { if (!armed) k = 0; else { const at = (i / pts.length) * ENTER; k = Math.max(0, Math.min(1, (el - at) / 600)) } }
         if (k <= 0) continue
         const s = el / 1000
-        const dx = still ? 0 : Math.sin(s * p.sp + p.ph) * p.amp
-        const dy = still ? 0 : Math.cos(s * p.sp * 0.8 + p.ph2) * p.amp * 1.2
+        const f = still ? null : drift(p, s)
+        const dx = f ? f.dx : 0
+        const dy = f ? f.dy : 0
         const ease = 1 - Math.pow(1 - k, 3)
         ctx.globalAlpha = alpha[p.mode] * ease
         ctx.beginPath()
-        ctx.arc(xs[i] + dx, ys[i] + dy - (1 - ease) * 14, rs[i] * (0.4 + 0.6 * ease), 0, Math.PI * 2)
+        ctx.arc(xs[i] + dx, ys[i] + dy - (1 - ease) * 14, rs[i] * (0.4 + 0.6 * ease) * (f ? f.k : 1), 0, Math.PI * 2)
         if (p.mode === 'hike') { ctx.strokeStyle = col.hike; ctx.lineWidth = 1.6; ctx.stroke() } else { ctx.fillStyle = col[p.mode]; ctx.fill() }
       }
       ctx.globalAlpha = 1

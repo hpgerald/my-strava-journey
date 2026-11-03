@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { seedDrift, drift } from '../motion/drift.js'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
 import { MODES } from '../lib/footReport.js'
@@ -64,7 +65,7 @@ export default function RecordStairs({ points, records, endT, notes = [], yMax, 
     const col = Object.fromEntries(MODES.map((k) => [k, css.getPropertyValue(`--m-${k}`).trim() || '#888']))
     let seed = 5
     const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
-    const pts = points.map((p) => ({ ...p, x: X(p.t), y: Y(p.v), ph: rnd() * 6.28, sp: 0.3 + rnd() * 0.5, amp: 0.4 + rnd() * 0.9 }))
+    const pts = points.map((p) => ({ ...p, x: X(p.t), y: Y(p.v), ...seedDrift(rnd, 0.75) }))
     const ENTER = 1800
     let raf = 0, start = 0, visible = true
     const moving = alive && !reduce && armed
@@ -78,11 +79,12 @@ export default function RecordStairs({ points, records, endT, notes = [], yMax, 
         if (!reduce) { if (!armed) k = 0; else { const at = ((p.x - m.l) / (W - m.l - m.r)) * ENTER; k = Math.max(0, Math.min(1, (el - at) / 500)) } }
         if (k <= 0) continue
         const s = el / 1000
-        const dx = moving ? Math.sin(s * p.sp + p.ph) * p.amp : 0
-        const dy = moving ? Math.cos(s * p.sp * 0.8 + p.ph) * p.amp : 0
+        const f = moving ? drift(p, s) : null
+        const dx = f ? f.dx : 0
+        const dy = f ? f.dy : 0
         ctx.globalAlpha = (p.mode === 'hike' ? 0.85 : 0.42) * k
         ctx.beginPath()
-        ctx.arc(p.x + dx, p.y + dy, (narrow ? 1.6 : 2.1) * (0.5 + 0.5 * k), 0, Math.PI * 2)
+        ctx.arc(p.x + dx, p.y + dy, (narrow ? 1.6 : 2.1) * (0.5 + 0.5 * k) * (f ? f.k : 1), 0, Math.PI * 2)
         if (p.mode === 'hike') { ctx.strokeStyle = col.hike; ctx.lineWidth = 1.2; ctx.stroke() } else { ctx.fillStyle = col[p.mode]; ctx.fill() }
       }
       ctx.globalAlpha = 1

@@ -1,4 +1,5 @@
 import { useWidth } from './useWidth.js'
+import { floatStyle } from '../motion/drift.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
 
@@ -36,9 +37,9 @@ export default function FitScatter({ points, fit, xDomain, yDomain, xTicks = [],
           ))}
           {xTicks.map((g) => <text key={`x${g}`} x={x(g)} y={H - m.b + 16} textAnchor="middle" className="cb__gl">{xFmt(g)}</text>)}
           <line x1={m.l} y1={H - m.b} x2={W - m.r} y2={H - m.b} stroke="var(--ink)" />
-          <g className="fsc__dots">
+          <g className="fsc__dots" data-float>
             {points.map((p, i) => (
-              <circle key={i} cx={x(clampX(p.x))} cy={y(clampY(p.y))} r={narrow ? 2.2 : 2.8} className={`fsc__dot mfill--${tone}`} style={{ '--d': `${Math.round((i / points.length) * 900)}ms` }} />
+              <circle key={i} cx={x(clampX(p.x))} cy={y(clampY(p.y))} r={narrow ? 2.2 : 2.8} className={`fsc__dot flt mfill--${tone}`} style={{ '--d': `${Math.round((i / points.length) * 900)}ms`, ...floatStyle(i) }} />
             ))}
           </g>
           <line x1={lx1} y1={ly1} x2={lx2} y2={ly2} className="fsc__fit" strokeDasharray={len} style={{ '--len': len }} />

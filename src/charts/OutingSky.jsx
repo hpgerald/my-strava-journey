@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { seedDrift, drift } from '../motion/drift.js'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
 import { toNum } from '../lib/format.js'
@@ -138,7 +139,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     }
     let seed = 7 + (year || 0)
     const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
-    for (const p of pts) { p.ph = rnd() * Math.PI * 2; p.ph2 = rnd() * Math.PI * 2; p.sp = 0.35 + rnd() * 0.55; p.amp = 0.6 + rnd() * 1.4 }
+    for (const p of pts) Object.assign(p, seedDrift(rnd, yearMode ? 1.15 : 1))
     const future = yearMode && recLast < dk(t1) - 1 ? { from: (recLast + 1) * DAY, to: t1 } : null
     return { pts, t0, t1, gap, streak: sBest, stillGoing, before, ticks, hours, notes, future, firstT: pts[0].t, lastT: pts[pts.length - 1].t }
   }, [activities, year, yearMode, recordFirstISO, recordLastISO, fullStreak && fullStreak.startISO, fullStreak && fullStreak.endISO, fullStreak && fullStreak.len, fullGap && fullGap.from, fullGap && fullGap.to])
@@ -200,13 +201,14 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
         }
         if (k <= 0) continue
         const s = el / 1000
-        const dx = still ? 0 : Math.sin(s * p.sp + p.ph) * p.amp
-        const dy = still ? 0 : Math.cos(s * p.sp * 0.8 + p.ph2) * p.amp * 1.3
+        const f = still ? null : drift(p, s)
+        const dx = f ? f.dx : 0
+        const dy = f ? f.dy : 0
         const ease = 1 - Math.pow(1 - k, 3)
         ctx.globalAlpha = alpha[p.g] * ease
         ctx.fillStyle = col[p.g]
         ctx.beginPath()
-        ctx.arc(xs[i] + dx, ys[i] + dy + (1 - ease) * 10, rs[i] * (0.4 + 0.6 * ease), 0, Math.PI * 2)
+        ctx.arc(xs[i] + dx, ys[i] + dy + (1 - ease) * 10, rs[i] * (0.4 + 0.6 * ease) * (f ? f.k : 1), 0, Math.PI * 2)
         ctx.fill()
       }
       const lp = pts.length - 1
