@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
 import { useBook } from './BookContext.js'
+import SectionMap from './SectionMap.jsx'
 
 // Shared page frame: skip link, sticky nav, main landmark, footer.
 // It also drives the site-wide scroll-reveal: every chart figure, section header
@@ -32,7 +33,9 @@ export default function Layout({ children }) {
 
     const scan = () => {
       scanFloat()
-      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *, hr.rule, .sgrid__fig, .flip, .tm, .geo, .grings, .fieldnote__quote')
+      // sections report how far the page has scrolled through them (scrollFx)
+      root.querySelectorAll('section.sgrid, .sgrid__fig, .fieldnote').forEach((el) => { if (!el.dataset.fx && !el.closest('.book')) el.dataset.fx = '' })
+      const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *, hr.rule, .sgrid__fig, .flip, .tm, .geo, .grings, .fieldnote__quote, .sgrid__statement, .odds, .ycards, .sgrid__note, .ev-file, .ev-read, .ev-how > div, .ev-gloss > div, .ev-tbl')
       nodes.forEach((el) => {
         if (el.dataset.areveal || el.closest('.book')) return
         if (el.closest('.yis-report') && (el.matches('figure.fig, .section-head, .edges'))) return
@@ -57,6 +60,7 @@ export default function Layout({ children }) {
         Skip to content
       </a>
       <Nav />
+      <SectionMap />
       <main id="main" tabIndex={-1} ref={mainRef}>
         {children}
       </main>

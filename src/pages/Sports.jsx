@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -166,7 +167,7 @@ export default function Sports() {
         {/* ===== the four sports in one view ===== */}
         <section className="sgrid yis-top" aria-labelledby="sp-title">
           <div className="sgrid__head">
-            <p className="eyebrow">The whole picture</p>
+            <Eyebrow>The whole picture</Eyebrow>
             <h2 id="sp-title" className="section-head__title">Runs cover the&nbsp;ground.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -780,7 +781,7 @@ export default function Sports() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="sp-edges">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Biggest days</p>
+            <Eyebrow>{num()} · Biggest days</Eyebrow>
             <h2 id="sp-edges" className="section-head__title">Each sport&rsquo;s biggest&nbsp;day.</h2>
           </div>
           <ul className="yrecs">
@@ -797,7 +798,7 @@ export default function Sports() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="sp-each">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Each sport on its own</p>
+            <Eyebrow>{num()} · Each sport on its own</Eyebrow>
             <h2 id="sp-each" className="section-head__title">Open any&nbsp;sport.</h2>
           </div>
           <ul className="sp-cards">

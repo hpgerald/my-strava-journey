@@ -68,8 +68,8 @@ p.ev-v { margin: 0; }
 
 /* wide screens: the reading and the notes sit in the words column */
 @media (min-width: 64rem) {
-  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { grid-column: 1; align-self: start; padding-top: 0.55rem; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
-  .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 2; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { grid-column: 1 / span 3; grid-row: 1; align-self: start; padding-top: 0.55rem; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
+  .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 4 / span 7; }
 }
 @media (max-width: 59.999rem) {
   .ev-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }

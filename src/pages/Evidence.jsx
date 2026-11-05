@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import Words from '../components/Words.jsx'
 import { Reveal } from '../components/Reveal.jsx'
@@ -53,7 +54,7 @@ function Case({ c }) {
     <section className="sgrid ev-case" id={id} aria-labelledby={`${id}-t`}>
       <div className="sgrid__head">
         <div className="ev-side">
-          <p className="eyebrow">Case {String(c.n).padStart(2, '0')}</p>
+          <Eyebrow>Case {String(c.n).padStart(2, '0')}</Eyebrow>
           <p className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</p>
         </div>
         <h2 id={`${id}-t`} className="section-head__title"><Words>{tie(c.title)}</Words></h2>
@@ -598,7 +599,7 @@ export default function Evidence() {
     <DetailFrame {...frame}>
       <section className="sgrid ev-intro" aria-labelledby="ev-intro-t">
         <div className="sgrid__head">
-          <p className="eyebrow">How I tested</p>
+          <Eyebrow>How I tested</Eyebrow>
           <h2 id="ev-intro-t" className="section-head__title"><Words>{tie('Twelve claims, on trial.')}</Words></h2>
         </div>
         <Reveal as="p" className="sgrid__statement">
@@ -617,7 +618,7 @@ export default function Evidence() {
       <hr className="rule rule--faint" />
       <section className="sgrid ev-board" aria-labelledby="ev-board-t">
         <div className="sgrid__head">
-          <p className="eyebrow">The verdicts</p>
+          <Eyebrow>The verdicts</Eyebrow>
           <h2 id="ev-board-t" className="section-head__title"><Words>{tie('The verdicts at a glance.')}</Words></h2>
         </div>
         <div className="ev-tbl">
@@ -647,7 +648,7 @@ export default function Evidence() {
       <hr className="rule rule--faint" />
       <section className="sgrid ev-holm" aria-labelledby="ev-holm-t">
         <div className="sgrid__head">
-          <p className="eyebrow">How the tests were run</p>
+          <Eyebrow>How the tests were run</Eyebrow>
           <h2 id="ev-holm-t" className="section-head__title"><Words>{tie('Correcting for many tests.')}</Words></h2>
         </div>
         <Reveal as="p" className="sgrid__statement">

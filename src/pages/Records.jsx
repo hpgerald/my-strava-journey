@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
@@ -171,7 +172,7 @@ export default function Records() {
         {/* ===== the distance record ===== */}
         <section className="sgrid yis-top" aria-labelledby="rc-title">
           <div className="sgrid__head">
-            <p className="eyebrow">The distance record</p>
+            <Eyebrow>The distance record</Eyebrow>
             <h2 id="rc-title" className="section-head__title">Against my own&nbsp;longest.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -608,7 +609,7 @@ export default function Records() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="rc-edges">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · All my records</p>
+            <Eyebrow>{num()} · All my records</Eyebrow>
             <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
           </div>
           <ul className="yrecs">

@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -185,7 +186,7 @@ export default function Goals() {
         {/* ===== the race against the calendar ===== */}
         <section className="sgrid yis-top" aria-labelledby="gl-title">
           <div className="sgrid__head">
-            <p className="eyebrow">Three targets, every year since {habit[0].year}</p>
+            <Eyebrow>Three targets, every year since {habit[0].year}</Eyebrow>
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -485,7 +486,7 @@ export default function Goals() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="gl-book">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · All my goals</p>
+            <Eyebrow>{num()} · All my goals</Eyebrow>
             <h2 id="gl-book" className="section-head__title">Met, and still&nbsp;open.</h2>
           </div>
           <ul className="yrecs">

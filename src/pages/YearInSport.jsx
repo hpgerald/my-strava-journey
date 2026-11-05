@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import { useParams } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -268,7 +269,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         {/* ===== the year in one view ===== */}
         <section className="sgrid yis-top" aria-labelledby={idp('yis-title')}>
           <div className="sgrid__head">
-            <p className="eyebrow">{Y}{isPartial ? ' · still running' : ''}</p>
+            <Eyebrow>{Y}{isPartial ? ' · still running' : ''}</Eyebrow>
             <h2 id={idp('yis-title')} className="section-head__title">{theme}.</h2>
           </div>
           {YEAR_REPORT[Y] && <Reveal as="p" className="sgrid__statement">{YEAR_REPORT[Y](s)}</Reveal>}
@@ -576,7 +577,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby={idp('yis-edges')}>
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Biggest days</p>
+            <Eyebrow>{num()} · Biggest days</Eyebrow>
             <h2 id={idp('yis-edges')} className="section-head__title">The biggest days of {Y}.</h2>
           </div>
           <ul className="yrecs">

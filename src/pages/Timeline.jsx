@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
@@ -105,7 +106,7 @@ export default function Timeline() {
         {/* ===== the chronicle ===== */}
         <section className="sgrid yis-top" aria-labelledby="tl-title">
           <div className="sgrid__head">
-            <p className="eyebrow">{fmtMon(C.firstISO)} to {fmtMon(C.lastISO)}</p>
+            <Eyebrow>{fmtMon(C.firstISO)} to {fmtMon(C.lastISO)}</Eyebrow>
             <h2 id="tl-title" className="section-head__title">No long gap since&nbsp;then.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -258,7 +259,7 @@ export default function Timeline() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="tl-rail">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Year by year</p>
+            <Eyebrow>{num()} · Year by year</Eyebrow>
             <h2 id="tl-rail" className="section-head__title">{C.events.length} moments in {word(lastYear - Number(C.firstISO.slice(0, 4)) + 1)} years.</h2>
           </div>
           <ol className="trail">

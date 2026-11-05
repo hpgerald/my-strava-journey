@@ -3,7 +3,8 @@ import { motionOK, finePointer } from './env.js'
 
 // The studio cursor: a small dot that follows exactly and a ring that trails it.
 // Over a link or button the ring grows; over anything with data-cursor it
-// shows that word ("Read", "Open", "Menu"). Elements marked data-magnetic lean
+// shows that word ("Read", "Open", "Menu"); over a chart it becomes a fine
+// orange sight for reading values. Elements marked data-magnetic lean
 // toward the pointer. Only for a real mouse, and never under reduced motion.
 export default function Cursor() {
   const dot = useRef(null)
@@ -32,8 +33,9 @@ export default function Cursor() {
       }
       const c = t && t.closest('[data-cursor]')
       const link = t && t.closest('a, button, [role="button"], summary, label')
+      const chart = !c && !link && t && t.closest('.sgrid__chart, .evc, .cb, figure.fig')
       setLabel(c ? c.getAttribute('data-cursor') : '')
-      setMode(c ? 'label' : link ? 'link' : '')
+      setMode(c ? 'label' : link ? 'link' : chart ? 'chart' : '')
     }
     const leave = () => setMode('hide')
     const down = () => ring.current && ring.current.classList.add('is-down')

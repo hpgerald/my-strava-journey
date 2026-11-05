@@ -1,4 +1,5 @@
 import Layout from '../components/Layout.jsx'
+import Eyebrow from '../components/Eyebrow.jsx'
 import Container from '../components/Container.jsx'
 import IndexHub from '../components/IndexHub.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
@@ -460,7 +461,7 @@ export default function Home() {
           <hr className="rule" />
           <section className="sgrid" aria-labelledby="streak-title">
             <div className="sgrid__head">
-              <p className="eyebrow">How the streak holds</p>
+              <Eyebrow>How the streak holds</Eyebrow>
               <h2 id="streak-title" className="section-head__title">One day leads to the&nbsp;next.</h2>
             </div>
 
@@ -508,7 +509,7 @@ export default function Home() {
           <Container>
             <section className="sgrid" aria-labelledby="work-title">
               <div className="sgrid__head">
-                <p className="eyebrow">Big days and small days</p>
+                <Eyebrow>Big days and small days</Eyebrow>
                 <h2 id="work-title" className="section-head__title">The long days carry a&nbsp;lot.</h2>
               </div>
 
@@ -607,7 +608,7 @@ export default function Home() {
       <Container>
         <hr className="rule" />
         <div className="closer-head">
-          <p className="eyebrow">A closer look</p>
+          <Eyebrow>A closer look</Eyebrow>
           <h2 className="section-head__title">Six more things I&nbsp;found.</h2>
         </div>
 
@@ -902,7 +903,7 @@ export default function Home() {
       <Container>
         <section className="sgrid" aria-labelledby="explore-title">
           <div className="sgrid__head">
-            <p className="eyebrow">Read on</p>
+            <Eyebrow>Read on</Eyebrow>
             <h2 id="explore-title" className="section-head__title">
               {cap(NUMWORD[menuItems.length] || String(menuItems.length))} more chapters.
             </h2>

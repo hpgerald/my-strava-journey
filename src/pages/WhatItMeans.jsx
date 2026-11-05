@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
@@ -105,7 +106,7 @@ export default function WhatItMeans() {
         {/* ===== the cost ===== */}
         <section className="sgrid yis-top" aria-labelledby="wm-title">
           <div className="sgrid__head">
-            <p className="eyebrow">Seven years, read back</p>
+            <Eyebrow>Seven years, read back</Eyebrow>
             <h2 id="wm-title" className="section-head__title">It costs&nbsp;time.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -398,7 +399,7 @@ export default function WhatItMeans() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="wm-close">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · What I would tell you</p>
+            <Eyebrow>{num()} · What I would tell you</Eyebrow>
             <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">

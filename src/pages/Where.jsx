@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -133,7 +134,7 @@ export default function Where() {
         {/* ===== Africa ===== */}
         <section className="sgrid yis-top" aria-labelledby="wh-title">
           <div className="sgrid__head">
-            <p className="eyebrow">Across Africa</p>
+            <Eyebrow>Across Africa</Eyebrow>
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -181,7 +182,7 @@ export default function Where() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="wh-tz">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Tanzania</p>
+            <Eyebrow>{num()} · Tanzania</Eyebrow>
             <h2 id="wh-tz" className="section-head__title">Three places carry most of&nbsp;it.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -538,7 +539,7 @@ export default function Where() {
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="wh-places">
           <div className="sgrid__head">
-            <p className="eyebrow">{num()} · Each place on its own</p>
+            <Eyebrow>{num()} · Each place on its own</Eyebrow>
             <h2 id="wh-places" className="section-head__title">Open any&nbsp;place.</h2>
           </div>
           <ul className="sp-cards wh-cards">
