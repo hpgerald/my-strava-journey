@@ -32,7 +32,7 @@ import { isNamedCountry } from '../lib/geo.js'
 
 const MONTH_L = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH_F = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const EVEREST = 8849
 const DAR_DODOMA_KM = 450 // Dar es Salaam to Dodoma by road, one way
 const pc = (v) => Math.round((v || 0) * 100)
@@ -155,6 +155,8 @@ export default function YearInSport({ year: bookYear } = {}) {
   const peakHour = s.hours24.indexOf(Math.max(...s.hours24))
   const fmtH = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
   const wkMax = Math.max(...s.weekday7), wkMin = Math.min(...s.weekday7)
+  // every weekday that shares the top or bottom count, Sunday first
+  const tiedDays = (v) => { const d = WEEK.filter((_, i) => s.weekday7[i] === v); return d.length > 1 ? `${d.slice(0, -1).join(', ')} and ${d[d.length - 1]}` : d[0] }
 
   // ---- the days ----
   const pctDays = r.activeShare
@@ -209,7 +211,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   const restByDay = (() => {
     const c = Array(7).fill(0)
     const d0 = Date.parse(r.startISO + 'T00:00:00Z'), d1 = Date.parse(r.endISO + 'T00:00:00Z')
-    for (let t = d0; t <= d1; t += 86400000) { const iso = new Date(t).toISOString().slice(0, 10); if (!s.activeSet.has(iso)) c[(new Date(t).getUTCDay() + 6) % 7] += 1 }
+    for (let t = d0; t <= d1; t += 86400000) { const iso = new Date(t).toISOString().slice(0, 10); if (!s.activeSet.has(iso)) c[new Date(t).getUTCDay()] += 1 }
     return c
   })()
   const restTop = restByDay.indexOf(Math.max(...restByDay))
@@ -228,12 +230,12 @@ export default function YearInSport({ year: bookYear } = {}) {
   const amActs = yearActs.filter((a) => hourOf(a) < 10), pmActs = yearActs.filter((a) => hourOf(a) >= 16 && hourOf(a) < 21)
   const shareOf = (xs, t) => (xs.length ? xs.filter((a) => a.sport_type === t).length / xs.length : 0)
   const before6 = yearActs.filter((a) => hourOf(a) < 6).length
-  const fullWeeks = (() => { let n = 0; const d0 = Date.parse(r.startISO + 'T00:00:00Z'), d1 = Date.parse(r.endISO + 'T00:00:00Z'); for (let t = d0; t + 6 * 86400000 <= d1; t += 86400000) { const dow = (new Date(t).getUTCDay() + 6) % 7; if (dow) continue; let all = true; for (let k = 0; k < 7; k++) if (!s.activeSet.has(new Date(t + k * 86400000).toISOString().slice(0, 10))) { all = false; break } if (all) n++ } return n })()
+  const fullWeeks = (() => { let n = 0; const d0 = Date.parse(r.startISO + 'T00:00:00Z'), d1 = Date.parse(r.endISO + 'T00:00:00Z'); for (let t = d0; t + 6 * 86400000 <= d1; t += 86400000) { const dow = new Date(t).getUTCDay(); if (dow) continue; let all = true; for (let k = 0; k < 7; k++) if (!s.activeSet.has(new Date(t + k * 86400000).toISOString().slice(0, 10))) { all = false; break } if (all) n++ } return n })()
   const twoDays = r.multi.two + r.multi.more
   const under3 = footActs.filter((a) => kmOf(a) < 3).length
   const km10Share = (() => { const t = footActs.reduce((u, a) => u + kmOf(a), 0) || 1; return footActs.filter((a) => kmOf(a) >= 10).reduce((u, a) => u + kmOf(a), 0) / t })()
   const bestWk = r.weekly.series.reduce((b, w) => (w.km > b.km ? w : b), r.weekly.series[0] || { w: 0, km: 0 })
-  const bestWkISO = new Date((bestWk.w * 7 + 4) * 86400000).toISOString().slice(0, 10)
+  const bestWkISO = new Date((bestWk.w * 7 + 3) * 86400000).toISOString().slice(0, 10)
   const wk50 = wkKms.filter((k) => k >= 50).length
   const firstSeen = (() => { const m = {}; for (const a of activities) { const g = geoByKey[a.activity_key]; if (g && g.country === 'Tanzania' && g.region && (!m[g.region] || a.date < m[g.region])) m[g.region] = a.date } return m })()
   const newRegs = Object.entries(firstSeen).filter(([, d]) => Number(d.slice(0, 4)) === Y).map(([k]) => k)
@@ -377,7 +379,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               title={evening >= morning ? 'The evenings led.' : 'The mornings led.'}
               statement={<>
                 The {evening >= morning ? 'evenings' : 'mornings'} were my time in {Y}{(evening >= morning) === (peakHour >= 12) ? `, and ${fmtH(peakHour)} was the busiest hour.` : `, though the single busiest hour was ${fmtH(peakHour)}.`}{' '}
-                {WEEK[s.weekday7.indexOf(wkMax)]} was my busiest day and {WEEK[s.weekday7.indexOf(wkMin)]} the quietest
+                {tiedDays(wkMax)} {tiedDays(wkMax).includes(' and ') ? 'were my busiest days' : 'was my busiest day'} and {tiedDays(wkMin)} the quietest
                 {wkMin / wkMax > 0.75 ? ', but not by much' : ''}. {pc(s.weekendShare)}% of my outings were on a Saturday or Sunday,
                 {s.weekendShare > 0.35 ? ' more than an even week would give.' : s.weekendShare < 0.24 ? ' less than an even week would give.' : ' about what an even week would give.'}
               </>}
@@ -469,13 +471,13 @@ export default function YearInSport({ year: bookYear } = {}) {
             ),
           }}
           read={[
-              `Every day of ${Y} as a wall calendar, one small month per block with Monday first. Orange days had an outing, deep orange marks the longest run of days in a row, and faint days are rest days.${isPartial ? ' Days still to come are left as outlines.' : ''}`,
+              `Every day of ${Y} as a wall calendar, one small month per block with Sunday first. Orange days had an outing, deep orange marks the longest run of days in a row, and faint days are rest days.${isPartial ? ' Days still to come are left as outlines.' : ''}`,
               r.restDays === 0 ? 'The share of days that held one outing, two, or three or more.' : 'After each day out, how soon the next outing came: the next day, two days later, or three days or more.',
             ]}
           story={[
               r.restDays === 0 ? 'There is no faint day in the calendar. Some of those days held only a short walk or one of the other activities, and each one counted.' : `There were ${n0(r.restDays)} rest days in ${Y}${so}. More of them fell on a ${WEEK[restTop]} than on any other day of the week.`,
               s.streakLen >= 7 ? `The longest run of days in a row was ${n0(s.streakLen)} days, from ${fmtDayIn(s.streakStartISO, Y)} to ${s.streakGoing ? 'now, still going' : fmtDayIn(s.streakEndISO, Y)}.${s.streakLen > s.streakInYear ? ` ${n0(s.streakInYear)} of those days fall in ${Y}, the deep orange stretch in the calendar.` : ' In the calendar it is the deep orange stretch.'}` : 'The days were scattered, with no long run of days in a row yet.',
-              fullWeeks ? `${cap(word(fullWeeks))} full ${fullWeeks === 1 ? 'week' : 'weeks'}, Monday to Sunday, had an outing on every day.` : 'No week of the year had an outing on every day.',
+              fullWeeks ? `${cap(word(fullWeeks))} full ${fullWeeks === 1 ? 'week' : 'weeks'}, Sunday to Saturday, had an outing on every day.` : 'No week of the year had an outing on every day.',
               twoDays ? `On ${n0(twoDays)} days I went out more than once.` : '',
             ]}
           source="Activity Log · days with at least one outing"

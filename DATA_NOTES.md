@@ -8,7 +8,10 @@ Generated for Phase 1 of the "my-strava-journey" build.
 Coverage: 2019-08-17 through 2026-11-01 (2,068 activities). Last refreshed 2026-11-02.
 Figures below from the original Phase-1 build are retained for provenance; current totals
 come from the weekly rebuild (`rebuild_from_raw.py` → `apply_foot_only.py` →
-`build_derived.py` → `sanitize_public_data.py` → `validate.py` → `update_readme.py`).
+`build_derived.py` → `sanitize_public_data.py` → `validate.py` → `build_evidence.py` → `update_readme.py`).
+`build_evidence.py` writes `evidence.json`, the tests behind "The Habit on Trial" (needs numpy, pandas,
+scipy, statsmodels, scikit-learn, ruptures and lifelines; fixed seeds, so the output is reproducible).
+Weeks run Sunday to Saturday everywhere in the data and on the site.
 
 ---
 

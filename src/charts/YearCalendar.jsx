@@ -3,7 +3,7 @@ import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 
 // Every day of one year as a wall calendar: twelve small months, each a grid of
-// days with Monday first. Days with an outing are orange, the longest unbroken
+// days with Sunday first. Days with an outing are orange, the longest unbroken
 // run of the year is deep orange, rest days are faint and days not yet lived (a
 // year still running) are left as outlines. Months wash in one after another.
 // props: activeSet Set<'YYYY-MM-DD'>, year, endISO (last day on record), streak {startISO, endISO}
@@ -28,7 +28,7 @@ export default function YearCalendar({ activeSet, year, endISO, streak, firstISO
   const months = MON.map((name, mo) => {
     const first = new Date(Date.UTC(year, mo, 1))
     const n = new Date(Date.UTC(year, mo + 1, 0)).getUTCDate()
-    const lead = (first.getUTCDay() + 6) % 7
+    const lead = first.getUTCDay()
     const days = []
     for (let d = 1; d <= n; d++) {
       const iso = `${year}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`

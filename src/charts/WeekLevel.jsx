@@ -4,11 +4,11 @@ import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
 
 // The shape of a week, as proof of a habit rather than a hobby: seven bars,
-// Monday to Sunday, against a dashed line at a perfectly even week (one seventh
+// Sunday to Saturday, against a dashed line at a perfectly even week (one seventh
 // each). The bars barely clear it, and the two weekend bars are tinted so the
 // eye can check for a weekend bulge that is not really there. Bars grow from the
-// baseline when the chart scrolls in. counts: [Mon..Sun] activity totals.
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+// baseline when the chart scrolls in. counts: [Sun..Sat] activity totals.
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export default function WeekLevel({ counts }) {
   const [ref, width] = useWidth(520)
@@ -43,7 +43,7 @@ export default function WeekLevel({ counts }) {
           {safe.map((v, i) => {
             const cx = m.l + slot * i + slot / 2
             const h = Math.max(1, base - y(v))
-            const weekend = i >= 5
+            const weekend = i === 0 || i === 6
             const on = hi === null || hi === i
             const fill = i === busiest ? 'var(--accent)' : weekend ? 'color-mix(in srgb, var(--accent) 34%, var(--paper))' : 'var(--grey-30)'
             return (

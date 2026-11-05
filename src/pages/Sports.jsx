@@ -730,7 +730,7 @@ export default function Sports() {
           statement={<>
             Two small findings surprised me. On the treadmill, my longer runs were quicker per kilometre.
             {at5 && at21 ? ` My usual 5 km went at ${pace(at5.pace)} a km and my usual 21 km at ${pace(at21.pace)}.` : ''}
-            {' '}And running and walking never fought for my time. A big running week did not mean less walking.
+            {' '}And over whole weeks, running did not crowd out walking: a big running week could come with almost any amount of walking.
           </>}
           odds={{
             title: 'Four numbers from the fits',
@@ -771,7 +771,7 @@ export default function Sports() {
             ]}
           story={[
               `The link on the treadmill is ${strength(F.r)}, so it is a tendency and not a rule. Plenty of short runs were quick and some long ones were slow. On average, each extra kilometre came with about ${secPerKm} seconds quicker per kilometre.`,
-              'The weeks show a calm picture. A week with a lot of running could have almost any amount of walking. My walking did not wait for a quiet running week, and my running did not wait for a quiet walking week.',
+              'The weeks show a calm picture. A week with a lot of running could have almost any amount of walking. From one week to the next there is a small pull between the two, and The Habit on Trial tests it in case 10.',
             ]}
           source={`Activity Log · least-squares fits; treadmill runs quicker than ${pace(TREAD_MIN)} a km left out`}
         />

@@ -29,6 +29,7 @@ import { isNamedCountry } from '../lib/geo.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import { useHeroLive } from '../motion/heroLive.js'
 import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -53,6 +54,7 @@ const fmtDayLong = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTHS_FULL[par
 
 export default function Home() {
   const book = useBook()
+  const heroRef = useHeroLive()
   useEffect(() => {
     document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
   }, [])
@@ -306,7 +308,7 @@ export default function Home() {
   const hourShare = (lo, hi) => hours.slice(lo, hi).reduce((t, v) => t + v, 0) / (activityLog.length || 1)
   const peakHour = hours.indexOf(Math.max(...hours))
   const fmtHour = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
-  const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const weekN = WEEK.map((d) => activityLog.filter((a) => a.weekday === d).length)
   const weekMax = Math.max(...weekN), weekMin = Math.min(...weekN)
   const weekAvg = weekN.reduce((t, v) => t + v, 0) / 7
@@ -410,7 +412,7 @@ export default function Home() {
     <Layout>
       {!book && (
         <div className="shero-scene" data-fx="pin">
-        <section className="shero" aria-hidden="true">
+        <section className="shero" aria-hidden="true" ref={heroRef}>
           <div className="shero__in">
             <p className="shero__t">
               {['Showing', 'up'].map((w, wi) => (
@@ -727,7 +729,7 @@ export default function Home() {
             ]}
           story={[
               `${(() => { const hs = gridYears.filter((y) => y > quietUntil && y < nowYear).map(peakHourOf); return hs.length && hs.every((h) => h >= 16) ? `From ${gridYears.find((y) => y > quietUntil)} to ${nowYear - 1} my busiest hour was always in the late afternoon or evening, after the working day.` : 'For most years my busiest hour was in the evening, after the working day.' })()} ${peakHourOf(nowYear) < 12 ? `In ${nowYear} it moved to ${fmtHour(peakHourOf(nowYear))}, and the mornings took the lead.` : `In ${nowYear} it is ${fmtHour(peakHourOf(nowYear))}.`}`,
-              `The weekend holds ${pcs((weekN[5] + weekN[6]) / (activityLog.length || 1))}% of all my outings, close to the 29% an even week would give. Saturday is a little busier than the rest, and the gap between the busiest and quietest day is ${n0(weekMax - weekMin)} outings over seven years.`,
+              `The weekend holds ${pcs((weekN[0] + weekN[6]) / (activityLog.length || 1))}% of all my outings, close to the 29% an even week would give. Saturday is a little busier than the rest, and the gap between the busiest and quietest day is ${n0(weekMax - weekMin)} outings over seven years.`,
             ]}
           source="Activity Log · start hour and weekday of every outing"
         />

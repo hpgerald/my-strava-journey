@@ -9,13 +9,14 @@ import Where from './Where.jsx'
 import Timeline from './Timeline.jsx'
 import Goals from './Goals.jsx'
 import WhatItMeans from './WhatItMeans.jsx'
+import Evidence from './Evidence.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildBookFacts } from '../lib/bookFacts.js'
 
 // My Book: the whole site set as one sports memoir. Every chapter is the real
 // page rendered in book mode (no site chrome, every chart at its final state),
-// framed by a cover, a title page, contents, a prologue, five part openers, an
+// framed by a cover, a title page, contents, a prologue, six part openers, an
 // epilogue and a note on the data. The same page prints to an A4 book; a PDF of
 // it is rendered at deploy time and offered for download.
 export const BOOK_TITLE = 'Showing Up'
@@ -38,6 +39,7 @@ const PARTS = [
   { n: 'III', name: 'Part three', title: 'The work', line: 'My sports on foot, the records I set and the places I went.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
   { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I set myself each year.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
   { n: 'V', name: 'Part five', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [['08', 'What It Means']] },
+  { n: 'VI', name: 'Part six', title: 'The proof', line: 'Twelve things I believe about my habit, each one tested against the log.', chapters: [['09', 'The Habit on Trial']] },
 ]
 
 // glossary terms for measures this book never uses
@@ -231,7 +233,7 @@ function Prologue({ F }) {
         This book is me going back through that record, all {n0(F.n)} activities of it.
       </p>
       <p>
-        There are five parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, and last, what I think it all means.
+        There are six parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, what I think it all means, and last, the tests that check whether it is true.
         To everyone who gave me kudos along the way, <span lang="sw">asanteni sana</span>, thank you very much.
       </p>
     </section>
@@ -415,7 +417,7 @@ export default function Book() {
 
   const frame = {
     crumbs: [{ label: 'Home', to: '/' }, { label: 'My Book' }],
-    number: '09',
+    number: '10',
     title: 'My Book',
     subtitle: 'The whole story, as a book',
     prev,
@@ -474,6 +476,9 @@ export default function Book() {
 
           <PartOpener p={PARTS[4]} />
           <WhatItMeans />
+
+          <PartOpener p={PARTS[5]} />
+          <Evidence />
 
           <Epilogue F={F} />
           <HowMade F={F} />

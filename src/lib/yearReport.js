@@ -89,13 +89,13 @@ export function buildYearReport(year, acts, geo, recordFirstISO, recordLastISO) 
 
   // steadiness: how much the weekly distance swings around its own average
   const wk = new Map()
-  for (const a of foot) { const i = dayIdx((a.date || '').slice(0, 10)); const w = Math.floor((i - 4) / 7); wk.set(w, (wk.get(w) || 0) + num(a, 'distance_km')) }
+  for (const a of foot) { const i = dayIdx((a.date || '').slice(0, 10)); const w = Math.floor((i - 3) / 7); wk.set(w, (wk.get(w) || 0) + num(a, 'distance_km')) }
   const weeks = Math.max(1, Math.round(span / 7))
   const wkVals = [...wk.values()]
   while (wkVals.length < weeks) wkVals.push(0)
   const wkMean = mean(wkVals), wkCv = wkMean ? sd(wkVals) / wkMean : 0
   // the weekly series in order, for the chart of the year's steadiness
-  const w0 = Math.floor((y0 - 4) / 7), w1 = Math.floor((y1 - 4) / 7)
+  const w0 = Math.floor((y0 - 3) / 7), w1 = Math.floor((y1 - 3) / 7)
   const wkSeries = []
   for (let w = w0; w <= w1; w++) wkSeries.push({ w, km: wk.get(w) || 0 })
 

@@ -3,16 +3,16 @@ import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 
 // The year's consistency as a calendar grid: one cell per day, columns are weeks
-// (Monday top), active days in accent, rest days faint. The longest unbroken run
+// (Sunday top), active days in accent, rest days faint. The longest unbroken run
 // of the year is drawn in deep accent so it reads as one solid stretch. Cells
 // wash in week by week when scrolled into view.
 // activeSet: Set<'YYYY-MM-DD'>; year:number; endISO: last day to show;
 // streak: { len, startISO, endISO }
 const MON_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-function mondayOnOrBefore(d) {
+function sundayOnOrBefore(d) {
   const x = new Date(d)
-  const wd = (x.getUTCDay() + 6) % 7 // Mon=0
+  const wd = x.getUTCDay() // Sun=0
   x.setUTCDate(x.getUTCDate() - wd)
   return x
 }
@@ -24,7 +24,7 @@ export default function YearStreak({ activeSet, year, endISO, streak }) {
 
   const start = new Date(Date.UTC(year, 0, 1))
   const end = new Date(`${endISO}T00:00:00Z`)
-  const gridStart = mondayOnOrBefore(start)
+  const gridStart = sundayOnOrBefore(start)
   const sStart = streak && streak.startISO ? new Date(`${streak.startISO}T00:00:00Z`) : null
   const sEnd = streak && streak.endISO ? new Date(`${streak.endISO}T00:00:00Z`) : null
 
@@ -35,7 +35,7 @@ export default function YearStreak({ activeSet, year, endISO, streak }) {
     days.push({
       iso,
       col: Math.floor((t - gridStart) / (7 * 86400000)),
-      row: (t.getUTCDay() + 6) % 7,
+      row: t.getUTCDay(),
       active: inYear && activeSet.has(iso),
       inYear,
       inStreak: sStart && sEnd && t >= sStart && t <= sEnd,
@@ -54,7 +54,7 @@ export default function YearStreak({ activeSet, year, endISO, streak }) {
   const x = (c) => left + c * (cell + gap)
   const y = (r) => top + r * (cell + gap)
 
-  // month labels at the first week whose Monday is in that month
+  // month labels at the first week whose Sunday is in that month
   const monthTicks = []
   let lastMonth = -1
   for (const d of days) {

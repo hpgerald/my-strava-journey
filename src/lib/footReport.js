@@ -155,11 +155,11 @@ export function buildFootReport(activities) {
   const treadFit = { ...fit(tp.map((f) => f.km), tp.map((f) => f.pace)), points: tp.map((f) => ({ x: f.km, y: f.pace })) }
   const wk = new Map()
   const habitStart = foot.find((f) => f.year >= 2021)
-  const w0 = habitStart ? Math.floor((dayIdx(habitStart.date) - 4) / 7) : 0
-  const wLast = Math.floor((dayIdx(lastISO) - 4) / 7)
+  const w0 = habitStart ? Math.floor((dayIdx(habitStart.date) - 3) / 7) : 0
+  const wLast = Math.floor((dayIdx(lastISO) - 3) / 7)
   for (let w = w0; w <= wLast; w++) wk.set(w, { run: 0, walk: 0 })
   for (const f of foot) {
-    const w = Math.floor((dayIdx(f.date) - 4) / 7)
+    const w = Math.floor((dayIdx(f.date) - 3) / 7)
     if (!wk.has(w)) continue
     if (f.sport === 'Run' || f.sport === 'TrailRun') wk.get(w).run += f.km
     else if (f.sport === 'Walk') wk.get(w).walk += f.km

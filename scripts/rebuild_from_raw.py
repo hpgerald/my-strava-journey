@@ -15,6 +15,8 @@ RAW = os.environ.get("STRAVA_RAW",
     "/root/.claude/uploads/b3a043bd-b3a9-5768-937e-095a6ffd4e38/26d5c9d9-1789800841676_strava_activities_raw.csv")
 OUT = "public/data"
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+# weeks run Sunday to Saturday: the order every weekly table is written in
+WEEK_SUN = WEEK[6:] + WEEK[:6]
 GSRC = "Strava GPS + point-in-polygon (Natural Earth) / nearest TZ city"
 CSRC = "Strava GPS + point-in-polygon (Natural Earth admin-0)"
 
@@ -199,7 +201,7 @@ Wr("relative_effort_by_year.csv", ["year", "total_relative_effort", "avg_relativ
 
 # weekday_patterns
 wd = []
-for d in WEEK:
+for d in WEEK_SUN:
     g = [r for r in rows if r['weekday'] == d]
     wd.append([d, len(g), n1(sum(N(r, 'distance_km') for r in g)), "Fun Stats"])
 Wr("weekday_patterns.csv", ["weekday", "activities", "distance_km", "source_page"], wd)

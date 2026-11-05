@@ -10,7 +10,7 @@ import { useBook } from './BookContext.js'
 const CHAPTER_ATMO = { '/where': 'where' }
 
 // One frame for every detail page: breadcrumb, big header, content, prev/next paging.
-// `number` shows the 01..09 index for top-level sections; omit it for sub-item pages.
+// `number` shows the 01..10 index for top-level sections; omit it for sub-item pages.
 export default function DetailFrame({ crumbs = [], number, title, subtitle, lede, children, prev, next }) {
   const location = useLocation()
   const book = useBook()
@@ -99,7 +99,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
 }
 
 // the logbook note each chapter carries on the site, kept for its book chapter
-const BOOK_SEED = { '02': '/numbers', '03': '/sports', '04': '/records', '05': '/where', '06': '/timeline', '07': '/goals', '08': '/what-it-means' }
+const BOOK_SEED = { '02': '/numbers', '03': '/sports', '04': '/records', '05': '/where', '06': '/timeline', '07': '/goals', '08': '/what-it-means', '09': '/on-trial' }
 
 export function PagingLink({ item, dir }) {
   if (!item) return <span className="sturn__gap" />

@@ -78,10 +78,10 @@ export function buildMeaningReport(activities) {
   for (let i = habit; i <= last; i++) habitAll += kmOn(i)
   const avgDayKm = habitAll / habitDays
 
-  // ---- weeks, Monday to Sunday, on foot ----
+  // ---- weeks, Sunday to Saturday, on foot ----
   const weeks = []
-  const monday = (i) => { const d = new Date(i * DAY); return i - ((d.getUTCDay() + 6) % 7) }
-  for (let w = monday(habit); w <= last; w += 7) {
+  const sunday = (i) => { const d = new Date(i * DAY); return i - d.getUTCDay() }
+  for (let w = sunday(habit); w <= last; w += 7) {
     let km = 0
     for (let k = 0; k < 7; k++) km += kmOn(w + k)
     const full = w + 6 <= last && w >= habit

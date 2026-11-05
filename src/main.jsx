@@ -15,6 +15,7 @@ import './styles/where.css'
 import './styles/timeline.css'
 import './styles/goals.css'
 import './styles/meaning.css'
+import './styles/evidence.css'
 import './styles/book.css'
 import './styles/studio.css'
 

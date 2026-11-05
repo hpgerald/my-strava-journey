@@ -88,10 +88,10 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
   const days = [...byDay.values()]
   const topDaysKm = days.slice().sort((a, b) => b.km - a.km).slice(0, 6)
   const topDaysClimb = days.slice().sort((a, b) => b.elev - a.elev).slice(0, 6)
-  const wkOf = (iso) => Math.floor((dayIdx(iso) - 4) / 7) // weeks run Monday to Sunday
+  const wkOf = (iso) => Math.floor((dayIdx(iso) - 3) / 7) // weeks run Sunday to Saturday
   const byWeek = new Map()
   for (const f of foot) { const w = wkOf(f.date); const x = byWeek.get(w) || { w, km: 0, elev: 0, n: 0 }; x.km += f.km; x.elev += f.elev; x.n++; byWeek.set(w, x) }
-  const weekStart = (w) => isoOf(w * 7 + 4)
+  const weekStart = (w) => isoOf(w * 7 + 3)
   const topWeeksKm = [...byWeek.values()].sort((a, b) => b.km - a.km).slice(0, 6).map((x) => ({ ...x, start: weekStart(x.w) }))
   const byMonth = new Map()
   for (const f of foot) { const k = f.date.slice(0, 7); const x = byMonth.get(k) || { month: k, km: 0, elev: 0, n: 0 }; x.km += f.km; x.elev += f.elev; x.n++; byMonth.set(k, x) }
@@ -148,7 +148,7 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
     foot: { ...sOut(longestRun(footDays)), current: current(footDays) },
     run: sOut(longestRun(daysOf((f) => f.sport === 'Run' || f.sport === 'TrailRun'))),
     walk: sOut(longestRun(daysOf((f) => f.sport === 'Walk'))),
-    week: { len: wkBest.len, startISO: weekStart(wkBest.start), endISO: isoOf(wkBest.end * 7 + 10), current: weeks[weeks.length - 1] === wkOf(lastISO) ? (() => { let s = weeks.length - 1; while (s > 0 && weeks[s] - weeks[s - 1] === 1) s--; return weeks.length - s })() : 0 },
+    week: { len: wkBest.len, startISO: weekStart(wkBest.start), endISO: isoOf(wkBest.end * 7 + 9), current: weeks[weeks.length - 1] === wkOf(lastISO) ? (() => { let s = weeks.length - 1; while (s > 0 && weeks[s] - weeks[s - 1] === 1) s--; return weeks.length - s })() : 0 },
     longGap,
     top: runsOf(allDays).slice(0, 8).map((r) => ({ len: r.len, startISO: isoOf(r.start), endISO: isoOf(r.end), current: r.end === lastDay })),
   }

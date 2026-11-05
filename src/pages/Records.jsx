@@ -498,7 +498,7 @@ export default function Records() {
               S.foot.len < S.any.len ? `The ${S.any.len} days were never one sport. My longest run of days on foot is ${S.foot.len}, so on some days of this streak the only outing was one of the other activities. It still counts as a day out, and it kept the chain.` : '',
               `Running and walking alone never come close. My longest running streak is ${S.run.len} days and my longest walking streak ${S.walk.len}. The habit holds because I can choose, day by day, whatever fits.`,
             ]}
-          source="Activity Log · consecutive days and weeks with an outing (weeks run Monday to Sunday)"
+          source="Activity Log · consecutive days and weeks with an outing (weeks run Sunday to Saturday)"
         />
 
         {/* ===== 9. where ===== */}

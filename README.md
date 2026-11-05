@@ -38,11 +38,10 @@ At the last refresh (1 November 2026) the record covered:
 | Elevation gained on foot | 84,885 m (about 9.6 times Everest) |
 | Kudos received | 72,546 |
 | Longest active streak | 308 days, still going |
-| Longest week streak | 163 weeks (about 3 years), still going |
+| Longest week streak | 153 weeks (about 3 years), still going |
 | Countries | 5 |
 | Tanzanian regions | 17 |
 <!-- AUTO-HIGHLIGHTS:END -->
-| Coverage | 2019-08-17 to 2026-10-25 |
 
 ## What's on the site
 
@@ -58,7 +57,8 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | 06 | **Timeline** | The whole record as one chronicle: milestones every 250 outings, the firsts on foot, trips abroad and new regions, every pair of shoes, the streaks and silences, the pace of the habit, and every moment written out year by year. |
 | 07 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year: each year raced against the calendar, the rings year by year, the odds that the open climbing ring closes (a resampling of the year's days), the Kilimanjaro Half with all editions raced at once, the fifty trips to Ras Kilomoni as a tally, the unbroken run of months, and a goal book. |
 | 08 | **What It Means** | The record read back as lessons, in the first person: what the habit costs in time (a clock per year), counting days before kilometres, the small days that kept it going, the weekly floor, how long days arrive in blocks, and the two levers of a yearly total. |
-| 09 | **My Book** | The whole site set as one sports memoir, *Showing Up*: cover, contents, prologue, five parts and an epilogue, with every chapter drawn live from the data. Prints as an A4 book; `scripts/book_pdf.mjs` renders the downloadable PDF into `public/book/` (re-run it after each data refresh). |
+| 09 | **The Habit on Trial** | Twelve claims about the habit, each tested with two to four statistical methods (logistic and hazard models, survival fits, changepoints, harmonic regression, rank tests, bootstraps) and a Holm correction across all tests, with a verdict for each: proven, supported or not proven. `scripts/build_evidence.py` writes every number to `public/data/evidence.json`. |
+| 10 | **My Book** | The whole site set as one sports memoir, *Showing Up*: cover, contents, prologue, six parts and an epilogue, with every chapter drawn live from the data. Prints as an A4 book; `scripts/book_pdf.mjs` renders the downloadable PDF into `public/book/` (re-run it after each data refresh). |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
 
@@ -162,8 +162,9 @@ Because the site is data-driven, a refresh is mostly a data swap:
 
 1. Regenerate the CSVs in `public/data/` from a new Strava export using the scripts in `scripts/`.
 2. Set `STRAVA_SOURCE` to the private workbook path before running `python scripts/extract_workbook.py`. The geo pass additionally reads `STRAVA_GEO_RAW` and `STRAVA_CITIES`; all scripts default their output to `public/data/` and can be redirected with `STRAVA_OUTPUT`.
-3. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
-4. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
+3. Run `python3 scripts/build_evidence.py` to re-run the statistical tests behind chapter 09 (`public/data/evidence.json`).
+4. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
+5. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
 

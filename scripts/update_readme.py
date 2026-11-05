@@ -59,11 +59,11 @@ region_count = len(regions)
 end_iso = meta["coverage_end"]
 end_month = f"{MONTHS[int(end_iso[5:7])]} {end_iso[:4]}"
 
-# week streak: consecutive ISO weeks (Mon-anchored) with >=1 activity, ending at the last week
+# week streak: consecutive weeks (Sunday to Saturday) with >=1 activity, ending at the last week
 weeks = set()
 for r in acts:
     d = datetime.date.fromisoformat(r["date"][:10])
-    weeks.add(d - datetime.timedelta(days=d.weekday()))
+    weeks.add(d - datetime.timedelta(days=(d.weekday() + 1) % 7))
 week_streak = 0
 if weeks:
     cur = max(weeks)

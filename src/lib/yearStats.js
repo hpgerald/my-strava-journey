@@ -8,7 +8,7 @@ import { prettyCountry, OTHER_LABEL } from './geo.js'
 // but folds into "Other activity" via prettySport.
 
 export const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 function maxBy(arr, f) {
   let best = null, bv = -Infinity
@@ -96,12 +96,12 @@ export function computeYearStats(year, acts, geo) {
 
   const calories = ya.reduce((s, a) => s + num(a, 'calories'), 0)
 
-  // weeks touched, counted by the Monday that starts each week (avoids ISO edge
+  // weeks touched, counted by the Sunday that starts each week (avoids ISO edge
   // cases while still counting distinct calendar weeks). weeksElapsed frames a
   // partial year honestly: weeks from Jan 1 to the last recorded day.
   const mondayKey = (iso) => {
     const d = new Date(iso + 'T00:00:00Z')
-    const back = (d.getUTCDay() + 6) % 7
+    const back = d.getUTCDay()
     d.setUTCDate(d.getUTCDate() - back)
     return d.toISOString().slice(0, 10)
   }

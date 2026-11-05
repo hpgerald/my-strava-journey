@@ -1,0 +1,140 @@
+/* ==========================================================================
+   evidence.css  ·  The Habit on Trial: one case file per claim on the site
+   grid. Verdict marks, the methods and results block, the verdict board, the
+   Holm table and the glossary, plus the marks of the chapter's charts.
+   ========================================================================== */
+
+/* ---- verdict marks ---- */
+.ev-v { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: var(--tr-wide); text-transform: uppercase; line-height: 1.2; padding: 0.22rem 0.5rem; border: 1px solid currentColor; border-radius: 2px; white-space: nowrap; }
+.ev-v--proven { color: var(--accent-ink); }
+.ev-v--supported { color: var(--ink); }
+.ev-v--not { color: var(--fg-faint); border-style: dashed; }
+p.ev-v { margin: 0; }
+
+/* ---- small headings inside a case ---- */
+.ev-k, .ev-how h3, .ev-gloss h3 { margin: 0 0 var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); font-weight: 600; }
+.ev-p { margin: 0 0 var(--sp-5); font-size: 0.95rem; line-height: 1.55; text-wrap: pretty; max-width: 40rem; }
+
+/* the head: case number and verdict share the label column */
+.ev-side { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.ev-side .eyebrow { margin: 0; }
+
+/* what I tested and the methods, beside the results */
+.ev-file { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
+.ev-file__col { min-width: 0; }
+.ev-methods { margin: 0; padding: 0; list-style: none; counter-reset: evm; }
+.ev-methods li { counter-increment: evm; position: relative; padding-left: 1.8rem; margin: 0 0 0.55rem; font-size: 0.95rem; line-height: 1.5; text-wrap: pretty; max-width: 40rem; }
+.ev-methods li::before { content: counter(evm, decimal-leading-zero); position: absolute; left: 0; top: 0.2em; font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--accent-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ev-res { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.ev-res th, .ev-res td { padding: 0.55rem 0; border-bottom: 1px solid var(--rule-faint); vertical-align: top; text-align: left; }
+.ev-res tr:first-child th, .ev-res tr:first-child td { border-top: 1px solid var(--rule-faint); }
+.ev-res th { font-weight: 400; color: var(--fg-muted); padding-right: var(--sp-4); }
+.ev-res td { font-variant-numeric: tabular-nums; text-align: right; font-weight: 500; }
+.ev-res th { width: 46%; }
+
+/* the chart and its plain reading */
+.ev-fig { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; }
+.ev-fig .sgrid__note { margin-top: var(--sp-3); max-width: 46rem; }
+.ev-read { border-left: 2px solid var(--accent); padding-left: var(--sp-4); max-width: 46rem; }
+.ev-read p { margin: 0 0 var(--sp-3); font-size: 1rem; line-height: 1.6; text-wrap: pretty; }
+.ev-read .ev-limits { margin: var(--sp-4) 0 0; font-size: 0.9rem; color: var(--fg-muted); }
+.ev-limits b { color: var(--fg); font-weight: 600; }
+
+/* ---- the intro notes ---- */
+.ev-how { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
+.ev-how > div { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; min-width: 0; }
+.ev-how p { margin: 0; font-size: 0.92rem; line-height: 1.55; color: var(--fg-muted); text-wrap: pretty; }
+.ev-how .ev-v { margin-right: 0.3rem; }
+
+/* ---- the verdict board and the Holm table ---- */
+.ev-tbl { overflow-x: auto; }
+.ev-board__t { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.ev-board__t th, .ev-board__t td { text-align: left; padding: 0.7rem var(--sp-4) 0.7rem 0; border-bottom: 1px solid var(--rule-faint); vertical-align: top; }
+.ev-board__t th:last-child, .ev-board__t td:last-child { padding-right: 0; }
+.ev-board__t thead th { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); font-weight: 600; border-bottom-color: var(--ink); }
+.ev-n { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.ev-num { font-variant-numeric: tabular-nums; color: var(--fg-muted); }
+.ev-jump { font: inherit; color: var(--fg); background: none; border: 0; padding: 0; text-align: left; cursor: pointer; border-bottom: 1px solid var(--rule-faint); transition: border-color 0.3s var(--ease), color 0.3s var(--ease); }
+.ev-jump:hover { border-bottom-color: var(--accent); color: var(--accent-ink); }
+.ev-jump:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (min-width: 48rem) { .ev-num { white-space: nowrap; } }
+
+/* ---- the glossary ---- */
+.ev-gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
+.ev-gloss > div { border-top: 1px solid var(--rule-faint); padding-top: 1rem; min-width: 0; }
+.ev-gloss h3 { color: var(--fg); font-family: var(--font-sans); font-size: 0.92rem; letter-spacing: 0; text-transform: none; }
+.ev-gloss p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
+.ev-colophon { margin: 0; font-size: 0.9rem; line-height: 1.55; color: var(--fg-muted); max-width: 46rem; }
+
+/* wide screens: the reading and the notes sit in the words column */
+@media (min-width: 64rem) {
+  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { grid-column: 1; align-self: start; padding-top: 0.55rem; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
+  .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 2; }
+}
+@media (max-width: 59.999rem) {
+  .ev-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ev-gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 47.999rem) {
+  .ev-file, .ev-how, .ev-gloss { grid-template-columns: minmax(0, 1fr); }
+  .ev-board__t, .ev-res { font-size: 0.88rem; }
+}
+
+/* ---- in the book ---- */
+.book .ev-read { border-left-width: 1.5px; }
+.book .ev-fig, .book .ev-file, .book .ev-board__t tr, .book .ev-holm__t tr, .book .ev-gloss > div { break-inside: avoid; }
+
+/* ==========================================================================
+   the charts
+   ========================================================================== */
+.evc__key { margin: 0 0 var(--sp-3); display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+.evc__key span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.evc__sw { display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 2px; background: var(--grey-45); }
+.evc__sw.is-acc { background: var(--accent); }
+.evc__sw.is-ink { background: var(--ink); }
+.evc__sw.is-line { height: 2px; width: 1rem; border-radius: 0; }
+.evc__sw.is-bar { height: 3px; width: 1rem; border-radius: 0; }
+.evc__sw.is-ring { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--grey-45); border-radius: 50%; }
+
+.evc .is-acc { color: var(--accent); }
+.evc .is-grey { color: var(--grey-45); }
+.evc .is-ink { color: var(--ink); }
+
+.evc__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); fill: var(--fg); font-variant-numeric: tabular-nums; }
+.evc__lbl--b { font-weight: 700; }
+
+/* lines draw in, dots and labels arrive after */
+.evc__line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease) var(--d, 0ms); }
+.evc__line--seg { stroke: var(--accent); stroke-width: 3; }
+.evc__line--ink { stroke: var(--ink); stroke-width: 2.2; }
+.evc__seg { color: var(--accent); }
+.evc__dot { fill: currentColor; opacity: 0; transition: opacity 0.5s var(--ease) var(--d, 0ms); }
+.evc__dot--soft { fill-opacity: 0.85; }
+.evc__dot.is-open { fill: var(--paper); stroke: currentColor; stroke-width: 2; }
+.evc__fade { opacity: 0; transition: opacity 0.5s var(--ease) calc(var(--d, 0ms) + 600ms); }
+.evc__plot.is-in .evc__line { stroke-dashoffset: 0; }
+.evc__plot.is-in .evc__dot, .evc__plot.is-in .evc__fade { opacity: 1; }
+
+/* bars rise */
+.evc__bar { fill: currentColor; transform: scaleY(0); transition: transform 0.8s var(--ease) var(--d, 0ms); }
+.evc__bar.is-grey { fill: var(--grey-45); fill-opacity: 0.7; }
+.evc__bar.is-acc { fill: var(--accent); }
+.evc__plot.is-in .evc__bar { transform: scaleY(1); }
+
+/* boxes, points, bars across, whiskers */
+.evc__box .evc__iqr { stroke: currentColor; stroke-width: 8; stroke-linecap: round; stroke-opacity: 0.28; opacity: 0; transition: opacity 0.6s var(--ease) var(--d, 0ms); }
+.evc__plot.is-in .evc__iqr { opacity: 1; }
+.evc__pt { fill: currentColor; fill-opacity: 0.5; opacity: 0; transition: opacity 0.5s var(--ease) var(--d, 0ms); }
+.evc__pt.is-acc { fill-opacity: 0.6; }
+.evc__plot.is-in .evc__pt { opacity: 1; }
+.evc__track { fill: var(--fill-track); }
+.evc__hbar { fill: currentColor; transform: scaleX(0); transition: transform 0.9s var(--ease) var(--d, 0ms); }
+.evc__plot.is-in .evc__hbar { transform: scaleX(1); }
+.evc__ci { stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.8s var(--ease) var(--d, 0ms); }
+.evc__wh .evc__ci { stroke-dasharray: none; stroke-dashoffset: 0; opacity: 0; transition: opacity 0.6s var(--ease) var(--d, 0ms); }
+.evc__plot.is-in .evc__wh .evc__ci { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .evc__line, .evc__dot, .evc__fade, .evc__bar, .evc__iqr, .evc__pt, .evc__hbar, .evc__ci { transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
+}
+.book .evc__line, .book .evc__dot, .book .evc__fade, .book .evc__bar, .book .evc__iqr, .book .evc__pt, .book .evc__hbar, .book .evc__ci { transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }

@@ -1,10 +1,10 @@
 import { useInView } from '../components/Reveal.jsx'
 
-// The shape of the week: seven columns, Monday to Sunday, each as tall as the
+// The shape of the week: seven columns, Sunday to Saturday, each as tall as the
 // activities that landed on it. Reveals which days carried the year. The tallest
 // day is picked out in accent; a near-flat row of seven means the habit ran every
-// day alike. counts: [Mon..Sun] activity counts.
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+// day alike. counts: [Sun..Sat] activity counts.
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export default function YearWeekdays({ counts }) {
   const [root, inView] = useInView()
