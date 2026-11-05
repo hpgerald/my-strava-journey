@@ -7,4 +7,5 @@ number,title,subtitle,route,category,source_page
 06,Timeline,From my first upload to now,/timeline,timeline,authored
 07,Goals,What I aim for each year,/goals,dashboard,authored
 08,What It Means,What I have learned from it,/what-it-means,personas,authored
-09,My Book,"The whole story, as a book",/book,book,authored
+09,The Habit on Trial,"Twelve claims, tested",/on-trial,evidence,authored
+10,My Book,"The whole story, as a book",/book,book,authored
