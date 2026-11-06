@@ -4,6 +4,7 @@ import Layout from './Layout.jsx'
 import Container from './Container.jsx'
 import FieldNote from './FieldNote.jsx'
 import { useBook } from './BookContext.js'
+import { SITE_TITLE } from '../lib/siteTitle.js'
 
 // Which chapters carry a distinct atmosphere (a faint page wash + tinted
 // watermark). The rest keep the base warm-paper / orange identity.
@@ -18,7 +19,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
     if (book) return undefined
     document.title = title ? `${title} · My Strava Journey` : 'My Strava Journey'
     return () => {
-      document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
+      document.title = SITE_TITLE
     }
   }, [title])
   useEffect(() => {

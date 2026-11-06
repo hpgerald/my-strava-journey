@@ -163,8 +163,9 @@ Because the site is data-driven, a refresh is mostly a data swap:
 1. Regenerate the CSVs in `public/data/` from a new Strava export using the scripts in `scripts/`.
 2. Set `STRAVA_SOURCE` to the private workbook path before running `python scripts/extract_workbook.py`. The geo pass additionally reads `STRAVA_GEO_RAW` and `STRAVA_CITIES`; all scripts default their output to `public/data/` and can be redirected with `STRAVA_OUTPUT`.
 3. Run `python3 scripts/build_evidence.py` to re-run the statistical tests behind chapter 09 (`public/data/evidence.json`).
-4. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
-5. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
+4. Run `npm run seo` to rewrite the search and sharing data (title, description, JSON-LD, sitemap and the share image) with the new numbers.
+5. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
+6. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
 

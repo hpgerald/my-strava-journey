@@ -13,7 +13,8 @@
     "check:data": "python scripts/validate.py",
     "check:encoding": "node scripts/check-encoding.mjs",
     "sanitize:data": "python scripts/sanitize_public_data.py",
-    "check": "npm run check:encoding && npm run check:data && npm test && npm run build"
+    "check": "npm run check:encoding && npm run check:data && npm test && npm run build",
+    "seo": "node scripts/build_seo.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

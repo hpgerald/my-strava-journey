@@ -31,6 +31,7 @@ import YearCharacters from '../components/YearCharacters.jsx'
 import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { useHeroLive } from '../motion/heroLive.js'
+import { SITE_TITLE } from '../lib/siteTitle.js'
 import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -57,7 +58,7 @@ export default function Home() {
   const book = useBook()
   const heroRef = useHeroLive()
   useEffect(() => {
-    document.title = 'My Strava Journey · Seven Years of Training, Read as Data'
+    document.title = SITE_TITLE
   }, [])
   const lifetime = useTable('lifetime_totals')
   const meta = useKeyed('meta', 'key', 'value')
