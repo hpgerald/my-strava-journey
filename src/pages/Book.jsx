@@ -51,6 +51,27 @@ const jump = (id) => (e) => {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
+// The cover's number column, set faint as part of the cover art: four
+// numbers with their words, right-aligned, and "My Strava Journey" running
+// down beside them on a hairline. Drawn as one image so it can sit back as far
+// as the cover needs; its words are given in full to screen readers.
+function CoverSide({ rows }) {
+  const pitch = 50.5
+  return (
+    <svg className="bk-cover__side" viewBox="0 0 160 190" role="img"
+      aria-label={`${rows.map(([v, l]) => `${v} ${l}`).join(', ')}. My Strava Journey.`}>
+      {rows.map(([v, l], i) => (
+        <g key={l}>
+          <text x="126" y={i * pitch + 20} textAnchor="end" className="bk-cover__sv">{v}</text>
+          <text x="126" y={i * pitch + 36.5} textAnchor="end" className="bk-cover__sl">{l}</text>
+        </g>
+      ))}
+      <line x1="139.5" x2="139.5" y1="3.5" y2="190" className="bk-cover__sr" />
+      <text transform="translate(145 4) rotate(90)" className="bk-cover__sl bk-cover__sd" dominantBaseline="hanging">My Strava Journey</text>
+    </svg>
+  )
+}
+
 // The cover: every day from the first upload to the latest, wound into a spiral
 // of one turn per year with 1 January at the top. A day out is a mark pointing
 // outward, longer for more distance on foot; a day without leaves the thin
@@ -160,15 +181,7 @@ function Cover({ F }) {
       </figure>
       <div className="bk-cover__base">
         <h2 className="bk-cover__t">Showing<br />Up<span>.</span></h2>
-        <div className="bk-cover__side">
-          <dl className="bk-cover__nums">
-            <div><dt>outings</dt><dd>{n0(F.n)}</dd></div>
-            <div><dt>km on foot</dt><dd>{n0(F.footKm)}</dd></div>
-            <div><dt>metres climbed</dt><dd>{n0(F.footElev)}</dd></div>
-            <div><dt>days in a row</dt><dd>{n0(F.streak)}</dd></div>
-          </dl>
-          <p className="bk-cover__d">My Strava Journey</p>
-        </div>
+        <CoverSide rows={[[n0(F.n), 'outings'], [n0(F.footKm), 'km on foot'], [n0(F.footElev), 'metres climbed'], [n0(F.streak), 'days in a row']]} />
       </div>
     </section>
   )
@@ -236,6 +249,20 @@ function Prologue({ F }) {
         There are six parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, what I think it all means, and last, the tests that check whether it is true.
         To everyone who gave me kudos along the way, <span lang="sw">asanteni sana</span>, thank you very much.
       </p>
+      <h3 className="bk-prose__h">How to read it</h3>
+      <p>
+        Every chapter is a page of my site, set in print. Each section starts with what I learned, in a few words, then the numbers that show it,
+        then two charts side by side. Under the charts there is a short note on how to read each one, and after them comes the longer story.
+      </p>
+      <p>
+        Distance and climb count only my four sports on foot: runs, walks, trail runs and hikes. Everything else I count as others. Those
+        outings still count as outings and as days out, but they add no distance and no climb. A week runs from Sunday to Saturday, and a day
+        out is any day with at least one outing.
+      </p>
+      <p>
+        The numbers stop on {fmtDay(F.lastISO)}. The log keeps growing, and each new edition of this book is drawn again from the latest data,
+        so a number here can differ a little from the one on the site a week later.
+      </p>
     </section>
   )
 }
@@ -276,6 +303,14 @@ function Epilogue({ F }) {
       <p>
         None of these totals came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, early in the morning or in the evening, on days like any other.
         The log will keep growing, and the next edition will have the new numbers.
+      </p>
+      <p>
+        Added together, those outings come to {n0(F.hours)} hours on the move, {n0(F.footKm)} km on foot and {n0(F.footElev)} m of climbing,
+        in {word(F.countries)} African countries and {n0(F.regions)} regions of Tanzania.
+      </p>
+      <p>
+        <span lang="sw">Mvumilivu hula mbivu</span>, the patient one eats the ripe fruit. The biggest lesson in this book is a plain one: the days
+        matter more than the distance. When the days kept coming, the distance came back by itself.
       </p>
       <p>I will be out tomorrow.</p>
       <p className="bk-sign">Gerald Tesha</p>

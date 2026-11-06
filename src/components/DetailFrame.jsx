@@ -45,8 +45,8 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
             <h2 id={`bk-ch-${number}-t`} className="bk-open__t">{title}</h2>
             {lede ? <p className="bk-open__lede">{lede}</p> : null}
           </header>
-          {children}
           <FieldNote seed={seed} align="wide" />
+          {children}
         </Container>
       </section>
     )

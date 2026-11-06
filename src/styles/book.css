@@ -105,6 +105,7 @@
 
 /* ---- prologue and epilogue ---- */
 .bk-prose p { margin: 0 0 var(--sp-4); max-width: 46rem; font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem); line-height: 1.6; text-wrap: pretty; }
+.bk-prose__h { margin: var(--sp-6) 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-caps); text-transform: uppercase; color: var(--accent-ink); font-weight: 700; }
 .bk-prose .bk-lead { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 1.05rem + 1.1vw, 2rem); line-height: 1.32; max-width: none; }
 .bk-sign { margin-top: var(--sp-6) !important; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md) !important; }
 
@@ -230,7 +231,7 @@
   .skip-link, .nav, .footer, .crumbs, .detail-head, .prevnext, .bk-bar,
   main > .container > .fieldnote, main > .container > hr.rule { display: none !important; }
   main > .container { max-width: none; padding: 0; }
-  .book .fieldnote { break-inside: avoid; margin: var(--sp-5) 0; }
+  .book .fieldnote { break-inside: avoid; margin: var(--sp-4) 0 var(--sp-5); }
 
 
   .bk-cover { page: bleed; margin: 0; max-width: none; width: calc(210mm / var(--k)); height: calc(297mm / var(--k)); aspect-ratio: auto; border: 0; box-shadow: none; padding: calc(17mm / var(--k)) calc(17mm / var(--k)) calc(15mm / var(--k)); break-after: page; }
@@ -248,10 +249,10 @@
   .bk-open { break-before: page; break-after: avoid; }
   .bk-open__n { font-size: calc(96pt / var(--k)); }
   .bk-open__t { font-size: calc(40pt / var(--k)); }
-  .bk-year { break-before: page; margin-top: 0; }
+  .bk-year { break-before: auto; margin-top: calc(var(--sp-7) / var(--k)); }
   .bk-year__n { font-size: calc(80pt / var(--k)); }
 
-  .book .sgrid { break-inside: avoid; padding-block: 0 var(--sp-5); }
+  .book .sgrid { break-inside: auto; padding-block: 0 var(--sp-5); }
   .book .rule { margin-block: var(--sp-4); break-after: avoid; }
   .book .sgrid.yis-top { break-inside: auto; }
   .book .source { break-before: avoid; }
@@ -265,3 +266,11 @@
   .bk-back__q { font-size: calc(40pt / var(--k)); }
   a { color: inherit; text-decoration: none; }
 }
+
+/* ---- the cover's number column sits back: faint, so the title and the
+   spiral carry the cover (it is drawn as part of the cover art) ---- */
+svg.bk-cover__side { display: block; width: 16cqw; height: auto; margin-bottom: 1cqw; overflow: visible; --cover-faint: #dcd8d1; }
+.bk-cover__sv { font-family: var(--font-display); font-weight: 600; font-size: 25px; font-variant-numeric: tabular-nums; fill: var(--cover-faint); }
+.bk-cover__sl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--cover-faint); }
+.bk-cover__sd { font-weight: 500; }
+.bk-cover__sr { stroke: var(--cover-faint); stroke-width: 1; }

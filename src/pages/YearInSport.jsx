@@ -590,6 +590,26 @@ export default function YearInSport({ year: bookYear } = {}) {
             <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
             <RecordCard kicker="Dar to Dodoma" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma, on foot" sub={`${n0(s.footKm)} km on foot`} />
           </ul>
+          <BookStory>{(() => {
+            const big = s.biggestFoot, climb = s.highestClimb, long = s.longestTime
+            const out = []
+            if (big && big.val > 0 && s.medianFoot > 0) {
+              const k = big.val / s.medianFoot
+              out.push(`A big day sits far from an ordinary one. My usual outing on foot in ${Y} was ${s.medianFoot.toFixed(1)} km, so the furthest, ${big.val.toFixed(1)} km in ${fmtMonth(big.date).split(' ')[0]}, was ${k >= 10 ? n0(k) : k.toFixed(1)} times a normal day out.`)
+            }
+            if (big && climb && long && big.val > 0) {
+              const sameClimb = climb.date === big.date, sameLong = long.date === big.date
+              if (sameClimb && sameLong) out.push('The furthest outing was also the longest in time and the one with the most climbing. One day held all three records of the year.')
+              else if (sameLong) out.push(`The furthest outing was also the longest in time, ${hm(long.val)} on my feet. The most climbing came on a different day, ${n0(climb.val)} m in ${fmtMonth(climb.date).split(' ')[0]}.`)
+              else if (sameClimb) out.push(`The furthest outing was also the one with the most climbing. The longest in time came on a different day, ${hm(long.val)} in ${fmtMonth(long.date).split(' ')[0]}.`)
+              else out.push(`The three biggest days of the year were three different outings: the furthest, the longest in time and the one with the most climbing each came on its own day.`)
+            }
+            if (ps) {
+              const d = Math.round(s.prs) - Math.round(ps.prs)
+              out.push(d > 0 ? `I set ${n0(s.prs)} personal records on Strava segments, ${n0(d)} more than in ${ps.year}.` : d < 0 ? `I set ${n0(s.prs)} personal records on Strava segments, ${n0(-d)} fewer than in ${ps.year}.` : `I set ${n0(s.prs)} personal records on Strava segments, the same number as in ${ps.year}.`)
+            }
+            return out
+          })()}</BookStory>
         </section>
 
         {/* ===== 8. where it happened ===== */}

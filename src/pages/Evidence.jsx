@@ -74,15 +74,17 @@ function Case({ c }) {
           </table>
         </div>
       </div>
-      <figure className="sgrid__fig ev-fig">
-        <figcaption className="sgrid__figtitle">{c.chart.title}</figcaption>
-        <div className="sgrid__chart">{c.chart.node}</div>
-        <p className="sgrid__note">{c.chart.note}</p>
-      </figure>
-      <div className="ev-read">
-        <h3 className="ev-k">What it shows</h3>
-        {c.plain.filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
-        <p className="ev-limits"><b>Limits.</b> {c.limits}</p>
+      <div className={`ev-show${c.chart.wide ? ' ev-show--wide' : ''}`}>
+        <figure className="sgrid__fig ev-fig">
+          <figcaption className="sgrid__figtitle">{c.chart.title}</figcaption>
+          <div className="sgrid__chart">{c.chart.node}</div>
+          <p className="sgrid__note">{c.chart.note}</p>
+        </figure>
+        <div className="ev-read">
+          <h3 className="ev-k">What it shows</h3>
+          {c.plain.filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
+          <p className="ev-limits"><b>Limits.</b> {c.limits}</p>
+        </div>
       </div>
     </section>
   )
@@ -195,7 +197,7 @@ function buildCases(E) {
         ...S.map((s, i) => [i ? `Era ${i + 1}` : 'Era 1, active days a week', f(s[2])]),
       ],
       chart: {
-        title: 'Active days per week',
+        title: 'Active days per week', wide: true,
         node: <ErasChart weekly={c.weekly} segments={S} aria={`Active days per week over ${n0(c.weeks)} weeks, with ${word(S.length)} eras at ${list(S.map((s) => f(s[2], 1)))} days a week.`} />,
         note: 'One bar per week, Sunday to Saturday. The orange steps are the eras found by the changepoint test, at their average level.',
       },
@@ -309,7 +311,7 @@ function buildCases(E) {
         ['Narrowest component', `${f(c.narrow[0])} km, width ${c.narrow[1] < 0.01 ? 'under 1%' : pc(c.narrow[1])}`],
       ],
       chart: {
-        title: 'Every treadmill run, by distance',
+        title: 'Every treadmill run, by distance', wide: true,
         node: <HeapChart hist={c.hist} aria={`Treadmill runs by distance in 100 m bins: ${five[1]} runs within 60 m of 5 km, ${hp(10)[1]} of 10 km, ${hp(15)[1]} of 15 km.`} />,
         note: `All ${n0(c.nTread)} treadmill runs in 100 m bins. The spikes at 5, 10 and 15 km are the round numbers.`,
       },
@@ -552,26 +554,99 @@ function buildCases(E) {
   return out
 }
 
-const GLOSS = [
-  ['Logistic regression', 'Predicts a yes or no (went out or not) from other values. Its effects are odds ratios: ×4.6 means the odds are 4.6 times higher.'],
-  ['Likelihood-ratio test', 'Compares a bigger model with a smaller one. If the extra terms add real information, χ² is large and p is small.'],
-  ['Runs test', 'Counts unbroken stretches of the same value. Too few stretches means values cluster.'],
-  ['Detrended fluctuation analysis', 'Measures how unevenness grows with the window size. 0.5 is no memory; above 0.5 means lasting good and quiet spells.'],
-  ['Hazard model', 'Asks, at each length, how likely a streak or a break is to end tomorrow.'],
-  ['Weibull shape', 'A survival model’s main number. Below 1, the risk of ending falls with age; above 1, it rises.'],
-  ['Changepoint detection', 'PELT and binary segmentation split a series into flat stretches, choosing break points that best explain the data, with a cost for each extra break.'],
-  ['CUSUM', 'The running sum of differences from the average. Its lowest point marks the switch from below-average to above-average.'],
-  ['Clustered errors and block bootstrap', 'Ways to keep days of the same week together, so that one good week does not count as seven independent pieces of evidence.'],
-  ['Harmonic regression', 'Fits a smooth yearly wave with a sine and a cosine. It finds a season without dividing the year into fixed months.'],
-  ['Kruskal–Wallis and Friedman', 'Rank tests that compare groups without assuming a shape. Friedman treats each year as its own block.'],
-  ['Binomial test', 'Asks whether a count is larger than its expected share would allow.'],
-  ['Gaussian mixture and BIC', 'Describes a distribution as a sum of bell curves. BIC picks the number of curves, with a cost for each extra one.'],
-  ['Theil–Sen and Kendall’s τ', 'A trend line and a trend test built on ranks and medians, so a few odd values cannot steer them.'],
-  ['Mann–Whitney U', 'Compares two groups by ranks, without assuming bell-shaped data.'],
-  ['Robust (HC3) errors', 'Standard errors that stay honest when the spread is uneven across the data.'],
-  ['Spearman ρ', 'A correlation on ranks, from −1 to 1. Near 0 means no steady link.'],
-  ['Fisher’s exact test', 'Compares two proportions exactly, without large-sample shortcuts.'],
-]
+// The methods, each explained at length: what it does, how it works, how to
+// read what it gives back, and where this chapter used it. Numbers come from
+// the same evidence.json as the cases.
+function glossary(E) {
+  const c1 = E.c1, c2 = E.c2, c6 = E.c6, c7 = E.c7, c10 = E.c10, c11 = E.c11
+  const pc0 = (v) => `${Math.round(v * 100)}%`
+  return [
+    ['The p-value', [
+      'Every test here starts from the opposite of the claim, a world where the pattern does not exist. The p-value is the chance of seeing a pattern at least as strong as mine if that world were real. A small p-value says my data would be very surprising there, which counts as evidence for the claim.',
+      'It is not the chance that the claim is true, and a large p-value does not prove the opposite. It only says the data are not strong enough to rule the opposite out. The usual line is 0.05, one chance in twenty. Very small values are written in powers of ten: 7×10⁻¹⁸ means a decimal point followed by seventeen zeros and then a 7.',
+    ]],
+    ['Holm correction', [
+      'When many tests are run, a few small p-values turn up by luck alone. With twenty tests at the 0.05 line, about one would pass even if every claim were false. The Holm method guards against that across the whole set of tests at once.',
+      `It sorts the p-values from smallest to largest, multiplies the smallest by the number of tests, the next by one fewer, and so on, keeping the order. A test holds if its adjusted value stays under 0.05. It controls the chance of even one false finding in the whole family, and it gives up less power than the simpler Bonferroni rule, which multiplies every p-value by the full number of tests. This chapter corrects ${E.holm.length} tests together.`,
+    ]],
+    ['Logistic regression', [
+      'A model for outcomes that are yes or no, such as whether I went out on a given day. It does not model the chance directly. It models the log of the odds, and each input moves those log odds up or down by a fixed amount.',
+      `Taking the exponent of a coefficient gives an odds ratio. In case 1, ×${c1.or.toFixed(2)} means the odds of going out are ${c1.or.toFixed(1)} times higher after a day out than after a rest day. Odds are not chances: a move from 50% to 82% is an odds ratio of about 4.6. I used it in cases 1, 4 and 5, each time with the day's outing as the outcome. Its standard version treats every day as separate evidence, which is why cases 4 and 5 also cluster the errors by week.`,
+    ]],
+    ['Likelihood-ratio test', [
+      'A way to ask whether extra terms in a model earn their place. I fit a smaller model and a bigger one that contains it, and compare how well each explains the data, measured by the log-likelihood.',
+      `If the extra terms add nothing, twice the gain in log-likelihood follows a χ² distribution, with one degree of freedom for each extra term. A large χ² means the bigger model explains the data much better than chance would allow. In case 1 the smaller model knew only yesterday and the bigger one knew the last seven days, so the test had six degrees of freedom, and it gave χ² = ${c1.lr.toFixed(1)}.`,
+    ]],
+    ['Runs test', [
+      'A run is an unbroken stretch of the same value, such as five active days in a row followed by a rest day. The Wald–Wolfowitz runs test counts the runs in a sequence and compares the count with what a random shuffle of the same days would give.',
+      `When values cluster, there are fewer and longer runs than expected. The result is a z-score: how many standard deviations the observed count sits from the expected one. My days since the comeback have ${c1.runs} runs where a shuffle would give about ${Math.round(c1.runsExp)}, a z-score of ${c1.runsZ.toFixed(1)}. The test assumes nothing about why days cluster, which makes it a plain check beside the regression in case 1.`,
+    ]],
+    ['Detrended fluctuation analysis', [
+      'DFA measures memory over many time scales at once. The series of active and rest days is first turned into a running total of how far each day sits from the average. That total is cut into windows of a given length, a straight line is fitted inside each window, and the average distance from those lines is the fluctuation for that length.',
+      `Repeating this for windows from a week to half a year, and plotting fluctuation against window length on log scales, gives a line whose slope is the exponent α. With no memory α is about 0.5. Above 0.5, good spells and quiet spells last longer than chance allows. Fitting a line inside each window removes slow trends, such as a busier year, so they do not pass as memory. My days give α = ${c1.dfa.toFixed(2)}, against ${c1.dfaShuf.toFixed(2)} for the same days shuffled 200 times.`,
+    ]],
+    ['Hazard model', [
+      'A hazard is the chance that something ends at a given moment, given that it has lasted until then. For a streak it is the chance that tomorrow is a rest day after so many days out. For a break it is the chance that tomorrow I go out again after so many rest days.',
+      `A discrete-time hazard model fits that chance with a logistic regression on how long the streak or break has lasted, here on the log of its length. A flat hazard means the past does not matter, the memoryless pattern. In case 2 the slope is ${c2.streakSlope > 0 ? '+' : ''}${c2.streakSlope.toFixed(2)} for streaks and ${c2.gapSlope.toFixed(2)} for breaks: a streak gets more likely to go on the longer it runs, and a break gets less likely to end.`,
+    ]],
+    ['Weibull shape', [
+      'The Weibull distribution is a common model for how long things last, from machine parts to streaks of days. Its shape parameter says how the risk of ending changes with age. A shape of 1 is a constant risk, the memoryless case. Below 1 the risk falls the longer something has lasted, so the survivors get sturdier. Above 1 the risk rises with age, as with wear.',
+      `A streak still running at the end of the record is counted as censored: the model knows it lasted at least that long without pretending it ended. My ${c2.nStreaks} streaks have a shape of ${c2.weibull.toFixed(2)}, with a 95% interval of ${c2.weibullLo.toFixed(2)} to ${c2.weibullHi.toFixed(2)}, below 1 all the way.`,
+    ]],
+    ['Changepoint detection', [
+      'These methods split a series into stretches with a steady level and find the points where the level changes. Each possible split is scored by how well flat segments fit the data, plus a penalty for every extra break, so the method cannot explain everything with a hundred tiny segments.',
+      'PELT (Pruned Exact Linear Time) finds the best set of breaks for a given penalty exactly, and fast. Binary segmentation works greedily: it takes the single best break, then searches each side again, and so on. Because they search in different ways, agreement between them is a good sign that a break is real. In case 3 both ran on active days per week, Sunday to Saturday, with a minimum era of eight weeks.',
+    ]],
+    ['CUSUM', [
+      'The cumulative sum adds up, week after week, how far each week sits above or below the overall average. While weeks are below average the sum keeps falling. When they move above average it starts to climb.',
+      'Its lowest point therefore marks the switch from a low period to a high one. It needs no model and no penalty, which makes it a simple outside check on the changepoint methods in case 3. It finds one switch at a time, so I used it for the biggest one, the comeback.',
+    ]],
+    ['Clustered errors and block bootstrap', [
+      'Days in the same week are not independent: case 1 shows that one active day makes the next more likely. A test that treats every day as separate evidence then looks more certain than it should.',
+      'Clustered standard errors fix this by measuring the spread from whole weeks instead of single days, which widens the error bars. The block bootstrap does the same by resampling: it draws whole weeks at random, with replacement, recomputes the result 2,000 times, and reads the 95% interval from the middle of those results. I used both in case 4, and clustered errors again in case 5, so the weekday and season results are not inflated by the habit’s own memory.',
+    ]],
+    ['χ² tests', [
+      'A χ² test compares the counts in a table with the counts expected if there were no pattern. Each cell adds the squared gap between observed and expected, divided by expected, and the total is checked against the χ² distribution.',
+      'The test of independence in case 4 used a table of weekday against active or rest. The goodness-of-fit version compares outings per weekday with an even split across the seven days. Both assume every day is a separate piece of evidence, which is why case 4 also has a clustered test.',
+    ]],
+    ['Harmonic regression', [
+      'A way to find a yearly cycle without cutting the year into months. Each day’s place in the year is turned into the sine and the cosine of the same angle, and both enter the model as inputs. Together they can draw any smooth wave with one high point and one low point a year, and the two coefficients give the size of the wave and where its peak falls.',
+      'Adding a second pair at twice the frequency allows two peaks a year, and a likelihood-ratio test says whether that helps. In case 5 the wave sat inside a logistic regression with a separate level for each year, so a busier year does not pass as a season.',
+    ]],
+    ['Kruskal–Wallis and Friedman', [
+      'Rank tests replace each value with its rank, so a few extreme values cannot dominate. Kruskal–Wallis asks whether several groups, here the twelve months, come from the same distribution.',
+      'Friedman asks the same question when the data come in blocks, here years, and compares the months only within each year, which removes the difference between busy and quiet years. Both assume very little about shape. The price is power: with only four values per month they need a large effect before they show it, which is what happened in case 5.',
+    ]],
+    ['Binomial test', [
+      'A test for a count out of a fixed number of tries. If every treadmill run near 5 km had the same chance of ending anywhere in a window of ±560 m around the mark, the share ending within 60 m of it would be set by the width of that slice, about 10.7%.',
+      `The binomial test asks how likely it is to see as many runs in that slice as I did if that were true. At 5 km, ${c6.heap[0][1]} of the ${c6.heap[0][2]} runs in the window end on the mark, against about ${Math.round(c6.heap[0][3])} expected. The test is one-sided: the claim is only about too many runs on the mark.`,
+    ]],
+    ['Gaussian mixture and BIC', [
+      'A Gaussian mixture describes a distribution as a sum of bell curves, each with its own centre, width and weight. It is fitted by the expectation-maximisation algorithm, which goes back and forth between assigning each value to the curves and moving the curves to fit their values.',
+      `BIC, the Bayesian information criterion, scores each model by its fit minus a penalty that grows with the number of curves, and the lowest BIC wins. I fitted it to the log of every distance on foot. If distances were smooth, BIC would settle on a few curves. On mine it keeps falling as curves are added, and the narrowest curve sits on ${c6.narrow[0].toFixed(2)} km with a width under 1%, which is how point masses on round numbers look to this model.`,
+    ]],
+    ['Theil–Sen and Kendall’s τ', [
+      'The Theil–Sen estimator draws a trend line from the median of the slopes between every pair of points. One odd run changes a few of those slopes but barely moves their median, so the line resists outliers far better than ordinary least squares.',
+      `Kendall’s τ is the matching test. It counts how often a later run is slower than an earlier one against how often it is quicker, and turns the balance into a number from −1 to 1. In case 7, τ = ${c7.tau.toFixed(2)} means that for about ${pc0((1 + c7.tau) / 2)} of pairs of treadmill runs from ${c7.from} to ${c7.prev}, the later run was the slower one.`,
+    ]],
+    ['Mann–Whitney U', [
+      'A test that compares two groups by ranks. All values from both groups are ranked together, and the test asks whether one group’s ranks sit higher than chance would allow. It needs no bell-shaped data and is little moved by outliers.',
+      `I used it to compare ${c7.cur} treadmill runs with ${c7.prev} runs in case 7, and in case 11 to compare how far I went the day after a long day (median ${c11.kmLong.toFixed(1)} km) with the day after an ordinary day out (median ${c11.kmOther.toFixed(1)} km).`,
+    ]],
+    ['Robust (HC3) errors', [
+      'Ordinary regression assumes the scatter around the line is the same everywhere. Real outings rarely behave like that, and when the scatter is uneven the usual error bars come out too narrow in some places and too wide in others.',
+      'HC3 is a sandwich estimator that measures the scatter point by point instead, with an extra correction for points that pull hard on the line. It changes the error bars and the p-values, never the fitted line itself. I used it for every linear regression in cases 7, 8, 9 and 12.',
+    ]],
+    ['Spearman ρ', [
+      'Spearman’s correlation is the ordinary correlation computed on ranks. It runs from −1 to 1. Positive means the two rise together, negative means one falls as the other rises, and near 0 means no steady link.',
+      `Because it uses ranks, it catches any steady rise or fall, straight or curved, and outliers cannot drive it. Its p-value tests the claim that the true value is 0. With ${c10.weeks} weeks, a ρ of about ±${c10.detect.toFixed(2)} is the smallest this record can tell apart from zero, which is the line I gave in case 10.`,
+    ]],
+    ['Fisher’s exact test', [
+      'A test for a two-by-two table, here a long day or not against out the next day or not. It works out the exact probability of every table with the same row and column totals and asks how unusual the observed one is, without the large-sample shortcut of the χ² test.',
+      `It also reports an odds ratio. In case 11, ${c11.or.toFixed(2)} means the odds of going out after a day of ${c11.km} km or more were about ${c11.or >= 1.9 && c11.or <= 2.1 ? 'twice' : `${c11.or.toFixed(1)} times`} those after an ordinary day out.`,
+    ]],
+  ]
+}
 
 export default function Evidence() {
   const { prev, next } = useSectionPaging('/on-trial')
@@ -609,7 +684,6 @@ export default function Evidence() {
         </Reveal>
         <div className="ev-how">
           <div><h3>The data</h3><p>{n0(M.n)} activities from {fmtShort(M.first)} to {fmtShort(M.last)}. Most tests use the {n0(M.daysSince)} days from the comeback on {fmtDay(M.comeback)}, so the long pause does not decide the result. A day counts as active if it held any outing, and a week runs from Sunday to Saturday.</p></div>
-          <div><h3>The p-value</h3><p>The chance of seeing a pattern at least this strong if the claim were false. The smaller it is, the stronger the evidence. The usual line is 0.05, and because I ran many tests, I also apply the stricter Holm correction.</p></div>
           <div><h3>Triangulation</h3><p>Each claim gets two to four methods that rest on different assumptions: a model, a test that assumes very little, and a resampling check. A claim is only called proven when they agree.</p></div>
           <div><h3>The verdicts</h3><p><span className="ev-v ev-v--proven">Proven</span> every method agrees and the result survives correction. <span className="ev-v ev-v--supported">Supported</span> the main result holds, with a weaker second check. <span className="ev-v ev-v--not">Not proven</span> the data does not back the claim.</p></div>
         </div>
@@ -652,8 +726,8 @@ export default function Evidence() {
           <h2 id="ev-holm-t" className="section-head__title"><Words>{tie('Correcting for many tests.')}</Words></h2>
         </div>
         <Reveal as="p" className="sgrid__statement">
-          With many tests, a few small p-values can appear by luck. The Holm method adjusts each p-value for the number of tests run.
-          These are the {E.holm.length} main tests of this chapter after adjustment.
+          These are the {E.holm.length} main tests of this chapter, before and after the Holm correction. Under them, each method I used
+          is explained in full.
         </Reveal>
         <div className="ev-tbl">
           <table className="ev-board__t ev-holm__t">
@@ -670,8 +744,9 @@ export default function Evidence() {
             </tbody>
           </table>
         </div>
+        <h3 className="ev-k ev-gloss__k">The methods</h3>
         <div className="ev-gloss">
-          {GLOSS.map(([k, v]) => <div key={k}><h3>{k}</h3><p>{v}</p></div>)}
+          {glossary(E).map(([k, ps]) => <div key={k}><h3>{k}</h3>{ps.map((t, i) => <p key={i}>{t}</p>)}</div>)}
         </div>
         <p className="ev-colophon">
           All results come from my public activity log (activities.csv) and were run in Python with scipy, statsmodels, scikit-learn,

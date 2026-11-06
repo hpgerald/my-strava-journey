@@ -32,6 +32,24 @@ p.ev-v { margin: 0; }
 .ev-res td { font-variant-numeric: tabular-nums; text-align: right; font-weight: 500; }
 .ev-res th { width: 46%; }
 
+/* the chart and its plain reading share a row: the chart on seven columns,
+   the reading on five. The two charts that need the width (the weeks and the
+   treadmill distances) take the full row, with the reading under them. */
+.ev-show { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; display: grid; gap: var(--r3, 1.5rem) var(--grid-gap); }
+.ev-show > .ev-fig { border-top: 0; padding-top: 0; }
+@media (min-width: 64rem) {
+  .ev-show:not(.ev-show--wide) { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+  .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1 / span 7; }
+  .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 8 / -1; margin-top: 1.9rem; }
+  .ev-show--wide { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .ev-show--wide > .ev-fig { grid-column: 1 / -1; }
+  .ev-show--wide > .ev-read { grid-column: 4 / span 7; }
+}
+.book .ev-show:not(.ev-show--wide) { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+.book .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1 / span 7; }
+.book .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 8 / -1; margin-top: 1.6rem; }
+.book .ev-gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
 /* the chart and its plain reading */
 .ev-fig { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; }
 .ev-fig .sgrid__note { margin-top: var(--sp-3); max-width: 46rem; }
@@ -41,7 +59,7 @@ p.ev-v { margin: 0; }
 .ev-limits b { color: var(--fg); font-weight: 600; }
 
 /* ---- the intro notes ---- */
-.ev-how { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
+.ev-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
 .ev-how > div { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; min-width: 0; }
 .ev-how p { margin: 0; font-size: 0.92rem; line-height: 1.55; color: var(--fg-muted); text-wrap: pretty; }
 .ev-how .ev-v { margin-right: 0.3rem; }
@@ -60,10 +78,12 @@ p.ev-v { margin: 0; }
 @media (min-width: 48rem) { .ev-num { white-space: nowrap; } }
 
 /* ---- the glossary ---- */
-.ev-gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); }
+.ev-gloss { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--r4, 2.5rem) var(--grid-gap); }
 .ev-gloss > div { border-top: 1px solid var(--rule-faint); padding-top: 1rem; min-width: 0; }
-.ev-gloss h3 { color: var(--fg); font-family: var(--font-sans); font-size: 0.92rem; letter-spacing: 0; text-transform: none; }
-.ev-gloss p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
+.ev-gloss h3 { color: var(--fg); font-family: var(--font-display); font-weight: 500; font-size: clamp(1.2rem, 1rem + 0.5vw, 1.45rem); letter-spacing: -0.02em; text-transform: none; margin-bottom: 0.7rem; }
+.ev-gloss p { margin: 0 0 0.75rem; font-size: 0.97rem; line-height: 1.6; color: var(--fg); text-wrap: pretty; max-width: 40rem; }
+.ev-gloss p:last-child { margin-bottom: 0; }
+.ev-gloss__k { margin-top: var(--r4, 2.5rem); }
 .ev-colophon { margin: 0; font-size: 0.9rem; line-height: 1.55; color: var(--fg-muted); max-width: 46rem; }
 
 /* wide screens: the reading and the notes sit in the words column */
@@ -73,7 +93,7 @@ p.ev-v { margin: 0; }
 }
 @media (max-width: 59.999rem) {
   .ev-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ev-gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ev-gloss { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 47.999rem) {
   .ev-file, .ev-how, .ev-gloss { grid-template-columns: minmax(0, 1fr); }
@@ -82,7 +102,8 @@ p.ev-v { margin: 0; }
 
 /* ---- in the book ---- */
 .book .ev-read { border-left-width: 1.5px; }
-.book .ev-fig, .book .ev-file, .book .ev-board__t tr, .book .ev-holm__t tr, .book .ev-gloss > div { break-inside: avoid; }
+.book .ev-fig, .book .ev-board__t tr, .book .ev-holm__t tr, .book .ev-gloss > div { break-inside: avoid; }
+.book .ev-show:not(.ev-show--wide) { break-inside: avoid; }
 
 /* ==========================================================================
    the charts
