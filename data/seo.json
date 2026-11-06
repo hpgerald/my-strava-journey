@@ -1,0 +1,53 @@
+{
+ "refreshed": "2026-11-02",
+ "routes": {
+  "/": {
+   "title": "My Strava Journey · Seven years on foot, read as data",
+   "description": "2,068 outings and 13,255 km on foot over seven years, most of them in Tanzania. My Strava log read as data: maps, records, tested habits and a free book."
+  },
+  "/numbers": {
+   "title": "Year in Sport",
+   "description": "Every year of my log as its own report, from 27 outings in 2019 to 330 in 2026 so far."
+  },
+  "/sports": {
+   "title": "Sports",
+   "description": "My four sports on foot: 9,132 km of running and 4,012 km of walking, with trail runs and hikes, and the treadmill kept apart from the road."
+  },
+  "/records": {
+   "title": "Records",
+   "description": "My longest, highest and hardest days on foot: 42.7 km in one outing, 1,979 m of climbing in one outing, and 308 days in a row."
+  },
+  "/where": {
+   "title": "Where",
+   "description": "Where I go out: five African countries and 17 regions of Tanzania, mapped from where each outing started."
+  },
+  "/timeline": {
+   "title": "Timeline",
+   "description": "Seven years in the order they happened: milestones, firsts on foot, trips, streaks and breaks."
+  },
+  "/goals": {
+   "title": "Goals",
+   "description": "The same three targets held against every year: 1,000 km of walking, 1,000 km of running and 24,000 m of climbing on foot."
+  },
+  "/what-it-means": {
+   "title": "What It Means",
+   "description": "What seven years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson."
+  },
+  "/on-trial": {
+   "title": "The Habit on Trial",
+   "description": "Twelve things I believe about my habit, tested with statistics against the log: seven proven, three supported and two not proven."
+  },
+  "/book": {
+   "title": "My Book",
+   "description": "Showing Up, the whole story as a free book, with every chart drawn from the log up to 1 November 2026. Read it online or download the PDF."
+  },
+  "/about": {
+   "title": "About",
+   "description": "How this site was made, what the data covers and how to reach me."
+  },
+  "/data": {
+   "title": "The Data",
+   "description": "Every table behind the site, what it holds and where it comes from."
+  }
+ }
+}
