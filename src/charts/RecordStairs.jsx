@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { scrollState } from '../motion/env.js'
 import { seedDrift, drift } from '../motion/drift.js'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
@@ -72,7 +73,7 @@ export default function RecordStairs({ points, records, endT, notes = [], yMax, 
     const draw = (now) => {
       if (!start) start = now
       const el = now - start
-      if (moving && !visible) { raf = requestAnimationFrame(draw); return }
+      if (moving && (!visible || (scrollState.active && el > ENTER + 600))) { raf = requestAnimationFrame(draw); return }
       ctx.clearRect(0, 0, W, H)
       for (const p of pts) {
         let k = 1

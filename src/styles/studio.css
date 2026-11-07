@@ -299,9 +299,7 @@ html.motion .section-head__title.areveal.is-in:where(:not(.book *)) { opacity: 1
 html.motion .eyebrow.areveal:where(:not(.book *)) { opacity: 0; transform: none; translate: -10px 0; transition: opacity 0.9s var(--ease-out), translate 0.9s var(--ease-out); }
 html.motion .eyebrow.areveal.is-in:where(:not(.book *)) { opacity: 1; translate: 0 0; }
 /* each statement inks in as it rises up the screen */
-html.motion .sgrid__statement:where(:not(.book *)), html.motion .hero__statement:where(:not(.book *)) { color: color-mix(in srgb, var(--fg) calc(28% + var(--fill, 1) * 72%), transparent); transition: color 0.25s linear; }
 /* a hairline under the nav shows how far down the page you are */
-html.motion .snav__bar:where(:not(.book *))::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--accent); transform: scaleX(var(--progress, 0)); transform-origin: 0 50%; }
 html.motion .snav.is-open .snav__bar:where(:not(.book *))::after { opacity: 0; }
 
 /* =============================================================== cursor */

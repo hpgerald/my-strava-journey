@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { scrollState } from '../motion/env.js'
 import { seedDrift, drift } from '../motion/drift.js'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
@@ -86,7 +87,7 @@ export default function FootMap({ rows }) {
     const draw = (now) => {
       if (!start) start = now
       const el = now - start
-      if (!still && !visible) { raf = requestAnimationFrame(draw); return }
+      if (!still && (!visible || (scrollState.active && el > ENTER + 700))) { raf = requestAnimationFrame(draw); return }
       ctx.clearRect(0, 0, W, H)
       for (let i = 0; i < pts.length; i++) {
         const p = pts[i]

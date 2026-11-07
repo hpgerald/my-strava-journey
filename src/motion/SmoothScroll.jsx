@@ -1,13 +1,21 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
-import { motionOK, lenisRef } from './env.js'
+import { motionOK, lenisRef, scrollState } from './env.js'
 import { createScrollFx } from './scrollFx.js'
 
-// Smooth, weighted scrolling for the whole site (Lenis), plus the small
-// scroll-linked layer the studio design leans on:
-//  - --vel on <html>: the scroll velocity, which skews the marquees
+// The scroll layer. Scrolling itself is the browser's own, for touchpads,
+// mouse wheels and touch screens alike: a touchpad already glides, and
+// smoothing it a second time made the page feel heavy. Lenis is kept only to
+// glide to a place when the site asks (the page map, back to top).
+// On top of the native scroll, once per frame and only while it moves:
+//  - the scroll-linked scenes (scrollFx)
 //  - [data-speed]: elements drift against the scroll for depth
+//  - the marquees lean with the speed of the scroll (--vel, on the marquees only)
 //  - html.is-scrolled / html.is-scrolling-down: the nav hides on the way down
+//  - html.is-scrolling: ambient motion (floating dots, breathing type) holds
+//    still while the page moves, and picks up again when it stops
+// Every value is written on the few elements that use it, never on <html>,
+// so a scroll frame never restyles the whole page.
 // Nothing runs under reduced motion or for automated browsers.
 export default function SmoothScroll() {
   useEffect(() => {
@@ -27,40 +35,53 @@ export default function SmoothScroll() {
       root.classList.add('pre-on')
       setTimeout(() => root.classList.remove('pre-on'), 4000)
     }
-    const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true })
+    const lenis = new Lenis({ smoothWheel: false, syncTouch: false, lerp: 0.12 })
     lenisRef.current = lenis
+    let lraf = 0
+    const lloop = (t) => { lenis.raf(t); lraf = requestAnimationFrame(lloop) }
+    lraf = requestAnimationFrame(lloop)
+
     const fx = createScrollFx()
-    let last = 0
-    let raf = 0
-    const vh = () => window.innerHeight
-    const onResize = () => { fx.refresh(); fx.update() }
-    window.addEventListener('resize', onResize)
-    // a first pass, so the scenes start in place before anyone scrolls
-    requestAnimationFrame(() => fx.update())
-    lenis.on('scroll', ({ scroll, velocity }) => {
-      setDir(scroll, last); last = scroll
+    let last = window.scrollY, lastT = performance.now(), vel = 0, raf = 0, idle = 0
+    const marquees = () => document.querySelectorAll('.mq__run')
+    const frame = () => {
+      raf = 0
+      const y = window.scrollY, t = performance.now()
+      const v = (y - last) / Math.max(1, t - lastT) * 16
+      vel += (Math.max(-1, Math.min(1, v / 40)) - vel) * 0.35
+      setDir(y, last); last = y; lastT = t
       fx.update()
-      root.style.setProperty('--vel', Math.max(-1, Math.min(1, velocity / 40)).toFixed(3))
-      const h = vh()
-      const max = Math.max(1, document.documentElement.scrollHeight - h)
-      root.style.setProperty('--progress', (scroll / max).toFixed(4))
-      document.querySelectorAll('.sgrid__statement, .hero__statement').forEach((el) => {
-        const r = el.getBoundingClientRect()
-        if (r.top > h) { el.style.setProperty('--fill', '0'); return }
-        if (r.bottom < 0) return
-        const p = Math.max(0, Math.min(1, (h * 0.92 - r.top) / (h * 0.45)))
-        el.style.setProperty('--fill', p.toFixed(3))
-      })
+      const h = window.innerHeight
       document.querySelectorAll('[data-speed]').forEach((el) => {
         const r = el.getBoundingClientRect()
         if (r.bottom < -h || r.top > h * 2) return
         const mid = r.top + r.height / 2 - h / 2
         el.style.transform = `translate3d(0, ${(-mid * Number(el.dataset.speed)).toFixed(1)}px, 0)`
       })
-    })
-    const loop = (t) => { lenis.raf(t); raf = requestAnimationFrame(loop) }
-    raf = requestAnimationFrame(loop)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); fx.destroy(); lenis.destroy(); lenisRef.current = null; root.style.removeProperty('--vel'); root.classList.remove('motion') }
+      marquees().forEach((m) => m.style.setProperty('--vel', vel.toFixed(3)))
+    }
+    const settle = () => {
+      scrollState.active = false
+      root.classList.remove('is-scrolling')
+      vel = 0
+      marquees().forEach((m) => m.style.setProperty('--vel', '0'))
+    }
+    const onScroll = () => {
+      if (!scrollState.active) { scrollState.active = true; root.classList.add('is-scrolling') }
+      clearTimeout(idle); idle = setTimeout(settle, 160)
+      if (!raf) raf = requestAnimationFrame(frame)
+    }
+    const onResize = () => { fx.refresh(); fx.update() }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    // a first pass, so the scenes start in place before anyone scrolls
+    requestAnimationFrame(() => fx.update())
+    return () => {
+      cancelAnimationFrame(raf); cancelAnimationFrame(lraf); clearTimeout(idle)
+      window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onResize)
+      fx.destroy(); lenis.destroy(); lenisRef.current = null
+      root.classList.remove('motion', 'is-scrolling'); scrollState.active = false
+    }
   }, [])
   return null
 }

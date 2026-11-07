@@ -32,6 +32,7 @@ import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { useHeroLive } from '../motion/heroLive.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
+import HeroArt from '../components/HeroArt.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -410,6 +411,20 @@ export default function Home() {
   // shown on the chapter's own page (02-10), not a re-sequenced 01-09
   const menuItems = nav.filter((r) => r.route !== '/')
 
+  // the hero's strip: outings in every month of the record, and the month the
+  // current streak began
+  const heroMonths = (() => {
+    if (!sortedDays.length) return []
+    const c = {}
+    for (const a of activityLog) { const k = (a.date || '').slice(0, 7); if (k) c[k] = (c[k] || 0) + 1 }
+    const out = []
+    let [y, m] = sortedDays[0].slice(0, 7).split('-').map(Number)
+    const end = sortedDays[sortedDays.length - 1].slice(0, 7)
+    for (let k = `${y}-${String(m).padStart(2, '0')}`; k <= end; m === 12 ? (y++, m = 1) : m++, k = `${y}-${String(m).padStart(2, '0')}`) out.push({ k, n: c[k] || 0 })
+    return out
+  })()
+  const heroStreakFrom = edStreak.start ? edStreak.start.slice(0, 7) : '9999-99'
+
   return (
     <Layout>
       {!book && (
@@ -424,6 +439,7 @@ export default function Home() {
                 </span>
               ))}
             </p>
+            <HeroArt months={heroMonths} streakFrom={heroStreakFrom} />
           </div>
         </section>
         <div className="shero-scene__run" aria-hidden="true" />

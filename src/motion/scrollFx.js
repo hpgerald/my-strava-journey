@@ -39,18 +39,18 @@ export function createScrollFx() {
       }
     }
     // the page's tail: 0 until the end of the content lifts off the footer, 1 when
-    // the footer is fully uncovered
+    // the footer is fully uncovered (written on the footer, which alone uses it)
     if (main && foot) {
       const mb = main.getBoundingClientRect().bottom
       const t = clamp((vh - mb) / Math.max(1, foot.offsetHeight)).toFixed(3)
-      if (t !== tail) { tail = t; document.documentElement.style.setProperty('--fx-tail', t) }
+      if (t !== tail) { tail = t; foot.style.setProperty('--fx-tail', t) }
     }
   }
 
   function destroy() {
     if (mo) mo.disconnect()
     for (const el of els) { el.style.removeProperty('--fx-in'); el.style.removeProperty('--fx-out'); el.style.removeProperty('--fx-pin') }
-    document.documentElement.style.removeProperty('--fx-tail')
+    if (foot) foot.style.removeProperty('--fx-tail')
     els = []
   }
 

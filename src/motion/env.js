@@ -14,3 +14,7 @@ export function finePointer() {
 
 // the shared smooth-scroll instance, when there is one
 export const lenisRef = { current: null }
+
+// true while the page is being scrolled; the canvas dot charts hold their
+// drawing still until it stops, so scrolling never waits on them
+export const scrollState = { active: false }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { lenisRef } from '../motion/env.js'
 
 // The page map on wide screens: a thin rail at the right edge with one tick
@@ -10,6 +10,7 @@ import { lenisRef } from '../motion/env.js'
 export default function SectionMap() {
   const [items, setItems] = useState([])
   const [on, setOn] = useState(-1)
+  const bar = useRef(null)
 
   useEffect(() => {
     const main = document.getElementById('main')
@@ -44,7 +45,7 @@ export default function SectionMap() {
       setOn(cur)
       const doc = document.documentElement
       const p = Math.min(1, Math.max(0, window.scrollY / Math.max(1, doc.scrollHeight - window.innerHeight)))
-      doc.style.setProperty('--read', p.toFixed(4))
+      if (bar.current) bar.current.style.setProperty('--read', p.toFixed(4))
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick) }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -63,7 +64,7 @@ export default function SectionMap() {
 
   return (
     <>
-      <div className="sread" aria-hidden="true"><span /></div>
+      <div className="sread" aria-hidden="true" ref={bar}><span /></div>
       {items.length >= 3 ? (
         <nav className="smap" aria-label="Sections of this page">
           <ol>

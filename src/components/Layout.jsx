@@ -33,8 +33,8 @@ export default function Layout({ children }) {
 
     const scan = () => {
       scanFloat()
-      // sections report how far the page has scrolled through them (scrollFx)
-      root.querySelectorAll('section.sgrid, .sgrid__fig, .fieldnote').forEach((el) => { if (!el.dataset.fx && !el.closest('.book')) el.dataset.fx = '' })
+      // titles, index figures and quotes read their own scroll progress (scrollFx)
+      root.querySelectorAll('.sgrid > .sgrid__head > .section-head__title, .sgrid > .sgrid__head > .eyebrow--n, .fieldnote__quote').forEach((el) => { if (!el.dataset.fx && !el.closest('.book')) el.dataset.fx = '' })
       const nodes = root.querySelectorAll('figure.fig, .section-head:not(.detail-head), .edges, .sgrid__head > *, hr.rule, .sgrid__fig, .flip, .tm, .geo, .grings, .fieldnote__quote, .sgrid__statement, .odds, .ycards, .sgrid__note, .ev-file, .ev-read, .ev-how > div, .ev-gloss > div, .ev-tbl')
       nodes.forEach((el) => {
         if (el.dataset.areveal || el.closest('.book')) return

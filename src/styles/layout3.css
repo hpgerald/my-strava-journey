@@ -147,11 +147,12 @@ html.motion .eyebrow--n.areveal.is-in .eyebrow__n:where(:not(.book *))::after { 
 html.motion .eyebrow--n.areveal .eyebrow__l:where(:not(.book *)) { opacity: 0; translate: -0.6rem 0; transition: opacity 0.7s var(--ease-out) 0.3s, translate 0.9s var(--ease-out) 0.3s; }
 html.motion .eyebrow--n.areveal.is-in .eyebrow__l:where(:not(.book *)) { opacity: 1; translate: 0 0; }
 
-/* scroll-driven: titles glide in from the right as their section rises, and
-   the index figure drifts the other way */
+/* scroll-driven: titles glide in from the right as they rise, and the index
+   figure drifts the other way (each reads its own progress, so a scroll frame
+   restyles only these few elements) */
 @media (min-width: 48rem) {
-  html.motion .sgrid[data-fx] > .sgrid__head > .section-head__title:where(:not(.book *)) { translate: calc((1 - var(--fx-in, 1)) * 2.4vw) 0; }
-  html.motion .sgrid[data-fx] > .sgrid__head > .eyebrow--n:where(:not(.book *)) { translate: 0 calc((1 - var(--fx-in, 1)) * 2.2rem); }
+  html.motion .sgrid > .sgrid__head > .section-head__title[data-fx]:where(:not(.book *)) { translate: calc((1 - var(--fx-in, 1)) * 2.4vw) 0; }
+  html.motion .sgrid > .sgrid__head > .eyebrow--n[data-fx]:where(:not(.book *)) { translate: 0 calc((1 - var(--fx-in, 1)) * 2.2rem); }
 }
 
 /* reading text wipes in from the top, line after line */
@@ -186,19 +187,9 @@ html.motion .sgrid__fig--mx.areveal .sgrid__chart:where(:not(.book *))::after { 
 html.motion .sgrid__fig.areveal .sgrid__figtitle:where(:not(.book *)) { letter-spacing: 0.22em; opacity: 0; transition: letter-spacing 1.2s var(--ease-out) 0.25s, opacity 0.8s 0.25s, color 0.4s; }
 html.motion .sgrid__fig.areveal.is-in .sgrid__figtitle:where(:not(.book *)) { letter-spacing: var(--tr-wide); opacity: 1; }
 
-/* the second figure of a pair trails the first while it rises, and lines up
-   with it before it reaches the reading height */
-@media (min-width: 60rem) {
-  html.motion .sgrid:not(.sgrid--sticky) > .sgrid__pair > .sgrid__fig--mx[data-fx]:where(:not(.book *)) { translate: 0 calc(max(0, 0.55 - var(--fx-in, 1)) * 9rem); }
-}
-
 /* notes and sources arrive last */
 html.motion .sgrid__note.areveal:where(:not(.book *)) { transition-delay: 0.35s; }
 
-/* the sticky reading column dims a little once its figures have passed */
-@media (min-width: 64rem) {
-  html.motion .sgrid--sticky[data-fx] > .sgrid__lead:where(:not(.book *)) { opacity: calc(1 - max(0, var(--fx-out, 0) - 0.7) * 2.5); }
-}
 
 /* bars answer the pointer: the one under it stays, the rest step back */
 html.motion :is(.cb__plot, .evc__plot):hover :is(.cb__bar, .evc__bar):where(:not(.book *)) { transition: opacity 0.3s, transform 0.8s var(--ease); }
@@ -213,7 +204,7 @@ html.motion .cb__plot.is-in .cb__bar--big rect:where(:not(.book *)) { animation:
 html.motion .evc__plot.is-in .evc__bar.is-acc:where(:not(.book *)) { animation: breathe 3.4s ease-in-out 1.6s infinite; }
 
 /* the fieldnote's opening mark swings in */
-html.motion .fieldnote[data-fx] .fieldnote__quote:where(:not(.book *)) { translate: calc((1 - var(--fx-in, 1)) * -1.5vw) 0; }
+html.motion .fieldnote__quote[data-fx]:where(:not(.book *)) { translate: calc((1 - var(--fx-in, 1)) * -1.5vw) 0; }
 
 /* the year cards and the chapter index deal themselves out */
 html.motion .ycards.areveal:where(:not(.book *)) { opacity: 1; transform: none; }
@@ -227,8 +218,12 @@ html.motion .ycards.areveal.is-in .ycard:nth-child(6) { transition-delay: 0.3s; 
 html.motion .ycards.areveal.is-in .ycard:nth-child(7) { transition-delay: 0.36s; }
 html.motion .ycards.areveal.is-in .ycard:nth-child(8) { transition-delay: 0.42s; }
 
-/* fast scrolling leans the big type, the way a page bends when flicked */
-html.motion .sgrid > .sgrid__head > .section-head__title:where(:not(.book *)), html.motion .eyebrow__n:where(:not(.book *)), html.motion .odds__n:where(:not(.book *)) { transform: skewX(calc(var(--vel, 0) * -6deg)); transition: transform 0.45s var(--ease-out), color 0.4s, translate 0.6s var(--ease-out); }
+/* the big type settles softly after its scroll-driven glide */
+html.motion .sgrid > .sgrid__head > .section-head__title:where(:not(.book *)), html.motion .eyebrow--n:where(:not(.book *)) { transition: translate 0.6s var(--ease-out); }
+
+/* ambient motion holds still while the page is being scrolled */
+html.is-scrolling .flt, html.is-scrolling .shero__ch, html.is-scrolling .shero__t b, html.is-scrolling .shero__t b::after,
+html.is-scrolling .cb__bar--big rect, html.is-scrolling .evc__bar.is-acc, html.is-scrolling .mq__track { animation-play-state: paused !important; }
 
 /* over a chart the cursor becomes a fine sight */
 .cur--chart .cur__ring:where(:not(.book *))::before { scale: 0.42; background: transparent; box-shadow: inset 0 0 0 1.5px var(--accent); }
@@ -237,3 +232,69 @@ html.motion .sgrid > .sgrid__head > .section-head__title:where(:not(.book *)), h
 @media (prefers-reduced-motion: reduce) {
   .sread span { transition: none; }
 }
+
+/* ==========================================================================
+   THE HOME HERO: type that breathes, and the objects around it
+   ========================================================================== */
+.shero__in:where(:not(.book *)) { position: relative; }
+
+/* the letters swell and slim in a slow wave, on the font's own width and
+   weight axes (the full stop keeps its own beat) */
+@keyframes chWave {
+  0%, 100% { font-variation-settings: 'wdth' 100, 'wght' 500; }
+  50% { font-variation-settings: 'wdth' var(--wd-hi, 116), 'wght' var(--wg-hi, 660); }
+}
+html.motion .shero__line > span.shero__ch:where(:not(.book *)) { animation: chUp 1.25s var(--ease-out) both, chWave 6.4s ease-in-out infinite; animation-delay: calc(0.3s + var(--i) * 40ms), calc(2.3s + var(--i) * 0.3s); }
+html.motion.pre-on .shero__line > span.shero__ch:where(:not(.book *)) { animation-delay: calc(2.5s + var(--i) * 40ms), calc(4.5s + var(--i) * 0.3s); }
+
+/* the turning seal */
+.shart__seal { position: absolute; right: var(--gutter); top: clamp(1.25rem, 6vh, 4rem); width: clamp(6.5rem, 3.5rem + 7.5vw, 11.5rem); aspect-ratio: 1; pointer-events: none; translate: calc(var(--hx, 0) * 1.6vw) calc(var(--hy, 0) * 1.2vh); }
+.shart__seal svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.shart__sealt { font-family: var(--font-sans); font-size: 13.5px; font-weight: 600; letter-spacing: 0.16em; fill: var(--ink); }
+.shart__sealr { fill: none; stroke: color-mix(in srgb, var(--ink) 18%, transparent); stroke-width: 1; }
+.shart__sealdot { fill: var(--accent); transform-box: view-box; transform-origin: 100px 100px; }
+@keyframes sealSpin { to { transform: rotate(360deg); } }
+@keyframes sealIn { from { opacity: 0; scale: 0.6; rotate: -40deg; } to { opacity: 1; scale: 1; rotate: 0deg; } }
+html.motion .shart__seal svg { animation: sealIn 1.4s var(--ease-out) 1.1s both; }
+html.motion.pre-on .shart__seal svg { animation-delay: 3.3s; }
+html.motion .shart__spin { transform-box: view-box; transform-origin: 100px 100px; animation: sealSpin 30s linear infinite; }
+html.motion .shart__sealdot { animation: dotBeat 2.8s ease-in-out 2.2s infinite; }
+
+/* every month of the record as a bar, the streak in orange */
+.shart__strip { position: absolute; right: var(--gutter); bottom: clamp(1.75rem, 6vh, 3.5rem); width: min(34vw, 40rem); height: clamp(3.25rem, 9vh, 6.5rem); display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 2px; align-items: end; pointer-events: none; translate: calc(var(--hx, 0) * -1vw) 0; }
+.shart__strip i { display: block; height: var(--h); background: var(--ink); opacity: 0.62; transform-origin: 50% 100%; }
+.shart__strip i.is-now { background: var(--accent); opacity: 1; }
+.shart__strip i.is-empty { background: color-mix(in srgb, var(--ink) 22%, transparent); opacity: 1; }
+@keyframes barUp { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes barSweep { 0%, 7%, 100% { opacity: 0.62; } 2.5% { opacity: 1; } }
+@keyframes barSweepNow { 0%, 7%, 100% { filter: none; } 2.5% { filter: brightness(1.25); } }
+html.motion .shart__strip i { animation: barUp 0.9s var(--ease-out) both, barSweep 8s linear infinite; animation-delay: calc(1.5s + var(--j) * 12ms), calc(4s + var(--j) * 38ms); }
+html.motion .shart__strip i.is-now { animation-name: barUp, barSweepNow; }
+html.motion.pre-on .shart__strip i { animation-delay: calc(3.7s + var(--j) * 12ms), calc(6.2s + var(--j) * 38ms); }
+
+/* registration marks in the corners */
+.shart__mark { position: absolute; width: 15px; height: 15px; pointer-events: none; }
+.shart__mark::before, .shart__mark::after { content: ''; position: absolute; background: color-mix(in srgb, var(--ink) 45%, transparent); }
+.shart__mark::before { left: 0; right: 0; top: 7px; height: 1px; }
+.shart__mark::after { top: 0; bottom: 0; left: 7px; width: 1px; }
+.shart__mark--tl { left: calc(var(--gutter) - 7px); top: 0.9rem; }
+.shart__mark--tr { right: calc(var(--gutter) - 7px); top: 0.9rem; }
+.shart__mark--bl { left: calc(var(--gutter) - 7px); bottom: 0.9rem; }
+.shart__mark--br { right: calc(var(--gutter) - 7px); bottom: 0.9rem; }
+@keyframes markIn { from { opacity: 0; rotate: -90deg; scale: 0.4; } to { opacity: 1; rotate: 0deg; scale: 1; } }
+html.motion .shart__mark { animation: markIn 1s var(--ease-out) 0.9s both; }
+html.motion .shart__mark--tr { animation-delay: 1s; }
+html.motion .shart__mark--br { animation-delay: 1.1s; }
+html.motion .shart__mark--bl { animation-delay: 1.2s; }
+html.motion.pre-on .shart__mark { animation-delay: 3.1s; }
+
+/* hold the hero still while the page scrolls */
+html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrolling .shart__strip i { animation-play-state: paused !important; }
+
+@media (max-width: 47.999rem) {
+  :root { --wd-hi: 102; --wg-hi: 600; }
+  .shero__t:where(:not(.book *)) { font-size: 22.5vw; }
+  .shart__seal { width: 5.75rem; top: 1.25rem; }
+  .shart__strip { left: var(--gutter); right: auto; bottom: auto; top: 2.2rem; width: calc(100% - var(--gutter) * 2 - 7rem); height: 3.25rem; }
+}
+@media print { .shart__seal, .shart__strip, .shart__mark { display: none; } }
