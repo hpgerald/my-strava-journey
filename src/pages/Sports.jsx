@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { BookRead } from '../components/BookStory.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -185,6 +186,10 @@ export default function Sports() {
             ]}
           />
           <FootMap rows={r.rows} />
+          <BookRead items={[
+            ['Every outing on foot', 'Each dot is one outing on foot. Across is the pace, quicker to the left, and up is the climb for each kilometre. A bigger dot is a longer outing and the colour is the way of moving. Outings with no climb at all, such as every treadmill run, sit in a lane under the axis.', <FootMap />],
+            ['What the clouds say', 'Each way of moving gathers into its own cloud, named at its middle. Where two clouds overlap, the two ways of moving are alike in pace and climb; where a cloud stands apart, it is a different kind of effort.', null],
+          ]} />
         </section>
 
         {/* ===== 1. who does what ===== */}

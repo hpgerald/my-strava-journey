@@ -103,7 +103,9 @@ p.ev-v { margin: 0; }
 /* ---- in the book ---- */
 .book .ev-read { border-left-width: 1.5px; }
 .book .ev-fig, .book .ev-board__t tr, .book .ev-holm__t tr, .book .ev-gloss > div { break-inside: avoid; }
-.book .ev-show:not(.ev-show--wide) { break-inside: avoid; }
+.book .ev-show--wide > .ev-read { grid-column: 1 / -1; max-width: none; border-left: 0; padding-left: 0; border-top: 1.5px solid var(--accent); padding-top: var(--sp-3); column-count: 2; column-gap: var(--sp-6); }
+.book .ev-show--wide > .ev-read p { break-inside: avoid-column; }
+.book .ev-show--wide > .ev-read .ev-k { break-after: avoid; }
 
 /* ==========================================================================
    the charts

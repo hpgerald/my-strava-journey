@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { BookContext } from '../components/BookContext.js'
 import Home from './Home.jsx'
@@ -13,6 +13,8 @@ import Evidence from './Evidence.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildBookFacts } from '../lib/bookFacts.js'
+import { assignLessons } from '../lib/vizLessons.jsx'
+import { BookIntro } from '../components/BookStory.jsx'
 
 // My Book: the whole site set as one sports memoir. Every chapter is the real
 // page rendered in book mode (no site chrome, every chart at its final state),
@@ -441,6 +443,7 @@ export default function Book() {
   const F = useMemo(() => (activities.length ? buildBookFacts(activities, geo) : null), [activities, geo])
   const years = useMemo(() => [...new Set(activities.map((a) => Number(a.year)).filter(Boolean))].sort((a, b) => a - b), [activities])
   const [pdf, setPdf] = useState(null)
+  const bookRef = useRef(null)
   const pdfUrl = `${import.meta.env.BASE_URL}${PDF_PATH}`
 
   useEffect(() => {
@@ -458,6 +461,19 @@ export default function Book() {
     prev,
     next,
   }
+  // each design lesson is taught once, under the first chart that can teach
+  // it; the chapters fill in as their data arrives, so look again on change
+  useEffect(() => {
+    const root = bookRef.current
+    if (!root) return undefined
+    let t = 0
+    const run = () => { clearTimeout(t); t = setTimeout(() => assignLessons(root), 120) }
+    const mo = new MutationObserver((list) => { if (list.some((m) => [...m.addedNodes, ...m.removedNodes].some((n) => n.nodeType === 1 && !n.closest?.('.bk-lesson')))) run() })
+    mo.observe(root, { childList: true, subtree: true })
+    assignLessons(root)
+    return () => { mo.disconnect(); clearTimeout(t) }
+  }, [F])
+
   if (!F) return <DetailFrame {...frame} />
 
   return (
@@ -471,7 +487,7 @@ export default function Book() {
       </div>
 
       <BookContext.Provider value={{ bare: false }}>
-        <article className="book" aria-label={`${BOOK_TITLE}, a book`}>
+        <article ref={bookRef} className="book" aria-label={`${BOOK_TITLE}, a book`}>
           <Cover F={F} />
           <TitlePage F={F} />
           <Contents />
@@ -481,6 +497,7 @@ export default function Book() {
           <section className="bk-ch" id="bk-ch-01" aria-labelledby="bk-ch-01-t">
             <div className="container">
               <Opener number="01" title="The Journey" subtitle="Seven years of one habit" />
+              <BookIntro number="01" />
             </div>
             <Home />
           </section>
@@ -489,6 +506,7 @@ export default function Book() {
           <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">
             <div className="container">
               <Opener number="02" title="Year in Sport" subtitle="One year at a time" />
+              <BookIntro number="02" />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">

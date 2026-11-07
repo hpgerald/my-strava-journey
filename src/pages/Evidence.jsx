@@ -1,3 +1,4 @@
+import { BookLesson } from '../components/BookStory.jsx'
 import { useEffect, useState } from 'react'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -79,6 +80,7 @@ function Case({ c }) {
           <figcaption className="sgrid__figtitle">{c.chart.title}</figcaption>
           <div className="sgrid__chart">{c.chart.node}</div>
           <p className="sgrid__note">{c.chart.note}</p>
+          <BookLesson of={c.chart.node} />
         </figure>
         <div className="ev-read">
           <h3 className="ev-k">What it shows</h3>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
-import BookStory, { BookRead } from '../components/BookStory.jsx'
+import BookStory, { BookRead, BookLesson } from '../components/BookStory.jsx'
 import { Reveal, useInView } from '../components/Reveal.jsx'
 import PlaceMap from '../charts/PlaceMap.jsx'
 import HBars from '../charts/HBars.jsx'
@@ -176,6 +176,7 @@ export default function Where() {
               </Ledger>
             </figure>
           </div>
+          <BookRead items={[['Africa, by outings', null, <PlaceMap />], ['Each country, busiest first', null, ['ledger']]]} />
         </section>
 
         {/* ===== 1. Tanzania ===== */}
@@ -207,6 +208,7 @@ export default function Where() {
               aria="Map of Tanzania's regions."
             />
           </figure>
+          <BookLesson of={<PlaceMap />} />
           <div className="sgrid__pair">
             <figure className="sgrid__fig sgrid__fig--chart">
               <figcaption className="sgrid__figtitle">Outings by region</figcaption>
@@ -228,8 +230,8 @@ export default function Where() {
             </figure>
           </div>
           <BookRead items={[
-            ['Outings by region', 'My ten busiest regions by the number of outings that started there. The line under each name gives the days I went out there and the month of my first outing.'],
-            ['Kilometres on foot by region', 'The same regions ranked by the kilometres I covered on foot there. The line under each name gives the metres climbed.'],
+            ['Outings by region', 'My ten busiest regions by the number of outings that started there. The line under each name gives the days I went out there and the month of my first outing.', <HBars rows={R.slice(0, 10).map((r) => ({ key: 'x', sub: 1, value: r.n }))} />],
+            ['Kilometres on foot by region', 'The same regions ranked by the kilometres I covered on foot there. The line under each name gives the metres climbed.', <HBars rows={R.slice().sort((a, b) => b.km - a.km).slice(0, 10).map((r) => ({ key: 'x', sub: 1, value: r.km }))} />],
           ]} />
           <BookStory>{[
             `The map above is shaded by outings, so the darker a region, the more often I went out there. ${home.region}, Dar es Salaam and Kilimanjaro stand out, and most of the country is still pale or empty.`,

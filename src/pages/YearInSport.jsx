@@ -5,7 +5,7 @@ import DetailFrame from '../components/DetailFrame.jsx'
 import { useBook } from '../components/BookContext.js'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
-import BookStory from '../components/BookStory.jsx'
+import BookStory, { BookLesson } from '../components/BookStory.jsx'
 import OutingSky from '../charts/OutingSky.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import YearMonths from '../charts/YearMonths.jsx'
@@ -283,6 +283,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             ]}
           />
           <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} fullStreak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} fullGap={r ? r.longGap : null} />
+          <BookLesson of={<OutingSky />} />
           <BookStory>{[
             `Each dot above is one outing of ${Y}, placed by its day across the year and by the hour it started, and a bigger dot is a longer distance. The marks pick out the longest silence of the year, the longest run of days and the three biggest days.`,
             `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} personal records on Strava segments` : ''}.`}`,
@@ -708,6 +709,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         <hr className="rule rule--faint" />
         <section className="yis-sec yis-sec--moment">
           <YearMoment year={Y} stats={s} />
+          <BookLesson of={<YearMoment />} />
         </section>
 
         {!book && <Reveal as="section" className="yis-cta">

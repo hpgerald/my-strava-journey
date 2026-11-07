@@ -508,8 +508,8 @@ export default function Home() {
               </figure>
             </div>
             <BookRead items={[
-              ['The odds, day by day', 'The middle point is a day I went out. Going right, each step is one more day in a row, and the orange line is the chance I go out again the next day. Going left, each step is one more day off, and the grey line is the chance I come back the next day. The gap between the two sides is the lesson: a chain is easier to keep than to restart.'],
-              ['Given today, the chance of tomorrow', 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I go out tomorrow and the right box the chance I rest, and the two add up to 100%. The darker the box, the more likely that next day.'],
+              ['The odds, day by day', 'The middle point is a day I went out. Going right, each step is one more day in a row, and the orange line is the chance I go out again the next day. Going left, each step is one more day off, and the grey line is the chance I come back the next day. The gap between the two sides is the lesson: a chain is easier to keep than to restart.', <HabitMomentum />],
+              ['Given today, the chance of tomorrow', 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I go out tomorrow and the right box the chance I rest, and the two add up to 100%. The darker the box, the more likely that next day.', <TransitionMatrix />],
             ]} />
             <BookStory>{[
               `Since I came back I have taken ${n0(habitBreaks.length)} breaks of one day or more. ${n0(breaksOne)} of them were a single day, and only ${n0(breaksFive)} lasted five days or more. The longest was ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`,
@@ -557,8 +557,8 @@ export default function Home() {
                 </figure>
               </div>
               <BookRead items={[
-                ['Every day, added up', 'Every day I went out on foot is lined up from the shortest on the left to the longest on the right, and the line adds up the distance as it goes. If every day were the same size, the line would follow the dashed diagonal. The more it sags below the diagonal, the more of the total comes from the long days.'],
-                ['Each tenth of days, by its share', 'The same days, cut into ten equal groups from the shortest tenth on the left to the longest on the right. Each bar is that group\u2019s share of all my distance on foot. If every day were equal, every bar would stop at the dashed 10% line.'],
+                ['Every day, added up', 'Every day I went out on foot is lined up from the shortest on the left to the longest on the right, and the line adds up the distance as it goes. If every day were the same size, the line would follow the dashed diagonal. The more it sags below the diagonal, the more of the total comes from the long days.', <LorenzCurve />],
+                ['Each tenth of days, by its share', 'The same days, cut into ten equal groups from the shortest tenth on the left to the longest on the right. Each bar is that group\u2019s share of all my distance on foot. If every day were equal, every bar would stop at the dashed 10% line.', <DecileBars />],
               ]} />
               <BookStory>{[
                 `My usual day on foot is about ${medDayKm.toFixed(1)} km. Half of my days out are shorter than that and half are longer. The very long days carry a lot for how few they are: ${n0(bigDays.length)} days of 20 km or more gave ${pcs(sumKm(bigDays) / dayKmTot)}% of all my kilometres.`,

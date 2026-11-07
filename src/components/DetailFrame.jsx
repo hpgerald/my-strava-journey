@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
 import FieldNote from './FieldNote.jsx'
+import { BookIntro } from './BookStory.jsx'
 import { useBook } from './BookContext.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
 
@@ -46,6 +47,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
             {lede ? <p className="bk-open__lede">{lede}</p> : null}
           </header>
           <FieldNote seed={seed} align="wide" />
+          <BookIntro number={number} />
           {children}
         </Container>
       </section>

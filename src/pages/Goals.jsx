@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
-import BookStory from '../components/BookStory.jsx'
+import BookStory, { BookLesson } from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import GoalRace from '../charts/GoalRace.jsx'
 import GhostRace from '../charts/GhostRace.jsx'
@@ -216,6 +216,7 @@ export default function Goals() {
             <li><i className="grace__kgoal" />the target</li>
             <li><i className="grace__khit" />the day it was crossed</li>
           </ul>
+          <BookLesson of={<GoalRace />} />
           <BookStory>{[
             'Each small panel is one target. The year runs from left to right and the line climbs as the total grows. Every earlier year is a grey line, this year is orange, and the dashed level is the target. Where a line crosses the dashed level, the ring for that year closed.',
             `The climbing panel is the one still open this year. At this point of the year, ${cur.year} is ahead of ${word(aheadOf)} of the ${word(habit.length - 1)} earlier years${elevAtNow(elevBest) > cur.elev.total ? `, and only ${elevBest.year}, my best climbing year, had climbed more by this date` : ''}.`,
@@ -246,7 +247,7 @@ export default function Goals() {
           }}
           left={{
             title: 'Each year as three rings',
-            node: <RingYears years={habit} cur={cur} />,
+            node: <RingYears years={habit} cur={cur} />, lesson: ['rings'],
           }}
           right={{
             title: 'The day each ring closed',

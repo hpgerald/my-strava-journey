@@ -5,6 +5,7 @@ import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { Reveal, useInView } from '../components/Reveal.jsx'
 import Chronicle from '../charts/Chronicle.jsx'
+import { BookLesson } from '../components/BookStory.jsx'
 import HBars from '../charts/HBars.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
@@ -147,6 +148,7 @@ export default function Timeline() {
             <li><i className="chron__kstreak" />20 days or more in a row</li>
             <li><i className="chron__kgap" />30 days or more without an outing</li>
           </ul>
+          <BookLesson of={<Chronicle />} />
         </section>
 
         {/* ===== 1. pace ===== */}

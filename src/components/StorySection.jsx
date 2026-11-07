@@ -45,7 +45,7 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
 
       {children}
 
-      {read ? <BookRead items={[[left.title, read[0]], [right.title, read[1]]]} /> : null}
+      <BookRead items={[[left.title, read && read[0], left.lesson || left.node], [right.title, read && read[1], right.lesson || right.node]]} />
       <BookStory>{story}</BookStory>
     </section>
   )

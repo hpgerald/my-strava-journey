@@ -3,7 +3,7 @@ import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
-import BookStory from '../components/BookStory.jsx'
+import BookStory, { BookLesson } from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { DayClocks, TwoPaths, DayPile, WeekStrips, NextGrid, IsoKm } from '../charts/MeaningCharts.jsx'
@@ -129,6 +129,7 @@ export default function WhatItMeans() {
           <ul className="chron__key" aria-hidden="true">
             <li>A full circle is one day.</li>
           </ul>
+          <BookLesson of={<DayClocks />} />
           <BookStory>{[
             `Each clock is one year, and the filled wedge is the time I spent moving on an average day, rest days included. ${early.length ? `In ${early.map((r) => r.year).join(' and ')} the wedges are thin slivers of ${early.map((r) => `${n0(r.minPerDay)}`).join(' and ')} minutes a day.` : ''}`,
             `From ${steady[0] ? steady[0].year : habitYear} to ${steady.length ? steady[steady.length - 1].year : habitYear} the clocks are almost the same size, between ${n0(steadyLo)} and ${n0(steadyHi)} minutes a day. The habit was steady long before it became every day. ${cur.partial ? `In ${cur.year} the wedge is the biggest of all, more than an hour and a half of every day.` : ''}`,

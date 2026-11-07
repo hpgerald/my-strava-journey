@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { BookRead } from '../components/BookStory.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -200,6 +201,10 @@ export default function Records() {
             yMax={45} yTicks={[0, 10, 20, 30, 40]} yFmt={(v) => `${v} km`} valFmt={(v) => `${k1(v)} km`} alive tall
             aria={`Every outing on foot by date and distance, with the distance record as a staircase. It broke ${dP.length} times: ${dP.map((r) => `${k1(r.km)} km on ${fmtDay(r.date)}`).join(', ')}.`}
           />
+          <BookRead items={[
+            ['The distance record', 'Each dot is one outing on foot, placed by its date and its distance and coloured by the way of moving. The staircase is my longest outing so far: it runs flat while the record holds and rises on the day a longer outing beats it.', <RecordStairs />],
+            ['Reading the steps', 'Tall steps close together mean the record was moving fast; a long flat stretch means it held. The dots under the staircase are every outing that did not beat it, so the gap between the cloud and the line shows how far a record sits above an ordinary day.', null],
+          ]} />
         </section>
 
         {/* ===== 1. the longest outings ===== */}
