@@ -312,10 +312,6 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 .hx__sp { display: inline-block; width: 0.22em; }
 .hx__dot { color: var(--accent); font-weight: inherit; }
 
-.hx__meta { flex: none; display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-4); border-top: 1.5px solid var(--ink); padding-top: 0.7rem; position: relative; z-index: 1; }
-.hx__meta p { margin: 0; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-muted); line-height: 1.5; }
-.hx__meta b { color: var(--ink); font-weight: 700; }
-.hx__span { text-align: right; }
 
 .hx__chart { flex: 1 1 auto; min-height: 11rem; margin-top: clamp(0.6rem, 2vh, 1.1rem); display: flex; flex-direction: column; }
 .hx__plot { position: relative; flex: 1 1 auto; display: flex; flex-direction: column; padding-top: 3rem; min-height: 0; }
@@ -354,10 +350,6 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 .hx__nums .is-acc small { color: var(--accent-ink); }
 
 @media (max-width: 40rem) {
-  .hx__meta { flex-wrap: wrap; row-gap: 0.2rem; }
-  .hx__meta p { font-size: 0.62rem; letter-spacing: 0.13em; }
-  .hx__meta p:first-child span { display: none; }
-  .hx__meta p:first-child b { display: block; }
   .hx__plot { padding-top: 2.6rem; }
   .hx__bars { gap: 1px; }
   .hx__note { font-size: 0.66rem; }
@@ -378,7 +370,7 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 @keyframes hxFade { from { opacity: 0; translate: 0 0.5rem; } to { opacity: 1; translate: 0 0; } }
 html.motion .hx__ch { animation: chUp 1.2s var(--ease-out) both, chBreath 6s ease-in-out infinite; animation-delay: calc(0.25s + var(--i) * 45ms), calc(1.9s + var(--i) * 0.18s); }
 html.motion .hx__dot { transform-origin: 30% 80%; animation: chUp 1.2s var(--ease-out) both, dotBeat 2.8s ease-in-out infinite; animation-delay: 0.75s, 2.2s; }
-html.motion .hx__meta, html.motion .hx__yrs { animation: hxFade 0.9s var(--ease-out) both; animation-delay: 0.7s; }
+html.motion .hx__yrs { animation: hxFade 0.9s var(--ease-out) both; animation-delay: 0.7s; }
 html.motion .hx__bars i { animation: barUp 0.9s var(--ease-out) both, barSweep 8s linear infinite; animation-delay: calc(0.8s + var(--j) * 10ms), calc(3.4s + var(--j) * 38ms); }
 html.motion .hx__bars i.is-now { animation-name: barUp, barSweepNow; }
 html.motion .hx__note, html.motion .hx__brk { animation: hxFade 0.8s var(--ease-out) both; animation-delay: 1.9s; }
@@ -389,7 +381,7 @@ html.motion .hx__nums div { animation: hxFade 0.9s var(--ease-out) both; animati
 html.motion .hx__nums div:nth-child(2) { --k: 1; } html.motion .hx__nums div:nth-child(3) { --k: 2; } html.motion .hx__nums div:nth-child(4) { --k: 3; }
 html.motion.pre-on .hx__ch { animation-delay: calc(2.45s + var(--i) * 45ms), calc(4.1s + var(--i) * 0.18s); }
 html.motion.pre-on .hx__dot { animation-delay: 2.95s, 4.4s; }
-html.motion.pre-on .hx__meta, html.motion.pre-on .hx__yrs { animation-delay: 2.9s; }
+html.motion.pre-on .hx__yrs { animation-delay: 2.9s; }
 html.motion.pre-on .hx__bars i { animation-delay: calc(3s + var(--j) * 10ms), calc(5.6s + var(--j) * 38ms); }
 html.motion.pre-on .hx__note, html.motion.pre-on .hx__brk { animation-delay: 4.1s; }
 html.motion.pre-on .hx__seal svg { animation-delay: 3.4s; }

@@ -2,15 +2,12 @@ import { useEffect, useRef } from 'react'
 import { useInView, useCountUp } from './Reveal.jsx'
 
 // The front page, filling the first screen with no idle space: the title on one
-// line from margin to margin, a line saying whose record this is, every month of
-// the record as a bar (with the long silence, the comeback and the streak marked
+// line from margin to margin, every month of the record as a bar (with the long silence, the comeback and the streak marked
 // on it, and the "Siku kwa siku" seal in the empty stretch on the left), and the
 // four big numbers counting up along the foot. Decoration for the eye: the same
 // record is told in words below it for screen readers.
 // props: months [{ k: 'YYYY-MM', n }], streakFrom 'YYYY-MM', streakSinceLabel,
 //   gap { days, fromKey }, comebackKey, nums { n, km, elev, streak }
-const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const monLabel = (k) => `${MON[parseInt(k.slice(5, 7), 10) - 1]} ${k.slice(0, 4)}`
 const fmt = (v) => Math.round(v || 0).toLocaleString('en-US')
 const seal = 'SIKU KWA SIKU · DAY BY DAY · SIKU KWA SIKU · DAY BY DAY · '
 
@@ -56,11 +53,6 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
             : <span key={i} className="hx__ch" style={{ '--i': i }}>{ch}</span>))}
           <b className="hx__ch hx__dot" style={{ '--i': chars.length }}>.</b>
         </p>
-      </div>
-
-      <div className="hx__meta">
-        <p><b>Gerald Tesha</b><span> · </span>Seven years on foot, read as data</p>
-        {N ? <p className="hx__span">Every month, {monLabel(months[0].k)} to {monLabel(months[N - 1].k)}</p> : null}
       </div>
 
       {N ? (
