@@ -73,3 +73,22 @@
 .book .kcl__area, .book .kcl__line, .book .kcl__dash, .book .kcl__down, .book .kcl__mark { transition: none !important; stroke-dashoffset: 0 !important; }
 .book .kcl__area { opacity: 0.7 !important; }
 .book .kcl__line, .book .kcl__dash, .book .kcl__down, .book .kcl__mark { opacity: 1 !important; }
+
+/* ---- the long day on Mount Hanang ---- */
+.hng__area { fill: var(--accent-soft); opacity: 0; transition: opacity 0.8s var(--ease) 1.2s; }
+.hng.is-in .hng__area { opacity: 0.6; }
+.hng__up { stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.8s var(--ease); }
+.hng.is-in .hng__up { stroke-dashoffset: 0; }
+.hng__down { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; opacity: 0; transition: opacity 0.6s var(--ease) 1.6s; }
+.hng__mid { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.45; }
+.hng__br { stroke: var(--ink); stroke-width: 1.2; }
+.hng__br--up { stroke: var(--accent); }
+.hng__span, .hng__mark { opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: var(--d, 1.6s); }
+.hng.is-in .hng__down, .hng.is-in .hng__span, .hng.is-in .hng__mark { opacity: 1; }
+.hng__dot { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.hng__top { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.hng__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--fg); }
+.hng__alt { font-weight: 400; fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .hng__area, .hng__up, .hng__down, .hng__span, .hng__mark { transition: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; } }
+.book .hng__area, .book .hng__up, .book .hng__down, .book .hng__span, .book .hng__mark { transition: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
+.book .hng__area { opacity: 0.6 !important; }

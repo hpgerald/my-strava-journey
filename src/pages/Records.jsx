@@ -10,6 +10,7 @@ import CumLine from '../charts/CumLine.jsx'
 import ChanceRows from '../charts/ChanceRows.jsx'
 import HBars from '../charts/HBars.jsx'
 import KiliClimb from '../charts/KiliClimb.jsx'
+import HanangDay from '../charts/HanangDay.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -63,6 +64,7 @@ export default function Records() {
   const kili = useTable('kili_half')
   const kxStages = useTable('kili_expedition')
   const kxProfile = useTable('kili_expedition_profile')
+  const hnRows = useTable('hanang_2023')
   const { prev, next } = useSectionPaging('/records')
   const geo = useMemo(() => Object.fromEntries(activityGeo.map((g) => [g.activity_key, g])), [activityGeo])
   const R = useMemo(() => (activities.length ? buildRecordReport(activities, geo, kili) : null), [activities, geo, kili])
@@ -77,6 +79,29 @@ export default function Records() {
     const climb = s.slice(0, 4).reduce((a, x) => a + x.climb, 0)
     return { s, profile, climb, km: s.reduce((a, x) => a + x.dist, 0), dayClimb: Math.round(s.slice(0, 3).reduce((a, x) => a + x.climb, 0) / 3 / 100) * 100 }
   }, [kxStages, kxProfile])
+
+  // the long day on Mount Hanang, April 2023 (scripts/build_hanang.py), and the longest days out on foot
+  const HN = useMemo(() => {
+    if (!hnRows.length || !activities.length) return null
+    const key = hnRows[0].activity_key
+    const a = activities.find((r) => r.activity_key === key)
+    if (!a) return null
+    const pts = hnRows.map((r) => ({ t: +r.t_min, alt: +r.alt_m })).sort((p, q) => p.t - q.t)
+    const top = pts.reduce((b, p) => (p.alt > b.alt ? p : b), pts[0])
+    const at = (min) => pts.reduce((b, p) => (Math.abs(p.t - min) < Math.abs(b.t - min) ? p : b), pts[0]).alt
+    const s0 = parseInt(hnRows[0].start.slice(11, 13), 10) * 60 + parseInt(hnRows[0].start.slice(14, 16), 10)
+    const near = pts.find((p) => p.alt >= top.alt - 300)
+    const FOOTS = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+    const modeOf = (r) => (r.sport_type === 'Run' ? (r.trainer === 'Yes' ? 'tread' : 'road') : r.sport_type === 'TrailRun' ? 'trail' : r.sport_type === 'Walk' ? 'walk' : 'hike')
+    const longest = activities.filter((r) => FOOTS.has(r.sport_type)).map((r) => ({ key: r.activity_key, date: r.date.slice(0, 10), mode: modeOf(r), km: +r.distance_km || 0, elev: +r.elevation_gain_m || 0, out: +r.elapsed_time_min || 0, region: (geo[r.activity_key] || {}).region }))
+      .sort((p, q) => q.out - p.out)
+    const back = longest.filter((r) => r.region === 'Manyara' && r.elev >= 500 && r.date > a.date.slice(0, 10)).sort((p, q) => (p.date < q.date ? -1 : 1))
+    return {
+      pts, start: hnRows[0].start, date: a.date.slice(0, 10), km: +a.distance_km, climb: +a.elevation_gain_m, out: +a.elapsed_time_min, moving: +a.moving_time_min,
+      top, upMin: Math.round(top.t), downMin: Math.round(pts[pts.length - 1].t) - Math.round(top.t), lastUp: top.t - near.t,
+      at9: at(21 * 60 - s0), atMid: at(24 * 60 - s0), first: longest[0] && longest[0].key === key, longest: longest.slice(0, 5), back,
+    }
+  }, [hnRows, activities, geo])
 
   const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Records' }], number: '04', title: 'Records', subtitle: 'My longest, highest and hardest days', prev, next }
   if (!R || !R.n) return <DetailFrame {...frame} />
@@ -423,6 +448,60 @@ export default function Records() {
                 <><span lang="sw">Mwenda pole hajikwai</span>, the one who goes slowly does not stumble. That is the lesson of the mountain, and it is the lesson of this whole record.</>,
               ]}
               source="Strava activities of the expedition · distance, climb and time from the Activity Log; altitude from the Strava streams of each stage"
+            />
+          </>
+        )}
+
+        {/* ===== the long day on Mount Hanang ===== */}
+        {HN && HN.first && (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="rc-hanang"
+              eyebrow={`${num()} · The longest day`}
+              title="Mount Hanang, my longest day."
+              statement={<>
+                A mountain does not care about the clock. On Mount Hanang in Manyara I set out before six in the morning, reached
+                the top in the late afternoon and was back down after two the next morning.
+              </>}
+              odds={{
+                title: `Mount Hanang, ${fmtMonth(HN.date)}`,
+                items: [
+                  { num: HN.out / 60, dec: 1, unit: ' h', label: 'from the start to the finish', tone: 'move' },
+                  { num: HN.climb, unit: ' m', label: 'climbed', tone: 'move' },
+                  { num: HN.km, dec: 1, unit: ' km', label: 'up and back down', tone: 'move' },
+                  { num: HN.moving / 60, dec: 1, unit: ' h', label: 'of it counted as moving', tone: 'rest' },
+                ],
+              }}
+              left={{
+                title: 'The day, hour by hour',
+                node: (
+                  <HanangDay
+                    points={HN.pts} start={HN.start}
+                    aria={`Altitude of the Mount Hanang hike against the time of day: from ${n0(HN.pts[0].alt)} m at the start to ${n0(HN.top.alt)} m at the top after ${hm(HN.upMin)}, then ${hm(HN.downMin)} back down to ${n0(HN.pts[HN.pts.length - 1].alt)} m.`}
+                  />
+                ),
+              }}
+              right={{
+                title: 'My longest days out on foot',
+                node: (
+                  <HBars
+                    aria={`The longest outings on foot by time from start to finish: ${HN.longest.map((r) => `${fmtDay(r.date)}, ${hm(r.out)}`).join('; ')}.`}
+                    rows={HN.longest.map((r) => ({ key: r.mode, label: fmtDay(r.date), sub: `${lower(r.mode)} · ${k1(r.km)} km · ${n0(r.elev)} m up${r.region ? ` · ${r.region}` : ''}`, value: r.out, display: `${(r.out / 60).toFixed(1)} h` }))}
+                  />
+                ),
+              }}
+              read={[
+                'The hike against the clock, from the early-morning start to the finish after midnight. The orange line is the way up and the black line the way down, and the brackets above give the hours each took. The dotted line marks midnight.',
+                'My five longest outings on foot, counted from the start to the finish, stops included. The line under each date gives the kind of outing, the distance, the climb and the region.',
+              ]}
+              story={[
+                `The top came slowly. The last 300 m took ${hm(HN.lastUp)}, about a third of the whole way up. I kept going one step at a time.`,
+                `The way down took almost as long as the way up, and most of it came after six in the evening. At nine in the evening I was still at ${n0(Math.round(HN.at9 / 10) * 10)} m, and at midnight I was at ${n0(Math.round(HN.atMid / 10) * 10)} m, with more than ${n0(Math.floor((HN.atMid - HN.pts[HN.pts.length - 1].alt) / 100) * 100)} m still to go down.`,
+                HN.back.length ? `Hanang called me back. I returned for the adventure race ${HN.back.length > 1 ? `in ${HN.back.map((r) => r.date.slice(0, 4)).join(' and ')}` : `in ${HN.back[0].date.slice(0, 4)}`}, and those days took ${HN.back.map((r) => hm(r.out)).join(' and ')}.` : '',
+                <><span lang="sw">Subira huvuta heri</span>, patience brings good things. That day on Hanang was mostly patience.</>,
+              ]}
+              source="Activity Log · time from start to finish, climb and distance of the hike; altitude from the Strava stream of the hike"
             />
           </>
         )}

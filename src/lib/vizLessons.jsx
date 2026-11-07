@@ -40,6 +40,7 @@ import GoalRings from '../charts/GoalRings.jsx'
 import YearMoment from '../charts/YearMoment.jsx'
 import Chronicle from '../charts/Chronicle.jsx'
 import KiliClimb from '../charts/KiliClimb.jsx'
+import HanangDay from '../charts/HanangDay.jsx'
 import { StopBars, SimHist, MonthBeads, CloseDots } from '../charts/GoalCharts.jsx'
 import { DfaChart, MomentumChart, ErasChart, SeasonChart, HeapChart, TreadPaceChart, EvScatter, LongDayChart, KudosChart } from '../charts/EvidenceCharts.jsx'
 import { WeekStrips, TwoPaths, NextGrid, IsoKm, DayPile, DayClocks } from '../charts/MeaningCharts.jsx'
@@ -150,6 +151,8 @@ export const LESSONS = {
   'mapnames': ['Name the places on the map', 'Only the places the story needs are named, right on the map, with a thin leader line where a place is too small to hold its name. The places with nothing logged stay pale grey and unnamed, so the eye goes to where the outings are.', 'Label a few places directly on a map and let the rest stay quiet. A map with every name printed reads like an atlas.'],
   'ledger': ['A list can be the chart', 'The countries are set as a ledger, busiest first, with the count in a large figure and the details in small type under each name. With a handful of rows, a well-set list is clearer than any bars.', 'When there are only a few items and each has several facts, set them as a ranked list with one big number per row.'],
 
+  'clockaxis': ['Choose the axis that tells the story', 'The same hike could be drawn against distance, and it would show a mountain. Drawn against the clock, it shows a day: the slow morning climb, the long way down, the hours past midnight. The choice of axis decides which story the chart tells.', 'Before you draw, ask what the reader should feel: the shape of the ground, or the length of the effort. Put that on the horizontal axis.'],
+  'brackets': ['Brackets for spans of time', 'The two brackets above the line give the hours up and the hours down. A bracket names a stretch of the axis without adding a single mark to the data, so the line stays clean.', 'When a duration matters, mark its start and end with a bracket and write the length on it.'],
   'gap': ['Show the gap in the data', 'When a recording fails, the easy thing is to join the last point to the next one and move on. Here that straight line would say I came down from near the crater rim to Kibo Hut in a moment. The grey band and the dashed line keep the gap in view and say plainly which part was not recorded.', 'Never let a line quietly bridge missing data. Break it, mark the gap, and say why it is there.'],
   'stagewidth': ['Width for distance, height for altitude', 'Each stage is as wide as the ground it covered, so a long day looks long and a steep day looks steep. Columns of equal width for each day would have hidden that the second day was the longest.', 'When the parts of a journey differ in length, give each part its true length on the axis.'],
 
@@ -249,6 +252,7 @@ const BY = new Map([
   [YearMoment, () => ['moment']],
   [Chronicle, () => ['lanes']],
   [KiliClimb, () => ['gap', 'stagewidth']],
+  [HanangDay, () => ['clockaxis', 'brackets']],
   [DfaChart, () => ['loglog', 'null']],
   [MomentumChart, () => ['nsize', 'momentum']],
   [ErasChart, () => ['eras']],
