@@ -44,6 +44,7 @@
      digits still align. No monospace/serif font is loaded, so there is no
      serif fallback anywhere. */
   --font-display: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-hero: 'Inter Tight Variable', 'Inter Tight', 'Inter Variable', system-ui, sans-serif;
   --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 

@@ -5,7 +5,9 @@ import { fmtInt, toNum } from '../lib/format.js'
 
 // The home hero: every outing of the record as one living sky (OutingSky), then
 // the four big numbers counting up underneath.
-export default function HeartbeatYears({ activities, km, elevation, streak }) {
+// quiet: the numbers already stand in the front page above, so they are kept
+// for screen readers only
+export default function HeartbeatYears({ activities, km, elevation, streak, quiet = false }) {
   const [coRef, coIn] = useInView({ threshold: 0.15, rootMargin: '0px' })
   const activeDays = useMemo(() => new Set(activities.map((a) => (a.date || '').slice(0, 10)).filter(Boolean)).size, [activities])
   const ready = activities.length > 0
@@ -17,7 +19,7 @@ export default function HeartbeatYears({ activities, km, elevation, streak }) {
   return (
     <div className="sky-hero">
       <OutingSky activities={activities} />
-      <div ref={coRef} className={`beat__callouts${coIn ? ' is-in' : ''}`}>
+      <div ref={coRef} className={`beat__callouts${coIn ? ' is-in' : ''}${quiet ? ' visually-hidden' : ''}`}>
         <div className="beat__co">
           <div className="beat__n">{fmtInt(actN)}</div>
           <div className="beat__l">Activities</div>

@@ -32,7 +32,7 @@ import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { useHeroLive } from '../motion/heroLive.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
-import HeroArt from '../components/HeroArt.jsx'
+import HeroBoard from '../components/HeroBoard.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -424,23 +424,28 @@ export default function Home() {
     return out
   })()
   const heroStreakFrom = edStreak.start ? edStreak.start.slice(0, 7) : '9999-99'
+  // the longest silence in the record and the month the habit came back after it
+  const heroGap = (() => {
+    let best = null
+    for (let i = 1; i < sortedDays.length; i++) {
+      const g = Math.round((Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1])) / 86400000) - 1
+      if (!best || g > best.days) best = { days: g, from: new Date(Date.parse(sortedDays[i - 1]) + 86400000).toISOString().slice(0, 7), back: sortedDays[i].slice(0, 7) }
+    }
+    return best
+  })()
+  const MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const heroStreakLabel = edStreak.start ? `${MON3[parseInt(edStreak.start.slice(5, 7), 10) - 1]} ${edStreak.start.slice(0, 4)}` : ''
 
   return (
     <Layout>
       {!book && (
         <div className="shero-scene" data-fx="pin">
         <section className="shero" aria-hidden="true" ref={heroRef}>
-          <div className="shero__in">
-            <p className="shero__t">
-              {['Showing', 'up'].map((w, wi) => (
-                <span key={w} className="shero__line">
-                  {[...w].map((ch, ci) => <span key={ci} className="shero__ch" style={{ '--i': wi * 7 + ci }}>{ch}</span>)}
-                  {wi === 1 ? <b className="shero__ch" style={{ '--i': 10 }}>.</b> : null}
-                </span>
-              ))}
-            </p>
-            <HeroArt months={heroMonths} streakFrom={heroStreakFrom} />
-          </div>
+          <HeroBoard
+            months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
+            gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}
+            nums={{ n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
+          />
         </section>
         <div className="shero-scene__run" aria-hidden="true" />
         </div>
@@ -452,7 +457,7 @@ export default function Home() {
             {years || 7} years, {fmtInt(activities)} activities, one habit.
           </h1>
 
-          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} />
+          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
 
           <Reveal as="p" className="hero__statement">
             Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.

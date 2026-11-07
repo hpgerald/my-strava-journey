@@ -59,7 +59,9 @@
 .bk-cover__cap { margin: 0; max-width: 62ch; text-align: center; font-family: var(--font-mono); font-size: max(0.62rem, 1.45cqw); line-height: 1.5; letter-spacing: var(--tr-wide); color: var(--fg-muted); }
 .bk-cover__cap span { color: var(--accent-ink); }
 .bk-cover__base { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 4cqw; border-top: 1px solid var(--ink); padding-top: 3cqw; }
-.bk-cover__t { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 19cqw; line-height: 0.84; letter-spacing: -0.04em; }
+.bk-cover__tw { container-type: inline-size; min-width: 0; align-self: end; }
+/* one line across the cell: 4.7 is the width of the title in ems at this weight and tracking */
+.bk-cover__t { margin: 0; font-family: var(--font-hero); font-weight: 800; font-size: calc(100cqw / 4.7); line-height: 0.8; letter-spacing: -0.06em; white-space: nowrap; padding-bottom: 0.06em; }
 .bk-cover__t span { color: var(--accent); }
 .bk-cover__side { display: flex; align-items: stretch; gap: 1.4cqw; margin-bottom: 1cqw; }
 .bk-cover__nums { margin: 0; display: grid; gap: 1.2cqw; }
@@ -70,7 +72,8 @@
 
 /* ---- title page and imprint ---- */
 .bk-title { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--sp-6); align-items: end; }
-.bk-title__t { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); line-height: 0.9; letter-spacing: -0.03em; }
+.bk-title__t { margin: 0; font-family: var(--font-hero); font-weight: 800; font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); line-height: 0.9; letter-spacing: -0.055em; }
+.bk-title__t b { color: var(--accent); font-weight: inherit; }
 .bk-title__s { margin: var(--sp-3) 0 0; font-size: var(--fs-md); color: var(--fg-muted); }
 .bk-title__a { margin: var(--sp-6) 0 0; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); }
 .bk-imprint { border-left: 3px solid var(--accent); padding-left: var(--sp-4); }

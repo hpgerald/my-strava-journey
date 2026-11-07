@@ -182,7 +182,7 @@ function Cover({ F }) {
         </figcaption>
       </figure>
       <div className="bk-cover__base">
-        <h2 className="bk-cover__t">Showing<br />Up<span>.</span></h2>
+        <div className="bk-cover__tw"><h2 className="bk-cover__t">Showing up<span>.</span></h2></div>
         <CoverSide rows={[[n0(F.n), 'outings'], [n0(F.footKm), 'km on foot'], [n0(F.footElev), 'metres climbed'], [n0(F.streak), 'days in a row']]} />
       </div>
     </section>
@@ -193,7 +193,7 @@ function TitlePage({ F }) {
   return (
     <section className="bk-page bk-title" aria-label="Title page">
       <div>
-        <p className="bk-title__t">{BOOK_TITLE}</p>
+        <p className="bk-title__t">Showing up<b>.</b></p>
         <p className="bk-title__s">{BOOK_SUB}</p>
         <p className="bk-title__a">Gerald Tesha</p>
       </div>

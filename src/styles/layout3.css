@@ -298,3 +298,102 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
   .shart__strip { left: var(--gutter); right: auto; bottom: auto; top: 2.2rem; width: calc(100% - var(--gutter) * 2 - 7rem); height: 3.25rem; }
 }
 @media print { .shart__seal, .shart__strip, .shart__mark { display: none; } }
+
+/* ===================================================================
+   The front page board (HeroBoard): one screen, no idle space. The title
+   runs from margin to margin on one line, the record fills the middle,
+   the four numbers sit along the foot.
+   =================================================================== */
+.hx { min-height: calc(100svh - var(--nav-h)); display: flex; flex-direction: column; padding: clamp(0.25rem, 1.6vh, 1.25rem) var(--gutter) clamp(1rem, 3vh, 1.75rem); }
+.hx__tw { container-type: inline-size; flex: none; overflow: hidden; }
+/* the size is set to fill the column exactly (HeroBoard measures it); this is the first guess */
+.hx__t { margin: 0; font-family: var(--font-hero); font-weight: 800; letter-spacing: -0.06em; font-size: calc(100cqw / 4.7); line-height: 0.8; white-space: nowrap; overflow: hidden; padding: 0.04em 0 0.24em; width: max-content; max-width: none; }
+.hx__ch { display: inline-block; }
+.hx__sp { display: inline-block; width: 0.22em; }
+.hx__dot { color: var(--accent); font-weight: inherit; }
+
+.hx__meta { flex: none; display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-4); border-top: 1.5px solid var(--ink); padding-top: 0.7rem; position: relative; z-index: 1; }
+.hx__meta p { margin: 0; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-muted); line-height: 1.5; }
+.hx__meta b { color: var(--ink); font-weight: 700; }
+.hx__span { text-align: right; }
+
+.hx__chart { flex: 1 1 auto; min-height: 11rem; margin-top: clamp(0.6rem, 2vh, 1.1rem); display: flex; flex-direction: column; }
+.hx__plot { position: relative; flex: 1 1 auto; display: flex; flex-direction: column; padding-top: 3rem; min-height: 0; }
+.hx__bars { flex: 1 1 auto; min-height: 5rem; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 2px; align-items: end; }
+.hx__bars i { display: block; height: var(--h); background: var(--ink); opacity: 0.5; transform-origin: 50% 100%; }
+.hx__bars i.is-now { background: var(--accent); opacity: 1; }
+.hx__bars i.is-empty { background: color-mix(in srgb, var(--ink) 25%, transparent); opacity: 1; }
+.hx__yrs { flex: none; display: flex; border-top: 1.5px solid var(--ink); }
+.hx__yrs span { flex: none; border-left: 1px solid var(--rule-faint); padding: 0.45rem 0 0 0.4rem; overflow: hidden; white-space: nowrap; }
+.hx__yrs span:first-child { border-left: 0; padding-left: 0; }
+.hx__yrs em { font-style: normal; font-family: var(--font-sans); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.hx__ys { display: none; }
+
+.hx__note { position: absolute; margin: 0; font-family: var(--font-sans); font-size: 0.74rem; font-weight: 500; line-height: 1.3; color: var(--fg-muted); white-space: nowrap; z-index: 1; }
+.hx__note b { display: block; font-family: var(--font-hero); font-weight: 800; font-size: clamp(1.05rem, 0.75rem + 0.9vw, 1.6rem); letter-spacing: -0.035em; line-height: 1.05; color: var(--ink); }
+.hx__note--back { top: 0; }
+.hx__note--back span { display: block; }
+.hx__note--gap { bottom: 26%; transform: translateX(-100%); text-align: right; padding: 0 0.6rem 0 0; background: var(--bg); }
+.hx__note--now { top: 0; right: 0; text-align: right; color: var(--accent-ink); }
+.hx__note--now b { color: var(--accent-ink); }
+.hx__brk { position: absolute; right: 0; top: 2.55rem; height: 0.4rem; border: 1.5px solid var(--accent); border-bottom: 0; }
+
+.hx__seal { position: absolute; left: 0; top: 0; width: clamp(4.6rem, 2.6rem + 6vw, 9rem); aspect-ratio: 1; pointer-events: none; translate: calc(var(--hx, 0) * 1.2vw) calc(var(--hy, 0) * 0.9vh); }
+.hx__seal svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hx__sealt { font-family: var(--font-sans); font-size: 13.5px; font-weight: 600; letter-spacing: 0.16em; fill: var(--ink); }
+.hx__sealr { fill: none; stroke: color-mix(in srgb, var(--ink) 18%, transparent); stroke-width: 1; }
+.hx__sealdot { fill: var(--accent); transform-box: view-box; transform-origin: 100px 100px; }
+
+.hx__nums { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); margin-top: clamp(0.9rem, 2.4vh, 1.4rem); }
+.hx__nums div { padding: 0.75rem 0 0 1rem; border-left: 1px solid var(--rule-faint); min-width: 0; }
+.hx__nums div:first-child { border-left: 0; padding-left: 0; }
+.hx__nums b { display: block; font-family: var(--font-hero); font-weight: 800; font-size: clamp(1.9rem, min(4.4vw, 8vh), 4.4rem); letter-spacing: -0.045em; line-height: 0.95; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hx__nums small { font-size: 0.4em; font-weight: 700; letter-spacing: 0; margin-left: 0.12em; }
+.hx__nums span { display: block; margin-top: 0.3rem; font-family: var(--font-sans); font-size: 0.78rem; color: var(--fg-muted); }
+.hx__nums .is-acc b { color: var(--accent-strong); }
+.hx__nums .is-acc small { color: var(--accent-ink); }
+
+@media (max-width: 40rem) {
+  .hx__meta { flex-wrap: wrap; row-gap: 0.2rem; }
+  .hx__meta p { font-size: 0.62rem; letter-spacing: 0.13em; }
+  .hx__meta p:first-child span { display: none; }
+  .hx__meta p:first-child b { display: block; }
+  .hx__plot { padding-top: 2.6rem; }
+  .hx__bars { gap: 1px; }
+  .hx__note { font-size: 0.66rem; }
+  .hx__note b { font-size: 1.02rem; }
+  .hx__note--back span { display: none; }
+  .hx__brk { top: 2.2rem; }
+  .hx__yl { display: none; }
+  .hx__ys { display: inline; }
+  .hx__yrs span { padding-left: 0.2rem; }
+  .hx__nums { grid-template-columns: 1fr 1fr; }
+  .hx__nums div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .hx__nums div:nth-child(n+3) { margin-top: 0.6rem; border-top: 1px solid var(--rule-faint); }
+  .hx__nums b { font-size: 1.9rem; }
+}
+
+/* the board comes alive: letters rise in, bars grow month by month, the seal
+   turns, the notes and numbers follow; then a light keeps running along the bars */
+@keyframes hxFade { from { opacity: 0; translate: 0 0.5rem; } to { opacity: 1; translate: 0 0; } }
+html.motion .hx__ch { animation: chUp 1.2s var(--ease-out) both, chBreath 6s ease-in-out infinite; animation-delay: calc(0.25s + var(--i) * 45ms), calc(1.9s + var(--i) * 0.18s); }
+html.motion .hx__dot { transform-origin: 30% 80%; animation: chUp 1.2s var(--ease-out) both, dotBeat 2.8s ease-in-out infinite; animation-delay: 0.75s, 2.2s; }
+html.motion .hx__meta, html.motion .hx__yrs { animation: hxFade 0.9s var(--ease-out) both; animation-delay: 0.7s; }
+html.motion .hx__bars i { animation: barUp 0.9s var(--ease-out) both, barSweep 8s linear infinite; animation-delay: calc(0.8s + var(--j) * 10ms), calc(3.4s + var(--j) * 38ms); }
+html.motion .hx__bars i.is-now { animation-name: barUp, barSweepNow; }
+html.motion .hx__note, html.motion .hx__brk { animation: hxFade 0.8s var(--ease-out) both; animation-delay: 1.9s; }
+html.motion .hx__seal svg { animation: sealIn 1.4s var(--ease-out) 1.2s both; }
+html.motion .hx__spin { transform-box: view-box; transform-origin: 100px 100px; animation: sealSpin 30s linear infinite; }
+html.motion .hx__sealdot { animation: dotBeat 2.8s ease-in-out 2.2s infinite; }
+html.motion .hx__nums div { animation: hxFade 0.9s var(--ease-out) both; animation-delay: calc(1s + var(--k, 0) * 0.1s); }
+html.motion .hx__nums div:nth-child(2) { --k: 1; } html.motion .hx__nums div:nth-child(3) { --k: 2; } html.motion .hx__nums div:nth-child(4) { --k: 3; }
+html.motion.pre-on .hx__ch { animation-delay: calc(2.45s + var(--i) * 45ms), calc(4.1s + var(--i) * 0.18s); }
+html.motion.pre-on .hx__dot { animation-delay: 2.95s, 4.4s; }
+html.motion.pre-on .hx__meta, html.motion.pre-on .hx__yrs { animation-delay: 2.9s; }
+html.motion.pre-on .hx__bars i { animation-delay: calc(3s + var(--j) * 10ms), calc(5.6s + var(--j) * 38ms); }
+html.motion.pre-on .hx__note, html.motion.pre-on .hx__brk { animation-delay: 4.1s; }
+html.motion.pre-on .hx__seal svg { animation-delay: 3.4s; }
+html.motion.pre-on .hx__nums div { animation-delay: calc(3.2s + var(--k, 0) * 0.1s); }
+/* the page pin: as the board scrolls away the title lifts and fades a little */
+html.motion .hx__t { --p: var(--fx-pin, 0); transform: translate3d(0, calc(var(--p) * -3vh), 0); opacity: calc(1 - var(--p) * 0.5); will-change: transform, opacity; }
+html.is-scrolling .hx__ch, html.is-scrolling .hx__dot, html.is-scrolling .hx__bars i, html.is-scrolling .hx__spin, html.is-scrolling .hx__sealdot { animation-play-state: paused !important; }

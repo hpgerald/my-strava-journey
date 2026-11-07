@@ -6,6 +6,7 @@ import { DataProvider } from './context/DataContext.jsx'
 
 import '@fontsource-variable/archivo/wdth.css'
 import '@fontsource-variable/inter'
+import '@fontsource-variable/inter-tight'
 import './styles/tokens.css'
 import './styles/components.css'
 import './styles/yearinsport.css'
