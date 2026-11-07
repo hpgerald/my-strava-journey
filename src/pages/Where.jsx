@@ -261,7 +261,7 @@ export default function Where() {
           }}
           left={{
             title: 'Share of the outings against share of the climb',
-            node: <PairBars rows={pairRows} H={Math.max(360, gradeRows.length * 55 + 18)} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb" aria={`Share of outings and of climb by region: ${pairRows.map((r) => `${r.label} ${pc(r.a)}% of outings, ${pc(r.b)}% of climb`).join('; ')}.`} />,
+            node: <PairBars rows={pairRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb" aria={`Share of outings and of climb by region: ${pairRows.map((r) => `${r.label} ${pc(r.a)}% of outings, ${pc(r.b)}% of climb`).join('; ')}.`} />,
           }}
           right={{
             title: 'Metres climbed per kilometre, by region',

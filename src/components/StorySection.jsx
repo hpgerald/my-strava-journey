@@ -36,10 +36,12 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
       if (Math.abs(fr[0].top - fr[1].top) > 8 || fr[0].width < 120 || fr[1].width < 120) { setPairH(0); return }
       const old = pair.style.alignItems
       pair.style.alignItems = 'start'
-      const hs = figs.map((f) => { const p = plotOf(f); return p ? p.getBoundingClientRect().height : 0 })
+      // only drawn charts set the shared height: a long list beside a chart must
+      // not stretch the chart out of shape
+      const hs = figs.map((f) => { const p = plotOf(f); return p && p.tagName.toLowerCase() === 'svg' ? p.getBoundingClientRect().height : 0 })
       pair.style.alignItems = old
-      const t = Math.round(Math.max(...hs))
-      if (t > 60 && t < 900) setPairH((prev) => (Math.abs(prev - t) > 2 ? t : prev))
+      const t = hs[0] && hs[1] ? Math.round(Math.max(...hs)) : 0
+      setPairH((prev) => (Math.abs(prev - t) > 2 ? (t > 60 && t < 900 ? t : 0) : prev))
     }
     const ro = new ResizeObserver(() => {
       const w = Math.round(pair.getBoundingClientRect().width)
