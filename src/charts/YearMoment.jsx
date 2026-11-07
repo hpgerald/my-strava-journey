@@ -74,9 +74,9 @@ export default function YearMoment({ year, stats }) {
       </div>
     )
   } else if (year === 2023) {
-    kicker = 'The hills'
-    title = 'A year in the hills.'
-    body = `I went to the hills more than ever. In March I also ran a 100 km stage race, over four evenings in a row.`
+    kicker = 'The summit'
+    title = 'To the top of Kilimanjaro.'
+    body = `In March I walked up Kilimanjaro one hut at a time and reached Uhuru Peak on my first attempt. Later that month I ran a 100 km stage race, over four evenings in a row.`
     const peak = s.monthsElev.indexOf(Math.max(...s.monthsElev))
     figure = (
       <>

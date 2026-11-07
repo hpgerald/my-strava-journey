@@ -51,3 +51,25 @@
 }
 .rc-firsts .hb { --hb-l: 16rem; }
 @media (max-width: 40rem) { .rc-firsts .hb { --hb-l: 8.5rem; } }
+
+/* ---- the Kilimanjaro climb ---- */
+.kcl__area { fill: var(--accent-soft); opacity: 0; transition: opacity 0.8s var(--ease) 1.2s; }
+.kcl.is-in .kcl__area { opacity: 0.7; }
+.kcl__line { stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-dashoffset: var(--len); transition: stroke-dashoffset 2s var(--ease); }
+.kcl.is-in .kcl__line { stroke-dashoffset: 0; }
+.kcl__dash { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 5 4; stroke-linejoin: round; opacity: 0; transition: opacity 0.6s var(--ease) 2s; }
+.kcl__down { stroke: var(--grey-45); stroke-width: 2; stroke-linejoin: round; opacity: 0; transition: opacity 0.6s var(--ease) 2.3s; }
+.kcl.is-in .kcl__dash, .kcl.is-in .kcl__down { opacity: 1; }
+.kcl__gap { fill: var(--grey-06); }
+.kcl__hut { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.kcl__top { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.kcl__mark { opacity: 0; transition: opacity 0.5s var(--ease) 1.4s; }
+.kcl__mark--late { transition-delay: 2.2s; }
+.kcl.is-in .kcl__mark { opacity: 1; }
+.kcl__lbl { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; fill: var(--fg); }
+.kcl__lbl--top { fill: var(--accent-ink); }
+.kcl__alt { font-weight: 400; fill: var(--fg-muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .kcl__area, .kcl__line, .kcl__dash, .kcl__down, .kcl__mark { transition: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; } }
+.book .kcl__area, .book .kcl__line, .book .kcl__dash, .book .kcl__down, .book .kcl__mark { transition: none !important; stroke-dashoffset: 0 !important; }
+.book .kcl__area { opacity: 0.7 !important; }
+.book .kcl__line, .book .kcl__dash, .book .kcl__down, .book .kcl__mark { opacity: 1 !important; }

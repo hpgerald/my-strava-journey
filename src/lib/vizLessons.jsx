@@ -39,6 +39,7 @@ import RasKilomoni from '../charts/RasKilomoni.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import YearMoment from '../charts/YearMoment.jsx'
 import Chronicle from '../charts/Chronicle.jsx'
+import KiliClimb from '../charts/KiliClimb.jsx'
 import { StopBars, SimHist, MonthBeads, CloseDots } from '../charts/GoalCharts.jsx'
 import { DfaChart, MomentumChart, ErasChart, SeasonChart, HeapChart, TreadPaceChart, EvScatter, LongDayChart, KudosChart } from '../charts/EvidenceCharts.jsx'
 import { WeekStrips, TwoPaths, NextGrid, IsoKm, DayPile, DayClocks } from '../charts/MeaningCharts.jsx'
@@ -149,6 +150,9 @@ export const LESSONS = {
   'mapnames': ['Name the places on the map', 'Only the places the story needs are named, right on the map, with a thin leader line where a place is too small to hold its name. The places with nothing logged stay pale grey and unnamed, so the eye goes to where the outings are.', 'Label a few places directly on a map and let the rest stay quiet. A map with every name printed reads like an atlas.'],
   'ledger': ['A list can be the chart', 'The countries are set as a ledger, busiest first, with the count in a large figure and the details in small type under each name. With a handful of rows, a well-set list is clearer than any bars.', 'When there are only a few items and each has several facts, set them as a ranked list with one big number per row.'],
 
+  'gap': ['Show the gap in the data', 'When a recording fails, the easy thing is to join the last point to the next one and move on. Here that straight line would say I came down from near the crater rim to Kibo Hut in a moment. The grey band and the dashed line keep the gap in view and say plainly which part was not recorded.', 'Never let a line quietly bridge missing data. Break it, mark the gap, and say why it is there.'],
+  'stagewidth': ['Width for distance, height for altitude', 'Each stage is as wide as the ground it covered, so a long day looks long and a steep day looks steep. Columns of equal width for each day would have hidden that the second day was the longest.', 'When the parts of a journey differ in length, give each part its true length on the axis.'],
+
   // ---- the whole record on one line ----
   'lanes': ['Lanes for different kinds of events', 'Time runs left to right, and each lane holds one kind of moment: milestones, firsts, trips, shoes, streaks. Sorting events into lanes keeps a busy timeline readable, because the eye can follow one kind at a time or read straight down for one moment.', 'For a timeline with many kinds of events, give each kind its own row on a shared time axis.'],
 
@@ -244,6 +248,7 @@ const BY = new Map([
   [GoalRings, () => ['rings']],
   [YearMoment, () => ['moment']],
   [Chronicle, () => ['lanes']],
+  [KiliClimb, () => ['gap', 'stagewidth']],
   [DfaChart, () => ['loglog', 'null']],
   [MomentumChart, () => ['nsize', 'momentum']],
   [ErasChart, () => ['eras']],

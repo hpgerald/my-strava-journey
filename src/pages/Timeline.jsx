@@ -53,8 +53,17 @@ export default function Timeline() {
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
   const gearRows = useTable('gear')
+  const kx = useTable('kili_expedition')
   const { prev, next } = useSectionPaging('/timeline')
-  const C = useMemo(() => (activities.length ? buildChronicle(activities, geoRows, gearRows) : null), [activities, geoRows, gearRows])
+  // the Kilimanjaro summit: the watch stopped short of the top, so the moment comes from the expedition table
+  const summit = useMemo(() => {
+    const r = kx.find((x) => String(x.stage) === '4')
+    if (!r) return []
+    // the summit push set out before midnight, so the top came the next morning
+    const top = new Date(Date.parse(r.date.slice(0, 10) + 'T00:00:00Z') + 86400000).toISOString().slice(0, 10)
+    return [{ lane: 'first', date: top, title: 'Uhuru Peak', sub: 'the top of Kilimanjaro, first attempt', key: 'trail' }]
+  }, [kx])
+  const C = useMemo(() => (activities.length ? buildChronicle(activities, geoRows, gearRows, summit) : null), [activities, geoRows, gearRows, summit])
 
   const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: '06', title: 'Timeline', subtitle: 'From my first upload to now', prev, next }
   if (!C) return <DetailFrame {...frame} />

@@ -1,0 +1,6 @@
+stage,activity_key,date,from_place,to_place,distance_km,climb_m,elapsed_min,start_alt_m,end_alt_m,high_alt_m,recorded_km,source_page
+1,a0902,2023-03-06 14:21,Marangu Gate,Mandara Hut,8.48,825,295,1880,2707,2707,8.48,Records
+2,a0904,2023-03-07 08:25,Mandara Hut,Horombo Hut,12.6,1037,457,2708,3723,3723,12.6,Records
+3,a0906,2023-03-08 08:05,Horombo Hut,Kibo Hut,9.3,1017,446,3714,4705,4705,9.3,Records
+4,a0908,2023-03-08 22:51,Kibo Hut,Uhuru Peak,5.42,981,1040,4702,5537,5537,3.22,Records
+5,a0909,2023-03-09 16:11,Kibo Hut,Horombo Hut,9.64,11,242,4707,3722,4707,9.64,Records

@@ -25,7 +25,9 @@ function runs(days) {
   return out
 }
 
-export function buildChronicle(activities, geoRows = [], gearRows = []) {
+// extra: hand-made moments the activity log cannot show on its own (the
+// Kilimanjaro summit, whose recording stopped before the top), [{ lane, date, title, sub, key }]
+export function buildChronicle(activities, geoRows = [], gearRows = [], extra = []) {
   const geo = Object.fromEntries(geoRows.map((g) => [g.activity_key, g]))
   const acts = activities.filter((a) => a.date).map((a) => {
     const g = geo[a.activity_key] || {}
@@ -64,6 +66,7 @@ export function buildChronicle(activities, geoRows = [], gearRows = []) {
   ]
   const firsts = firstDefs.map(([title, pred, sub]) => { const f = firstOf(pred); return f ? { title, date: f.date, t: f.t, mode: f.mode, sport: f.sport, km: f.km, elev: f.elev, detail: sub(f) } : null }).filter(Boolean).sort((a, b) => a.t - b.t)
   for (const f of firsts) events.push({ lane: 'first', date: f.date, title: f.title, sub: f.detail, key: f.mode })
+  for (const e of extra) if (e && e.date >= firstISO && e.date <= lastISO) events.push(e)
 
   // ---- places: each country's first outing and every stay abroad ----
   const countryName = (c) => (NAMED_COUNTRIES.has(c) ? c : 'Other')

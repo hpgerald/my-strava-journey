@@ -55,6 +55,7 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 | activity_geo.csv | Strava GPS + geocoding | Medium–High | Per-activity country/region only; coordinates, city names and IDs removed. |
 | countries.csv | Strava GPS + point-in-polygon | Medium–High | 7 countries; border caveats in §5. |
 | tanzania_regions.csv | Strava GPS + nearest TZ city | Medium–High | 17 regions; see §5. |
+| kili_expedition / kili_expedition_profile.csv | Activity Log + Strava activity streams | High | The Kilimanjaro expedition of March 2023 (Marangu route), built once by `scripts/build_kili_expedition.py` from streams cached in `scripts/kili_streams/expedition.json`; not part of the weekly rebuild. On the summit night the watch's power saver stopped the recording at 5,537 m, so the profile of that stage ends there; the chart marks the rest of the night (Gilman's Point, Uhuru Peak, the way back to Kibo Hut) as not recorded. |
 | nav_index.csv | authored | n/a | Site structure, no figures. |
 | glossary.csv | authored | n/a | Standard Strava term definitions. |
 
