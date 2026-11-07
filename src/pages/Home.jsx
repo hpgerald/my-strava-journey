@@ -630,7 +630,7 @@ export default function Home() {
       <Container>
         <hr className="rule" />
         <div className="closer-head">
-          <h2 className="section-head__title">A closer look.</h2>
+          <Eyebrow>A closer look</Eyebrow>
         </div>
 
         {/* 1. Where in the world */}
