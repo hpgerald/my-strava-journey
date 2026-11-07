@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale, linePath } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Every active day lined up from shortest to longest, with the distance added
 // up as you go. The dashed diagonal is what an even record would look like;
@@ -11,13 +12,14 @@ import { linScale, linePath } from './primitives.js'
 const pc = (v) => `${Math.round(v * 100)}%`
 
 export default function LorenzCurve({ points, gini, markP = 0.9 }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!points || points.length < 2) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: 14, b: 44, l: 40 }
   const x = linScale([0, 1], [m.l, W - m.r])
   const y = linScale([0, 1], [H - m.b, m.t])

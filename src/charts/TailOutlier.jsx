@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Where a record sits in the distribution it came from. The histogram is every
 // ordinary effort; the orange marker is the record, pushed far out into the
@@ -9,12 +10,13 @@ import { linScale } from './primitives.js'
 // record is not a little better than usual, it is many deviations beyond it.
 // props: values [], mark, mean, sd, z, pct, unit, markLabel.
 export default function TailOutlier({ values, mark, mean, sd, z, pct, unit = 'km', markLabel = 'the record' }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!values || !values.length) return <div ref={ref} />
 
   const W = Math.max(320, width)
-  const H = W < 520 ? 288 : 360
+  const H = fitH(pairH, W < 520 ? 288 : 360)
   const m = { t: 36, r: 18, b: 46, l: 16 }
 
   const hi = Math.max(mark, ...values) * 1.04

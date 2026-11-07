@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale, smoothLinePath, smoothAreaPath } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The chance the next day is active, read from where you stand today. The
 // middle line is a day you moved. Right: each step is one more day on a roll
@@ -11,13 +12,14 @@ import { linScale, smoothLinePath, smoothAreaPath } from './primitives.js'
 const pct = (v) => `${Math.round(v * 100)}%`
 
 export default function HabitMomentum({ stick, rebound, origin }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!stick || !stick.length || !rebound || !rebound.length) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: 14, b: 44, l: 46 }
   const maxL = stick[stick.length - 1].L
   const maxG = rebound[rebound.length - 1].g

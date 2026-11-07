@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { niceTicks } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The selected year month by month: one bar per calendar month, height = the
 // metric (activities or foot kilometres). Bars grow from the baseline in a
@@ -12,13 +13,14 @@ const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
 
 export default function YearMonths({ months, metric = 'activities', unit = 'activities' }) {
+  const pairH = usePairH()
   const [ref, w] = useWidth(640)
   const [root, inView] = useInView()
   const [hi, setHi] = useState(null)
   const W = Math.max(300, w)
   const narrow = W < 520
-  const H = narrow ? 200 : 360
-  const pad = { t: 26, r: 12, b: 30, l: 12 }
+  const H = fitH(pairH, narrow ? 200 : 360)
+  const pad = { t: 30, r: 12, b: 44, l: 12 }
   const vals = months.map((d) => (metric === 'km' ? d.km : d.activities))
   const peak = Math.max(1, ...vals)
   const { max } = niceTicks(peak, 4)

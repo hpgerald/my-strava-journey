@@ -55,7 +55,9 @@
 .wstrip.is-in .wstrip__row { opacity: 1; }
 
 /* ---- what came next ---- */
-.ngrid__cells { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 3px; }
+.ngrid__cells { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 3px; align-content: start; }
+.sgrid__chart > .ngrid { flex: 1; display: flex; flex-direction: column; }
+.sgrid__chart > .ngrid > .ngrid__cells { flex: 1; }
 .ngrid__c { display: block; aspect-ratio: 1; border-radius: 2px; opacity: 0; transition: opacity 0.3s var(--ease); transition-delay: var(--d, 0ms); }
 .ngrid.is-in .ngrid__c, .ngrid__key .ngrid__c { opacity: 1; }
 .ngrid__c.is-run { background: var(--accent); }

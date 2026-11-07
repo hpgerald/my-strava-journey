@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Plain vertical bars on the site grid, for the companion figures of the home
 // sections. Each bar carries its own value on top; tone colours it like the
@@ -10,14 +11,15 @@ import { linScale } from './primitives.js'
 // props: items [{label, short?, value, display, tone}], max?, ticks [values],
 //   tickFmt (v => string), ref {value, label, short?}, xCap, yCap, aria, H?, Hn?
 export default function ColBars({ items, max, ticks = [], tickFmt = (v) => v, refLine, xCap, yCap, aria, H: Hd = 360, Hn = 300 }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!items || !items.length) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? Hn : Hd
-  const m = { t: 30, r: 14, b: xCap ? 44 : 26, l: 46 }
+  const H = fitH(pairH, narrow ? Hn : Hd)
+  const m = { t: 30, r: 14, b: 44, l: 46 }
   const top = max || Math.max(...items.map((d) => d.value)) * 1.08
   const y = linScale([0, top], [H - m.b, m.t])
   const n = items.length

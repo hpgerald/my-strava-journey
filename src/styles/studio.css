@@ -367,8 +367,6 @@ a.stat:hover .stat__value:where(:not(.book *)), a.stat:focus-visible .stat__valu
 
 /* charts side by side end on the same line */
 @media (min-width: 48rem) {
-  .sgrid__pair .yrank:where(:not(.book *)), .sgrid__pair .yrank__list:where(:not(.book *)) { height: 100%; }
-  .sgrid__pair .yrank__list:where(:not(.book *)) { justify-content: space-between; }
   .sgrid__pair .tally:where(:not(.book *)) { min-height: 330px; align-content: space-between; }
 }
 
@@ -521,3 +519,7 @@ html.motion .yis-report:where(:not(.book *)) { animation: fadeUp 0.9s var(--ease
 }
 html.motion .flt:where(:not(.book *)) { animation: float-dot var(--fd, 8s) ease-in-out var(--fp, 0s) infinite; animation-play-state: paused; }
 html.motion [data-float].is-live .flt:where(:not(.book *)) { animation-play-state: running; }
+
+/* the year ranking fills the height of the chart beside it, on the site and in the book */
+.sgrid__pair .sgrid__chart > .yrank { flex: 1; display: flex; flex-direction: column; }
+.sgrid__pair .yrank__list { flex: 1; justify-content: space-between; }

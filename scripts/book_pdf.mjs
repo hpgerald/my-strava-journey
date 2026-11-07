@@ -27,7 +27,7 @@ await page.waitForSelector('.bk-back', { timeout: 60000 })
 await page.evaluate(() => document.fonts.ready)
 // let every chart settle at its final state
 await page.waitForTimeout(5000)
-await page.evaluate((k) => { document.documentElement.classList.add('pdf-scaled'); document.documentElement.style.setProperty('--k', String(k)) }, 680 / 960)
+await page.evaluate((k) => { document.documentElement.classList.add('pdf-scaled'); document.documentElement.style.setProperty('--k', String(k)); window.dispatchEvent(new Event('resize')) }, 680 / 960)
 await page.evaluate(() => { document.title = 'Showing Up · Gerald Tesha' })
 await page.waitForTimeout(500)
 

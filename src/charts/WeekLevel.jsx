@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The shape of a week, as proof of a habit rather than a hobby: seven bars,
 // Sunday to Saturday, against a dashed line at a perfectly even week (one seventh
@@ -11,6 +12,7 @@ import { linScale } from './primitives.js'
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export default function WeekLevel({ counts }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(520)
   const [root, inView] = useInView()
   const [hi, setHi] = useState(null)
@@ -19,7 +21,7 @@ export default function WeekLevel({ counts }) {
 
   const W = Math.max(300, width)
   const narrow = W < 460
-  const H = narrow ? 240 : 300
+  const H = fitH(pairH, narrow ? 240 : 300)
   const m = { t: 30, r: 10, b: 34, l: 10 }
   const slot = (W - m.l - m.r) / 7
   const barW = Math.min(slot * 0.64, 62)

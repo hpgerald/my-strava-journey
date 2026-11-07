@@ -1,5 +1,6 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
+import { usePairH, fitH } from './pairHeight.js'
 
 // If every way of moving were a road: each line starts at the same point and
 // climbs across one kilometre at that sport's real average gradient (all the
@@ -8,11 +9,12 @@ import { useInView } from '../components/Reveal.jsx'
 // value at the end of each line is the true one. Lines draw themselves in.
 // props: rows [{ key, label, mPerKm }], exaggerate (default 10), aria
 export default function Grades({ rows, exaggerate = 10, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 24, r: narrow ? 104 : 150, b: 40, l: 14 }
   const run = W - m.l - m.r
   const maxRise = Math.max(...rows.map((r) => r.mPerKm))

@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The same days as the Lorenz curve, cut into ten equal groups from shortest
 // to longest. Each bar is that tenth's share of all the distance. If every day
@@ -9,13 +10,14 @@ import { linScale } from './primitives.js'
 const pc = (v) => `${(v * 100).toFixed(v < 0.1 ? 1 : 0)}%`
 
 export default function DecileBars({ shares }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!shares || shares.length !== 10) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: 14, b: 44, l: 40 }
   // headroom above the tallest bar so its value never meets the key line
   const top = Math.max(0.25, Math.ceil(Math.max(...shares) * 1.12 * 20) / 20)

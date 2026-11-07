@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale, niceTicks, smoothLinePath, smoothAreaPath } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // How the year's kilometres stacked up: cumulative foot distance at each month
 // end, climbing from zero in January to the year's total. The line draws itself
@@ -12,6 +13,7 @@ const MON = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 const MONL = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export default function YearProgress({ cum, lastMonth = 11, total = 0 }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const [hi, setHi] = useState(null)
@@ -19,8 +21,8 @@ export default function YearProgress({ cum, lastMonth = 11, total = 0 }) {
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 210 : 360
-  const m = { t: 20, r: 16, b: 28, l: narrow ? 42 : 46 }
+  const H = fitH(pairH, narrow ? 210 : 360)
+  const m = { t: 30, r: 16, b: 44, l: narrow ? 42 : 46 }
   const last = Math.max(0, Math.min(11, lastMonth))
   const peak = Math.max(1, ...cum.map((d) => d.cum))
   const { max, ticks } = niceTicks(peak, 4)

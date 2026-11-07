@@ -252,7 +252,7 @@ export default function Goals() {
           right={{
             title: 'The day each ring closed',
             node: (
-              <CloseDots H={440}
+              <CloseDots H={360}
                 rows={habit.map((y) => ({ year: y.year, ndays: y.ndays, upTo: y.upTo, marks: TARGETS.map((t) => ({ key: t.key, label: t.label, ring: t.ring, day: y[t.key].closed, share: y[t.key].share })) }))}
                 aria={`The day each target was crossed: ${habit.map((y) => `${y.year}: ${TARGETS.map((t) => (y[t.key].closed != null ? `${t.label.toLowerCase()} on ${fmtShort(doy(y.year, y[t.key].closed))}` : `${t.label.toLowerCase()} ${Math.round(y[t.key].share * 100)}%`)).join(', ')}`).join('; ')}.`}
               />
@@ -406,7 +406,7 @@ export default function Goals() {
                 title: 'Every trip, in the numbers I counted them',
                 node: (
                   <RasKilomoni
-                    rows={rk}
+                    rows={rk} H={330}
                     aria={`Fifty tiles numbered ${rk[0].roman} to ${rkLast.roman}, one for each trip to Ras Kilomoni: ${rkWalks} walks and ${rk.length - rkWalks} runs.`}
                   />
                 ),

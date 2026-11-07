@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { floatStyle } from '../motion/drift.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
 
@@ -42,12 +44,13 @@ export function DayClocks({ years, aria }) {
 // between them is shaded, and each point carries its real value.
 // props: rows [{ year, a, b, aText, bText }], aLabel, bLabel, aria
 export function TwoPaths({ rows, aLabel, bLabel, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
-  const m = { l: 44, r: narrow ? 70 : 96, t: 34, b: 30 }
+  const H = fitH(pairH, narrow ? 300 : 360)
+  const m = { l: 44, r: narrow ? 70 : 96, t: 30, b: 44 }
   const base = rows[0]
   const ia = rows.map((r) => (100 * r.a) / base.a)
   const ib = rows.map((r) => (100 * r.b) / base.b)
@@ -94,6 +97,7 @@ export function TwoPaths({ rows, aLabel, bLabel, aria }) {
 // the 1 km band its distance on foot fell in. Days under the cut-off are orange.
 // props: kms [km per active day], cut, per (days per dot), aria
 export function DayPile({ kms, cut = 2, per = 5, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
@@ -106,7 +110,7 @@ export function DayPile({ kms, cut = 2, per = 5, aria }) {
   const dot = Math.max(2.5, Math.min(7, cw - 2))
   const tallest = Math.max(...bins.map((b) => Math.ceil(b / per)))
   const step = narrow ? dot + 1 : Math.min(dot + 1.5, (360 - m.t - m.b) / Math.max(1, tallest))
-  const H = narrow ? m.t + tallest * step + m.b : 360
+  const H = fitH(pairH, narrow ? m.t + tallest * step + m.b : 360)
   const dd = Math.max(2, Math.min(dot, step - 1))
   return (
     <div ref={ref} className="cb">
@@ -140,13 +144,14 @@ export function DayPile({ kms, cut = 2, per = 5, aria }) {
 // the median week. The year in progress is orange.
 // props: years [{ year, weeks [{ km }], q25, med, q75 }], now, aria
 export function WeekStrips({ years, now, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
   const m = { l: 44, r: 12, t: 16, b: 36 }
   const rowH = narrow ? 42 : (360 - m.t - m.b) / Math.max(1, years.length)
-  const H = narrow ? m.t + years.length * rowH + m.b : 360
+  const H = fitH(pairH, narrow ? m.t + years.length * rowH + m.b : 360)
   const hi = Math.max(160, ...years.flatMap((y) => y.weeks.map((w) => w.km)))
   const x = linScale([0, hi], [m.l, W - m.r])
   const ticks = [0, 25, 50, 75, 100, 125, 150].filter((v) => v <= hi && (!narrow || v % 50 === 0))
@@ -188,10 +193,33 @@ export function WeekStrips({ years, now, aria }) {
 export function NextGrid({ items, order, aria }) {
   const [root, inView] = useInView()
   const groups = order.map((o) => ({ ...o, n: items.filter((i) => i.next === o.key).length })).filter((g) => g.n)
+  // as many columns as it takes for the squares to fill the space the chart
+  // is given (beside another chart, the same height as that chart)
+  const [cols, setCols] = useState(24)
+  useEffect(() => {
+    const el = root.current
+    if (!el || typeof ResizeObserver === 'undefined') return undefined
+    const n = items.length, gap = 3
+    const fit = () => {
+      const keyH = (el.querySelector('.ngrid__key') || { offsetHeight: 0 }).offsetHeight + 16
+      const W = el.clientWidth, Hav = el.clientHeight - keyH
+      if (!W || Hav < 60) return
+      let best = 24
+      for (let c = 8; c <= 40; c++) {
+        const size = (W - gap * (c - 1)) / c, rows = Math.ceil(n / c)
+        if (rows * size + gap * (rows - 1) <= Hav) { best = c; break }
+      }
+      setCols(best)
+    }
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [items.length])
   let k = 0
   return (
     <div ref={root} className={`ngrid${inView ? ' is-in' : ''}`} role="img" aria-label={aria}>
-      <div className="ngrid__cells" aria-hidden="true">
+      <div className="ngrid__cells" aria-hidden="true" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
         {groups.flatMap((g) => Array.from({ length: g.n }, () => <i key={k} className={`ngrid__c is-${g.key}`} style={{ '--d': `${(k++) * 6}ms` }} />))}
       </div>
       <ul className="ngrid__key" aria-hidden="true">
@@ -208,11 +236,12 @@ export function NextGrid({ items, order, aria }) {
 // where its two levers put it.
 // props: years [{ year, share, kmPerActive, km, partial }], totals [km], aria
 export function IsoKm({ years, totals = [1000, 2000, 3000], aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 320 : 360
+  const H = fitH(pairH, narrow ? 320 : 360)
   const m = { l: 44, r: 22, t: 30, b: 44 }
   const yMax = 20
   const x = linScale([0.4, 1], [m.l, W - m.r])

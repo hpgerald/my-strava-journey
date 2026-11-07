@@ -1,19 +1,21 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale, linePath } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Two counts across the years, each labelled at its own end, with the year the
 // second line takes the lead marked. Used for walks against runs.
 // props: years [n], a {label, values}, b {label, values} (b is the accent line),
 //   cross (index of the first year b leads, or -1), aria
 export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yCap = 'outings a year' }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!years || years.length < 2) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: narrow ? 52 : 64, b: 44, l: 46 }
   const max = Math.max(...a.values, ...b.values)
   const step = max > 1000 ? 500 : max > 200 ? 100 : 50

@@ -2,6 +2,7 @@ import { useWidth } from './useWidth.js'
 import { floatStyle } from '../motion/drift.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // A scatter of one measure against another with its least-squares line drawn
 // through it and the correlation printed on the line. Dots wash in first, the
@@ -9,11 +10,12 @@ import { linScale } from './primitives.js'
 // props: points [{ x, y }], fit { slope, intercept, r }, xDomain, yDomain,
 //   xTicks, yTicks, xFmt, yFmt, xCap, yCap, tone (mode key), invertY, fitLabel, aria
 export default function FitScatter({ points, fit, xDomain, yDomain, xTicks = [], yTicks = [], xFmt = (v) => v, yFmt = (v) => v, xCap, yCap, tone = 'tread', invertY = false, fitLabel, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: 12, b: 44, l: 44 }
   const x = linScale(xDomain, [m.l, W - m.r])
   const y = invertY ? linScale(yDomain, [m.t, H - m.b]) : linScale(yDomain, [H - m.b, m.t])

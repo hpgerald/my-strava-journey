@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale, smoothLinePath, smoothAreaPath, bisectNearest } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The whole journey as one climbing line: cumulative kilometres on foot from the
 // first run to today, with the signature moments pinned straight onto the curve.
@@ -11,6 +12,7 @@ import { linScale, smoothLinePath, smoothAreaPath, bisectNearest } from './primi
 const fmtK = (v) => Math.round(v).toLocaleString()
 
 export default function JourneyArc({ points, marks = [] }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(820)
   const [root, inView] = useInView()
   const [hi, setHi] = useState(null)
@@ -18,7 +20,7 @@ export default function JourneyArc({ points, marks = [] }) {
 
   const W = Math.max(320, width)
   const narrow = W < 560
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 54, r: 16, b: 30, l: narrow ? 38 : 52 }
   const t0 = points[0].t
   const t1 = points[points.length - 1].t

@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Stacked columns, one per year: each column is cut into parts coloured by key,
 // with the column's total printed on top. Columns grow from the floor one after
@@ -9,13 +10,14 @@ import { linScale } from './primitives.js'
 // props: items [{ label, short?, parts: [{ key, value }], display, partial? }],
 //   keys [{ key, label }], ticks, tickFmt, yCap, aria, H?, Hn?
 export default function StackCols({ items, keys, ticks = [], tickFmt = (v) => v, yCap, aria, H: Hd = 360, Hn = 300 }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!items || !items.length) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? Hn : Hd
-  const m = { t: 30, r: 8, b: 26, l: 44 }
+  const H = fitH(pairH, narrow ? Hn : Hd)
+  const m = { t: 30, r: 8, b: 44, l: 44 }
   const tot = (d) => d.parts.reduce((s, p) => s + p.value, 0)
   const top = Math.max(...items.map(tot), ...(ticks.length ? [ticks[ticks.length - 1]] : [])) * 1.08
   const y = linScale([0, top], [H - m.b, m.t])

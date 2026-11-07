@@ -1,18 +1,20 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // A histogram with one thin bar per unit, where a few chosen bars (the spikes)
 // are drawn in accent and labelled with their count. Built for the treadmill's
 // stopping points: whole fives stand out of a low grey field.
 // props: bins [{ x, count }], spikes [x], xCap, yCap, aria
 export default function SpikeHist({ bins, spikes = [], xCap, yCap, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!bins || !bins.length) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 280 : 360
+  const H = fitH(pairH, narrow ? 280 : 360)
   const m = { t: 30, r: 10, b: 44, l: 40 }
   const max = Math.max(...bins.map((b) => b.count)) * 1.12
   const y = linScale([0, max], [H - m.b, m.t])

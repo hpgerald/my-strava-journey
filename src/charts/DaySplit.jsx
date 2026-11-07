@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // A typical active day, one row per year. The bar is the minutes moving on a day
 // with an activity, cut into the outings that made it: each block is the average
@@ -9,13 +10,14 @@ import { linScale } from './primitives.js'
 // the year in progress.
 // props: rows [{year, perDay, outings, avgMin}], quietUntil (last grey year)
 export default function DaySplit({ rows, quietUntil }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!rows || !rows.length) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 30, r: narrow ? 70 : 92, b: 44, l: narrow ? 34 : 44 }
   const maxMin = Math.max(120, Math.ceil(Math.max(...rows.map((r) => r.perDay)) / 30) * 30)
   const x = linScale([0, maxMin], [m.l, W - m.r])

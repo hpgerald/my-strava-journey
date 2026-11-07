@@ -1,5 +1,6 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Every month of the record as one cell, years down, months across. The shade is
 // the share of that month's days with an activity: pale is a thin month, deep
@@ -18,13 +19,14 @@ function ramp(t) {
 }
 
 export default function MonthGrid({ years, cells, mark = [], markLabel }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!years || !years.length) return <div ref={ref} />
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
+  const H = fitH(pairH, narrow ? 300 : 360)
   const m = { t: 34, r: 14, b: 44, l: narrow ? 34 : 44 }
   const cw = (W - m.l - m.r) / 12
   const ch = (H - m.t - m.b) / years.length

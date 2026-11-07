@@ -3,6 +3,7 @@ import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
 import { useBook } from './BookContext.js'
 import SectionMap from './SectionMap.jsx'
+import { watchPairs } from '../lib/alignPairs.js'
 
 // Shared page frame: skip link, sticky nav, main landmark, footer.
 // It also drives the site-wide scroll-reveal: every chart figure, section header
@@ -50,6 +51,9 @@ export default function Layout({ children }) {
     mo.observe(root, { childList: true, subtree: true })
     return () => { io.disconnect(); live.disconnect(); mo.disconnect() }
   }, [])
+
+  // charts set side by side start on the same line (the book included)
+  useEffect(() => (book ? undefined : watchPairs(mainRef.current)), [book])
 
   // inside My Book a page is typeset as a chapter, so it brings no site chrome
   if (book) return <>{children}</>

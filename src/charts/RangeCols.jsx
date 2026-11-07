@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // One column per year showing a spread: a band from the 25th to the 75th
 // percentile with the median as a bold tick and its value printed beside it.
@@ -9,13 +10,14 @@ import { linScale } from './primitives.js'
 // props: items [{ label, p25, med, p75 }], domain [lo, hi], ticks, tickFmt,
 //   valFmt, invert, yCap, aria
 export default function RangeCols({ items, domain, ticks = [], tickFmt = (v) => v, valFmt = (v) => v, invert = false, yCap, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
   if (!items || !items.length) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 360
-  const m = { t: 30, r: 10, b: 26, l: 44 }
+  const H = fitH(pairH, narrow ? 300 : 360)
+  const m = { t: 30, r: 10, b: 44, l: 44 }
   const y = invert ? linScale(domain, [m.t, H - m.b]) : linScale(domain, [H - m.b, m.t])
   const slot = (W - m.l - m.r) / items.length
   const bw = Math.min(46, slot * (narrow ? 0.5 : 0.42))

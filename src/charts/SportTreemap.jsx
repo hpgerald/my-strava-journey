@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Every outing as a tile. The four sports on foot get a tile and a name each;
 // everything else shares one "Other activities" tile and is never named.
@@ -43,6 +44,7 @@ function squarify(items, x, y, w, h) {
 }
 
 export default function SportTreemap({ rows }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(560)
   const [hover, setHover] = useState(null)
   const N = (x) => Number(x) || 0
@@ -63,7 +65,7 @@ export default function SportTreemap({ rows }) {
     .sort((a, b) => b.value - a.value)
 
   const W = Math.max(300, width)
-  const H = W < 520 ? 260 : 360
+  const H = fitH(pairH, W < 520 ? 260 : 360)
   const tiles = squarify(items, 0, 0, W, H)
 
   return (

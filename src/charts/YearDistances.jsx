@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The typical outing: foot activities grouped by rounded kilometre, one bar each,
 // the long tail folded into a final 25+ column. The tallest bars are the distances
@@ -9,14 +10,15 @@ import { linScale } from './primitives.js'
 // baseline when the chart scrolls in. bins: [{ km, count, cap }]; peaks: km values
 // to highlight.
 export default function YearDistances({ bins, peaks = [] }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(560)
   const [root, inView] = useInView()
   const [hover, setHover] = useState(null)
   if (!bins || !bins.length) return <div ref={ref} />
 
   const W = Math.max(320, width)
-  const H = W < 520 ? 250 : 360
-  const m = { t: 24, r: 14, b: 40, l: 34 }
+  const H = fitH(pairH, W < 520 ? 250 : 360)
+  const m = { t: 30, r: 14, b: 44, l: 34 }
   const iw = W - m.l - m.r
   const ih = H - m.t - m.b
   const maxC = Math.max(1, ...bins.map((b) => b.count))

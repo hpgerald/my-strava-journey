@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // An alluvial flip: two stacked columns (distance on the left, climb on the
 // right) with a ribbon per sport connecting its share on each side. It makes one
@@ -8,12 +9,13 @@ import { useWidth } from './useWidth.js'
 const SHADE = { Run: 'var(--ink)', Walk: 'var(--grey-55)', TrailRun: 'var(--accent)', Hike: 'var(--grey-35)' }
 
 export default function FootFlip({ items }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(560)
   const [hover, setHover] = useState(null)
   if (!items || !items.length) return <div ref={ref} />
 
   const W = Math.max(280, width)
-  const H = W < 520 ? 300 : 360
+  const H = fitH(pairH, W < 520 ? 300 : 360)
   const m = { t: 34, b: 22 }
   const ih = H - m.t - m.b
   const barW = 22

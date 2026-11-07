@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
+import { usePairH, fitH } from './pairHeight.js'
 
 // The same race, every edition at once. The course is drawn as its height
 // profile, one faint line per edition, and each edition is a runner on its own
@@ -11,6 +12,7 @@ import { useInView, usePrefersReducedMotion } from '../components/Reveal.jsx'
 const clock = (sec) => { const m = Math.round(sec / 60); return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}` }
 
 export default function GhostRace({ race, courseKm, aria }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView({ threshold: 0.3 })
   const reduce = usePrefersReducedMotion()
@@ -42,7 +44,7 @@ export default function GhostRace({ race, courseKm, aria }) {
 
   const W = Math.max(300, width)
   const narrow = W < 520
-  const H = narrow ? 300 : 340
+  const H = fitH(pairH, narrow ? 300 : 340)
   const m = { l: 36, r: narrow ? 30 : 40, t: 40, b: 34 }
   const altMin = Math.min(...race.flatMap((r) => r.track.map((p) => p.alt)))
   const altMax = Math.max(...race.flatMap((r) => r.track.map((p) => p.alt)))

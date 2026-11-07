@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { linScale, linePath, areaPath } from './primitives.js'
+import { usePairH, fitH } from './pairHeight.js'
 
 // Off the treadmill. Every year's activities split into two bands - indoors on a
 // machine, or out in the world - stacked to a full hundred percent so only the
@@ -11,6 +12,7 @@ import { linScale, linePath, areaPath } from './primitives.js'
 const truthy = (v) => { const s = String(v).trim().toLowerCase(); return s === '1' || s === 'true' || s === 'yes' }
 
 export default function IndoorOutdoor({ activities, height, heightNarrow }) {
+  const pairH = usePairH()
   const [ref, width] = useWidth(560)
   const [hover, setHover] = useState(null)
   if (!activities || !activities.length) return <div ref={ref} />
@@ -31,7 +33,7 @@ export default function IndoorOutdoor({ activities, height, heightNarrow }) {
   const W = Math.max(300, width)
   const narrow = W < 520
   const m = { t: 20, r: narrow ? 40 : 52, b: 26, l: narrow ? 40 : 52 }
-  const H = narrow ? (heightNarrow || 220) : (height || 250)
+  const H = fitH(pairH, narrow ? (heightNarrow || 220) : (height || 250))
   const x = linScale([0, pts.length - 1], [m.l, W - m.r])
   const y = linScale([0, 100], [H - m.b, m.t]) // 0% bottom, 100% top; outdoor from bottom
   const outdoorTop = pts.map((p, i) => [x(i), y(100 - p.indoor)]) // waterline
