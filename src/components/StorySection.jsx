@@ -91,9 +91,9 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
         {rightNote ? <p className="sgrid__note sgrid__note--mx">{rightNote}</p> : null}
       </div>
 
-      {children}
-
       <BookRead items={[[left.title, read && read[0], left.lesson || left.node], [right.title, read && read[1], right.lesson || right.node]]} />
+
+      {children}
       <BookStory>{story}</BookStory>
     </section>
   )

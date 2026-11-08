@@ -104,28 +104,38 @@ export function SimHist({ finals, target, unit = 'm', aria }) {
   )
 }
 
-// Time out on the course, cut into moving and stopped: one bar per edition, the
-// moving part solid and the stops hatched at the end, with both read out.
+// Time out on the course, cut into moving and stopped: one thick bar per
+// edition on a shared hour scale, the moving part solid and the stops hatched
+// at the end, with both read out. Faint hour lines run through all the rows, so
+// the small gains between years can be read against the clock.
 // props: rows [{ label, moving, stopped, now }], aria
 export function StopBars({ rows, aria }) {
   const [root, inView] = useInView()
   const top = Math.max(...rows.map((r) => r.moving + r.stopped))
   const hm = (min) => { const h = Math.floor(min / 60), mm = Math.round(min % 60); return h ? `${h} h ${String(mm).padStart(2, '0')}` : `${mm} min` }
+  const hours = []
+  for (let h = 0; h * 60 <= top; h++) hours.push(h)
   return (
     <div ref={root} className={`hb stopb${inView ? ' is-in' : ''}`} role="img" aria-label={aria}>
       <p className="chr__key" aria-hidden="true"><i className="chr__barsw" />moving <i className="stopb__sw" />stopped</p>
-      <ul className="hb__list" aria-hidden="true">
-        {rows.map((r, i) => (
-          <li key={r.label} className="hb__row" style={{ '--d': `${i * 90}ms` }}>
-            <span className="hb__lbl">{r.label}<small className="hb__sub">{hm(r.moving + r.stopped)} on the course</small></span>
-            <span className="hb__track">
-              <span className={`hb__bar ${r.now ? 'mfill--road' : 'mfill--ink'}`} style={{ '--v': r.moving / top }} />
-              <span className="stopb__stop" style={{ '--v0': r.moving / top, '--v': r.stopped / top }} />
-              <b className="hb__val mono" style={{ '--v': (r.moving + r.stopped) / top }}>{hm(r.moving)} <span className="chr__exp">+ {Math.round(r.stopped)} min</span></b>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div className="stopb__plot" aria-hidden="true">
+        {hours.map((h) => <span key={h} className={`stopb__grid${h ? '' : ' is-zero'}`} style={{ '--v': (h * 60) / top }} />)}
+        <ul className="hb__list">
+          {rows.map((r, i) => (
+            <li key={r.label} className={`hb__row${r.now ? ' is-now' : ''}`} style={{ '--d': `${i * 90}ms` }}>
+              <span className="hb__lbl">{r.label}</span>
+              <span className="hb__track">
+                <span className={`hb__bar ${r.now ? 'mfill--road' : 'mfill--ink'}`} style={{ '--v': r.moving / top }} />
+                <span className="stopb__stop" style={{ '--v0': r.moving / top, '--v': r.stopped / top }} />
+                <b className="hb__val mono" style={{ '--v': (r.moving + r.stopped) / top }}>{hm(r.moving)} <span className="chr__exp">+ {Math.round(r.stopped)} min</span></b>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="stopb__axis">
+          {hours.map((h) => <span key={h} style={{ '--v': (h * 60) / top }}>{h} h</span>)}
+        </div>
+      </div>
     </div>
   )
 }

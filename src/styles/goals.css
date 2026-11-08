@@ -73,6 +73,23 @@
 .stopb__stop { position: absolute; top: 0; bottom: 0; left: calc(100% * var(--v0) * var(--hb-max)); width: calc(100% * var(--v) * var(--hb-max)); background: repeating-linear-gradient(135deg, var(--grey-45) 0 2px, transparent 2px 4px); border: 1px solid var(--grey-45); border-left: 0; border-radius: 0 2px 2px 0; opacity: 0; transition: opacity 0.5s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.8s); }
 .stopb.is-in .stopb__stop { opacity: 1; }
 .stopb .hb__val { translate: 10px -50%; }
+.stopb { --hb-l: 4.5rem; }
+.stopb .hb__lbl { font-family: var(--font-display); font-size: var(--fs-md); font-weight: 600; font-variant-numeric: tabular-nums; }
+.stopb .is-now .hb__lbl { color: var(--accent-ink); }
+.stopb .hb__track { height: clamp(30px, 3.4vw, 46px); }
+.stopb .hb__val { font-size: var(--fs-sm); font-weight: 600; }
+.stopb .chr__exp { font-weight: 400; color: var(--fg-muted); }
+/* the hour scale: faint lines through every row and the hours along the foot,
+   placed with the same formula as the bars */
+.stopb__plot { position: relative; display: flex; flex-direction: column; }
+.stopb__grid { position: absolute; top: 0; bottom: 1.6rem; width: 0; border-left: 1px solid var(--rule-faint); left: calc(var(--hb-l) + var(--sp-2) + (100% - var(--hb-l) - var(--sp-2)) * var(--v) * var(--hb-max)); }
+.stopb__grid.is-zero { border-left-color: var(--ink); }
+.stopb__plot > .hb__list { position: relative; }
+.stopb__axis { position: relative; height: 1.6rem; margin-top: var(--sp-2); }
+.stopb__axis span { position: absolute; top: 0.35rem; left: calc(var(--hb-l) + var(--sp-2) + (100% - var(--hb-l) - var(--sp-2)) * var(--v) * var(--hb-max)); translate: -50% 0; font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); white-space: nowrap; }
+/* beside a taller chart the rows share its height, each bar centred in its row */
+.sgrid__chart > .stopb > .stopb__plot { flex: 1; }
+.sgrid__chart > .stopb > .stopb__plot > .hb__list { flex: 1; grid-auto-rows: 1fr; max-height: 34rem; }
 
 /* ---- the tally ---- */
 .tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-3); padding-top: var(--sp-2); }
@@ -138,3 +155,43 @@
 html.motion .rask__plot .rask__tile { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0.86); transition: opacity 0.5s var(--ease), transform 0.6s var(--ease); transition-delay: calc(var(--i) * 28ms); }
 html.motion .rask__plot.is-in .rask__tile { opacity: 1; transform: none; }
 html.motion .rask__plot.is-in .rask__tile.is-dim { opacity: 0.35; transition-delay: 0s; }
+
+/* ---- the Kilimanjaro Half, taken apart (charts/KiliHalf.jsx) ---- */
+.ksplit__yr, .kkm__yr { font-family: var(--font-display); font-weight: 600; font-size: 15px; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.ksplit__yr.is-now, .kkm__yr.is-now { fill: var(--accent-ink); }
+.ksplit__name { font-family: var(--font-display); font-weight: 600; font-size: 15px; fill: var(--ink); }
+.ksplit__path { stroke: var(--grey-45); stroke-width: 1.5; }
+.ksplit__dot { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+.ksplit__dot.is-now { fill: var(--accent); }
+.ksplit__v { font-family: var(--font-mono); font-size: 12px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.ksplit__v.is-now { fill: var(--accent-ink); }
+html.motion .ksplit__path:where(:not(.book *)) { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease-out) 0.35s; }
+html.motion .ksplit.is-in .ksplit__path:where(:not(.book *)) { stroke-dashoffset: 0; }
+html.motion .ksplit__pt:where(:not(.book *)) { opacity: 0; transition: opacity 0.5s var(--ease-out); transition-delay: var(--d, 0s); }
+html.motion .ksplit.is-in .ksplit__pt:where(:not(.book *)) { opacity: 1; }
+
+.kkm__land { fill: var(--grey-10); }
+.kkm__ridge { stroke: var(--ink); stroke-width: 1.5; }
+.kkm__dir { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--fg-muted); }
+.kkm__turn { font-family: var(--font-sans); font-size: 12px; font-weight: 600; fill: var(--ink); }
+.kkm__top { fill: var(--accent); }
+.kkm__tline { stroke: var(--ink); stroke-dasharray: 2 3; opacity: 0.55; }
+.kkm__sq { fill: var(--ink); }
+.kkm__n { font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; dominant-baseline: middle; }
+.kkm__n.is-dark { fill: var(--paper); }
+.kkm__run { fill: var(--accent); }
+.kkm__tot { font-family: var(--font-mono); font-size: 13px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.kkm__tot.is-now { fill: var(--accent-ink); }
+.kkm__gk { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--fg-muted); }
+.kkm__gb { fill: var(--grey-45); }
+.kkm__gb.is-run { fill: var(--accent); }
+.kkm__gv { font-family: var(--font-mono); font-size: 11px; font-weight: 600; fill: var(--ink); }
+.kkm__key { margin: 0 0 var(--sp-2); display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); justify-content: flex-end; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-muted); }
+.kkm__key span { display: inline-flex; align-items: center; gap: 6px; }
+.kkm__ksw { display: inline-block; width: 14px; height: 10px; background: var(--ink); border-radius: 1px; }
+.kkm__ksw--q { opacity: 0.92; } .kkm__ksw--m { opacity: 0.3; margin-left: -4px; } .kkm__ksw--s { opacity: 0.12; margin-left: -4px; margin-right: 4px; }
+.kkm__kr { display: inline-block; width: 18px; height: 4px; background: var(--accent); }
+html.motion .kkm__cell:where(:not(.book *)), html.motion .kkm__gain:where(:not(.book *)) { opacity: 0; transition: opacity 0.6s var(--ease-out); transition-delay: var(--d, 0s); }
+html.motion .kkm.is-in .kkm__cell:where(:not(.book *)), html.motion .kkm.is-in .kkm__gain:where(:not(.book *)) { opacity: 1; }
+.kh-fig { grid-column: 1 / -1; }
+@media (max-width: 40rem) { .kkm__key { justify-content: flex-start; } }

@@ -1,146 +1,183 @@
-import { useState } from 'react'
 import { useWidth } from './useWidth.js'
-import { linScale } from './primitives.js'
+import { useInView } from '../components/Reveal.jsx'
+import { usePairH, fitH } from './pairHeight.js'
 
-// Four runnings of the same course, read from the real GPS tracks. The terrain on
-// top is the course itself: it climbs 268 m to a turnaround near 9 km, then falls
-// away for the run home. Below it, one pace ribbon per year, every ~500 m coloured
-// by how fast it was run there, pale where slow, deep orange where quick. Read
-// down the years and the ribbons warm as the race quickens; read across and every
-// year drags on the climb and flies on the drop. props: rows (per-year finishes),
-// profile (per-bin { year, bin, dist_km, rel_alt_m, pace_sec }).
-const clock = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
-const P_FAST = 545, P_SLOW = 780
-const SLOW = [0xF2, 0xDE, 0xCC], FAST = [0xCC, 0x39, 0x00]
-const lerp = (a, b, t) => a + (b - a) * t
-const clamp01 = (x) => Math.max(0, Math.min(1, x))
-const paceColor = (p) => {
-  const t = clamp01((P_SLOW - p) / (P_SLOW - P_FAST))
-  const c = SLOW.map((s, i) => Math.round(lerp(s, FAST[i], t)))
-  return `rgb(${c[0]},${c[1]},${c[2]})`
+// The Kilimanjaro Half, taken apart. Every edition runs the same 21.1 km of road:
+// 9.5 km up to the turn, the highest point, and 11.6 km back down. Times are
+// clock minutes over that stretch (scripts/build_kili_half_detail.py).
+
+const hm = (min) => { const t = Math.round(min); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
+const ms = (min) => { const s = Math.round(min * 60); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` }
+
+// The way up and the way down as two panels, side by side, each spanning the
+// same number of minutes, so a step on one side is as wide as a step on the
+// other. One dot per edition, oldest at the top, joined in order: the path of
+// each half from year to year.
+// props: race [{ year, up, down }], aria
+export function KiliSplit({ race, aria }) {
+  const pairH = usePairH()
+  const [ref, width] = useWidth(560)
+  const [root, inView] = useInView({ threshold: 0.25 })
+  const W = Math.max(300, width)
+  const narrow = W < 480
+  const H = fitH(pairH, narrow ? 300 : 340)
+  const rows = race.filter((r) => r.up > 0 && r.down > 0)
+  if (rows.length < 2) return <div ref={ref} />
+  const m = { t: 58, b: 34, l: narrow ? 40 : 48, r: narrow ? 8 : 14 }
+  const gap = narrow ? 26 : 48
+  const pw = (W - m.l - m.r - gap) / 2
+  // one span of minutes for both panels, each starting a little under its quickest year
+  const lo5 = (v) => Math.floor((v - 1) / 5) * 5
+  const sides = [
+    { key: 'up', name: 'Up to the turn', sub: '9.5 km, climbing', vals: rows.map((r) => r.up) },
+    { key: 'down', name: 'Back down', sub: '11.6 km, descending', vals: rows.map((r) => r.down) },
+  ]
+  const span = Math.max(...sides.map((s) => Math.ceil((Math.max(...s.vals) + 2 - lo5(Math.min(...s.vals))) / 5) * 5))
+  sides.forEach((s, i) => { s.lo = lo5(Math.min(...s.vals)); s.x0 = m.l + i * (pw + gap) })
+  const X = (s, v) => s.x0 + ((v - s.lo) / span) * pw
+  const Y = (i) => m.t + 14 + (i / Math.max(1, rows.length - 1)) * (H - m.t - m.b - 28)
+  const last = rows.length - 1
+  return (
+    <div ref={ref} className="cb">
+      <div ref={root} className={`cb__plot ksplit${inView ? ' is-in' : ''}`}>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block', overflow: 'visible' }}>
+          {rows.map((r, i) => (
+            <text key={r.year} x={m.l - 10} y={Y(i) + 4} textAnchor="end" className={`ksplit__yr${i === last ? ' is-now' : ''}`}>{r.year}</text>
+          ))}
+          {sides.map((s) => {
+            const ticks = []
+            for (let v = s.lo; v <= s.lo + span; v += 5) ticks.push(v)
+            const pts = rows.map((r, i) => ({ x: X(s, r[s.key]), y: Y(i), v: r[s.key] }))
+            return (
+              <g key={s.key}>
+                <text x={s.x0} y={m.t - 30} className="ksplit__name">{s.name}</text>
+                <text x={s.x0} y={m.t - 14} className="cb__axis">{s.sub}</text>
+                {ticks.map((v, j) => (
+                  <g key={v}>
+                    <line x1={X(s, v)} x2={X(s, v)} y1={m.t} y2={H - m.b} stroke="var(--rule-faint)" />
+                    {(narrow ? j % 2 === 1 : j < ticks.length - 1 || s.key === 'down') ? <text x={X(s, v)} y={H - m.b + 18} textAnchor="middle" className="cb__gl">{hm(v)}</text> : null}
+                  </g>
+                ))}
+                <line x1={s.x0} x2={s.x0 + pw} y1={H - m.b} y2={H - m.b} stroke="var(--ink)" />
+                <path d={pts.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')} className="ksplit__path" fill="none" pathLength="1" />
+                {pts.map((p, i) => (
+                  <g key={i} className="ksplit__pt" style={{ '--d': `${0.35 + i * 0.22}s` }}>
+                    <circle cx={p.x} cy={p.y} r={i === last ? 7 : 5} className={i === last ? 'ksplit__dot is-now' : 'ksplit__dot'} />
+                    {/* the time beside its dot, on the side with room */}
+                    <text x={p.x > s.x0 + pw * 0.72 ? p.x - (i === last ? 12 : 10) : p.x + (i === last ? 12 : 10)} y={p.y + 4} textAnchor={p.x > s.x0 + pw * 0.72 ? 'end' : 'start'} className={`ksplit__v cb__halo${i === last ? ' is-now' : ''}`}>{hm(p.v)}</text>
+                  </g>
+                ))}
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+    </div>
+  )
 }
 
-export default function KiliHalf({ rows, profile }) {
-  const [ref, width] = useWidth(680)
-  const [hover, setHover] = useState(null)
-  if (!rows || !rows.length || !profile || !profile.length) return <div ref={ref} />
-
-  const N = (x) => Number(x) || 0
-  const years = [...new Set(profile.map((p) => p.year))].sort()
-  const bins = Math.max(...profile.map((p) => Number(p.bin))) + 1
-  const byYear = Object.fromEntries(years.map((y) => [y, profile.filter((p) => p.year === y).sort((a, b) => Number(a.bin) - Number(b.bin))]))
-  const finish = Object.fromEntries(rows.map((r) => [r.year, N(r.moving_min)]))
-  const distKm = byYear[years[0]].map((p) => N(p.dist_km))
-  const totalKm = distKm[distKm.length - 1] + (distKm[1] - distKm[0]) / 2
-  // shared course profile: average relative altitude across the years
-  const sharedAlt = Array.from({ length: bins }, (_, i) => {
-    const vs = years.map((y) => N(byYear[y][i]?.rel_alt_m))
-    return vs.reduce((a, b) => a + b, 0) / vs.length
-  })
-
+// Every kilometre of every edition, one cell each, under the course it covers.
+// A cell is darker the quicker the kilometre; the orange line at its foot is the
+// share of it I ran. Under the grid, what the last edition gained on the first,
+// kilometre by kilometre.
+// props: race [{ year, moving, kms [{ km, min, run }] }], line [{ d, alt }], turnKm, aria
+export function KiliKm({ race, line, turnKm, aria }) {
+  const [ref, width] = useWidth(1100)
+  const [root, inView] = useInView({ threshold: 0.15 })
+  const rows = race.filter((r) => r.kms && r.kms.length)
+  if (rows.length < 2 || !line || line.length < 3) return <div ref={ref} />
   const W = Math.max(320, width)
-  const narrow = W < 560
-  const leftW = narrow ? 78 : 98
-  const padR = 14
-  const plotL = leftW, plotR = W - padR
-  const plotW = plotR - plotL
-  const cellW = plotW / bins
-  const elevH = narrow ? 58 : 72
-  const ribH = narrow ? 22 : 26
-  const ribGap = 7
-  const topPad = 20
-  const elevTop = topPad
-  const ribsTop = elevTop + elevH + 26
-  const H = ribsTop + years.length * (ribH + ribGap) + 26
-
-  const sx = linScale([0, totalKm], [plotL, plotR])
-  const aMin = Math.min(...sharedAlt), aMax = Math.max(...sharedAlt)
-  const sy = linScale([aMin, aMax], [elevTop + elevH, elevTop + 6])
-  const peakBin = sharedAlt.indexOf(aMax)
-
-  // elevation area path
-  const ptsTop = sharedAlt.map((a, i) => `${(plotL + (i + 0.5) * cellW).toFixed(1)},${sy(a).toFixed(1)}`)
-  const areaPath = `M${plotL},${elevTop + elevH} L` + ptsTop.join(' L') + ` L${plotR},${elevTop + elevH} Z`
-  const linePath = 'M' + ptsTop.join(' L')
-
-  const kmTicks = [0, 5, 10, 15, 20].filter((k) => k <= totalKm)
-
+  const narrow = W < 700
+  const N = Math.max(...rows.map((r) => r.kms.length))
+  const m = { l: narrow ? 40 : 64, r: narrow ? 4 : 8, t: 26 }
+  const cw = (W - m.l - m.r) / N
+  const prof = narrow ? 64 : 96
+  const ch = narrow ? 26 : 38
+  const gapR = 3
+  const gridTop = m.t + prof + 26
+  const gridH = rows.length * ch + (rows.length - 1) * gapR
+  const axisY = gridTop + gridH + 16
+  const gainTop = axisY + 30
+  const gainH = narrow ? 56 : 76
+  const H = gainTop + gainH + 22
+  const X = (km) => m.l + (km / N) * (W - m.l - m.r)
+  // the course: altitude over the same 21 km
+  const aMin = Math.min(...line.map((p) => p.alt)), aMax = Math.max(...line.map((p) => p.alt))
+  const PY = (a) => m.t + prof - ((a - aMin) / Math.max(1, aMax - aMin)) * (prof - 8)
+  const ridge = line.map((p, i) => `${i ? 'L' : 'M'}${X(Math.min(N, p.d)).toFixed(1)} ${PY(p.alt).toFixed(1)}`).join(' ')
+  const area = `${ridge} L${X(N)} ${m.t + prof} L${X(0)} ${m.t + prof} Z`
+  const top = line.reduce((b, p) => (p.alt > b.alt ? p : b), line[0])
+  // colour: the quickest kilometre darkest, the slowest palest, one scale for all
+  const all = rows.flatMap((r) => r.kms.map((k) => k.min))
+  const lo = Math.min(...all), hi = Math.max(...all)
+  // eased, so the ordinary kilometres stay pale and the quick ones stand out dark
+  const shade = (v) => 0.07 + 0.86 * Math.pow(1 - (v - lo) / Math.max(0.01, hi - lo), 1.8)
+  // what the last edition gained on the first, each kilometre
+  const first = rows[0], last = rows[rows.length - 1]
+  const gains = last.kms.map((k) => { const f = first.kms.find((x) => x.km === k.km); return { km: k.km, g: f ? f.min - k.min : 0, run: k.run } })
+  const gMax = Math.max(1, ...gains.map((g) => Math.abs(g.g)))
+  const GY0 = gainTop + gainH * (Math.max(...gains.map((g) => g.g)) / (Math.max(...gains.map((g) => g.g)) + Math.max(0, -Math.min(...gains.map((g) => g.g))) || 1))
+  const GS = (v) => (v / gMax) * (GY0 - gainTop)
+  const tx = X(turnKm)
   return (
-    <div ref={ref} className="kh">
-      <svg
-        width="100%"
-        height={H}
-        viewBox={`0 0 ${W} ${H}`}
-        role="img"
-        aria-label="The Kilimanjaro Half Marathon course elevation with four years of pace ribbons, faster each year."
-        style={{ display: 'block' }}
-        onMouseLeave={() => setHover(null)}
-      >
-        {/* km gridlines spanning terrain + ribbons */}
-        {kmTicks.map((k) => (
-          <line key={'g' + k} x1={sx(k)} y1={elevTop} x2={sx(k)} y2={ribsTop + years.length * (ribH + ribGap) - ribGap} className="kh__grid" />
-        ))}
+    <div ref={ref} className="cb">
+      <p className="kkm__key" aria-hidden="true">
+        <span><i className="kkm__ksw kkm__ksw--q" /><i className="kkm__ksw kkm__ksw--m" /><i className="kkm__ksw kkm__ksw--s" />quicker to slower</span>
+        <span><i className="kkm__kr" />the part of a kilometre I ran</span>
+      </p>
+      <div ref={root} className={`cb__plot kkm${inView ? ' is-in' : ''}`}>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block', overflow: 'visible' }}>
+          {/* the course */}
+          <path d={area} className="kkm__land" />
+          <path d={ridge} className="kkm__ridge" fill="none" />
+          {!narrow ? <text x={X(turnKm / 2)} y={m.t + prof - 10} textAnchor="middle" className="kkm__dir">up to the turn</text> : null}
+          {!narrow ? <text x={X(turnKm + (N - turnKm) / 2)} y={m.t + prof - 10} textAnchor="middle" className="kkm__dir">back down</text> : null}
+          <text x={X(0)} y={PY(line[0].alt) - 8} className="cb__gl">{Math.round(line[0].alt).toLocaleString('en-US')} m</text>
+          <circle cx={X(top.d)} cy={PY(top.alt)} r="4" className="kkm__top" />
+          <text x={X(top.d)} y={PY(top.alt) - 10} textAnchor="middle" className="kkm__turn">the turn, {Math.round(top.alt).toLocaleString('en-US')} m</text>
+          <line x1={tx} x2={tx} y1={PY(top.alt) + 6} y2={axisY - 12} className="kkm__tline" />
 
-        {/* course terrain */}
-        <path d={areaPath} fill="var(--grey-10)" />
-        <path d={linePath} fill="none" stroke="var(--grey-45)" strokeWidth="1.4" strokeLinejoin="round" />
-        <circle cx={sx(distKm[peakBin])} cy={sy(aMax)} r="3" fill="var(--paper)" stroke="var(--ink)" strokeWidth="1.6" />
-        <text x={sx(distKm[peakBin])} y={sy(aMax) - 7} textAnchor="middle" className="kh__peak">the turn &middot; +{Math.round(aMax)} m</text>
-        <text x={plotL} y={elevTop + elevH + 15} className="kh__terr">THE COURSE &middot; climbs {Math.round(aMax)} m, then falls</text>
+          {/* the grid */}
+          {rows.map((r, ri) => {
+            const y = gridTop + ri * (ch + gapR)
+            const now = r === last
+            return (
+              <g key={r.year}>
+                <text x={m.l - 10} y={y + ch / 2 + 4} textAnchor="end" className={`kkm__yr${now ? ' is-now' : ''}`}>{r.year}</text>
+                {r.kms.map((k) => {
+                  const a = shade(k.min)
+                  const x = X(k.km - 1) + 1
+                  return (
+                    <g key={k.km} className="kkm__cell" style={{ '--d': `${(k.km - 1) * 28 + ri * 60}ms` }}>
+                      <rect x={x} y={y} width={cw - 2} height={ch} rx="1.5" className="kkm__sq" style={{ fillOpacity: a }} />
+                      {!narrow ? <text x={x + (cw - 2) / 2} y={y + ch / 2 + 2} textAnchor="middle" className={`kkm__n${a > 0.5 ? ' is-dark' : ''}`}>{ms(k.min)}</text> : null}
+                      {k.run > 0 ? <rect x={x} y={y + ch - 4} width={(cw - 2) * Math.min(1, k.run)} height="4" className="kkm__run" /> : null}
+                    </g>
+                  )
+                })}
+              </g>
+            )
+          })}
+          {Array.from({ length: N }, (_, i) => i + 1).filter((k) => !narrow || k === 1 || k % 5 === 0).map((k) => (
+            <text key={k} x={X(k - 0.5)} y={axisY} textAnchor="middle" className="cb__gl">{k}</text>
+          ))}
+          <text x={m.l - 10} y={axisY} textAnchor="end" className="cb__gl">km</text>
 
-        {/* pace ribbons, one per year */}
-        {years.map((y, yi) => {
-          const ry = ribsTop + yi * (ribH + ribGap)
-          const dim = hover && hover.y !== y
-          return (
-            <g key={y} opacity={dim ? 0.5 : 1}>
-              {byYear[y].map((p, i) => {
-                const on = !hover || (hover.y === y && hover.i === i)
-                return (
-                  <rect
-                    key={i}
-                    x={plotL + i * cellW} y={ry} width={cellW + 0.6} height={ribH}
-                    fill={paceColor(N(p.pace_sec))}
-                    stroke={hover && hover.y === y && hover.i === i ? 'var(--ink)' : 'none'}
-                    strokeWidth={on ? 1 : 0}
-                    onMouseEnter={() => setHover({ y, i })}
-                    onMouseLeave={() => setHover(null)}
-                  />
-                )
-              })}
-              <text x={leftW - 10} y={ry + ribH / 2 - 2} textAnchor="end" className={`kh__yr${yi === years.length - 1 ? ' kh__yr--hot' : ''}`}>{y}</text>
-              <text x={leftW - 10} y={ry + ribH / 2 + 11} textAnchor="end" className="kh__fin">{clock(finish[y])}</text>
-            </g>
-          )
-        })}
-
-        {/* distance axis */}
-        {kmTicks.map((k) => (
-          <text key={'k' + k} x={sx(k)} y={H - 8} textAnchor="middle" className="kh__tick">{k === 0 ? 'start' : k + ' km'}</text>
-        ))}
-      </svg>
-
-      <div className="kh__legend">
-        <span className="kh__legttl">pace</span>
-        <span className="kh__ramp" />
-        <span className="kh__legend-lo">slower</span>
-        <span className="kh__legend-hi">quicker</span>
-        <span className="kh__legnote">each cell ≈ 500 m of the course</span>
+          {/* what the last edition gained on the first */}
+          <text x={m.l} y={gainTop - 8} className="kkm__gk">{narrow ? `Gained on ${first.year}, each km` : `Minutes ${last.year} gained on ${first.year}, each kilometre`}</text>
+          <line x1={m.l} x2={W - m.r} y1={GY0} y2={GY0} stroke="var(--ink)" />
+          {gains.map((g) => {
+            const x = X(g.km - 1) + cw * 0.18
+            const h = GS(g.g)
+            return (
+              <g key={g.km} className="kkm__gain" style={{ '--d': `${0.9 + (g.km - 1) * 0.03}s` }}>
+                <rect x={x} y={h >= 0 ? GY0 - h : GY0} width={cw * 0.64} height={Math.max(1, Math.abs(h))} className={g.run >= 0.5 ? 'kkm__gb is-run' : 'kkm__gb'} />
+                {!narrow && g.g >= 1.5 ? <text x={x + cw * 0.32} y={GY0 - h - 6} textAnchor="middle" className="kkm__gv">{g.g.toFixed(1)}</text> : null}
+              </g>
+            )
+          })}
+        </svg>
       </div>
-
-      {hover && byYear[hover.y] && byYear[hover.y][hover.i] && (() => {
-        const p = byYear[hover.y][hover.i]
-        const sec = N(p.pace_sec)
-        return (
-          <div className="chart-tip" style={{ left: Math.min(Math.max(plotL + hover.i * cellW - 60, 8), W - 180), top: ribsTop - 6 }}>
-            <strong>{hover.y} &middot; {N(p.dist_km).toFixed(1)} km in</strong>
-            <br />
-            {Math.floor(sec / 60)}:{String(Math.round(sec % 60)).padStart(2, '0')}/km &middot; {N(p.rel_alt_m) >= 0 ? '+' : ''}{Math.round(N(p.rel_alt_m))} m
-            <br />
-            finished in {clock(finish[hover.y])}
-          </div>
-        )
-      })()}
     </div>
   )
 }

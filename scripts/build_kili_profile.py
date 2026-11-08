@@ -10,6 +10,10 @@ fixed, so this is a one-off enrichment, not part of the weekly rebuild.
 
 Source activity ids: 2023=8623538896, 2024=10831534059,
 2025=13701654964, 2026=17811226358.
+
+The bins cover the same 21.1 km of road every year, anchored on the turn (the
+highest point), and the half hour the 2023 watch ran before the start is taken
+out, as in build_kili_half_detail.py, so the replay starts with the gun.
 """
 import csv, json, os, statistics
 
@@ -29,13 +33,16 @@ def interp(xs, ys, x):
     t = (x - xs[lo]) / (xs[hi] - xs[lo]) if xs[hi] != xs[lo] else 0
     return ys[lo] + t * (ys[hi] - ys[lo])
 
+from build_kili_half_detail import load, UP_KM, DOWN_KM
+
 rows = []
 for y in YEARS:
-    s = json.load(open(os.path.join(HERE, "kili_streams", f"k{y}.json")))
-    D, T, A = s["distance"], s["time"], s["altitude"]
-    total, a0 = D[-1], A[0]
+    D, T, A, ti = load(y)
+    a = D[ti] - UP_KM * 1000
+    total = (UP_KM + DOWN_KM) * 1000
+    a0 = interp(D, A, a)
     for i in range(BINS):
-        d0, d1 = total * i / BINS, total * (i + 1) / BINS
+        d0, d1 = a + total * i / BINS, a + total * (i + 1) / BINS
         dt = interp(D, T, d1) - interp(D, T, d0)
         dd = (d1 - d0) / 1000.0
         pace = min(CAP, dt / dd) if dd > 0 else 0

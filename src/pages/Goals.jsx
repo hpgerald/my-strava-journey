@@ -4,13 +4,14 @@ import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
-import BookStory, { BookLesson } from '../components/BookStory.jsx'
+import BookStory, { BookLesson, BookRead } from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import GoalRace from '../charts/GoalRace.jsx'
 import GhostRace from '../charts/GhostRace.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import ColBars from '../charts/ColBars.jsx'
-import { CloseDots, SimHist, StopBars, MonthBeads } from '../charts/GoalCharts.jsx'
+import { CloseDots, SimHist, MonthBeads } from '../charts/GoalCharts.jsx'
+import { KiliSplit, KiliKm } from '../charts/KiliHalf.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
@@ -82,8 +83,11 @@ export default function Goals() {
   const kili = useTable('kili_half')
   const profile = useTable('kili_half_profile')
   const rasKilomoni = useTable('ras_kilomoni')
+  const kParts = useTable('kili_half_parts')
+  const kKms = useTable('kili_half_km')
+  const kCourse = useTable('kili_half_course')
   const { prev, next } = useSectionPaging('/goals')
-  const G = useMemo(() => (activities.length ? buildGoalsReport(activities, kili, profile, rasKilomoni) : null), [activities, kili, profile, rasKilomoni])
+  const G = useMemo(() => (activities.length ? buildGoalsReport(activities, kili, profile, rasKilomoni, kParts, kKms, kCourse) : null), [activities, kili, profile, rasKilomoni, kParts, kKms, kCourse])
 
   // deep links from the home page (/goals#kili-half and the rest) land once the
   // data has drawn the section
@@ -140,9 +144,11 @@ export default function Goals() {
   const race = G.race
   const first = race[0], last = race[race.length - 1], quick = G.quickest
   const faster = race.length > 1 && race.every((r, i) => !i || r.moving < race[i - 1].moving)
-  const samePrs = race.length > 1 && race.every((r) => r.prs != null && r.prs === first.prs)
-  const topKudos = race.reduce((b, r) => (!b || r.kudos > b.kudos ? r : b), null)
-  const slowest = race.reduce((b, r) => (!b || r.moving > b.moving ? r : b), null)
+  // the race taken apart: the way up, the way down, every kilometre (charts/KiliHalf.jsx)
+  const split = race.length > 1 && race.every((r) => r.up > 0 && r.down > 0)
+  const upGain = split ? first.up - last.up : 0
+  const downGain = split ? first.down - last.down : 0
+  const downEachYear = split && race.every((r, i) => !i || r.down < race[i - 1].down)
 
   // ---- Ras Kilomoni ----
   const rk = G.rk
@@ -173,7 +179,6 @@ export default function Goals() {
   const lateMonths = fullMonths.slice(goodRun).concat(curMonths.filter((m) => m.partial))
   const lateSum = lateMonths.reduce((s, m) => s + m.v, 0)
   const bigMonths = fullMonths.filter((m) => m.v >= 3000)
-  const steps = race.slice(1).map((r, i) => race[i].moving - r.moving)
   const rkAvg = (sp) => { const xs = rk.filter((r) => (sp === 'Walk' ? r.sport === 'Walk' : r.sport !== 'Walk')); return xs.length ? xs.reduce((s, r) => s + r.km, 0) / xs.length : 0 }
   const allCentury = centCur.n === centCur.of && centCur.of > 0
   const walkYearsLow = habit.filter((y) => y !== cur && y.walk.closed == null).length
@@ -334,17 +339,17 @@ export default function Goals() {
               id="kili-half"
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
-              statement={<>
-                Most of the time I saved on this race came from stopping less. In {first.year} I stood still for{' '}
-                {n0(first.stopped)} minutes during the Kilimanjaro Half. In {last.year} it was less than {word(Math.ceil(last.stopped))}.
-              </>}
+              statement={split && downGain > upGain ? <>
+                Most of what I gained came on the way back down. Going up to the turn I kept much the same speed after my
+                first year. Coming down I got quicker {downEachYear ? 'every year' : 'over the years'}{last.runKm > 4 ? <>, and in {last.year} I ran two long stretches of the descent</> : null}.
+              </> : <>The same road, {word(race.length)} times, a little quicker each time.</>}
               odds={{
                 title: `${cap(word(race.length))} editions of one race`,
                 items: [
                   { num: first.moving - last.moving, unit: ' min', dec: 1, label: `quicker in ${last.year} than in ${first.year}`, tone: 'move' },
-                  { num: first.stopped - last.stopped, unit: ' min', label: `less time stopped than in ${first.year}`, tone: 'move' },
-                  { num: G.courseKm - slowest.atQuickest, unit: ' km', dec: 1, label: `${slowest.year} behind when ${quick.year} finished`, tone: 'rest' },
-                  { num: topKudos.kudos, unit: '', label: `kudos in ${topKudos.year}${topKudos.kudos >= G.topKudos ? ', the most of any outing' : `, the most of the ${word(race.length)}`}`, tone: 'move' },
+                  ...(split ? [{ num: downGain, unit: ' min', dec: 1, label: 'of it gained on the way down', tone: 'move' }, { num: upGain, unit: ' min', dec: 1, label: 'gained on the way up', tone: 'rest' }] : []),
+                  ...(last.runKm != null ? [{ num: last.runKm, unit: ' km', dec: 1, label: `run in ${last.year}, the rest walked`, tone: 'move' }] : []),
+
                 ],
               }}
               left={{
@@ -352,29 +357,45 @@ export default function Goals() {
                 node: (
                   <GhostRace
                     race={race} courseKm={G.courseKm}
-                    aria={`The ${race.length} editions of the Kilimanjaro Half replayed together along the course profile. Moving times: ${race.map((r) => `${r.year} ${hmin(r.moving)}`).join(', ')}. When ${quick.year} finished, ${race.filter((r) => r !== quick).map((r) => `${r.year} was ${k1(G.courseKm - r.atQuickest)} km behind`).join(', ')}.`}
+                    aria={`The ${race.length} editions of the Kilimanjaro Half replayed together along the course profile. Time on the course: ${race.map((r) => `${r.year} ${hmin(r.moving)}`).join(', ')}. When ${quick.year} finished, ${race.filter((r) => r !== quick).map((r) => `${r.year} was ${k1(G.courseKm - r.atQuickest)} km behind`).join(', ')}.`}
                   />
                 ),
               }}
               right={{
-                title: 'Moving and stopped, each edition',
+                title: 'The two halves, each edition',
                 node: (
-                  <StopBars
-                    rows={race.map((r) => ({ label: String(r.year), moving: r.moving, stopped: r.stopped, now: r === last }))}
-                    aria={`Time on the course at each edition: ${race.map((r) => `${r.year} ${hmin(r.moving)} moving and ${Math.round(r.stopped)} minutes stopped`).join(', ')}.`}
+                  <KiliSplit
+                    race={race}
+                    aria={`Time up to the turn and time back down at each edition: ${race.map((r) => `${r.year} ${hmin(r.up)} up and ${hmin(r.down)} down`).join(', ')}.`}
                   />
                 ),
               }}
               read={[
-              'The course is drawn as its height profile, climbing to a turnaround and coming back down. Each edition is a runner on its own line, moving at the pace it really ran. When the quickest edition reached the finish, the others are marked where they were on the course.',
-              'One bar for each edition: the solid part is the time moving and the hatched end is the time I stood still.',
+              'The course is drawn as its height profile, climbing to the turn and coming back down. Each edition is a runner on its own line, moving at the pace I really went. When the quickest edition reached the finish, the others are marked where they were on the course.',
+              'The way up and the way down, one panel each, and both panels cover the same number of minutes. One dot for each edition, the oldest at the top. The line joins them in order, so each half can be followed from year to year.',
             ]}
-              story={[
-              steps.length ? `The biggest step came between the first and the second edition, ${n0(steps[0])} minutes quicker on the move. After that each year brought only a few minutes, and the time stopped stayed low.` : '',
-              'It is the same course every time, the same climb out and the same long way back down. That makes it a fair test of one year against the next.',
-            ]}
-              source="Kilimanjaro Half table and course profile · moving pace per half kilometre, elapsed and moving time per edition"
-            />
+              story={split ? [
+              'The climb is where I hold steady. The descent is where I find time.',
+              last.runKm > 4 ? `The kilometres I ran in ${last.year} are the ones where I gained the most. Walking, I can only go so fast downhill. Running, the same road gave me about two minutes a kilometre.` : '',
+              <><span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. A few minutes each year added up to {n0(first.moving - last.moving)}.</>,
+            ] : []}
+              source="Kilimanjaro Half table · clock time over the same 21.1 km of road each year, from the Strava streams of each edition; running from step cadence, 2024 to 2026"
+            >
+              {split && race.every((r) => r.kms && r.kms.length) ? (
+                <>
+                  <figure className="sgrid__fig kh-fig">
+                    <figcaption className="sgrid__figtitle">Every kilometre, {word(race.length)} times</figcaption>
+                    <div className="sgrid__chart">
+                      <KiliKm
+                        race={race} line={G.courseLine} turnKm={last.turnKm}
+                        aria={`Minutes for each kilometre of the course at each edition, under the course profile. ${race.map((r) => `${r.year}: ${hmin(r.moving)} in all`).join('; ')}. In ${last.year} I ran ${k1(last.runKm)} km, mostly on the way down, and those are the kilometres where ${last.year} gained most on ${first.year}.`}
+                      />
+                    </div>
+                  </figure>
+                  <BookRead items={[[`Every kilometre, ${word(race.length)} times`, `One row for each edition and one cell for each kilometre, set under the piece of road it covers. The darker the cell, the quicker I was. The orange line at the foot of a cell is the part of that kilometre I ran. The bars at the bottom are the minutes ${last.year} gained on ${first.year} on each kilometre, orange where I ran in ${last.year}.`, <KiliKm />]]} />
+                </>
+              ) : null}
+            </StorySection>
           </>
         )}
 

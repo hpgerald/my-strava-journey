@@ -14,7 +14,7 @@ const DAY = 86400000
 const dayIdx = (iso) => Math.round(Date.parse(iso.slice(0, 10) + 'T00:00:00Z') / DAY)
 const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
 
-export function buildGoalsReport(activities, kili = [], profile = [], rasKilomoni = []) {
+export function buildGoalsReport(activities, kili = [], profile = [], rasKilomoni = [], parts = [], kms = [], course = []) {
   const acts = activities.filter((a) => a.date).map((a) => ({
     date: a.date.slice(0, 10), year: Number(a.year), sport: a.sport_type,
     walk: a.sport_type === 'Walk' ? toNum(a.distance_km) || 0 : 0,
@@ -73,10 +73,20 @@ export function buildGoalsReport(activities, kili = [], profile = [], rasKilomon
     // time through each half-kilometre bin, scaled so the whole matches moving time
     const raw = bins.map((b) => b.sec * 0.5)
     const tot = raw.reduce((s, v) => s + v, 0) || 1
+    r.stopped = Math.max(0, r.elapsed - r.moving)
+    // the same 21.1 km of road every year, in clock minutes (scripts/build_kili_half_detail.py):
+    // the way up to the turn, the way back down, the kilometres run; the race
+    // time becomes the clock time over that stretch
+    const pt = parts.find((p) => Number(p.year) === r.year)
+    if (pt) {
+      r.up = toNum(pt.up_min); r.down = toNum(pt.down_min); r.moving = toNum(pt.course_min)
+      r.runKm = pt.run_km === '' || pt.run_km == null ? null : toNum(pt.run_km)
+      r.turnKm = toNum(pt.up_km)
+    }
     let t = 0
     r.track = bins.map((b, i) => { t += (raw[i] / tot) * r.moving * 60; return { d: b.d + 0.25, alt: b.alt, t } })
     r.track.unshift({ d: 0, alt: bins.length ? bins[0].alt : 0, t: 0 })
-    r.stopped = Math.max(0, r.elapsed - r.moving)
+    r.kms = kms.filter((k) => Number(k.year) === r.year).map((k) => ({ km: Number(k.km), min: toNum(k.min), run: k.run_share === '' || k.run_share == null ? null : toNum(k.run_share) })).sort((a, b) => a.km - b.km)
     const f = acts.find((x) => x.date === r.date && Math.abs(x.dist - r.km) < 0.3)
     r.prs = f ? f.prs : null
   }
@@ -128,5 +138,6 @@ export function buildGoalsReport(activities, kili = [], profile = [], rasKilomon
 
   const topKudos = Math.max(0, ...acts.map((a) => a.kudos))
 
-  return { topKudos, marathon, stage, lastISO, lastYear, years, byYear, cur, daysLeft, sims, race, quickest, courseKm, rk, outingNo, months, streak, streakFrom, century }
+  const courseLine = course.map((c) => ({ d: toNum(c.d_km), alt: toNum(c.alt_m) })).sort((a, b) => a.d - b.d)
+  return { topKudos, marathon, stage, lastISO, lastYear, years, byYear, cur, daysLeft, sims, race, quickest, courseKm, courseLine, rk, outingNo, months, streak, streakFrom, century }
 }

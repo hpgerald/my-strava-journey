@@ -42,6 +42,7 @@ import YearMoment from '../charts/YearMoment.jsx'
 import Chronicle from '../charts/Chronicle.jsx'
 import KiliClimb from '../charts/KiliClimb.jsx'
 import HanangDay from '../charts/HanangDay.jsx'
+import { KiliSplit, KiliKm } from '../charts/KiliHalf.jsx'
 import { StopBars, SimHist, MonthBeads, CloseDots } from '../charts/GoalCharts.jsx'
 import { DfaChart, MomentumChart, ErasChart, SeasonChart, HeapChart, TreadPaceChart, EvScatter, LongDayChart, KudosChart } from '../charts/EvidenceCharts.jsx'
 import { WeekStrips, TwoPaths, NextGrid, IsoKm, DayPile, DayClocks } from '../charts/MeaningCharts.jsx'
@@ -146,6 +147,8 @@ export const LESSONS = {
   'stops': ['Split a bar into what it is made of', 'Each bar is the time on the course, cut into moving and stopped, with the stops hatched. A total time hides where the minutes went; the split shows it.', 'When a total is made of two different things, split the bar and treat the parts differently.'],
   'sim': ['Show uncertainty as many outcomes', 'A forecast given as one number pretends to know more than it does. Drawing many possible endings shows the range honestly, and the share that clears the target gives the chance in a form anyone can check by eye.', 'For a forecast, show the whole range of outcomes.'],
   'race': ['Many years, one race', 'Putting every year on one set of axes, with the past years in grey and the current year in colour, turns a question about one year into a comparison with all of them. The grey years are the context; the coloured one is the question.', 'Put the current period on top of grey past periods to show whether it is ahead or behind.'],
+  'halves': ['Same span, so the steps compare', 'The way up and the way down each get a panel, and both panels cover the same number of minutes. A step of five minutes is as wide on one side as on the other, so the reader sees at once which half changed more. The scale starts near the times, since dots are compared by where they sit and need no zero.', 'When one measure is split into parts, give every part the same scale, so the changes can be compared directly.'],
+  'kmgrid': ['One row for each time the same road', 'Every kilometre of every edition is a cell, darker where I was quicker, and the course is drawn above so each column sits under its piece of road. The years become rows that can be read across, and the road becomes columns that can be read down.', 'When the same course is covered many times, give each time a row on one grid, and line the grid up with the ground.'],
   'ghost': ['Movement when time is the story', 'On the site this race plays out as motion, because the story is who passed whom and when. Paper cannot move, so the printed chart is frozen at a moment that matters, and the times are written beside it.', 'Animate only when the change over time is the point, and always make a still version that tells the story on its own.'],
   'rings': ['Rings for progress toward a target', 'Each ring fills to its share of a target and closes when the target is met. Rings are quick to read as done or not done, though comparing the length of two arcs is harder than comparing two bars.', 'Use rings for a few goals that are either met or not; use bars when the exact shares matter.'],
 
@@ -238,6 +241,8 @@ const BY = new Map([
   [PlaceMap, () => ['logmap', 'mapnames']],
   [GoalRace, () => ['race']],
   [GhostRace, () => ['ghost']],
+  [KiliSplit, () => ['halves']],
+  [KiliKm, () => ['kmgrid']],
   [RasKilomoni, () => ['tiles']],
   [StopBars, () => ['stops']],
   [SimHist, () => ['sim']],
