@@ -23,6 +23,11 @@ import Papa from 'papaparse'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = path.join(ROOT, 'public', 'data')
 const SITE = 'https://hpgerald.github.io/my-strava-journey/'
+// Google Search Console proves ownership with a token; paste it into
+// scripts/seo_config.json as "googleSiteVerification" and it goes into the head
+let CONFIG = {}
+try { CONFIG = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts', 'seo_config.json'), 'utf8')) } catch { CONFIG = {} }
+const GSV = String(CONFIG.googleSiteVerification || '').trim()
 const BOOK_PDF = 'book/showing-up-gerald-tesha.pdf'
 const SAME_AS = ['https://www.strava.com/athletes/gtesha', 'https://www.linkedin.com/in/gtesha/', 'https://github.com/hpgerald']
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
@@ -68,9 +73,10 @@ const verdicts = E ? Object.values(E.verdicts) : []
 const vc = (v) => verdicts.filter((x) => x === v).length
 
 // ---------------------------------------------------------------- the words
-const TITLE = `My Strava Journey · ${cap(word(years))} years on foot, read as data`
-const DESC = `${n0(F.n)} outings and ${n0(F.km)} km on foot over ${word(years)} years, most of them in Tanzania. My Strava log read as data: maps, records, tested habits and a free book.`
-const OG_DESC = `${n0(F.n)} outings, ${n0(F.km)} km on foot and ${n0(F.streak)} days in a row so far. ${cap(word(years))} years of my Strava log, read as data.`
+// the name comes first: someone searching for Gerald Tesha should see it at once
+const TITLE = `Gerald Tesha · My Strava Journey · ${cap(word(years))} years on foot`
+const DESC = `Gerald Tesha's ${word(years)} years on foot, mostly in Tanzania: ${n0(F.n)} outings and ${n0(F.km)} km from his Strava log, with maps, records, tested habits and a free book.`
+const OG_DESC = `${n0(F.n)} outings, ${n0(F.km)} km on foot and ${n0(F.streak)} days in a row so far. ${cap(word(years))} years of Gerald Tesha's Strava log, read as data.`
 
 const routes = {
   '/': { title: TITLE, description: DESC },
@@ -93,8 +99,10 @@ const v = refreshed.replace(/-/g, '')
 const ld = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'WebSite', '@id': `${SITE}#website`, url: SITE, name: 'My Strava Journey', alternateName: 'Showing Up', description: DESC, inLanguage: 'en', author: { '@id': `${SITE}#gerald` }, dateModified: refreshed },
-    { '@type': 'Person', '@id': `${SITE}#gerald`, name: 'Gerald Tesha', url: SITE, sameAs: SAME_AS },
+    { '@type': 'WebSite', '@id': `${SITE}#website`, url: SITE, name: 'My Strava Journey', alternateName: ['Gerald Tesha', 'Showing Up'], description: DESC, inLanguage: 'en', author: { '@id': `${SITE}#gerald` }, publisher: { '@id': `${SITE}#gerald` }, dateModified: refreshed },
+    // the home page is Gerald's own page: Google reads a ProfilePage as a page about one person
+    { '@type': 'ProfilePage', '@id': `${SITE}#profile`, url: SITE, name: TITLE, description: DESC, inLanguage: 'en', isPartOf: { '@id': `${SITE}#website` }, mainEntity: { '@id': `${SITE}#gerald` }, dateModified: refreshed, primaryImageOfPage: { '@type': 'ImageObject', url: `${SITE}og.png?v=${v}`, width: 1200, height: 630 } },
+    { '@type': 'Person', '@id': `${SITE}#gerald`, name: 'Gerald Tesha', givenName: 'Gerald', familyName: 'Tesha', url: SITE, mainEntityOfPage: { '@id': `${SITE}#profile` }, nationality: { '@type': 'Country', name: 'Tanzania' }, description: `Tanzanian runner and walker, author of the free book Showing Up and of My Strava Journey, ${word(years)} years of his Strava log read as data.`, sameAs: SAME_AS },
     {
       '@type': 'Book', '@id': `${SITE}#book`, name: 'Showing Up', alternativeHeadline: `${cap(word(years))} years on foot, from my own log`, author: { '@id': `${SITE}#gerald` },
       bookFormat: 'https://schema.org/EBook', inLanguage: 'en', isAccessibleForFree: true, url: `${SITE}#/book`, dateModified: refreshed,
@@ -115,7 +123,7 @@ const head = `<!-- SEO:START (written by scripts/build_seo.mjs at each refresh; 
     <link rel="canonical" href="${SITE}" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#141414" />
-    <meta name="author" content="Gerald Tesha" />
+    <meta name="author" content="Gerald Tesha" />${GSV ? `\n    <meta name="google-site-verification" content="${esc(GSV)}" />` : ''}
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="My Strava Journey" />
@@ -143,7 +151,7 @@ const head = `<!-- SEO:START (written by scripts/build_seo.mjs at each refresh; 
 const chapters = Object.entries(routes).filter(([r]) => r !== '/' && r !== '/about' && r !== '/data')
 const body = `<!-- SEO:BODY:START -->
       <div id="seo-summary">
-        <h1>${esc(TITLE)}</h1>
+        <h1>Gerald Tesha · My Strava Journey</h1>
         <p>${esc(DESC)}</p>
         <ul>
 ${chapters.map(([r, x]) => `          <li><a href="#${r}">${esc(x.title)}</a>: ${esc(x.description)}</li>`).join('\n')}

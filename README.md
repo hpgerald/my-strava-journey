@@ -18,6 +18,7 @@ This is a static, data-driven explainer built from a personal Strava export: **2
 - [Getting started](#getting-started)
 - [Building and deploying](#building-and-deploying)
 - [Updating the data](#updating-the-data)
+- [Google search](#google-search)
 - [Design and accessibility](#design-and-accessibility)
 - [Data and methodology](#data-and-methodology)
 - [Contact](#contact)
@@ -168,6 +169,19 @@ Because the site is data-driven, a refresh is mostly a data swap:
 6. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
+
+## Google search
+
+The home page is built to be found by name. Its title starts with **Gerald Tesha**, the description and the first heading name him, and the structured data (JSON-LD) marks the page as a profile page about one person, linked to the Strava, LinkedIn and GitHub profiles. `npm run seo` writes all of it at each refresh.
+
+To put the site in Google Search Console:
+
+1. Open [search.google.com/search-console](https://search.google.com/search-console) and add a property of the **URL prefix** type: `https://hpgerald.github.io/my-strava-journey/` (a Domain property cannot be used on a github.io address).
+2. Verify ownership with the **HTML tag** method. Copy only the token from the tag Google shows (the text inside `content="..."`), paste it into `scripts/seo_config.json` as `googleSiteVerification`, run `npm run seo`, deploy, then press **Verify**. The tag stays in the page at every refresh. (The **HTML file** method also works: put the file Google gives you in `public/` and deploy.)
+3. Under **Sitemaps**, submit `https://hpgerald.github.io/my-strava-journey/sitemap.xml`.
+4. Under **URL inspection**, inspect the home page and press **Request indexing**. Do the same for the book PDF.
+
+The chapters live behind `#/` addresses, which Google treats as one page, so the home page and the book PDF are what appear in search. Links from the Strava, LinkedIn and GitHub profiles back to the site help Google tie the name to it.
 
 ## Design and accessibility
 

@@ -454,7 +454,7 @@ export default function Home() {
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
         <section className="hero" aria-labelledby="hero-title">
           <h1 id="hero-title" className="visually-hidden">
-            {years || 7} years, {fmtInt(activities)} activities, one habit.
+            Gerald Tesha: {years || 7} years on foot, {fmtInt(activities)} activities, one habit.
           </h1>
 
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
