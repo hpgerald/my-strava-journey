@@ -8,12 +8,13 @@ export function useWidth(initial = 640) {
   useEffect(() => {
     if (!ref.current) return
     const el = ref.current
+    // the observer reports the first width itself, right after the page is
+    // laid out, so nothing here asks the browser to lay the page out early
     const ro = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect?.width
-      if (w && Math.abs(w - width) > 1) setWidth(w)
+      if (w) setWidth((prev) => (Math.abs(w - prev) > 1 ? w : prev))
     })
     ro.observe(el)
-    setWidth(el.clientWidth || initial)
     return () => ro.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

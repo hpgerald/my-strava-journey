@@ -1,3 +1,10 @@
+/* Metric-matched stand-ins, shown for the moment before the web fonts arrive:
+   a local Arial scaled to the width and line height of each web font, so the
+   swap does not move the page. */
+@font-face { font-family: 'Archivo Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 104.73%; ascent-override: 83.83%; descent-override: 20.05%; line-gap-override: 0%; }
+@font-face { font-family: 'Inter Tight Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 105.05%; ascent-override: 92.21%; descent-override: 22.96%; line-gap-override: 0%; }
+@font-face { font-family: 'Inter Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 107.01%; ascent-override: 90.53%; descent-override: 22.54%; line-gap-override: 0%; }
+
 /* ============================================================================
    tokens.css  ·  Design tokens for My Strava Journey
    Monochrome only: black / white / grey ramp. Meaning comes from type, scale,
@@ -43,10 +50,10 @@
      --font-mono maps to Inter as well; numeric contexts use tabular figures so
      digits still align. No monospace/serif font is loaded, so there is no
      serif fallback anywhere. */
-  --font-display: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-hero: 'Inter Tight Variable', 'Inter Tight', 'Inter Variable', system-ui, sans-serif;
-  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Archivo Variable', 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-hero: 'Inter Tight Variable', 'Inter Tight', 'Inter Tight Fallback', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   /* ---- Fluid type scale (neo-grotesque, big type) ---- */
   --fs-2xs: clamp(0.66rem, 0.63rem + 0.15vw, 0.72rem);

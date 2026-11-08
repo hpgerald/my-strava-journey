@@ -1,5 +1,5 @@
 import { useBook } from './BookContext.js'
-import { lessonKeysFor, LessonSlot } from '../lib/vizLessons.jsx'
+import { getLessons } from '../lib/lessonsRegistry.js'
 import { BOOK_INTROS } from '../lib/bookIntros.js'
 
 // The longer story behind a section, printed only in My Book, where the page
@@ -24,7 +24,9 @@ export default function BookStory({ children, title = 'The story' }) {
 // lib/vizLessons.jsx). items: [[chart title, text, chart node?], ...]
 export function BookRead({ items }) {
   const book = useBook()
-  if (!book || !items) return null
+  const L = getLessons()
+  if (!book || !items || !L) return null
+  const { lessonKeysFor, LessonSlot } = L
   const rows = items.map((x) => (x ? { t: x[0], text: x[1], keys: x[2] ? lessonKeysFor(x[2]) : [] } : null))
   if (!rows.some((r) => r && (r.text || r.keys.length))) return null
   return (
@@ -43,8 +45,9 @@ export function BookRead({ items }) {
 // a lone lesson for a chart outside a pair, printed only in My Book
 export function BookLesson({ of }) {
   const book = useBook()
-  if (!book || !of) return null
-  return <LessonSlot keys={lessonKeysFor(of)} />
+  const L = getLessons()
+  if (!book || !of || !L) return null
+  return <L.LessonSlot keys={L.lessonKeysFor(of)} />
 }
 
 // the opening essay of a chapter, printed only in My Book

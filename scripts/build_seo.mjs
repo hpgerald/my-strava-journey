@@ -142,7 +142,7 @@ const head = `<!-- SEO:START (written by scripts/build_seo.mjs at each refresh; 
     <meta name="twitter:image" content="${SITE}og.png?v=${v}" />
     <link rel="alternate" type="application/pdf" title="Showing Up, the book" href="${SITE}${BOOK_PDF}" />
     <script type="application/ld+json">${JSON.stringify(ld)}</script>
-    <style>#seo-summary { max-width: 42rem; margin: 6rem auto; padding: 0 1.25rem; font: 1rem/1.55 system-ui, sans-serif; color: #141414; background: #f2f0eb; }</style>
+    <style>#seo-summary { max-width: 42rem; margin: 0 auto; padding: 6rem 1.25rem; font: 1rem/1.55 system-ui, sans-serif; color: #141414; background: #f2f0eb; }</style>
     <!-- SEO:END -->`
 
 // the words a crawler finds before the page runs. They sit in their own div:

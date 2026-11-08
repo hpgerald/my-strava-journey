@@ -1,3 +1,4 @@
+import { setLessons } from './lessonsRegistry.js'
 import ColBars from '../charts/ColBars.jsx'
 import HBars from '../charts/HBars.jsx'
 import StackCols from '../charts/StackCols.jsx'
@@ -305,3 +306,5 @@ export function LessonSlot({ keys }) {
     </div>
   )
 }
+
+setLessons({ lessonKeysFor, LessonSlot })

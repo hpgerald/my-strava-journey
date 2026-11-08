@@ -21,7 +21,7 @@ import TwoLines from '../charts/TwoLines.jsx'
 import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { lorenz, topShare } from '../lib/stats.js'
-import { useEffect, useMemo } from 'react'
+import { memo, useEffect, useMemo, useState, startTransition } from 'react'
 import { Link } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, toNum } from '../lib/format.js'
@@ -38,6 +38,7 @@ import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
 import Marquee from '../motion/Marquee.jsx'
 
+const NONE = []
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
 
@@ -55,21 +56,54 @@ const MONTHS_SHORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'
 const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const fmtDayLong = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTHS_FULL[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 
+// The page itself only gathers its tables. The site loads its tables one at a
+// time and each arrival redraws every reader of them, so the heavy work lives
+// in HomeBody below, which redraws only when its own tables change.
 export default function Home() {
-  const book = useBook()
-  const heroRef = useHeroLive()
   useEffect(() => {
     document.title = SITE_TITLE
   }, [])
-  const lifetime = useTable('lifetime_totals')
-  const meta = useKeyed('meta', 'key', 'value')
-  const countries = useTable('countries')
-  const activityLog = useTable('activities')
-  const activityGeo = useTable('activity_geo')
-  const monthlyTotals = useTable('monthly_totals')
-  const sportBreakdown = useTable('sport_breakdown')
-  const tzRegions = useTable('tanzania_regions')
-  const nav = useTable('nav_index')
+  const lifetime0 = useTable('lifetime_totals')
+  const metaRows = useTable('meta')
+  const countries0 = useTable('countries')
+  const activityLog0 = useTable('activities')
+  const activityGeo0 = useTable('activity_geo')
+  const monthlyTotals0 = useTable('monthly_totals')
+  const sportBreakdown0 = useTable('sport_breakdown')
+  const tzRegions0 = useTable('tanzania_regions')
+  const nav0 = useTable('nav_index')
+  const homeReady = [lifetime0, countries0, activityLog0, activityGeo0, monthlyTotals0, sportBreakdown0, tzRegions0, nav0].every((t) => t.length > 0)
+  // the tables arrive one by one; the page works from all of them at once, so
+  // until the last one is in, every figure below is worked out from nothing
+  const ready = (t) => (homeReady ? t : NONE)
+  // the front board paints first; the chapters below it are drawn right after
+  // as an interruptible update, so a slow phone can still answer a tap while
+  // they are built, and they arrive all at once, so nothing on screen moves
+  const [restOn, setRestOn] = useState(false)
+  useEffect(() => { if (homeReady && !restOn) startTransition(() => setRestOn(true)) }, [homeReady, restOn])
+  return (
+    <HomeBody
+      homeReady={homeReady} restOn={restOn} metaRows={metaRows}
+      lifetime={ready(lifetime0)}
+      countries={ready(countries0)}
+      activityLog={ready(activityLog0)}
+      activityGeo={ready(activityGeo0)}
+      monthlyTotals={ready(monthlyTotals0)}
+      sportBreakdown={ready(sportBreakdown0)}
+      tzRegions={ready(tzRegions0)}
+      nav={ready(nav0)}
+    />
+  )
+}
+
+const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime, countries, activityLog, activityGeo, monthlyTotals, sportBreakdown, tzRegions, nav }) {
+  const book = useBook()
+  const heroRef = useHeroLive()
+  const meta = useMemo(() => {
+    const out = {}
+    for (const r of metaRows) out[r.key] = r.value
+    return out
+  }, [metaRows])
 
   // per-year character narrative (shared with the Year in Sport report)
   // the biggest single climb of a hike, and where it started
@@ -450,6 +484,8 @@ export default function Home() {
         <div className="shero-scene__run" aria-hidden="true" />
         </div>
       )}
+      {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
+      {homeReady && restOn && (<>
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
         <section className="hero" aria-labelledby="hero-title">
@@ -932,6 +968,7 @@ export default function Home() {
           <IndexHub items={menuItems} />
         </section>
       </Container>
+      </>)}
     </Layout>
   )
-}
+})

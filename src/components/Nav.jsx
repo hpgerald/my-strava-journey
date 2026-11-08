@@ -43,7 +43,7 @@ export default function Nav() {
   return (
     <header className={`snav${open ? ' is-open' : ''}`}>
       <div className="snav__bar">
-        <Link className="snav__mark" to="/" aria-label="My Strava Journey, home" data-magnetic>
+        <Link className="snav__mark" to="/" aria-label="Showing up. My Strava Journey, home" data-magnetic>
           Showing up<b>.</b>
         </Link>
         <p className="snav__here" aria-hidden={!here}>

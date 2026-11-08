@@ -43,44 +43,104 @@ function anchorOf(p, fig) {
   return { y: p.getBoundingClientRect().top - ft, kind: 'top' }
 }
 
-export function alignPairs(root) {
+// Every pair is worked on in step with the others: all measured, then all
+// moved, then all measured again, so the page is laid out a few times in all
+// rather than a few times for every pair.
+const holderOf = (p) => (p.tagName.toLowerCase() === 'svg' ? p.parentElement : p)
+// an svg moves by its wrapper's padding, an HTML chart by its own margin
+const propOf = (p) => (p.tagName.toLowerCase() === 'svg' ? 'paddingTop' : 'marginTop')
+// the difference between the two plots: two svg charts line up on their
+// baselines, otherwise on their tops; measured against each figure, so an
+// entrance animation on a figure does not count
+const gapOf = (x) => {
+  const an = x.plots.map((p, i) => anchorOf(p, x.figs[i]))
+  if (an[0].kind === 'base' && an[1].kind === 'base') return an[0].y - an[1].y
+  const top = (i) => x.plots[i].getBoundingClientRect().top - x.figs[i].getBoundingClientRect().top
+  return top(0) - top(1)
+}
+const setShift = (x, sh) => x.plots.forEach((p, i) => {
+  const h = holderOf(p)
+  h.style.transition = 'none'
+  h.style[propOf(p)] = sh[i] ? `${Math.round(sh[i])}px` : ''
+  if (sh[i]) h.dataset.pairShift = '1'; else delete h.dataset.pairShift
+})
+
+export function alignPairs(root, only) {
   if (!root) return
-  root.querySelectorAll('.sgrid__pair').forEach((pair) => {
+  const pairs = only || [...root.querySelectorAll('.sgrid__pair')]
+  // 1. the pairs of two figures
+  const all = []
+  pairs.forEach((pair) => {
     const figs = [...pair.querySelectorAll(':scope > figure')]
     if (figs.length !== 2) return
-    const plots = figs.map(plotOf)
-    const holder = (p) => (p && p.tagName.toLowerCase() === 'svg' ? p.parentElement : p)
-    // an svg moves by its wrapper's padding, an HTML chart by its own margin
-    const prop = (p) => (p.tagName.toLowerCase() === 'svg' ? 'paddingTop' : 'marginTop')
-    plots.forEach((p) => { const h = p && holder(p); if (h && h.dataset.pairShift) { h.style[prop(p)] = ''; delete h.dataset.pairShift } })
-    if (!plots[0] || !plots[1]) return
-    const fr = figs.map((f) => f.getBoundingClientRect())
-    if (Math.abs(fr[0].top - fr[1].top) > 8 || fr[0].width < 120 || fr[1].width < 120) return
-    // measured against each figure, so an entrance animation on a figure does not
-    // count; a few passes, because moving one plot can move the other
-    // two svg charts line up on their baselines; otherwise on their tops
-    const gap = () => {
-      const an = plots.map((p, i) => anchorOf(p, figs[i]))
-      if (an[0].kind === 'base' && an[1].kind === 'base') return an[0].y - an[1].y
-      return (plots[0].getBoundingClientRect().top - figs[0].getBoundingClientRect().top) - (plots[1].getBoundingClientRect().top - figs[1].getBoundingClientRect().top)
-    }
-    const apply = (sh) => plots.forEach((p, i) => { const h = holder(p); h.style.transition = 'none'; h.style[prop(p)] = sh[i] ? `${Math.round(sh[i])}px` : ''; if (sh[i]) h.dataset.pairShift = '1'; else delete h.dataset.pairShift })
-    let shift = [0, 0]
-    let d = gap()
-    for (let pass = 0; pass < 4 && Math.abs(d) >= 1.5 && Math.abs(d) <= 140; pass++) {
-      // move the higher plot down, or bring the other back up if it was moved
-      const hi = d < 0 ? 0 : 1, lo = 1 - hi
-      const next = [...shift]
-      if (next[lo] > 0) next[lo] = Math.max(0, next[lo] - Math.abs(d))
-      else next[hi] += Math.abs(d)
-      apply(next)
-      const d2 = gap()
-      // a layout where both plots move together cannot be aligned this way: undo
-      if (Math.abs(d2) >= Math.abs(d) - 1) { apply(shift); break }
-      shift = next
-      d = d2
-    }
+    all.push({ pair, figs })
   })
+  // 2. find each pair's plots and whether it is side by side (reads only; the
+  //    old shifts are read off the styles, so nothing is written yet)
+  all.forEach((x) => {
+    x.plots = x.figs.map(plotOf)
+    if (!x.plots[0] || !x.plots[1]) return
+    const fr = x.figs.map((f) => f.getBoundingClientRect())
+    x.side = Math.abs(fr[0].top - fr[1].top) <= 8 && fr[0].width >= 120 && fr[1].width >= 120
+    x.was = x.plots.map((p) => { const h = holderOf(p); return h.dataset.pairShift ? parseFloat(h.style[propOf(p)]) || 0 : 0 })
+    if (x.side) x.d = gapOf(x)
+  })
+  // 3. the shift each pair needs, from where its plots would be with no shift
+  const todo = []
+  all.forEach((x) => {
+    if (!x.plots || !x.plots[0] || !x.plots[1]) return
+    if (!x.side) { if (x.was[0] || x.was[1]) setShift(x, [0, 0]); return }
+    const raw = x.d - x.was[0] + x.was[1]
+    x.raw = raw
+    x.shift = Math.abs(raw) >= 1.5 && Math.abs(raw) <= 140 ? (raw < 0 ? [-raw, 0] : [0, raw]) : [0, 0]
+    if (Math.abs(x.shift[0] - x.was[0]) >= 1 || Math.abs(x.shift[1] - x.was[1]) >= 1) todo.push(x)
+  })
+  // 4. move them all (writes), then check them all (reads), a few rounds, as
+  //    moving one plot can move the other
+  let round = todo
+  for (let pass = 0; pass < 3 && round.length; pass++) {
+    round.forEach((x) => setShift(x, x.shift))
+    round.forEach((x) => { x.d2 = gapOf(x) })
+    const next = []
+    round.forEach((x) => {
+      const before = pass ? x.dPrev : x.raw
+      // a layout where both plots move together cannot be aligned this way: undo
+      if (Math.abs(x.d2) >= Math.abs(before) - 1 && Math.abs(x.d2) >= 1.5) { x.shift = x.ok || [0, 0]; setShift(x, x.shift); return }
+      x.ok = [...x.shift]
+      if (Math.abs(x.d2) < 1.5) return
+      const hi = x.d2 < 0 ? 0 : 1, lo = 1 - hi
+      const s2 = [...x.shift]
+      if (s2[lo] > 0) s2[lo] = Math.max(0, s2[lo] - Math.abs(x.d2))
+      else s2[hi] += Math.abs(x.d2)
+      x.shift = s2
+      x.dPrev = x.d2
+      next.push(x)
+    })
+    round = next
+  }
+}
+
+// a mutation that brings in a new element (a chart drawn or redrawn), as
+// against a number counting up, which only swaps text
+export const addsElement = (m) => m.type === 'childList' && [...m.addedNodes, ...m.removedNodes].some((n) => n.nodeType === 1)
+
+// The pair heights of every section, measured together: all checks (reads),
+// then all figures freed (writes), then all heights (reads), then all put back
+// (writes). Two layouts of the page in all, however many pairs there are.
+const queue = new Set()
+let frame = 0
+const flush = () => {
+  frame = 0
+  const jobs = [...queue].filter((j) => j.check())
+  queue.clear()
+  jobs.forEach((j) => j.free())
+  jobs.forEach((j) => j.read())
+  jobs.forEach((j) => j.done())
+}
+export function queuePairMeasure(job) {
+  queue.add(job)
+  // two frames on, so the charts have drawn at their new size first
+  if (!frame) frame = requestAnimationFrame(() => { frame = requestAnimationFrame(flush) })
 }
 
 // keep every pair in a page aligned as charts load, resize and redraw
@@ -93,7 +153,7 @@ export function watchPairs(root) {
   const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(run) : null
   const seen = new WeakSet()
   const scan = () => { if (ro) root.querySelectorAll('.sgrid__pair > figure').forEach((f) => { if (!seen.has(f)) { seen.add(f); ro.observe(f) } }) }
-  const mo = new MutationObserver((list) => { if (list.some((m) => m.type === 'childList')) { scan(); run() } })
+  const mo = new MutationObserver((list) => { if (list.some(addsElement)) { scan(); run() } })
   mo.observe(root, { childList: true, subtree: true })
   window.addEventListener('resize', run)
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(run)

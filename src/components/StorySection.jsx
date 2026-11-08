@@ -5,7 +5,7 @@ import OddsRow from './OddsRow.jsx'
 import BookStory, { BookRead } from './BookStory.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { PairH } from '../charts/pairHeight.js'
-import { plotOf } from '../lib/alignPairs.js'
+import { plotOf, queuePairMeasure, addsElement } from '../lib/alignPairs.js'
 import { useSectionVariant } from './SectionCount.js'
 
 // The home page section recipe, in one place: eyebrow and insight headline, a
@@ -27,32 +27,43 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
   useEffect(() => {
     const pair = pairRef.current
     if (!pair || typeof ResizeObserver === 'undefined') return undefined
-    let raf = 0, lastW = 0
-    const measure = () => {
-      raf = 0
-      const figs = [...pair.querySelectorAll(':scope > figure')]
-      if (figs.length !== 2) return
-      const fr = figs.map((f) => f.getBoundingClientRect())
-      if (Math.abs(fr[0].top - fr[1].top) > 8 || fr[0].width < 120 || fr[1].width < 120) { setPairH(0); return }
-      const old = pair.style.alignItems
-      pair.style.alignItems = 'start'
+    let lastW = 0, live = true
+    // every pair on the page is measured in one shared pass (see queuePairMeasure),
+    // so the page is laid out once for all of them, never once per pair
+    const job = {
+      // first, with nothing changed: is the pair side by side?
+      check() {
+        const figs = [...pair.querySelectorAll(':scope > figure')]
+        if (figs.length !== 2) return false
+        const fr = figs.map((f) => f.getBoundingClientRect())
+        if (Math.abs(fr[0].top - fr[1].top) > 8 || fr[0].width < 120 || fr[1].width < 120) { setPairH(0); return false }
+        job.figs = figs
+        return true
+      },
+      // then the figures are let go to their natural height, all pairs at once
+      free() { job.old = pair.style.alignItems; pair.style.alignItems = 'start' },
       // only drawn charts set the shared height: a long list beside a chart must
       // not stretch the chart out of shape
-      const hs = figs.map((f) => { const p = plotOf(f); return p && p.tagName.toLowerCase() === 'svg' ? p.getBoundingClientRect().height : 0 })
-      pair.style.alignItems = old
-      const t = hs[0] && hs[1] ? Math.round(Math.max(...hs)) : 0
-      setPairH((prev) => (Math.abs(prev - t) > 2 ? (t > 60 && t < 900 ? t : 0) : prev))
+      read() { job.hs = job.figs.map((f) => { const p = plotOf(f); return p && p.tagName.toLowerCase() === 'svg' ? p.getBoundingClientRect().height : 0 }) },
+      done() {
+        pair.style.alignItems = job.old
+        if (!live) return
+        const hs = job.hs
+        const t = hs[0] && hs[1] ? Math.round(Math.max(...hs)) : 0
+        setPairH((prev) => (Math.abs(prev - t) > 2 ? (t > 60 && t < 900 ? t : 0) : prev))
+      },
     }
-    const ro = new ResizeObserver(() => {
-      const w = Math.round(pair.getBoundingClientRect().width)
+    const ro = new ResizeObserver((entries) => {
+      const w = Math.round(entries[entries.length - 1].contentRect.width)
       // a new width: every chart goes back to its own height before measuring again
       if (w !== lastW) { lastW = w; setPairH(0) }
-      if (!raf) raf = requestAnimationFrame(() => requestAnimationFrame(measure))
+      queuePairMeasure(job)
     })
     ro.observe(pair)
-    const mo = new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(() => requestAnimationFrame(measure)) })
+    // a chart that appears or is replaced; a number counting up is not one
+    const mo = new MutationObserver((list) => { if (list.some(addsElement)) queuePairMeasure(job) })
     mo.observe(pair, { childList: true, subtree: true })
-    return () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(raf) }
+    return () => { live = false; ro.disconnect(); mo.disconnect() }
   }, [])
   return (
     <section ref={ref} className={`sgrid sgrid--${variant}`} aria-labelledby={id} data-turn={want ? undefined : ''}>

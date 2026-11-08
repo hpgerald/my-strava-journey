@@ -173,12 +173,17 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr)
     const ctx = cv.getContext('2d')
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    const css = getComputedStyle(cv)
-    const col = {
-      run: css.getPropertyValue('--accent').trim() || '#fc4c02',
-      walk: css.getPropertyValue('--grey-85').trim() || '#2b2b2b',
-      trail: css.getPropertyValue('--accent-ink').trim() || '#b23400',
-      other: css.getPropertyValue('--grey-35').trim() || '#a6a6a6',
+    // the colours are read at the first drawing, a frame after the chart is
+    // placed, when the browser has worked out the page's styles on its own
+    let col = null
+    const readCols = () => {
+      const css = getComputedStyle(cv)
+      return {
+        run: css.getPropertyValue('--accent').trim() || '#fc4c02',
+        walk: css.getPropertyValue('--grey-85').trim() || '#2b2b2b',
+        trail: css.getPropertyValue('--accent-ink').trim() || '#b23400',
+        other: css.getPropertyValue('--grey-35').trim() || '#a6a6a6',
+      }
     }
     const alpha = { run: 0.62, walk: 0.55, trail: 0.7, other: 0.65 }
     const pts = model.pts
@@ -188,6 +193,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     let raf = 0, start = 0, visible = true
     const still = reduce || !armed
     const draw = (now) => {
+      if (!col) col = readCols()
       if (!start) start = now
       const el = now - start
       // off screen: keep the clock ticking but skip the drawing work
@@ -224,7 +230,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     }
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting }, { threshold: 0 })
     io.observe(cv)
-    raf = requestAnimationFrame(draw)
+    raf = requestAnimationFrame(() => { raf = requestAnimationFrame(draw) })
     return () => { cancelAnimationFrame(raf); io.disconnect() }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model, W, H, armed, reduce])

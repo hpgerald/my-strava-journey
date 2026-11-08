@@ -9,6 +9,28 @@ import { useInView, useCountUp } from './Reveal.jsx'
 // props: months [{ k: 'YYYY-MM', n }], streakFrom 'YYYY-MM', streakSinceLabel,
 //   gap { days, fromKey }, comebackKey, nums { n, km, elev, streak }
 const fmt = (v) => Math.round(v || 0).toLocaleString('en-US')
+// a counting number in a box already as wide as its final value, so the
+// unit beside it holds still while the digits climb
+const Num = ({ v, to }) => (
+  <span className="hx__nw"><span className="hx__nf" aria-hidden="true">{fmt(to)}</span><span>{fmt(v)}</span></span>
+)
+// the four numbers along the foot, counting up on their own, so each step of
+// the count redraws only these and leaves the bars and the title alone
+function HeroNums({ nums, go }) {
+  const ready = !!nums && nums.n > 0
+  const nN = useCountUp(nums ? nums.n : 0, go && ready, { dur: 2400 })
+  const kmN = useCountUp(nums ? nums.km : 0, go && ready, { dur: 2400 })
+  const elN = useCountUp(nums ? nums.elev : 0, go && ready, { dur: 2400 })
+  const stN = useCountUp(nums ? nums.streak : 0, go && ready, { dur: 2400 })
+  return (
+    <div className="hx__nums">
+      <div><b><Num v={nN} to={nums && nums.n} /></b><span>outings</span></div>
+      <div><b><Num v={kmN} to={nums && nums.km} /><small>km</small></b><span>on foot</span></div>
+      <div><b><Num v={elN} to={nums && nums.elev} /><small>m</small></b><span>climbed</span></div>
+      <div className="is-acc"><b><Num v={stN} to={nums && nums.streak} /><small>days</small></b><span>in a row</span></div>
+    </div>
+  )
+}
 const seal = 'SIKU KWA SIKU · DAY BY DAY · SIKU KWA SIKU · DAY BY DAY · '
 
 export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums }) {
@@ -25,17 +47,18 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
       const w = t.scrollWidth
       if (w > 0) t.style.fontSize = `${(100 * box.clientWidth) / w}px`
     }
+    // the title stays hidden until the hero font is in and the size is final,
+    // so it never jumps (its letters only start rising after a quarter second)
+    let live = true
+    const show = () => { if (live) { fit(); box.classList.add('is-fit') } }
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(box)
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit)
-    return () => ro.disconnect()
+    const late = setTimeout(show, 800)
+    if (document.fonts && document.fonts.load) document.fonts.load('800 100px "Inter Tight Variable"').then(show, show)
+    else show()
+    return () => { live = false; clearTimeout(late); ro.disconnect() }
   }, [])
-  const ready = !!nums && nums.n > 0
-  const nN = useCountUp(nums ? nums.n : 0, inView && ready, { dur: 2400 })
-  const kmN = useCountUp(nums ? nums.km : 0, inView && ready, { dur: 2400 })
-  const elN = useCountUp(nums ? nums.elev : 0, inView && ready, { dur: 2400 })
-  const stN = useCountUp(nums ? nums.streak : 0, inView && ready, { dur: 2400 })
   const N = months.length
   const top = Math.max(1, ...months.map((m) => m.n))
   const at = (k) => Math.max(0, months.findIndex((m) => m.k >= k))
@@ -97,12 +120,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         </div>
       ) : <div className="hx__chart" />}
 
-      <div className="hx__nums">
-        <div><b>{fmt(nN)}</b><span>outings</span></div>
-        <div><b>{fmt(kmN)}<small>km</small></b><span>on foot</span></div>
-        <div><b>{fmt(elN)}<small>m</small></b><span>climbed</span></div>
-        <div className="is-acc"><b>{fmt(stN)}<small>days</small></b><span>in a row</span></div>
-      </div>
+      <HeroNums nums={nums} go={inView} />
     </div>
   )
 }

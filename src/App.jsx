@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import TitleManager from './components/TitleManager.jsx'
@@ -6,20 +7,23 @@ import Cursor from './motion/Cursor.jsx'
 import Preloader from './motion/Preloader.jsx'
 import PageTransition from './motion/PageTransition.jsx'
 import Home from './pages/Home.jsx'
-import YearInSport from './pages/YearInSport.jsx'
-import Sports from './pages/Sports.jsx'
-import SportDetail from './pages/SportDetail.jsx'
-import Records from './pages/Records.jsx'
-import Where from './pages/Where.jsx'
-import PlaceDetail from './pages/PlaceDetail.jsx'
-import Timeline from './pages/Timeline.jsx'
-import Goals from './pages/Goals.jsx'
-import WhatItMeans from './pages/WhatItMeans.jsx'
-import Evidence from './pages/Evidence.jsx'
-import Book from './pages/Book.jsx'
-import Data from './pages/Data.jsx'
-import About from './pages/About.jsx'
-import NotFound from './pages/NotFound.jsx'
+
+// The front page ships in the first script; every other chapter loads its own
+// code when it is first opened, so the first visit downloads and runs less.
+const YearInSport = lazy(() => import('./pages/YearInSport.jsx'))
+const Sports = lazy(() => import('./pages/Sports.jsx'))
+const SportDetail = lazy(() => import('./pages/SportDetail.jsx'))
+const Records = lazy(() => import('./pages/Records.jsx'))
+const Where = lazy(() => import('./pages/Where.jsx'))
+const PlaceDetail = lazy(() => import('./pages/PlaceDetail.jsx'))
+const Timeline = lazy(() => import('./pages/Timeline.jsx'))
+const Goals = lazy(() => import('./pages/Goals.jsx'))
+const WhatItMeans = lazy(() => import('./pages/WhatItMeans.jsx'))
+const Evidence = lazy(() => import('./pages/Evidence.jsx'))
+const Book = lazy(() => import('./pages/Book.jsx'))
+const Data = lazy(() => import('./pages/Data.jsx'))
+const About = lazy(() => import('./pages/About.jsx'))
+const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 export default function App() {
   return (
@@ -30,6 +34,7 @@ export default function App() {
       <Preloader />
       <PageTransition />
       <Cursor />
+      <Suspense fallback={<div className="route-wait" />}>
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -59,6 +64,7 @@ export default function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </>
   )
 }
