@@ -25,7 +25,7 @@ const GROUPS = [
     items: [
       ['pr_longest', 'My ten longest outings on foot.'],
       ['pr_elevation', 'My ten biggest climbs on foot.'],
-      ['pr_activities', 'Every activity that set a personal record.'],
+      ['pr_activities', 'Every activity that set a PR.'],
       ['kudos_leaderboard', 'The activities with the most kudos.'],
       ['most_repeated_titles', 'How often my most-used titles came up, without the titles.'],
     ],

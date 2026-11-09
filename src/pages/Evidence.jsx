@@ -145,7 +145,7 @@ function buildCases(E) {
       n: 2, verdict: V.c2, short: 'A chain gets stronger, a break gets stickier', key: `Weibull shape ${f(c.weibull)} (${f(c.weibullLo)}–${f(c.weibullHi)})`,
       title: 'A chain gets stronger.',
       claim: 'The longer I have gone out day after day, the more likely I am to go out again. The longer I have rested, the less likely I am to start again.',
-      tested: 'The opposite claim: the chance of a streak ending is the same on day 2 as on day 20, and the chance of a break ending is the same after one rest day as after five. That is the memoryless (geometric) pattern.',
+      tested: 'The opposite claim: the chance of a streak ending is the same on day 2 as on day 20, and the chance of a break ending is the same after one zero day as after five. That is the memoryless (geometric) pattern.',
       methods: [
         'Discrete-time hazard model: a logistic regression of tomorrow on the log of how long the current streak or break has lasted.',
         `Weibull survival fit to the ${n0(c.nStreaks)} streaks since the comeback, with the current streak counted as still running (censored). A shape below 1 means the risk of ending falls with age.`,
@@ -158,17 +158,17 @@ function buildCases(E) {
         ['Out again after day 1 of a streak', `${pc(d1[1] / d1[2])} (${d1[1]}/${d1[2]})`],
         ['Out again after day 7', `${pc(d7[1] / d7[2])} (${d7[1]}/${d7[2]})`],
         [`Out again after days ${tail[0][0]} to ${tail[tail.length - 1][0]}`, `${th} of ${tn}`],
-        ['Out after 1 rest day', `${pc(r1[1] / r1[2])} (${r1[1]}/${r1[2]})`],
-        ['Out after 5 rest days', `${pc(r5[1] / r5[2])} (${r5[1]}/${r5[2]})`],
+        ['Out after 1 zero day', `${pc(r1[1] / r1[2])} (${r1[1]}/${r1[2]})`],
+        ['Out after 5 zero days', `${pc(r5[1] / r5[2])} (${r5[1]}/${r5[2]})`],
       ],
       chart: {
         title: 'Chance of going out tomorrow',
-        node: <MomentumChart on={c.memOn} off={c.memOff} aria={`Chance of going out the next day: ${pc(d1[1] / d1[2])} after one day out, ${pc(d7[1] / d7[2])} after seven; ${pc(r1[1] / r1[2])} after one rest day, ${pc(r5[1] / r5[2])} after five.`} />,
-        note: 'Orange: after this many days out in a row. Grey: after this many rest days in a row. The dot size is the number of cases behind each point.',
+        node: <MomentumChart on={c.memOn} off={c.memOff} aria={`Chance of going out the next day: ${pc(d1[1] / d1[2])} after one day out, ${pc(d7[1] / d7[2])} after seven; ${pc(r1[1] / r1[2])} after one zero day, ${pc(r5[1] / r5[2])} after five.`} />,
+        note: 'Orange: after this many days out in a row. Grey: after this many zero days in a row. The dot size is the number of cases behind each point.',
       },
       plain: [
         V.c2 === 'proven' ? 'Momentum and rust are both real and both measurable.' : 'Momentum is clear, and rust is weaker.',
-        `The first day back is the easiest one to lose: ${pc(1 - d1[1] / d1[2])} of new streaks end there. By the second week a streak nearly carries itself. Rest works the other way: each extra day off makes the next day off more likely.`,
+        `The first day back is the easiest one to lose: ${pc(1 - d1[1] / d1[2])} of new streaks end there. By the second week a streak nearly carries itself. Zero days work the other way: each extra zero day makes the next one more likely.`,
       ],
       limits: `Only ${word(c.reach14)} streaks reached two weeks, so the right end of the orange line rests on small numbers. The Weibull model is continuous and streaks are counted in whole days, so I treat its shape as a check on the hazard model, which fits the daily counts directly.`,
     })
@@ -223,7 +223,7 @@ function buildCases(E) {
       claim: `Since the comeback, some days of the week are skipped more than others. ${DAY[c.best]} is the day I skip least, and ${DAY[c.worst]} is the day I skip most.`,
       tested: 'The opposite claim: the chance of a day being active is the same on every day of the week, from Sunday to Saturday.',
       methods: [
-        'χ² test of independence on active and rest days by weekday.',
+        'χ² test of independence on active and zero days by weekday.',
         'Logistic regression with errors clustered by week, because days in the same week are not independent (case 1). This makes the test stricter.',
         `Block bootstrap: whole weeks resampled 2,000 times to get an interval for the ${DAY[c.best]} minus ${DAY[c.worst]} gap.`,
         'A χ² goodness-of-fit test on the number of outings by weekday.',
@@ -573,22 +573,22 @@ function glossary(E) {
     ]],
     ['Logistic regression', [
       'A model for outcomes that are yes or no, such as whether I went out on a given day. It does not model the chance directly. It models the log of the odds, and each input moves those log odds up or down by a fixed amount.',
-      `Taking the exponent of a coefficient gives an odds ratio. In case 1, ×${c1.or.toFixed(2)} means the odds of going out are ${c1.or.toFixed(1)} times higher after a day out than after a rest day. Odds are not chances: a move from 50% to 82% is an odds ratio of about 4.6. I used it in cases 1, 4 and 5, each time with the day's outing as the outcome. Its standard version treats every day as separate evidence, which is why cases 4 and 5 also cluster the errors by week.`,
+      `Taking the exponent of a coefficient gives an odds ratio. In case 1, ×${c1.or.toFixed(2)} means the odds of going out are ${c1.or.toFixed(1)} times higher after a day out than after a zero day. Odds are not chances: a move from 50% to 82% is an odds ratio of about 4.6. I used it in cases 1, 4 and 5, each time with the day's outing as the outcome. Its standard version treats every day as separate evidence, which is why cases 4 and 5 also cluster the errors by week.`,
     ]],
     ['Likelihood-ratio test', [
       'A way to ask whether extra terms in a model earn their place. I fit a smaller model and a bigger one that contains it, and compare how well each explains the data, measured by the log-likelihood.',
       `If the extra terms add nothing, twice the gain in log-likelihood follows a χ² distribution, with one degree of freedom for each extra term. A large χ² means the bigger model explains the data much better than chance would allow. In case 1 the smaller model knew only yesterday and the bigger one knew the last seven days, so the test had six degrees of freedom, and it gave χ² = ${c1.lr.toFixed(1)}.`,
     ]],
     ['Runs test', [
-      'A run is an unbroken stretch of the same value, such as five active days in a row followed by a rest day. The Wald–Wolfowitz runs test counts the runs in a sequence and compares the count with what a random shuffle of the same days would give.',
+      'A run is an unbroken stretch of the same value, such as five active days in a row followed by a zero day. The Wald–Wolfowitz runs test counts the runs in a sequence and compares the count with what a random shuffle of the same days would give.',
       `When values cluster, there are fewer and longer runs than expected. The result is a z-score: how many standard deviations the observed count sits from the expected one. My days since the comeback have ${c1.runs} runs where a shuffle would give about ${Math.round(c1.runsExp)}, a z-score of ${c1.runsZ.toFixed(1)}. The test assumes nothing about why days cluster, which makes it a plain check beside the regression in case 1.`,
     ]],
     ['Detrended fluctuation analysis', [
-      'DFA measures memory over many time scales at once. The series of active and rest days is first turned into a running total of how far each day sits from the average. That total is cut into windows of a given length, a straight line is fitted inside each window, and the average distance from those lines is the fluctuation for that length.',
+      'DFA measures memory over many time scales at once. The series of active and zero days is first turned into a running total of how far each day sits from the average. That total is cut into windows of a given length, a straight line is fitted inside each window, and the average distance from those lines is the fluctuation for that length.',
       `Repeating this for windows from a week to half a year, and plotting fluctuation against window length on log scales, gives a line whose slope is the exponent α. With no memory α is about 0.5. Above 0.5, good spells and quiet spells last longer than chance allows. Fitting a line inside each window removes slow trends, such as a busier year, so they do not pass as memory. My days give α = ${c1.dfa.toFixed(2)}, against ${c1.dfaShuf.toFixed(2)} for the same days shuffled 200 times.`,
     ]],
     ['Hazard model', [
-      'A hazard is the chance that something ends at a given moment, given that it has lasted until then. For a streak it is the chance that tomorrow is a rest day after so many days out. For a break it is the chance that tomorrow I go out again after so many rest days.',
+      'A hazard is the chance that something ends at a given moment, given that it has lasted until then. For a streak it is the chance that tomorrow is a zero day after so many days out. For a break it is the chance that tomorrow I go out again after so many zero days.',
       `A discrete-time hazard model fits that chance with a logistic regression on how long the streak or break has lasted, here on the log of its length. A flat hazard means the past does not matter, the memoryless pattern. In case 2 the slope is ${c2.streakSlope > 0 ? '+' : ''}${c2.streakSlope.toFixed(2)} for streaks and ${c2.gapSlope.toFixed(2)} for breaks: a streak gets more likely to go on the longer it runs, and a break gets less likely to end.`,
     ]],
     ['Weibull shape', [
@@ -685,7 +685,7 @@ export default function Evidence() {
           in my log, with more than one method for each, so that no single test decides. {cap(list(summary))}.
         </Reveal>
         <div className="ev-how">
-          <div><h3>The data</h3><p>{n0(M.n)} activities from {fmtShort(M.first)} to {fmtShort(M.last)}. Most tests use the {n0(M.daysSince)} days from the comeback on {fmtDay(M.comeback)}, so the long pause does not decide the result. A day counts as active if it held any outing, and a week runs from Sunday to Saturday.</p></div>
+          <div><h3>The data</h3><p>{n0(M.n)} activities from {fmtShort(M.first)} to {fmtShort(M.last)}. Most tests use the {n0(M.daysSince)} days from the comeback on {fmtDay(M.comeback)}, so the long layoff does not decide the result. A day counts as active if it held any outing, and a week runs from Sunday to Saturday.</p></div>
           <div><h3>Triangulation</h3><p>Each claim gets two to four methods that rest on different assumptions: a model, a test that assumes very little, and a resampling check. A claim is only called proven when they agree.</p></div>
           <div><h3>The verdicts</h3><p><span className="ev-v ev-v--proven">Proven</span> every method agrees and the result survives correction. <span className="ev-v ev-v--supported">Supported</span> the main result holds, with a weaker second check. <span className="ev-v ev-v--not">Not proven</span> the data does not back the claim.</p></div>
         </div>

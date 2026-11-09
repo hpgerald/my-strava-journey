@@ -171,7 +171,7 @@ export default function Chronicle({ data, aria }) {
             const x0 = X(s.start), x1 = Math.max(X(s.end), x0 + 2)
             const by = L.streak.c + (narrow ? 20 : 30)
             return (
-              <g key={s.start} className="chron__m" style={{ '--d': `${fr(s.start) * 1.8}s` }} onMouseEnter={show(s, `${fmtDay(s.start)} to ${fmtDay(s.end)} · ${s.len} days in a row${s.current ? ', still going' : ''}`)}>
+              <g key={s.start} className="chron__m" style={{ '--d': `${fr(s.start) * 1.8}s` }} onMouseEnter={show(s, `${fmtDay(s.start)} to ${fmtDay(s.end)} · a ${s.len}-day streak${s.current ? ', still going' : ''}`)}>
                 <rect x={x0} y={by} width={x1 - x0} height={narrow ? 10 : 14} rx="2" className={`chron__streak${s.current ? ' is-now' : ''}`} />
               </g>
             )
@@ -180,7 +180,7 @@ export default function Chronicle({ data, aria }) {
             const x0 = X(b.start), x1 = Math.max(X(b.end), x0 + 2)
             const by = L.streak.c + (narrow ? 20 : 30)
             return (
-              <g key={b.start} className="chron__m" style={{ '--d': `${fr(b.start) * 1.8}s` }} onMouseEnter={show(b, `${fmtDay(b.start)} to ${fmtDay(b.end)} · ${b.len} days without an outing`)}>
+              <g key={b.start} className="chron__m" style={{ '--d': `${fr(b.start) * 1.8}s` }} onMouseEnter={show(b, `${fmtDay(b.start)} to ${fmtDay(b.end)} · a ${b.len}-day layoff`)}>
                 <rect x={x0} y={by} width={x1 - x0} height={narrow ? 10 : 14} className="chron__gap" />
               </g>
             )
@@ -188,7 +188,7 @@ export default function Chronicle({ data, aria }) {
           {(() => {
             const cand = [
               ...data.streaks.filter((s) => s.len >= 60).map((s) => ({ key: s.start, len: s.len, x: X(s.start), text: narrow ? `${s.len} days` : `${s.len} days${s.current ? ', still going' : ''}`, gap: false, start: s.start })),
-              ...data.breaks.filter((b) => b.len >= 300).map((b) => ({ key: b.start, len: b.len, x: X(b.start), text: narrow ? `${b.len} days off` : `${b.len} days off`, gap: true, start: b.start })),
+              ...data.breaks.filter((b) => b.len >= 300).map((b) => ({ key: b.start, len: b.len, x: X(b.start), text: `${b.len}-day layoff`, gap: true, start: b.start })),
             ].sort((a, b) => b.len - a.len)
             const taken = []
             const out = []

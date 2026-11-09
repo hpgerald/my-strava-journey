@@ -29,7 +29,7 @@ export function KiliSplit({ race, aria }) {
   // one span of minutes for both panels, each starting a little under its quickest year
   const lo5 = (v) => Math.floor((v - 1) / 5) * 5
   const sides = [
-    { key: 'up', name: 'Up to the turn', sub: '9.5 km, climbing', vals: rows.map((r) => r.up) },
+    { key: 'up', name: 'Up to the turnaround', sub: '9.5 km, climbing', vals: rows.map((r) => r.up) },
     { key: 'down', name: 'Back down', sub: '11.6 km, descending', vals: rows.map((r) => r.down) },
   ]
   const span = Math.max(...sides.map((s) => Math.ceil((Math.max(...s.vals) + 2 - lo5(Math.min(...s.vals))) / 5) * 5))
@@ -130,11 +130,11 @@ export function KiliKm({ race, line, turnKm, aria }) {
           {/* the course */}
           <path d={area} className="kkm__land" />
           <path d={ridge} className="kkm__ridge" fill="none" />
-          {!narrow ? <text x={X(turnKm / 2)} y={m.t + prof - 10} textAnchor="middle" className="kkm__dir">up to the turn</text> : null}
+          {!narrow ? <text x={X(turnKm / 2)} y={m.t + prof - 10} textAnchor="middle" className="kkm__dir">up to the turnaround</text> : null}
           {!narrow ? <text x={X(turnKm + (N - turnKm) / 2)} y={m.t + prof - 10} textAnchor="middle" className="kkm__dir">back down</text> : null}
           <text x={X(0)} y={PY(line[0].alt) - 8} className="cb__gl">{Math.round(line[0].alt).toLocaleString('en-US')} m</text>
           <circle cx={X(top.d)} cy={PY(top.alt)} r="4" className="kkm__top" />
-          <text x={X(top.d)} y={PY(top.alt) - 10} textAnchor="middle" className="kkm__turn">the turn, {Math.round(top.alt).toLocaleString('en-US')} m</text>
+          <text x={X(top.d)} y={PY(top.alt) - 10} textAnchor="middle" className="kkm__turn">the turnaround, {Math.round(top.alt).toLocaleString('en-US')} m</text>
           <line x1={tx} x2={tx} y1={PY(top.alt) + 6} y2={axisY - 12} className="kkm__tline" />
 
           {/* the grid */}

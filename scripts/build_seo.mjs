@@ -76,13 +76,13 @@ const vc = (v) => verdicts.filter((x) => x === v).length
 // the name comes first: someone searching for Gerald Tesha should see it at once
 const TITLE = `Gerald Tesha · My Strava Journey · ${cap(word(years))} years on foot`
 const DESC = `Gerald Tesha's ${word(years)} years on foot, mostly in Tanzania: ${n0(F.n)} outings and ${n0(F.km)} km from his Strava log, with maps, records, tested habits and a free book.`
-const OG_DESC = `${n0(F.n)} outings, ${n0(F.km)} km on foot and ${n0(F.streak)} days in a row so far. ${cap(word(years))} years of Gerald Tesha's Strava log, read as data.`
+const OG_DESC = `${n0(F.n)} outings, ${n0(F.km)} km on foot and a ${n0(F.streak)}-day streak so far. ${cap(word(years))} years of Gerald Tesha's Strava log, read as data.`
 
 const routes = {
   '/': { title: TITLE, description: DESC },
   '/numbers': { title: 'Year in Sport', description: `Every year of my log as its own report, from ${n0(byYear[F.firstYear])} outings in ${F.firstYear} to ${n0(byYear[F.lastYear])} in ${F.lastYear}${last.slice(5) < '12-31' ? ' so far' : ''}.` },
   '/sports': { title: 'Sports', description: `My four sports on foot: ${n0(F.runKm)} km of running and ${n0(F.walkKm)} km of walking, with trail runs and hikes, and the treadmill kept apart from the road.` },
-  '/records': { title: 'Records', description: `My longest, highest and hardest days on foot: ${F.longest.toFixed(1)} km in one outing, ${n0(F.climb)} m of climbing in one outing, and ${n0(F.streak)} days in a row.` },
+  '/records': { title: 'Records', description: `My longest, highest and hardest days on foot: ${F.longest.toFixed(1)} km in one outing, ${n0(F.climb)} m of climbing in one outing, and a ${n0(F.streak)}-day streak.` },
   '/where': { title: 'Where', description: `Where I go out: ${word(F.countries)} African countries and ${word(F.regions)} regions of Tanzania, mapped from where each outing started.` },
   '/timeline': { title: 'Timeline', description: `${cap(word(years))} years in the order they happened: milestones, firsts on foot, trips, streaks and breaks.` },
   '/goals': { title: 'Goals', description: 'The same three targets held against every year: 1,000 km of walking, 1,000 km of running and 24,000 m of climbing on foot.' },
@@ -231,7 +231,7 @@ async function drawOg() {
     <div class="top"><span class="mark">Showing up<b>.</b></span><span class="by">Gerald Tesha · My Strava Journey</span></div>
     <div class="big">${n0(F.n)} outings<b>.</b><span>${n0(F.km)} km on foot.</span></div>
     <div class="row">
-      <p class="hot"><strong>${n0(F.streak)}</strong>days in a row, still going</p>
+      <p class="hot"><strong>${n0(F.streak)}</strong>day streak, still going</p>
       <p><strong>${n0(F.elev)} m</strong>climbed on foot</p>
       <p><strong>${F.countries} countries</strong>in Africa, and ${F.regions} regions of Tanzania</p>
       <p><strong>${F.firstYear} to ${F.lastYear}</strong>each bar below is a month</p>

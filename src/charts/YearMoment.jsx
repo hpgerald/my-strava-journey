@@ -61,7 +61,7 @@ export default function YearMoment({ year, stats }) {
     const jun = s.monthsActivities[5] || 0
     const jul = s.monthsActivities[6] || 0
     const aug = s.monthsActivities[7] || 0
-    body = `For the first half of the year there is almost nothing. Then, in the middle of the year, a few outings a month became dozens, and before the year ended I had gone out ${s.streakLen} days in a row.`
+    body = `For the first half of the year there is almost nothing. Then, in the middle of the year, a few outings a month became dozens, and before the year ended I was on a ${s.streakLen}-day streak.`
     figure = <JumpBars items={[{ label: 'Jun', v: jun }, { label: 'Jul', v: jul, hot: true }, { label: 'Aug', v: aug }]} />
   } else if (year === 2022) {
     kicker = 'The busiest'
@@ -107,7 +107,7 @@ export default function YearMoment({ year, stats }) {
     kicker = 'Every day'
     title = 'One day at a time.'
     body = `Every day of the year so far, at home and away.`
-    figure = <div className="ymom__chips">{chip('days in a row', s.streakLen)}{chip('hours moving', Math.round(s.hours))}</div>
+    figure = <div className="ymom__chips">{chip('day streak', s.streakLen)}{chip('hours moving', Math.round(s.hours))}</div>
   }
 
   return (

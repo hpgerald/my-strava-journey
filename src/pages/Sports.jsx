@@ -223,7 +223,7 @@ export default function Sports() {
                   { label: 'Hours moving', total: `${n0(T.hours)} h`, parts: SPORTS.map((s) => ({ key: s, value: S[s].hours })) },
                   { label: 'Climb', total: `${n0(T.elev)} m`, parts: SPORTS.map((s) => ({ key: s, value: S[s].elev })) },
                   { label: 'Kudos', total: n0(T.kudos), parts: SPORTS.map((s) => ({ key: s, value: S[s].kudos })) },
-                  { label: 'Personal records', total: n0(T.prs), parts: SPORTS.map((s) => ({ key: s, value: S[s].prs })) },
+                  { label: 'PRs', total: n0(T.prs), parts: SPORTS.map((s) => ({ key: s, value: S[s].prs })) },
                 ]}
               />
             ),
@@ -243,7 +243,7 @@ export default function Sports() {
             ]}
           story={[
               'Which sport matters most depends on what I count. By outings, walks lead. By distance, runs lead by far. By hours, walks and runs are almost level. By climb, walks lead again, and trail runs and hikes come close behind.',
-              `Personal records lean heavily to running: ${pc(share('prs', 'Run'))}% of them came on runs and ${pc(share('prs', 'Walk'))}% on walks. Kudos follow the outings more evenly, with runs and walks taking almost the same share.`,
+              `PRs lean heavily to running: ${pc(share('prs', 'Run'))}% of them came on runs and ${pc(share('prs', 'Walk'))}% on walks. Kudos follow the outings more evenly, with runs and walks taking almost the same share.`,
             ]}
           source="Activity Log · runs, walks, trail runs and hikes; distance and climb on foot only"
         />
@@ -633,7 +633,7 @@ export default function Sports() {
           eyebrow={`${num()} · A run and a walk on the same day`}
           title='A run and a walk, hours apart.'
           statement={<>
-            As the habit settled, I stopped splitting my days. In the early years I often did two things in one day, a run in the
+            As the habit settled, I stopped splitting my days. In the early years I often did doubles, a run in the
             morning and a walk in the evening, and only {word(under30)} pairs were less than half an hour apart. Now one longer
             outing usually takes their place.
           </>}
@@ -694,7 +694,7 @@ export default function Sports() {
               { num: M[rated[0]].effortPerHour, unit: '', label: `effort per hour, ${MODE_NAME[rated[0]].toLowerCase()}`, tone: 'move' },
               { num: M.walk.effortPerHour, unit: '', label: 'effort per hour, walk', tone: 'rest' },
               { num: M[kudosTop].kudosPer, unit: '', label: `kudos per ${MODE_NAME[kudosTop].toLowerCase()}`, tone: 'move' },
-              { num: M.road.prsPer, dec: 1, unit: '', label: 'personal records per outdoor run', tone: 'move' },
+              { num: M.road.prsPer, dec: 1, unit: '', label: 'PRs per outdoor run', tone: 'move' },
             ],
           }}
           left={{
@@ -717,14 +717,14 @@ export default function Sports() {
           }}
           read={[
               'Strava\u2019s relative effort, a score from my heart rate, divided by the hours moving, for each way of moving with enough scored outings. A longer bar means my heart worked harder for each hour.',
-              'The average kudos each kind of outing received. The line under each name is the personal records it set per outing.',
+              'The average kudos each kind of outing received. The line under each name is the PRs it set per outing.',
             ]}
           story={[
               `Kudos grew over the years. In 2021 an outing got about ${n0(kudosYear(2021))} kudos on average. Since 2022 it has stayed between ${n0(Math.min(...[2022, 2023, 2024, 2025, LY].map(kudosYear)))} and ${n0(Math.max(...[2022, 2023, 2024, 2025, LY].map(kudosYear)))}.`,
               unrated.length ? `${cap(unrated.map((k) => ofModeName(k)).join(' and '))} are left off the effort chart, because too few of them have a heart-rate score.` : '',
               'The two charts point in different directions. The treadmill is where my heart works hardest for each hour, and it gets fewer kudos than the trail runs. The trail runs score lower per hour, and they get the most cheers.',
             ]}
-          source="Activity Log · Strava relative effort (heart rate), kudos and personal records"
+          source="Activity Log · Strava relative effort (heart rate), kudos and PRs"
         />
 
         {/* ===== 11. the maths ===== */}

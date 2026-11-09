@@ -318,6 +318,9 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 .hx__t { margin: 0; font-family: var(--font-hero); font-weight: 800; letter-spacing: -0.06em; font-size: calc(100cqw / 4.7); line-height: 0.8; white-space: nowrap; overflow: hidden; padding: 0.04em 0 0.24em; width: max-content; max-width: none; }
 .hx__ch { display: inline-block; }
 .hx__tw:not(.is-fit) .hx__t { visibility: hidden; }
+/* the title is sized by measuring it, so its size must never ease, even under
+   reduced motion, where every property gets a near-zero transition */
+.hx__t, .hx__t > * { transition: none !important; }
 .hx__nw { display: inline-grid; justify-items: start; }
 .hx__nw > span { grid-area: 1 / 1; }
 .hx__nf { visibility: hidden; }

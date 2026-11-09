@@ -253,7 +253,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
     return { ...n, x, y: Y(n.p.hour), lane }
   }).filter(Boolean) : []
   const fromJan = yearMode && streak.start * DAY <= model.t0
-  const streakTxt = `${streak.len} ${narrow ? 'days in a row' : fromJan && stillGoing && !before ? 'days in a row, every day so far' : stillGoing ? 'days in a row, still going' : yearMode ? 'days in a row, the longest run' : 'days in a row'}`
+  const streakTxt = `${streak.len}-day streak${narrow ? '' : fromJan && stillGoing && !before ? ', every day so far' : stillGoing ? ', still going' : yearMode ? ', the longest' : ''}`
   const first = new Date(model.firstT)
   // the streak label sits on its bracket: starting at the bracket when it fits,
   // ending at it otherwise, and never past either edge of the plot
@@ -297,13 +297,13 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
           </svg>
           <canvas ref={canvasRef} className="sky__canvas" style={{ width: W, height: H }} />
           <svg className="sky__over" width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img"
-            aria-label={`${model.pts.length.toLocaleString()} outings${yearMode ? ` in ${year}` : ''}, placed by date and by the hour they started.${showGap ? ` The longest stretch without one was ${gap.len} days.` : ''} The longest run of days in a row was ${streak.len}.`}>
+            aria-label={`${model.pts.length.toLocaleString()} outings${yearMode ? ` in ${year}` : ''}, placed by date and by the hour they started.${showGap ? ` The longest layoff was ${gap.len} days.` : ''} The longest streak was ${streak.len} days.`}>
             {showGap && (narrow || gx1 - gx0 < 110 ? (showStreak && gx0 < lx1 && gx0 + 125 > lx0 ? null : (
               <text x={gx0} y={m.t - 18} textAnchor="start" className="sky__gapl"><tspan className="sky__gapn">{gap.len}</tspan> days silent</text>
             )) : (
               <>
                 <text x={(gx0 + gx1) / 2} y={m.t + plotH / 2 - 6} textAnchor="middle" className="sky__gapn">{gap.len} days</text>
-                <text x={(gx0 + gx1) / 2} y={m.t + plotH / 2 + 16} textAnchor="middle" className="sky__gapl">without one</text>
+                <text x={(gx0 + gx1) / 2} y={m.t + plotH / 2 + 16} textAnchor="middle" className="sky__gapl">the long layoff</text>
               </>
             ))}
             {future && X(future.to) - X(future.from) > 70 && (
@@ -313,7 +313,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
               <>
                 <path className="sky__streak" d={`M${sx0} ${m.t - 2} V${m.t - 8} H${sx1} V${m.t - 2}`} fill="none" />
                 <text x={lStart ? lx0 : lx1} y={m.t - 14} textAnchor={lStart ? 'start' : 'end'} className="sky__streakl">
-                  <tspan className="sky__streakn">{streak.len}</tspan> {streakTxt.replace(/^\d+ /, '')}
+                  <tspan className="sky__streakn">{streak.len}</tspan>{streakTxt.replace(/^\d+/, '')}
                 </text>
               </>
             )}

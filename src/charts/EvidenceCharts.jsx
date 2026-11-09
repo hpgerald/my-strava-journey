@@ -86,7 +86,7 @@ export function MomentumChart({ on, off, aria }) {
   const pts = (arr) => arr.map(([k, h, n]) => [x(k), y(h / n), n])
   return (
     <>
-      <Key items={[['is-acc', 'after this many days out in a row'], ['is-grey', 'after this many rest days in a row']]} />
+      <Key items={[['is-acc', 'after this many days out in a row'], ['is-grey', 'after this many zero days in a row']]} />
       <Svg f={f} aria={aria}>
         <Grid m={m} W={W} y={y} ticks={[0.25, 0.5, 0.75, 1]} fmt={(v) => pct(v)} />
         <line x1={m.l} x2={W - m.r} y1={H - m.b} y2={H - m.b} stroke="var(--ink)" />

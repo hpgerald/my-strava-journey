@@ -563,50 +563,50 @@ export default function Records() {
         <hr className="rule rule--faint" />
         <StorySection
           id="rc-prs"
-          eyebrow={`${num()} · Personal records`}
+          eyebrow={`${num()} · PRs`}
           title="Beating my own times."
           statement={<>
-            Personal records come from going back to the same road.{raceFirst ? ` The Kilimanjaro Half gave me ${raceFirst.prs} in one morning in ${raceFirst.year}${raceMatch.length === R.race.length - 1 && raceMatch.length > 1 ? ', and I matched that on the same course every year since' : raceMatch.length ? `, and I matched that on the same course in ${raceMatch.map((x) => x.year).join(' and ')}` : ''}.` : ''} A personal record here means I beat my own earlier time on a
+            PRs come from going back to the same road.{raceFirst ? ` The Kilimanjaro Half gave me ${raceFirst.prs} in one morning in ${raceFirst.year}${raceMatch.length === R.race.length - 1 && raceMatch.length > 1 ? ', and I matched that on the same course every year since' : raceMatch.length ? `, and I matched that on the same course in ${raceMatch.map((x) => x.year).join(' and ')}` : ''}.` : ''} A PR, short for personal record, here means I beat my own earlier time on a
             Strava segment, a short timed stretch of road or trail. The treadmill gives almost none, because segments need GPS.
           </>}
           odds={{
             title: 'Segment bests on foot',
             items: [
-              { num: R.prTotal, unit: '', label: 'personal records in all', tone: 'move' },
+              { num: R.prTotal, unit: '', label: 'PRs in all', tone: 'move' },
               { num: R.prOutings, unit: '', label: 'outings that set at least one', tone: 'rest' },
               { num: prLast.prs, unit: '', label: `in ${lastYear}${so}`, tone: 'move' },
               { num: prLast.rate, dec: 2, unit: '', label: `per outing in ${lastYear}`, tone: 'move' },
             ],
           }}
           left={{
-            title: 'Personal records, year by year',
+            title: 'PRs, year by year',
             node: (
               <ColBars
                 items={R.prByYear.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.prs, display: String(y.prs), tone: y.year === prBest.year ? 'big' : y.prs ? 'mid' : 'quiet' }))}
                 ticks={prTicks} yCap="records &uarr;"
-                aria={`Personal records each year: ${R.prByYear.map((y) => `${y.year} ${y.prs}`).join(', ')}.`}
+                aria={`PRs each year: ${R.prByYear.map((y) => `${y.year} ${y.prs}`).join(', ')}.`}
               />
             ),
           }}
           right={{
-            title: 'Personal records per outing',
+            title: 'PRs per outing',
             node: (
               <ColBars
                 items={R.prByYear.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.rate, display: y.rate.toFixed(2), tone: y.year === lastYear ? 'big' : y.rate ? 'mid' : 'quiet' }))}
                 ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5].filter((t) => t <= Math.max(...R.prByYear.map((y) => y.rate)) * 1.15)} tickFmt={(v) => v.toFixed(1)} yCap="per outing &uarr;"
-                aria={`Personal records per outing each year: ${R.prByYear.map((y) => `${y.year} ${y.rate.toFixed(2)}`).join(', ')}.`}
+                aria={`PRs per outing each year: ${R.prByYear.map((y) => `${y.year} ${y.rate.toFixed(2)}`).join(', ')}.`}
               />
             ),
           }}
           read={[
-              'The number of personal records I set each year on Strava segments.',
+              'The number of PRs I set each year on Strava segments.',
               'The same records divided by the outings of that year, so a busy year does not look better only because it had more outings.',
             ]}
           story={[
               `Two years stand out, 2023 and ${lastYear}. In 2023 I went to the trails and the hills, and I ran the Kilimanjaro Half for the first time. In ${lastYear} more of my running moved outside than ever before, and the records followed, the most of any year.`,
               'The right chart is the fair one. In 2021 and 2022 I did many outings, and almost all were on the treadmill, where there are no segments to beat. Per outing, those years are the lowest of the habit.',
             ]}
-          source="Activity Log · personal records (Strava segment bests) on runs, walks, trail runs and hikes"
+          source="Activity Log · PRs (Strava segment bests) on runs, walks, trail runs and hikes"
         />
 
         {/* ===== 8. streaks ===== */}
@@ -614,7 +614,7 @@ export default function Records() {
         <StorySection
           id="rc-streaks"
           eyebrow={`${num()} · Streaks`}
-          title={S.any.current === S.any.len ? `Every day since ${fmtMonth(S.any.startISO)}.` : `${n0(S.any.len)} days in a row.`}
+          title={S.any.current === S.any.len ? `Every day since ${fmtMonth(S.any.startISO)}.` : `A ${n0(S.any.len)}-day streak.`}
           statement={<>
             I do not take the streaks for granted.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, more than ${word(Math.floor(S.week.len / 52))} years now.` : ''}
             {' '}The other side of my record is the long gap, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}, when I did
@@ -626,7 +626,7 @@ export default function Records() {
               { num: S.any.len, unit: ' days', label: S.any.current === S.any.len ? 'with an outing, still going' : 'with an outing, the best', tone: 'move' },
               { num: S.week.len, unit: ' weeks', label: 'with at least one outing', tone: 'move' },
               { num: S.run.len, unit: ' days', label: 'running in a row', tone: 'move' },
-              { num: S.longGap.len, unit: ' days', label: 'without one, the longest gap', tone: 'rest' },
+              { num: S.longGap.len, unit: ' days', label: 'the longest layoff', tone: 'rest' },
             ],
           }}
           left={{
@@ -648,7 +648,7 @@ export default function Records() {
             ),
           }}
           read={[
-              'My eight longest runs of days in a row with an outing, longest at the top, with the month each began and the day it ended.',
+              'My eight longest streaks, longest at the top, with the month each began and the day it ended.',
               'The best run of days for each kind of streak: any outing, any outing on foot, a run every day, and a walk every day.',
             ]}
           story={[
@@ -756,7 +756,7 @@ export default function Records() {
             ]}
           story={[
               `Runs broke their record almost twice as often as chance would give. That is the shape of real progress: I was going further over time, so new bests kept coming. Walks are the exception, ${SR.Walk.broken} times against ${SR.Walk.expected.toFixed(1)}, close to chance.`,
-              stoodRec ? `The tall bar in the middle is the ${k1(stoodRec.km)} km run of ${fmtMonth(stoodRec.date)}. It stood for ${n0(stoodLong.days)} days, right through the long pause, until I came back and beat it.` : '',
+              stoodRec ? `The tall bar in the middle is the ${k1(stoodRec.km)} km run of ${fmtMonth(stoodRec.date)}. It stood for ${n0(stoodLong.days)} days, right through the long layoff, until I came back and beat it.` : '',
             ]}
           source="Activity Log · record counts against the harmonic expectation for a random order"
         />

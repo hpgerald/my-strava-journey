@@ -43,7 +43,7 @@ export default function YearCalendar({ activeSet, year, endISO, streak, firstISO
     <div ref={ref} className="ycal">
       <div ref={root} className={`ycal__plot${inView ? ' is-in' : ''}`} style={{ position: 'relative' }}>
         <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" style={{ display: 'block' }} onMouseLeave={() => setHi(null)}
-          aria-label={`Calendar of ${year}: ${activeSet.size} days with an outing.${streak && streak.startISO ? ` The longest run of days in a row went from ${streak.startISO} to ${streak.endISO}.` : ''}`}>
+          aria-label={`Calendar of ${year}: ${activeSet.size} days with an outing.${streak && streak.startISO ? ` The longest streak went from ${streak.startISO} to ${streak.endISO}.` : ''}`}>
           {months.map((m) => {
             const bx = (m.mo % perRow) * (blockW + gapX)
             const by = Math.floor(m.mo / perRow) * (blockH + 12)
@@ -62,12 +62,12 @@ export default function YearCalendar({ activeSet, year, endISO, streak, firstISO
         </svg>
         {hi && (
           <div className="chart-tip" style={{ left: 0, top: -6, position: 'absolute' }}>
-            <strong>{hi.d} {MON[parseInt(hi.iso.slice(5, 7), 10) - 1]}</strong> · {hi.future ? 'not on the record' : hi.active ? 'an outing' : 'rest day'}
+            <strong>{hi.d} {MON[parseInt(hi.iso.slice(5, 7), 10) - 1]}</strong> · {hi.future ? 'not on the record' : hi.active ? 'an outing' : 'zero day'}
           </div>
         )}
       </div>
       <p className="ycal__key" aria-hidden="true">
-        <i className="ycal__sw is-streak" /> longest run in a row <i className="ycal__sw is-on" /> outing <i className="ycal__sw" /> rest day
+        <i className="ycal__sw is-streak" /> longest streak <i className="ycal__sw is-on" /> outing <i className="ycal__sw" /> zero day
       </p>
     </div>
   )

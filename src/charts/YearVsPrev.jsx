@@ -26,11 +26,11 @@ export default function YearVsPrev({ rows, prevYear }) {
               <span className="yvp__lbl">{r.label}</span>
               <span className="yvp__bars">
                 <span className="yvp__barwrap">
-                  <span className="yvp__bar yvp__bar--cur" style={{ width: `${(r.cur / max) * 70}%`, transitionDelay: `${i * 70}ms` }} />
+                  <span className="yvp__bar yvp__bar--cur" style={{ width: `calc(min(70%, 100% - 5.5rem) * ${(r.cur / max).toFixed(4)})`, transitionDelay: `${i * 70}ms` }} />
                   <b className="yvp__num mono">{fmt(r.cur, r.decimals)}{r.unit ? <span className="yvp__u"> {r.unit}</span> : null}</b>
                 </span>
                 <span className="yvp__barwrap yvp__barwrap--prev">
-                  <span className="yvp__bar yvp__bar--prev" style={{ width: `${(r.prev / max) * 70}%`, transitionDelay: `${i * 70 + 40}ms` }} />
+                  <span className="yvp__bar yvp__bar--prev" style={{ width: `calc(min(70%, 100% - 5.5rem) * ${(r.prev / max).toFixed(4)})`, transitionDelay: `${i * 70 + 40}ms` }} />
                   <b className="yvp__num yvp__num--prev mono">{fmt(r.prev, r.decimals)}</b>
                 </span>
               </span>

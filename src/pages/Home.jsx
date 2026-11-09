@@ -505,8 +505,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
           )}
           <BookStory>{[
-            `Seven years sounds long, but most of this record comes from the last five. Before the long pause I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
-            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long pause. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
+            `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
+            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
             'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
           ]}</BookStory>
         </section>
@@ -531,8 +531,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             <OddsRow
               title="Chance the next day is active"
               items={[
-                { value: mFiveOff.p, label: `after ${['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} days off`, tone: 'rest' },
-                { value: mOneOff.p, label: 'after one day off', tone: 'rest' },
+                { value: mFiveOff.p, label: `after ${['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} zero days`, tone: 'rest' },
+                { value: mOneOff.p, label: 'after one zero day', tone: 'rest' },
                 { value: momentum.origin, label: 'after a day out', tone: 'move' },
                 { value: mWeek.p, label: 'after a week on a roll', tone: 'move' },
               ]}
@@ -549,13 +549,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               </figure>
             </div>
             <BookRead items={[
-              ['The odds, day by day', 'The middle point is a day I went out. Going right, each step is one more day in a row, and the orange line is the chance I go out again the next day. Going left, each step is one more day off, and the grey line is the chance I come back the next day. The gap between the two sides is the lesson: a chain is easier to keep than to restart.', <HabitMomentum />],
-              ['Given today, the chance of tomorrow', 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I go out tomorrow and the right box the chance I rest, and the two add up to 100%. The darker the box, the more likely that next day.', <TransitionMatrix />],
+              ['The odds, day by day', 'The middle point is a day I went out. Going right, each step is one more day on the streak, and the orange line is the chance I go out again the next day. Going left, each step is one more zero day, and the grey line is the chance I come back the next day. The gap between the two sides is the lesson: a chain is easier to keep than to restart.', <HabitMomentum />],
+              ['Given today, the chance of tomorrow', 'Read it by row. The top row starts from a day I went out, the bottom row from a zero day. In each row the left box is the chance I go out tomorrow and the right box the chance I rest, and the two add up to 100%. The darker the box, the more likely that next day.', <TransitionMatrix />],
             ]} />
             <BookStory>{[
               `Since I came back I have taken ${n0(habitBreaks.length)} breaks of one day or more. ${n0(breaksOne)} of them were a single day, and only ${n0(breaksFive)} lasted five days or more. The longest was ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`,
-              'The left side of the chart is the part I watch. Each extra day of rest makes the next one easier to take, and after five days off I am more likely to stay in than to go out. So a short walk on a tired day is worth more than it looks.',
-              `The right side is the reward. The longer the chain, the closer the next day comes to certain. In ${nowYear} I have not had a single rest day, so this year the whole story sits on the right.`,
+              'The left side of the chart is the part I watch. Each extra day of rest makes the next one easier to take, and after five zero days I am more likely to stay in than to go out. So a short walk on a tired day is worth more than it looks.',
+              `The right side is the reward. The longer the chain, the closer the next day comes to certain. In ${nowYear} I have not had a single zero day, so this year the whole story sits on the right.`,
             ]}</BookStory>
           </section>
         </Container>
@@ -649,7 +649,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               ),
             }}
             read={[
-              'One row for each year. The length of the bar is the minutes I spent moving on a day I went out. The bar is cut into blocks, one for each outing on a typical day, so many short blocks mean I split the day and one long block means one longer outing. Grey rows are the years before the long pause, and orange is this year.',
+              'One row for each year. The length of the bar is the minutes I spent moving on a day I went out. The bar is cut into blocks, one for each outing on a typical day, so many short blocks mean I split the day and one long block means one longer outing. Grey rows are the years before the long layoff, and orange is this year.',
               'Each bar is a year, and its height is the share of my days out that had two or more outings. The higher the bar, the more often I split the day.',
             ]}
             story={[

@@ -37,7 +37,7 @@ const word = (n) => WORD[n] || String(n)
 // the parts of the book and the chapters inside each
 const PARTS = [
   { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where, and what I do.', chapters: [['01', 'The Journey']] },
-  { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year on its own, from the quiet first months to the year with no day off.', chapters: [['02', 'Year in Sport']] },
+  { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year on its own, from the quiet first months to the year with no zero day.', chapters: [['02', 'Year in Sport']] },
   { n: 'III', name: 'Part three', title: 'The work', line: 'My sports on foot, the records I set and the places I went.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
   { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I set myself each year.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
   { n: 'V', name: 'Part five', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [['08', 'What It Means']] },
@@ -158,7 +158,7 @@ function SpiralYears({ F }) {
         return <text key={m} x={f1(x)} y={f1(y + 6)} textAnchor="middle" className="bk-spiral__mo">{m}</text>
       })}
       <text className="bk-spiral__note" dy="-9">
-        <textPath href="#bk-silence" startOffset="34%" textAnchor="middle">{n0(F.silence.len)} days without one</textPath>
+        <textPath href="#bk-silence" startOffset="34%" textAnchor="middle">{n0(F.silence.len)}-day layoff</textPath>
       </text>
       <circle cx={f1(sx)} cy={f1(sy)} r="5" className="bk-spiral__dot" />
       <text x={f1(sx + 12)} y={f1(sy + 5)} className="bk-spiral__lab">{fmtShort(F.firstISO)}</text>
@@ -178,12 +178,12 @@ function Cover({ F }) {
         <SpiralYears F={F} />
         <figcaption className="bk-cover__cap">
           Every day since my first upload, one turn per year. A mark is a day out, longer for more km on foot.
-          <span> Orange: the {n0(F.streak)} days in a row still going.</span>
+          <span> Orange: the {n0(F.streak)}-day streak, still going.</span>
         </figcaption>
       </figure>
       <div className="bk-cover__base">
         <div className="bk-cover__tw"><h2 className="bk-cover__t">Showing up<span>.</span></h2></div>
-        <CoverSide rows={[[n0(F.n), 'outings'], [n0(F.footKm), 'km on foot'], [n0(F.footElev), 'metres climbed'], [n0(F.streak), 'days in a row']]} />
+        <CoverSide rows={[[n0(F.n), 'outings'], [n0(F.footKm), 'km on foot'], [n0(F.footElev), 'metres climbed'], [n0(F.streak), 'day streak']]} />
       </div>
     </section>
   )
@@ -241,8 +241,8 @@ function Prologue({ F }) {
         Then I stopped for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
       </p>
       <p>
-        When I started again, I did not stop. Since {fmtMonth(F.habitISO)} I have been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest break has been {word(F.maxAfter)} days.
-        As I finish this edition, I am on {n0(F.streak)} days in a row.
+        When I started again, I did not stop. Since {fmtMonth(F.habitISO)} I have been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest layoff has been {word(F.maxAfter)} days.
+        As I finish this edition, I am on a {n0(F.streak)}-day streak.
       </p>
       <p>
         This book is me going back through that record, all {n0(F.n)} activities of it.
@@ -300,7 +300,7 @@ function Epilogue({ F }) {
     <section className="bk-page bk-prose" id="bk-epilogue" aria-labelledby="bk-epi-t">
       <h2 id="bk-epi-t" className="bk-head">Epilogue</h2>
       <p className="bk-lead">
-        The last activity in this edition is from {fmtDay(F.lastISO)}. I am on {n0(F.streak)} days in a row, and the habit that started in {F.habitISO.slice(0, 4)} has now lasted {n0(F.habitDays)} days.
+        The last activity in this edition is from {fmtDay(F.lastISO)}. I am on a {n0(F.streak)}-day streak, and the habit that started in {F.habitISO.slice(0, 4)} has now lasted {n0(F.habitDays)} days.
       </p>
       <p>
         None of these totals came from one big effort. They came from {n0(F.n)} ordinary outings, most of them short, early in the morning or in the evening, on days like any other.
@@ -412,7 +412,7 @@ function Notes({ glossary }) {
       <div className="bk-notes__cols">
         <div>
           <h3>Where the numbers come from</h3>
-          <p>Every activity comes from my Strava export: the date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and personal records. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
+          <p>Every activity comes from my Strava export: the date and time, sport, distance, moving and elapsed time, climb, heart-rate effort, kudos and PRs. Places come from each activity&rsquo;s GPS start point, kept only to country and region.</p>
           <p>Distance and climb only count the four sports on foot: runs, walks, trail runs and hikes. Everything else counts as other activities. Those still count as outings and days out, but they add no distance or climb, and I do not name them.</p>
           <p>A treadmill run is one that Strava marks as done indoors. Those have no GPS, so they never show up on a map and set almost no segment records.</p>
         </div>

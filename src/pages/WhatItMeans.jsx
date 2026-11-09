@@ -118,7 +118,7 @@ export default function WhatItMeans() {
             items={[
               { num: hours, unit: ' hours', label: 'on the move since the first upload', tone: 'move' },
               { num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
-              { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, rest days included`, tone: 'move' },
+              { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, zero days included`, tone: 'move' },
               { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}`, tone: 'move' },
             ]}
           />
@@ -131,7 +131,7 @@ export default function WhatItMeans() {
           </ul>
           <BookLesson of={<DayClocks />} />
           <BookStory>{[
-            `Each clock is one year, and the filled wedge is the time I spent moving on an average day, rest days included. ${early.length ? `In ${early.map((r) => r.year).join(' and ')} the wedges are thin slivers of ${early.map((r) => `${n0(r.minPerDay)}`).join(' and ')} minutes a day.` : ''}`,
+            `Each clock is one year, and the filled wedge is the time I spent moving on an average day, zero days included. ${early.length ? `In ${early.map((r) => r.year).join(' and ')} the wedges are thin slivers of ${early.map((r) => `${n0(r.minPerDay)}`).join(' and ')} minutes a day.` : ''}`,
             `From ${steady[0] ? steady[0].year : habitYear} to ${steady.length ? steady[steady.length - 1].year : habitYear} the clocks are almost the same size, between ${n0(steadyLo)} and ${n0(steadyHi)} minutes a day. The habit was steady long before it became every day. ${cur.partial ? `In ${cur.year} the wedge is the biggest of all, more than an hour and a half of every day.` : ''}`,
             'Spread over a day, it is not a lot of time. That is the first lesson, and the rest of this chapter follows from it.',
           ]}</BookStory>
@@ -193,20 +193,20 @@ export default function WhatItMeans() {
         <StorySection
           id="wm-small"
           eyebrow={`${num()} · Do the small version`}
-          title="The small days count."
+          title="Streak savers count."
           statement={<>
             <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Many of my days were small ones,
             less than {SMALL_KM} km on foot. They add almost nothing to my distance, but I logged them all the same. Later the
-            numbers showed me why they matter: after a small day, I was much more likely to go out again than after a full rest.
+            numbers showed me why they matter: after one of these streak savers, I was much more likely to go out again than after a zero day.
             On a bad day, I try to do a small version.
           </>}
           odds={{
-            title: `Small days since ${habitYear}`,
+            title: `Streak savers since ${habitYear}`,
             items: [
               { num: M.smallDays, unit: ' days', label: `under ${SMALL_KM} km on foot`, tone: 'move' },
               { value: smallShare, label: 'of all my days out', tone: 'move' },
               { value: M.smallNextActive, label: 'out again the next day', tone: 'move' },
-              { value: M.restNextActive, label: 'out again after a full rest day', tone: 'rest' },
+              { value: M.restNextActive, label: 'out again after a zero day', tone: 'rest' },
             ],
           }}
           left={{
@@ -229,11 +229,11 @@ export default function WhatItMeans() {
             ),
           }}
           read={[
-              `Every day out since ${habitYear} is a dot, stacked in the 1 km band its distance on foot fell in. The orange dots on the left are the small days under ${SMALL_KM} km, and the tall stacks show my usual days.`,
-              `The number of small days under ${SMALL_KM} km in each year.`,
+              `Every day out since ${habitYear} is a dot, stacked in the 1 km band its distance on foot fell in. The orange dots on the left are the streak savers under ${SMALL_KM} km, and the tall stacks show my usual days.`,
+              `The number of streak savers under ${SMALL_KM} km in each year.`,
             ]}
           story={[
-              `The small days were most common in ${smallTop.year}, with ${n0(smallTop.small)} of them${smallTop === low || smallTop === lowYear ? ', in my lowest year' : ''}. In ${cur.year}${cur.partial ? ' so far' : ''} there have been ${n0(cur.small)}, in a year with no rest day at all.`,
+              `Streak savers were most common in ${smallTop.year}, with ${n0(smallTop.small)} of them${smallTop === low || smallTop === lowYear ? ', in my lowest year' : ''}. In ${cur.year}${cur.partial ? ' so far' : ''} there have been ${n0(cur.small)}, in a year with no zero day at all.`,
               'On those days the outing was short, or it was one of the other activities. Either way, it counted as a day out, and it kept the chain going for the next day.',
             ]}
           source="Activity Log · every day with an activity since the habit began, distance on foot only"
@@ -245,15 +245,15 @@ export default function WhatItMeans() {
             <hr className="rule rule--faint" />
             <StorySection
               id="wm-floor"
-              eyebrow={`${num()} · The quiet weeks`}
+              eyebrow={`${num()} · The down weeks`}
               title='Keep a floor.'
               statement={<>
-                My big weeks have not changed much over the years. What changed is the quiet weeks. From 2022 to 2025 some weeks
+                My peak weeks have not changed much over the years. What changed is the down weeks. From 2022 to 2025 some weeks
                 slipped very low. In {cur.year} none has, and the middle half of my weeks are between{' '}
                 {n0(wNow.q25)} and {n0(wNow.q75)} km. If the bad weeks are not too bad, the year takes care of itself.
               </>}
               odds={{
-                title: 'Weeks on foot',
+                title: 'Weekly volume',
                 items: [
                   { num: Math.floor(wNow.min), unit: ' km', label: `my lowest week of ${cur.year}`, tone: 'move' },
                   { num: wNow.under10, unit: ' weeks', label: `under 10 km in ${cur.year}`, tone: 'move' },
@@ -285,7 +285,7 @@ export default function WhatItMeans() {
               'The number of weeks in each year with less than 10 km on foot.',
             ]}
               story={[
-              `The left edge of each row is where a year was won or lost. In ${wLowYear.year}, ${n0(wLowYear.under10)} weeks fell under 10 km, more than in any other year. In ${cur.year} the whole row has moved to the right, and the quiet weeks are gone.`,
+              `The left edge of each row is where a year was won or lost. In ${wLowYear.year}, ${n0(wLowYear.under10)} weeks fell under 10 km, more than in any other year. In ${cur.year} the whole row has moved to the right, and the down weeks are gone.`,
               'A floor is easier to keep than a peak. A week of 20 km is three ordinary walks, and I can almost always find time for that.',
             ]}
               source="Activity Log · distance on foot per full week since the habit began"

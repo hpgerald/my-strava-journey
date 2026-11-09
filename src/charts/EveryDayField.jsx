@@ -62,7 +62,7 @@ export default function EveryDayField({ firstISO, lastISO, activeSet, streakStar
         {hi != null && days[hi] && (
           <div className="chart-tip" style={{ left: `${Math.min(86, Math.max(6, ((hi % cols) / cols) * 100))}%`, top: Math.floor(hi / cols) * step + step }}>
             <strong>{new Date(days[hi].iso + 'T00:00:00Z').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</strong>
-            <br />{days[hi].active ? (days[hi].streak ? 'active · in the streak' : 'active') : 'rest day'}
+            <br />{days[hi].active ? (days[hi].streak ? 'active · in the streak' : 'active') : 'zero day'}
           </div>
         )}
       </div>

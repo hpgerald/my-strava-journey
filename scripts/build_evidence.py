@@ -254,7 +254,7 @@ K["sp"] = np.where(K.foot, K.sport_type, "Other"); K["yr"] = K.dt.dt.year.astype
 mk = smf.ols('lk ~ np.log1p(km) + np.log1p(el) + C(sp, Treatment("Walk")) + pr + wkend + C(yr)', K).fit(cov_type="HC3"); ck = mk.conf_int()
 names = [('C(sp, Treatment("Walk"))[T.TrailRun]', "Trail run against a walk"), ('C(sp, Treatment("Walk"))[T.Run]', "Run against a walk"),
          ('C(sp, Treatment("Walk"))[T.Hike]', "Hike against a walk"), ('C(sp, Treatment("Walk"))[T.Other]', "Others against a walk"),
-         ("wkend", "On a weekend"), ("pr", "Set a personal record"), ("np.log1p(km)", "Twice the distance"), ("np.log1p(el)", "Twice the climb")]
+         ("wkend", "On a weekend"), ("pr", "Set a PR"), ("np.log1p(km)", "Twice the distance"), ("np.log1p(el)", "Twice the climb")]
 kud = []
 for key, lab in names:
     if key not in mk.params: continue

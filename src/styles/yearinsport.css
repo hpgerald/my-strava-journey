@@ -249,3 +249,8 @@
   .ymom__chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3); }
   .ymom__chip .ymom__big { font-size: clamp(1.5rem, 1rem + 2.4vw, 2rem); }
 }
+/* on the smallest phones the change goes under the bars, so the numbers never run into it */
+@media (max-width: 24rem) {
+  .yvp__row { grid-template-columns: minmax(72px, 26%) 1fr; }
+  .yvp__delta { grid-column: 2; }
+}

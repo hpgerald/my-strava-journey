@@ -42,6 +42,9 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
     const box = tw.current
     if (!box) return undefined
     const t = box.firstElementChild
+    // no transition on the size, or the measure would read the old size (under
+    // reduced motion every property gets a near-zero transition)
+    t.style.transition = 'none'
     const fit = () => {
       t.style.fontSize = '100px'
       const w = t.scrollWidth
@@ -98,7 +101,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
             ))}
           </div>
           {gap && gap.days > 30 ? (
-            <p className="hx__note hx__note--gap" style={{ left: pc(comebackKey ? at(comebackKey) : at(gap.fromKey)) }}><b>{fmt(gap.days)} days</b>without an outing</p>
+            <p className="hx__note hx__note--gap" style={{ left: pc(comebackKey ? at(comebackKey) : at(gap.fromKey)) }}><b>{fmt(gap.days)} days</b>the long layoff</p>
           ) : null}
           {comebackKey ? (
             <p className="hx__note hx__note--back" style={{ left: pc(at(comebackKey)) }}><b>The comeback</b><span>a few outings a month became dozens</span></p>

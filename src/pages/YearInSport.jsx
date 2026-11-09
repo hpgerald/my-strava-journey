@@ -286,7 +286,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           <BookLesson of={<OutingSky />} />
           <BookStory>{[
             `Each dot above is one outing of ${Y}, placed by its day across the year and by the hour it started, and a bigger dot is a longer distance. The marks pick out the longest silence of the year, the longest run of days and the three biggest days.`,
-            `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} personal records on Strava segments` : ''}.`}`,
+            `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} PRs on Strava segments` : ''}.`}`,
           ]}</BookStory>
         </section>
 
@@ -429,16 +429,16 @@ export default function YearInSport({ year: bookYear } = {}) {
           statement={<>
             {r.restDays === 0
               ? 'Not one day was skipped. Some days it was only something small, but it was something, and the days add up when none of them is skipped.'
-              : `My longest run of days in a row${s.streakStartISO ? ` went from ${fmtDayIn(s.streakStartISO, Y)} to ${fmtDayIn(s.streakEndISO, Y)}` : ' was short'}.${r.longGap.len >= 2 ? ` My longest break ended on ${fmtDayIn(r.longGap.to, Y)}.` : ''}`}
+              : `My longest streak${s.streakStartISO ? ` went from ${fmtDayIn(s.streakStartISO, Y)} to ${fmtDayIn(s.streakEndISO, Y)}` : ' was short'}.${r.longGap.len >= 2 ? ` My longest ${r.longGap.len >= 7 ? 'layoff' : 'break'} ended on ${fmtDayIn(r.longGap.to, Y)}.` : ''}`}
           </>}
           odds={{
             title: `The days of ${Y}`,
             items: [
               { num: s.activeDays, unit: ' days', label: `with an outing, of ${fmtInt(r.span)}`, tone: 'move' },
               { num: s.streakLen, unit: ' days', label: s.streakGoing ? 'in a row, still going' : 'the longest run in a row', tone: 'move' },
-              { num: r.longGap.len, unit: ' days', label: 'the longest break', tone: 'rest' },
+              { num: r.longGap.len, unit: ' days', label: r.longGap.len >= 7 ? 'the longest layoff' : 'the longest break', tone: 'rest' },
               r.restDays === 0
-                ? { value: multiDays / Math.max(1, s.activeDays), label: 'of days held two outings or more', tone: 'move' }
+                ? { value: multiDays / Math.max(1, s.activeDays), label: 'of days were doubles', tone: 'move' }
                 : { value: r.gaps.total ? r.gaps.next / gapsTot : 0, label: 'of outings followed the very next day', tone: 'move' },
             ],
           }}
@@ -473,14 +473,14 @@ export default function YearInSport({ year: bookYear } = {}) {
             ),
           }}
           read={[
-              `Every day of ${Y} as a wall calendar, one small month per block with Sunday first. Orange days had an outing, deep orange marks the longest run of days in a row, and faint days are rest days.${isPartial ? ' Days still to come are left as outlines.' : ''}`,
+              `Every day of ${Y} as a wall calendar, one small month per block with Sunday first. Orange days had an outing, deep orange marks the longest streak, and faint days are zero days.${isPartial ? ' Days still to come are left as outlines.' : ''}`,
               r.restDays === 0 ? 'The share of days that held one outing, two, or three or more.' : 'After each day out, how soon the next outing came: the next day, two days later, or three days or more.',
             ]}
           story={[
-              r.restDays === 0 ? 'There is no faint day in the calendar. Some of those days held only a short walk or one of the other activities, and each one counted.' : `There were ${n0(r.restDays)} rest days in ${Y}${so}. More of them fell on a ${WEEK[restTop]} than on any other day of the week.`,
-              s.streakLen >= 7 ? `The longest run of days in a row was ${n0(s.streakLen)} days, from ${fmtDayIn(s.streakStartISO, Y)} to ${s.streakGoing ? 'now, still going' : fmtDayIn(s.streakEndISO, Y)}.${s.streakLen > s.streakInYear ? ` ${n0(s.streakInYear)} of those days fall in ${Y}, the deep orange stretch in the calendar.` : ' In the calendar it is the deep orange stretch.'}` : 'The days were scattered, with no long run of days in a row yet.',
+              r.restDays === 0 ? 'There is no faint day in the calendar. Some of those days held only a short walk or one of the other activities, and each one counted.' : `There were ${n0(r.restDays)} zero days in ${Y}${so}. More of them fell on a ${WEEK[restTop]} than on any other day of the week.`,
+              s.streakLen >= 7 ? `The longest streak was ${n0(s.streakLen)} days, from ${fmtDayIn(s.streakStartISO, Y)} to ${s.streakGoing ? 'now, still going' : fmtDayIn(s.streakEndISO, Y)}.${s.streakLen > s.streakInYear ? ` ${n0(s.streakInYear)} of those days fall in ${Y}, the deep orange stretch in the calendar.` : ' In the calendar it is the deep orange stretch.'}` : 'The days were scattered, with no real streak yet.',
               fullWeeks ? `${cap(word(fullWeeks))} full ${fullWeeks === 1 ? 'week' : 'weeks'}, Sunday to Saturday, had an outing on every day.` : 'No week of the year had an outing on every day.',
-              twoDays ? `On ${n0(twoDays)} days I went out more than once.` : '',
+              twoDays ? `On ${n0(twoDays)} days I doubled up.` : '',
             ]}
           source="Activity Log · days with at least one outing"
         />
@@ -530,9 +530,9 @@ export default function YearInSport({ year: bookYear } = {}) {
             <StorySection
               id={idp('yis-maths')}
               eyebrow={`${num()} · How steady it was`}
-              title={r.restDays === 0 ? `No rest day in ${Y}${so}.` : 'One day led to the next.'}
+              title={r.restDays === 0 ? `No zero day in ${Y}${so}.` : 'One day led to the next.'}
               statement={<>
-                {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a rest day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it could go either way'}.`}
+                {r.restDays === 0 ? '' : `After a day out, I usually went out again. After a zero day, ${r.p01 < 0.5 ? 'I usually rested again' : 'it could go either way'}.`}
                 {r.weekly.cv < 0.6 ? ' My weeks were fairly steady.' : r.weekly.cv < 1 ? ' My weeks went up and down a fair bit.' : ' My weeks swung a lot, from almost nothing to very big.'}
                 {' '}My biggest week was {n0(Math.max(...r.weekly.series.map((w) => w.km)))} km on foot.
               </>}
@@ -542,7 +542,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                   { value: r.p11, label: 'went out again the day after a day out', tone: 'move' },
                   r.restDays === 0
                     ? { num: r.weekly.mean, unit: ' km', label: 'in an average week', tone: 'rest' }
-                    : { value: r.p01, label: 'went out the day after a rest day', tone: 'rest' },
+                    : { value: r.p01, label: 'went out the day after a zero day', tone: 'rest' },
                   { num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were, where 0 is all the same', tone: 'rest' },
                   { num: r.tail.mark / r.tail.mean, dec: 1, unit: '×', label: 'my longest outing against the average one', tone: 'move' },
                 ],
@@ -561,7 +561,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               } : { title: 'Given today, the chance of tomorrow', node: <TransitionMatrix p11={r.p11} p01={r.p01} /> }}
               right={{ title: 'The longest outing against all the others', node: <TailOutlier values={r.tail.values} mark={r.tail.mark} mean={r.tail.mean} sd={r.tail.sd} z={r.tail.z} pct={r.tail.pct} unit="km" markLabel="the longest" /> }}
               read={[
-              r.restDays === 0 ? 'Each bar is one week of the year, as tall as my distance on foot that week. Orange weeks were above the average week, and the dashed line is the average.' : 'Read it by row. The top row starts from a day I went out, the bottom row from a rest day. In each row the left box is the chance I went out the next day and the right box the chance I rested.',
+              r.restDays === 0 ? 'Each bar is one week of the year, as tall as my distance on foot that week. Orange weeks were above the average week, and the dashed line is the average.' : 'Read it by row. The top row starts from a day I went out, the bottom row from a zero day. In each row the left box is the chance I went out the next day and the right box the chance I rested.',
               'Every outing on foot as a small histogram by distance. The shaded band is the normal range, and the orange mark is the longest outing of the year, with how many times the average it was.',
             ]}
               story={[
@@ -586,7 +586,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             {s.longestTime && s.longestTime.val > 0 && <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} />}
             {s.highestClimb && s.highestClimb.val > 0 && <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of climb in one outing" sub={fmtMonth(s.highestClimb.date)} />}
             {s.hardest && s.hardest.val > 0 && <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative effort, Strava's score for how hard it was" sub={fmtMonth(s.hardest.date)} />}
-            <RecordCard kicker="Personal records" value={Math.round(s.prs)} label="best times on Strava segments" sub={`${Y}`} tone="hot" />
+            <RecordCard kicker="PRs" value={Math.round(s.prs)} label="best times on Strava segments" sub={`${Y}`} tone="hot" />
             <RecordCard kicker="Most cheered" value={s.mostKudos ? s.mostKudos.kudos : 0} label={s.mostKudos ? `kudos on one ${/^other/i.test(s.mostKudos.sport) ? 'other activity' : s.mostKudos.sport.toLowerCase()}` : 'kudos on one outing'} sub={s.mostKudos ? fmtMonth(s.mostKudos.date) : ''} />
             <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
             <RecordCard kicker="Dar to Dodoma" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma, on foot" sub={`${n0(s.footKm)} km on foot`} />
@@ -607,7 +607,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             }
             if (ps) {
               const d = Math.round(s.prs) - Math.round(ps.prs)
-              out.push(d > 0 ? `I set ${n0(s.prs)} personal records on Strava segments, ${n0(d)} more than in ${ps.year}.` : d < 0 ? `I set ${n0(s.prs)} personal records on Strava segments, ${n0(-d)} fewer than in ${ps.year}.` : `I set ${n0(s.prs)} personal records on Strava segments, the same number as in ${ps.year}.`)
+              out.push(d > 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(d)} more than in ${ps.year}.` : d < 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(-d)} fewer than in ${ps.year}.` : `I set ${n0(s.prs)} PRs on Strava segments, the same number as in ${ps.year}.`)
             }
             return out
           })()}</BookStory>
@@ -670,7 +670,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               { value: chg(s.n, ps.n) || 0, sign: true, label: 'outings', tone: (chg(s.n, ps.n) || 0) >= 0 ? 'move' : 'rest' },
               { value: chg(s.footKm, ps.footKm) || 0, sign: true, label: 'distance on foot', tone: (chg(s.footKm, ps.footKm) || 0) >= 0 ? 'move' : 'rest' },
               { value: chg(s.elev, ps.elev) || 0, sign: true, label: 'metres climbed', tone: (chg(s.elev, ps.elev) || 0) >= 0 ? 'move' : 'rest' },
-              { value: chg(s.prs, ps.prs) || 0, sign: true, label: 'personal records', tone: (chg(s.prs, ps.prs) || 0) >= 0 ? 'move' : 'rest' },
+              { value: chg(s.prs, ps.prs) || 0, sign: true, label: 'PRs', tone: (chg(s.prs, ps.prs) || 0) >= 0 ? 'move' : 'rest' },
             ] : [
               { num: rankN, unit: '', label: 'rank by outings', tone: 'move' },
               { num: rankKm, unit: '', label: 'rank by distance', tone: 'move' },
@@ -688,7 +688,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                 { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(ps.hours), unit: 'h' },
                 { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(ps.elev), unit: 'm' },
                 { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos) },
-                { label: 'Personal records', cur: Math.round(s.prs), prev: Math.round(ps.prs) },
+                { label: 'PRs', cur: Math.round(s.prs), prev: Math.round(ps.prs) },
               ]} />
             ) : <p className="yis-empty">{Y} is where my record starts.</p>,
           }}
@@ -697,7 +697,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               ps ? `${Y} against ${prevYear}, measure by measure: orange is ${Y}, grey is ${prevYear}, and the number is the change.${isPartial ? ` ${Y} is not finished, so it is compared with a full year.` : ''}` : 'The first year has no year before it to compare with.',
             ]}
           story={[
-              `By hours moving it comes ${ORD[rankH - 1]}, by personal records ${ORD[rankP - 1]} and by kudos ${ORD[rankK - 1]}.`,
+              `By hours moving it comes ${ORD[rankH - 1]}, by PRs ${ORD[rankP - 1]} and by kudos ${ORD[rankK - 1]}.`,
               bestKmYear && bestKmYear.year !== Y ? `Against my best year for distance, ${bestKmYear.year}, it covered ${pc(s.footKm / bestKmYear.footKm)}% as many kilometres on foot.` : `It is my best year for distance on foot.`,
               `For distance per outing on foot, it comes ${ORD[rankKpo - 1]} of the ${word(years.length)} years, at ${kmPerOut(s).toFixed(1)} km each.`,
               isPartial ? 'The year is not finished, so it can still move up these lists.' : '',

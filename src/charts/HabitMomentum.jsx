@@ -44,7 +44,7 @@ export default function HabitMomentum({ stick, rebound, origin }) {
     <div ref={ref} className="hmom">
       <div ref={root} className={`hmom__plot${inView ? ' is-in' : ''}`}>
         <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img"
-          aria-label={`Chance the next day is active. If you moved today it is ${pct(origin)}. It climbs to ${week ? pct(week.p) : ''} after a week on a roll and ${pct(endRight.p)} by ${endRight.L} days. After one day off it is ${oneOff ? pct(oneOff.p) : ''}, and after ${endLeft.g} days off it falls to ${pct(endLeft.p)}.`}
+          aria-label={`Chance the next day is active. If you moved today it is ${pct(origin)}. It climbs to ${week ? pct(week.p) : ''} after a week on a roll and ${pct(endRight.p)} by ${endRight.L} days. After one zero day it is ${oneOff ? pct(oneOff.p) : ''}, and after ${endLeft.g} zero days it falls to ${pct(endLeft.p)}.`}
           style={{ display: 'block' }}>
           {/* y gridlines with their percentages */}
           {grid.map((g) => (
@@ -76,7 +76,7 @@ export default function HabitMomentum({ stick, rebound, origin }) {
           {oneOff && (
             <g className="hmom__mark">
               <circle cx={xLeft(1)} cy={y(oneOff.p)} r="3.5" fill="var(--grey-55)" stroke="var(--paper)" strokeWidth="1.5" />
-              <text x={xLeft(1) - 8} y={y(oneOff.p) - 12} textAnchor="end" className="hmom__end hmom__end--down hmom__halo">1 day off · {pct(oneOff.p)}</text>
+              <text x={xLeft(1) - 8} y={y(oneOff.p) - 12} textAnchor="end" className="hmom__end hmom__end--down hmom__halo">1 zero day · {pct(oneOff.p)}</text>
             </g>
           )}
 
@@ -84,7 +84,7 @@ export default function HabitMomentum({ stick, rebound, origin }) {
           <circle className="hmom__dot" cx={xRight(endRight.L)} cy={y(endRight.p)} r="4" fill="var(--accent)" />
           <text x={xRight(endRight.L)} y={y(endRight.p) + 20} textAnchor="end" className="hmom__end hmom__end--up hmom__halo">{endRight.L} days · {pct(endRight.p)}</text>
           <circle className="hmom__dot" cx={xLeft(endLeft.g)} cy={y(endLeft.p)} r="4" fill="var(--grey-55)" />
-          <text x={xLeft(endLeft.g) + 4} y={y(endLeft.p) + 22} textAnchor="start" className="hmom__end hmom__end--down hmom__halo">{endLeft.g} days off · {pct(endLeft.p)}</text>
+          <text x={xLeft(endLeft.g) + 4} y={y(endLeft.p) + 22} textAnchor="start" className="hmom__end hmom__end--down hmom__halo">{endLeft.g} zero days · {pct(endLeft.p)}</text>
 
           {/* x ticks: days off to the left, days on a roll to the right */}
           {lTicks.map((g) => (
@@ -93,7 +93,7 @@ export default function HabitMomentum({ stick, rebound, origin }) {
           {rTicks.filter((L) => L > 1).map((L) => (
             <text key={'r' + L} x={xRight(L)} y={H - m.b + 16} textAnchor={L === maxL ? 'end' : 'middle'} className="hmom__tick">{L}</text>
           ))}
-          <text x={(m.l + cx) / 2} y={H - 6} textAnchor="middle" className="hmom__axis">&larr; days off</text>
+          <text x={(m.l + cx) / 2} y={H - 6} textAnchor="middle" className="hmom__axis">&larr; zero days</text>
           <text x={(cx + W - m.r) / 2} y={H - 6} textAnchor="middle" className="hmom__axis">days on a roll &rarr;</text>
         </svg>
       </div>

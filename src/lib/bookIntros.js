@@ -14,7 +14,7 @@ export const BOOK_INTROS = {
   },
   '02': {
     paras: [
-      'This chapter goes through the record one year at a time, from the small beginning, through the long pause, to the year I came back and the years that followed. Each year has its own short opening and then the same set of sections in the same order: the busiest month, the sport that led, the hour of the day, the share of days out, the usual outing, the chain of days, the biggest days, the places and the year’s rank among all the others.',
+      'This chapter goes through the record one year at a time, from the small beginning, through the long layoff, to the year I came back and the years that followed. Each year has its own short opening and then the same set of sections in the same order: the busiest month, the sport that led, the hour of the day, the share of days out, the usual outing, the chain of days, the biggest days, the places and the year’s rank among all the others.',
       'Keeping the same order was a choice. A reader who has learned to read one year can read every other year at once, and what is left to see is the difference between them. The early years are thin, and their pages say so plainly. The later years are full, and the same charts carry far more marks.',
       'Mwaka ni mwaka, a year is a year. Each one is judged on its own days, and the comparisons with the year before are there only to show which way I was moving.',
     ],
@@ -64,7 +64,7 @@ export const BOOK_INTROS = {
     paras: [
       'This chapter turns from what happened to what I learned. Each section is one lesson, drawn from my own record, about what the habit costs, what keeps it going and how a year adds up.',
       'The lessons are mine and they come from one person’s days. I share them as things that worked for me, and the last section gathers them for anyone starting out.',
-      'Usipoziba ufa utajenga ukuta, if you do not fill the crack you will build a wall. Most of the lessons here are about the small cracks: the one rest day that becomes five, the short walk that keeps the chain unbroken.',
+      'Usipoziba ufa utajenga ukuta, if you do not fill the crack you will build a wall. Most of the lessons here are about the small cracks: the one zero day that becomes five, the short walk that keeps the chain unbroken.',
     ],
     design: 'The charts in this chapter are chosen to make each lesson easy to feel. Time is drawn as clocks, days are stacked as dots that can be counted, and the trade-off between more days and longer days is drawn as lines of equal total.',
   },

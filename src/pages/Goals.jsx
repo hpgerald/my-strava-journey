@@ -340,7 +340,7 @@ export default function Goals() {
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
               statement={split && downGain > upGain ? <>
-                Most of what I gained came on the way back down. Going up to the turn I kept much the same speed after my
+                Most of what I gained came on the way back down. Going up to the turnaround I kept much the same speed after my
                 first year. Coming down I got quicker {downEachYear ? 'every year' : 'over the years'}{last.runKm > 4 ? <>, and in {last.year} I ran two long stretches of the descent</> : null}.
               </> : <>The same road, {word(race.length)} times, a little quicker each time.</>}
               odds={{
@@ -366,12 +366,12 @@ export default function Goals() {
                 node: (
                   <KiliSplit
                     race={race}
-                    aria={`Time up to the turn and time back down at each edition: ${race.map((r) => `${r.year} ${hmin(r.up)} up and ${hmin(r.down)} down`).join(', ')}.`}
+                    aria={`Time up to the turnaround and time back down at each edition: ${race.map((r) => `${r.year} ${hmin(r.up)} up and ${hmin(r.down)} down`).join(', ')}.`}
                   />
                 ),
               }}
               read={[
-              'The course is drawn as its height profile, climbing to the turn and coming back down. Each edition is a runner on its own line, moving at the pace I really went. When the quickest edition reached the finish, the others are marked where they were on the course.',
+              'The course is drawn as its height profile, climbing to the turnaround and coming back down. Each edition is a runner on its own line, moving at the pace I really went. When the quickest edition reached the finish, the others are marked where they were on the course.',
               'The way up and the way down, one panel each, and both panels cover the same number of minutes. One dot for each edition, the oldest at the top. The line joins them in order, so each half can be followed from year to year.',
             ]}
               story={split ? [

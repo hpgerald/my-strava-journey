@@ -138,7 +138,7 @@ export default function Timeline() {
               { num: span, unit: ' days', label: 'from the first outing to the latest', tone: 'move' },
               { num: C.n, unit: '', label: 'outings in that time', tone: 'move' },
               { num: S.len, unit: ' days', label: `the silence, ${fmtMon(S.start)} to ${fmtMon(S.end)}`, tone: 'rest' },
-              { num: C.maxAfter, unit: ' days', label: 'the longest break since', tone: 'move' },
+              { num: C.maxAfter, unit: ' days', label: 'the longest layoff since', tone: 'move' },
             ]}
           />
           <Chronicle
@@ -154,8 +154,8 @@ export default function Timeline() {
             <li><i className="msw msw--hike" />hike</li>
             <li><i className="chron__ktrip" />a trip across the border</li>
             <li><i className="chron__kshoe" />a pair of shoes, black while still in use</li>
-            <li><i className="chron__kstreak" />20 days or more in a row</li>
-            <li><i className="chron__kgap" />30 days or more without an outing</li>
+            <li><i className="chron__kstreak" />streaks of 20 days or more</li>
+            <li><i className="chron__kgap" />layoffs of 30 days or more</li>
           </ul>
           <BookLesson of={<Chronicle />} />
         </section>
@@ -203,11 +203,11 @@ export default function Timeline() {
           }}
           read={[
               'Each bar is the number of days it took me to log 250 more outings, in order from the first 250 to the latest. A shorter bar means those outings came faster.',
-              'The longest gap between two outings in each year, counted in full even when it runs across New Year. The long pause covers parts of 2020 and 2021, so those two bars run off the top: the scale stops at 40 days so the small gaps can still be seen.',
+              'The longest gap between two outings in each year, counted in full even when it runs across New Year. The long layoff covers parts of 2020 and 2021, so those two bars run off the top: the scale stops at 40 days so the small gaps can still be seen.',
             ]}
           story={[
-              `The faint bars under the chronicle above are my outings in each month. In the first two years they are thin and broken, and then comes the empty stretch of the long pause. After I came back the row never drops to zero again: ${n0(monthsSince)} months in a row, each with at least one outing.`,
-              `Since the comeback my longest break in any year has been ${word(C.maxAfter)} days, and breaks of a week or more have happened ${n0(C.after.length)} times in all. In ${lastYear}${so} there has been none.`,
+              `The faint bars under the chronicle above are my outings in each month. In the first two years they are thin and broken, and then comes the empty stretch of the long layoff. After I came back the row never drops to zero again: ${n0(monthsSince)} months in a row, each with at least one outing.`,
+              `Since the comeback my longest layoff in any year has been ${word(C.maxAfter)} days, and layoffs of a week or more have happened ${n0(C.after.length)} times in all. In ${lastYear}${so} there has been none.`,
               `At my pace now, 250 outings take about ${Math.round(lastStep.days / 30.44)} months. The bars are not getting shorter every time, and that is fine. Since I took on longer outings, a day of one outing counts the same as a day of two, and the chain matters more than the count.`,
             ]}
           source="Activity Log · dates of every 250th outing and of every gap between outings"
