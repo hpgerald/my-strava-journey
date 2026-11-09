@@ -5,7 +5,7 @@ The CSVs are the single source of truth for the site. No figure was invented; wh
 value was unavailable it was left blank and logged here.
 
 Generated for Phase 1 of the "my-strava-journey" build.
-Coverage: 2019-08-17 through 2026-11-01 (2,068 activities). Last refreshed 2026-11-02.
+Coverage: 2019-08-17 through 2026-11-08 (2,076 activities). Last refreshed 2026-11-09.
 Figures below from the original Phase-1 build are retained for provenance; current totals
 come from the weekly rebuild (`rebuild_from_raw.py` → `apply_foot_only.py` →
 `build_derived.py` → `sanitize_public_data.py` → `validate.py` → `build_evidence.py` → `update_readme.py` → `build_seo.mjs`).
@@ -56,6 +56,7 @@ Reproduce with: `scripts/extract_workbook.py` → `scripts/build_geo.py` →
 | countries.csv | Strava GPS + point-in-polygon | Medium–High | 7 countries; border caveats in §5. |
 | tanzania_regions.csv | Strava GPS + nearest TZ city | Medium–High | 17 regions; see §5. |
 | kili_expedition / kili_expedition_profile.csv | Activity Log + Strava activity streams | High | The Kilimanjaro expedition of March 2023 (Marangu route), built once by `scripts/build_kili_expedition.py` from streams cached in `scripts/kili_streams/expedition.json`; not part of the weekly rebuild. On the summit night the watch's power saver stopped the recording at 5,537 m, so the profile of that stage ends there; the chart marks the rest of the night (Gilman's Point, Uhuru Peak, the way back to Kibo Hut) as not recorded. |
+| kili_half_parts / kili_half_km / kili_half_course.csv | Strava activity streams | High | The four Kilimanjaro Half Marathons on the same 21.1 km of road, anchored on the turn (the highest point): 9.5 km up and 11.6 km down, clock time, with the half hour the 2023 watch ran before the start taken out. Minutes per course kilometre, the share of each kilometre run (step cadence of 65 or more, 2024 to 2026), and the course altitude every 250 m. Built once by `scripts/build_kili_half_detail.py` from streams cached in `scripts/kili_streams/`; not part of the weekly rebuild. |
 | hanang_2023.csv | Activity Log + Strava activity stream | High | The Mount Hanang hike of 30 April 2023 (Manyara): altitude against minutes since the start, built once by `scripts/build_hanang.py` from the stream cached in `scripts/kili_streams/hanang_2023.json`; not part of the weekly rebuild. Time, climb and distance on the page come from activities.csv. |
 | nav_index.csv | authored | n/a | Site structure, no figures. |
 | glossary.csv | authored | n/a | Standard Strava term definitions. |
