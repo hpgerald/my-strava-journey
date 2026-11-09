@@ -61,7 +61,7 @@
 .bk-cover__base { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 4cqw; border-top: 1px solid var(--ink); padding-top: 3cqw; }
 .bk-cover__tw { container-type: inline-size; min-width: 0; align-self: end; }
 /* one line across the cell: 4.7 is the width of the title in ems at this weight and tracking */
-.bk-cover__t { margin: 0; font-family: var(--font-hero); font-weight: 800; font-size: calc(100cqw / 4.7); line-height: 0.8; letter-spacing: -0.06em; white-space: nowrap; padding-bottom: 0.06em; }
+.bk-cover__t { margin: 0; font-family: var(--font-hero); font-weight: 800; font-size: calc(100cqw / 5.36); line-height: 0.8; letter-spacing: -0.06em; white-space: nowrap; padding-bottom: 0.06em; }
 .bk-cover__t span { color: var(--accent); }
 .bk-cover__side { display: flex; align-items: stretch; gap: 1.4cqw; margin-bottom: 1cqw; }
 .bk-cover__nums { margin: 0; display: grid; gap: 1.2cqw; }
@@ -294,10 +294,12 @@
   a { color: inherit; text-decoration: none; }
 }
 
-/* ---- the cover's number column sits back: faint, so the title and the
-   spiral carry the cover (it is drawn as part of the cover art) ---- */
-svg.bk-cover__side { display: block; width: 16cqw; height: auto; margin-bottom: 1cqw; overflow: visible; --cover-faint: #dcd8d1; }
-.bk-cover__sv { font-family: var(--font-display); font-weight: 600; font-size: 25px; font-variant-numeric: tabular-nums; fill: var(--cover-faint); }
+/* ---- the cover's number column: quieter than the title, still easy to read,
+   the numbers in ink and their words in grey (drawn as part of the cover art) ---- */
+svg.bk-cover__side { display: block; width: 16cqw; height: auto; margin-bottom: 1cqw; overflow: visible; --cover-faint: var(--fg-faint); }
+.bk-cover__sv { font-family: var(--font-display); font-weight: 600; font-size: 25px; font-variant-numeric: tabular-nums; fill: var(--ink); }
 .bk-cover__sl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--cover-faint); }
 .bk-cover__sd { font-weight: 500; }
 .bk-cover__sr { stroke: var(--cover-faint); stroke-width: 1; }
+/* on a phone the number column takes a little more room, so its words stay readable */
+@media screen and (max-width: 40rem) { svg.bk-cover__side { width: 24cqw; } }

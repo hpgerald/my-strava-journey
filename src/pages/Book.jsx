@@ -158,7 +158,7 @@ function SpiralYears({ F }) {
         return <text key={m} x={f1(x)} y={f1(y + 6)} textAnchor="middle" className="bk-spiral__mo">{m}</text>
       })}
       <text className="bk-spiral__note" dy="-9">
-        <textPath href="#bk-silence" startOffset="50%" textAnchor="middle">{n0(F.silence.len)} days without one</textPath>
+        <textPath href="#bk-silence" startOffset="34%" textAnchor="middle">{n0(F.silence.len)} days without one</textPath>
       </text>
       <circle cx={f1(sx)} cy={f1(sy)} r="5" className="bk-spiral__dot" />
       <text x={f1(sx + 12)} y={f1(sy + 5)} className="bk-spiral__lab">{fmtShort(F.firstISO)}</text>
