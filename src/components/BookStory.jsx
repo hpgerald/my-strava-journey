@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react'
 import { useBook } from './BookContext.js'
 import { getLessons } from '../lib/lessonsRegistry.js'
 import { BOOK_INTROS } from '../lib/bookIntros.js'
@@ -50,18 +51,62 @@ export function BookLesson({ of }) {
   return <L.LessonSlot keys={L.lessonKeysFor(of)} />
 }
 
+// The design note beside the opening essay ends on the essay's last line: its
+// text is set as large as it can be, up to one step of phi above the essay's
+// own size, without running past the essay. When the two stack (a narrow
+// screen) the note keeps the essay's size.
+function useEndTogether(bodyRef, boxRef) {
+  useLayoutEffect(() => {
+    const body = bodyRef.current, box = boxRef.current
+    if (!body || !box) return undefined
+    const t = box.lastElementChild
+    // measured as it is set: no transition may hold the old size (the reduced
+    // motion rule leaves a 0.01 ms one on everything)
+    t.style.transition = 'none'
+    let busy = false
+    const fit = () => {
+      if (busy) return
+      busy = true
+      t.style.fontSize = ''
+      const b = body.getBoundingClientRect(), x = box.getBoundingClientRect()
+      if (x.top > b.top + 4 || x.left < b.right) { busy = false; return }
+      const pad = parseFloat(getComputedStyle(box).paddingBottom) || 0
+      const room = b.bottom - pad
+      const base = parseFloat(getComputedStyle(t).fontSize)
+      let lo = base, hi = base * 1.618
+      for (let i = 0; i < 9; i++) {
+        const mid = (lo + hi) / 2
+        t.style.fontSize = `${mid}px`
+        if (t.getBoundingClientRect().bottom <= room + 0.5) lo = mid
+        else hi = mid
+      }
+      t.style.fontSize = `${lo.toFixed(2)}px`
+      requestAnimationFrame(() => { busy = false })
+    }
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(body)
+    window.addEventListener('resize', fit)
+    document.fonts?.ready.then(fit)
+    return () => { ro.disconnect(); window.removeEventListener('resize', fit) }
+  }, [bodyRef, boxRef])
+}
+
 // the opening essay of a chapter, printed only in My Book
 export function BookIntro({ number }) {
   const book = useBook()
   const x = BOOK_INTROS[number]
+  const bodyRef = useRef(null)
+  const boxRef = useRef(null)
+  useEndTogether(bodyRef, boxRef)
   if (!book || !x) return null
   return (
     <div className="bk-intro">
-      <div className="bk-intro__body">
+      <div className="bk-intro__body" ref={bodyRef}>
         {x.paras.map((p, i) => <p key={i} className={i ? '' : 'bk-intro__first'}>{p}</p>)}
       </div>
       {x.design ? (
-        <aside className="bk-intro__design">
+        <aside className="bk-intro__design" ref={boxRef}>
           <p className="bk-lesson__k">The design of this chapter</p>
           <p>{x.design}</p>
         </aside>

@@ -68,8 +68,8 @@ function CoverSide({ rows }) {
           <text x="126" y={i * pitch + 36.5} textAnchor="end" className="bk-cover__sl">{l}</text>
         </g>
       ))}
-      <line x1="139.5" x2="139.5" y1="3.5" y2="190" className="bk-cover__sr" />
-      <text transform="translate(145 4) rotate(90)" className="bk-cover__sl bk-cover__sd" dominantBaseline="hanging">My Strava Journey</text>
+      <line x1="136.5" x2="136.5" y1="3.5" y2="190" className="bk-cover__sr" />
+      <text transform="translate(141.5 4) rotate(90)" className="bk-cover__sl bk-cover__sd">My Strava Journey</text>
     </svg>
   )
 }
@@ -151,7 +151,7 @@ function SpiralYears({ F }) {
       <path d={hot} className="bk-spiral__hot" style={{ strokeWidth: w(y1 - y0) }} />
       {years.map((y) => {
         const r = radius(y - y0)
-        return <text key={y} x={SP.c + 6} y={SP.c - r + 13} className="bk-spiral__yr">{y}</text>
+        return <text key={y} x={SP.c} y={SP.c - r + 16} textAnchor="middle" className="bk-spiral__yr">{y}</text>
       })}
       {months.map(([m, t]) => {
         const [x, y] = polar(t, rOut + 26)
@@ -192,7 +192,7 @@ function Cover({ F }) {
 function TitlePage({ F }) {
   return (
     <section className="bk-page bk-title" aria-label="Title page">
-      <div>
+      <div className="bk-title__main">
         <p className="bk-title__t">Showing up<b>.</b></p>
         <p className="bk-title__s">{BOOK_SUB}</p>
         <p className="bk-title__a">Gerald Tesha</p>
@@ -272,13 +272,17 @@ function Prologue({ F }) {
 function PartOpener({ p }) {
   return (
     <section className="bk-part" id={`bk-part-${p.n}`} aria-labelledby={`bk-part-${p.n}-t`}>
-      <p className="bk-part__k">{p.name}</p>
-      <p className="bk-part__n" aria-hidden="true">{p.n}</p>
-      <h2 id={`bk-part-${p.n}-t`} className="bk-part__t">{p.title}</h2>
-      <p className="bk-part__l">{p.line}</p>
-      <ul className="bk-part__ch">
-        {p.chapters.map(([num, t]) => <li key={num}><span>{num}</span>{t}</li>)}
-      </ul>
+      <div className="bk-part__top">
+        <p className="bk-part__k">{p.name}</p>
+        <p className="bk-part__n" aria-hidden="true">{p.n}</p>
+      </div>
+      <div className="bk-part__foot">
+        <h2 id={`bk-part-${p.n}-t`} className="bk-part__t">{p.title}</h2>
+        <p className="bk-part__l">{p.line}</p>
+        <ul className="bk-part__ch">
+          {p.chapters.map(([num, t]) => <li key={num}><span>{num}</span>{t}</li>)}
+        </ul>
+      </div>
     </section>
   )
 }
@@ -538,7 +542,7 @@ export default function Book() {
           <Notes glossary={glossary} />
           <Contact />
           <section className="bk-back" aria-label="Back cover">
-            <p className="bk-back__q">{n0(F.n)} outings. {n0(F.footKm)} km on foot. One habit.</p>
+            <p className="bk-back__q"><span>{n0(F.n)} outings.</span> <span>{n0(F.footKm)} km on foot.</span> <span>One habit.</span></p>
             <p className="bk-back__a">{BOOK_TITLE} · Gerald Tesha</p>
           </section>
         </article>
