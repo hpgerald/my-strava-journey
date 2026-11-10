@@ -1,0 +1,1 @@
+import{a as i}from"./index-BusaXRLq.js";function c(u){const n=i("nav_index"),t=n.findIndex(e=>e.route===u),o=t>=0?n[t]:null,l=e=>e?{to:e.route,label:e.title,subtitle:e.subtitle,number:e.number}:null,r=t>0?l(n[t-1]):null,s=t>=0&&t<n.length-1?l(n[t+1]):null;return{cur:o,prev:r,next:s,ready:n.length>0}}export{c as u};
