@@ -38,19 +38,19 @@ p.ev-v { margin: 0; }
 .ev-show { border-top: 1px solid var(--rule-faint); padding-top: 1.1rem; display: grid; gap: var(--r3, 1.5rem) var(--grid-gap); }
 .ev-show > .ev-fig { border-top: 0; padding-top: 0; }
 @media (min-width: 64rem) {
-  .ev-show:not(.ev-show--wide) { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
-  .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1 / span 7; }
+  .ev-show:not(.ev-show--wide) { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); align-items: start; }
+  .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1; }
   .ev-show:not(.ev-show--wide) { align-items: stretch; }
-  .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 8 / -1; margin-top: 1.9rem; display: flex; flex-direction: column; }
+  .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 2; margin-top: 1.9rem; display: flex; flex-direction: column; }
   /* the limits close the column level with the foot of the chart */
   .ev-show:not(.ev-show--wide) > .ev-read > .ev-limits { margin-top: auto; padding-top: var(--sp-4); }
-  .ev-show--wide { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .ev-show--wide { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
   .ev-show--wide > .ev-fig { grid-column: 1 / -1; }
-  .ev-show--wide > .ev-read { grid-column: 4 / span 7; }
+  .ev-show--wide > .ev-read { grid-column: 2; }
 }
-.book .ev-show:not(.ev-show--wide) { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
-.book .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1 / span 7; }
-.book .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 8 / -1; margin-top: 1.6rem; }
+.book .ev-show:not(.ev-show--wide) { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); align-items: start; }
+.book .ev-show:not(.ev-show--wide) > .ev-fig { grid-column: 1; }
+.book .ev-show:not(.ev-show--wide) > .ev-read { grid-column: 2; margin-top: 1.6rem; }
 .book .ev-show:not(.ev-show--wide) { align-items: stretch; }
 .book .ev-show:not(.ev-show--wide) > .ev-read { display: flex; flex-direction: column; }
 .book .ev-show:not(.ev-show--wide) > .ev-read > .ev-limits { margin-top: auto; padding-top: var(--sp-3); }
@@ -95,8 +95,8 @@ p.ev-v { margin: 0; }
 
 /* wide screens: the reading and the notes sit in the words column */
 @media (min-width: 64rem) {
-  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { grid-column: 1 / span 3; grid-row: 1; align-self: start; padding-top: 0.55rem; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
-  .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 4 / span 7; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { grid-column: 1; grid-row: 1; align-self: start; padding-top: 0.55rem; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
+  .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 2; }
 }
 @media (max-width: 59.999rem) {
   .ev-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }

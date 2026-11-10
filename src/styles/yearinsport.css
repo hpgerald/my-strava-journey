@@ -177,32 +177,54 @@
 .ydist__bar { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom; transition: transform var(--dur-slow) var(--ease); }
 .ydist__plot.is-in .ydist__bar { transform: scaleY(1); }
 
-/* ---- against last year (YearVsPrev) ---- */
-.yvp__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-4); }
-.yvp__row { display: grid; grid-template-columns: minmax(84px, 22%) 1fr auto; align-items: center; gap: var(--sp-2) var(--sp-4); }
-.yvp__lbl { font-size: var(--fs-sm); color: var(--ink); }
-.yvp__bars { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-.yvp__barwrap { display: block; white-space: nowrap; line-height: 1; }
-.yvp__bar { display: inline-block; vertical-align: middle; height: 13px; border-radius: 3px;
+/* ---- against last year (YearVsPrev) ----
+   Names and totals on the left 38.2 %, the arrows on the right 61.8 %; every
+   arrow leaves the same line, last year's total. */
+.yvp__axis, .yvp__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--sp-5); }
+.yvp__ticks { position: relative; height: 1.5rem; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.yvp__tick { position: absolute; bottom: 0.35rem; transform: translateX(-50%); white-space: nowrap; line-height: 1; }
+.yvp__tick.is-start { transform: translateX(-1px); }
+.yvp__tick.is-end { transform: translateX(-100%); }
+.yvp__tick.is-zero { color: var(--ink); font-weight: 600; }
+.yvp__list { list-style: none; margin: 0; padding: 0; }
+.yvp__row { align-items: center; padding: var(--sp-3) 0; border-top: 1px solid var(--rule-faint); }
+.yvp__row:last-child { border-bottom: 1px solid var(--rule-faint); }
+.yvp__lbl { min-width: 0; }
+.yvp__name { display: block; font-size: var(--fs-md); font-weight: 600; color: var(--ink); line-height: 1.2; letter-spacing: -0.01em; }
+.yvp__was { display: block; margin-top: 3px; font-size: var(--fs-xs); color: var(--fg-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.yvp__track { position: relative; align-self: stretch; min-height: 2.4rem; }
+/* last year's line, unbroken from row to row */
+.yvp__track::before { content: ''; position: absolute; left: var(--z); top: calc(-1 * var(--sp-3) - 1px); bottom: calc(-1 * var(--sp-3)); width: 2px; margin-left: -1px; background: var(--ink); z-index: 1; }
+/* a solid band from last year's line to this year, cut to a point */
+.yvp__band { position: absolute; top: 50%; height: 2.25rem; margin-top: -1.125rem; min-width: 1.1rem; background: var(--accent);
+  clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%);
   transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease); }
-.yvp__bar--cur { background: var(--accent); }
-.yvp__bar--prev { background: var(--grey-25); height: 9px; }
-.yvp.is-in .yvp__bar { transform: scaleX(1); }
-.yvp__num { display: inline-block; vertical-align: middle; margin-left: var(--sp-2); font-size: var(--fs-xs); color: var(--ink); font-variant-numeric: tabular-nums; }
-.yvp__num--prev { color: var(--fg-faint); }
-.yvp__u { color: var(--fg-faint); }
-.yvp__delta { font-family: var(--font-mono); font-size: var(--fs-sm); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.yvp__delta.is-up { color: var(--accent-ink); }
-.yvp__delta.is-down { color: var(--fg-muted); }
-.yvp__leg { display: flex; align-items: center; gap: var(--sp-2); margin: var(--sp-5) 0 0; font-family: var(--font-mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--fg-faint); }
-.yvp__swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.yvp__swatch--cur { background: var(--accent); }
-.yvp__swatch--prev { background: var(--grey-25); margin-left: var(--sp-3); }
+.is-down .yvp__band { background: var(--grey-35); transform-origin: right;
+  clip-path: polygon(1rem 0, 100% 0, 100% 100%, 1rem 100%, 0 50%); }
+.yvp.is-in .yvp__band { transform: scaleX(1); }
+/* this year's total: past the point, or inside the band near the edge */
+.yvp__val { position: absolute; top: 50%; z-index: 2; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); line-height: 1; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  transform: translate(0.5rem, -50%); opacity: 0; transition: opacity var(--dur-slow) var(--ease); }
+.yvp.is-in .yvp__val { opacity: 1; }
+.yvp__val.is-in { transform: translate(calc(-100% - 1.35rem), -50%); }
+.is-down .yvp__val.is-out { transform: translate(calc(-100% - 0.5rem), -50%); }
+.is-down .yvp__val.is-in { transform: translate(1.35rem, -50%); }
+.yvp__u { font-family: var(--font-sans); font-weight: 500; font-size: 0.72em; color: inherit; opacity: 0.75; }
+.yvp__same { position: absolute; top: 50%; z-index: 1; width: 3px; height: 2.9rem; margin: -1.45rem 0 0 -1.5px; background: var(--ink); box-shadow: 0 0 0 2px var(--paper); }
+.yvp__leg { display: flex; align-items: center; gap: var(--sp-2); margin: var(--sp-4) 0 0; font-size: var(--fs-xs); color: var(--fg-muted); }
+.yvp__key { width: 3px; height: 16px; background: var(--ink); display: inline-block; }
+@media (max-width: 30rem) {
+  .yvp__axis, .yvp__row { grid-template-columns: minmax(0, 1fr); }
+  .yvp__axis > span:first-child { display: none; }
+  .yvp__track { min-height: 2.4rem; margin-top: var(--sp-2); }
+  .yvp__track::before { top: 0; bottom: calc(-1 * var(--sp-3)); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .yprog__line { stroke-dashoffset: 0 !important; }
   .yprog__area, .yprog__dot { opacity: 1 !important; }
-  .yweek__bar, .ydist__bar, .yvp__bar { transform: none !important; }
+  .yweek__bar, .ydist__bar, .yvp__band { transform: none !important; }
+  .yvp__val { opacity: 1 !important; }
 }
 
 /* ---- the rebuilt report: section-grid rows, record cards, small helpers ---- */
@@ -249,8 +271,4 @@
   .ymom__chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3); }
   .ymom__chip .ymom__big { font-size: clamp(1.5rem, 1rem + 2.4vw, 2rem); }
 }
-/* on the smallest phones the change goes under the bars, so the numbers never run into it */
-@media (max-width: 24rem) {
-  .yvp__row { grid-template-columns: minmax(72px, 26%) 1fr; }
-  .yvp__delta { grid-column: 2; }
-}
+

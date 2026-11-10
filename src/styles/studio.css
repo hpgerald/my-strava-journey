@@ -25,7 +25,7 @@
   --gutter: clamp(1.25rem, 4vw, 4rem);
   --grid-gap: clamp(1rem, 2vw, 2rem);
   --nav-h: 4.5rem;
-  --sec-pad: clamp(3rem, 2rem + 2.6vw, 4.75rem);
+  --sec-pad: clamp(2.953rem, 2rem + 2.6vw, 4.778rem);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
@@ -84,7 +84,7 @@ html.is-scrolled .snav__bar:where(:not(.book *)) { background: color-mix(in srgb
 @media (max-width: 40rem) { .snav__here:where(:not(.book *)) { display: none; } .snav__bar:where(:not(.book *)) { grid-template-columns: 1fr auto; } }
 
 /* the full-screen menu */
-.smenu:where(:not(.book *)) { position: fixed; inset: 0; z-index: 1; background: var(--night); color: var(--on-night); padding: calc(var(--nav-h) + clamp(1.5rem, 6vh, 4rem)) var(--gutter) clamp(1.5rem, 4vh, 3rem); display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: var(--sp-7); overflow-y: auto; }
+.smenu:where(:not(.book *)) { position: fixed; inset: 0; z-index: 1; background: var(--night); color: var(--on-night); padding: calc(var(--nav-h) + clamp(1.5rem, 6vh, 4rem)) var(--gutter) clamp(1.5rem, 4vh, 3rem); display: grid; grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); gap: var(--sp-7); overflow-y: auto; }
 .smenu[hidden]:where(:not(.book *)) { display: none; }
 html.motion .smenu:not([hidden]):where(:not(.book *)) { animation: menuIn 0.9s var(--ease-io) both; }
 @keyframes menuIn { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
@@ -155,7 +155,7 @@ html.motion.pre-on .shero__k:where(:not(.book *)), html.motion.pre-on .shero__fo
 .sopen__w:where(:not(.book *)) { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 .sopen__ch:where(:not(.book *)) { display: inline-block; }
 html.motion .sopen__ch:where(:not(.book *)) { animation: chUp 1.1s var(--ease-out) both; animation-delay: calc(0.35s + var(--i) * 30ms); }
-.sopen__foot:where(:not(.book *)) { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto; gap: var(--sp-6); align-items: end; border-top: 1px solid var(--rule-faint); padding-top: var(--sp-5); }
+.sopen__foot:where(:not(.book *)) { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr) auto; gap: var(--sp-6); align-items: end; border-top: 1px solid var(--rule-faint); padding-top: var(--sp-5); }
 .sopen__sub:where(:not(.book *)) { margin: 0; font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem); line-height: 1.3; letter-spacing: -0.01em; }
 .sopen__lede:where(:not(.book *)) { margin: 0; font-size: 1rem; color: var(--fg-muted); max-width: 32rem; line-height: 1.5; }
 html.motion .sopen__foot > *:where(:not(.book *)), html.motion .sopen__top:where(:not(.book *)) { animation: fadeUp 1.1s var(--ease-out) 0.75s both; }
@@ -170,11 +170,11 @@ hr.rule.rule--faint:where(:not(.book *)), .yis-report > hr.rule:where(:not(.book
   font-family: var(--font-display); font-weight: var(--d-weight); letter-spacing: -0.038em; line-height: 1.02;
   font-size: clamp(1.9rem, 1.1rem + 3vw, 4.1rem); margin-top: 0.9rem; text-wrap: balance;
 }
-.sgrid__statement:where(:not(.book *)) { font-size: clamp(1.12rem, 1rem + 0.55vw, 1.42rem); line-height: 1.5; letter-spacing: -0.008em; max-width: 46rem; }
+.sgrid__statement:where(:not(.book *)) { font-size: clamp(1.128rem, 1rem + 0.55vw, 1.435rem); line-height: var(--phi); letter-spacing: -0.008em; }
 
 /* wide screens: the label sits in its own column, the words beside it */
 @media (min-width: 64rem) {
-  .sgrid:not(.book .sgrid) { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--grid-gap); }
+  .sgrid:not(.book .sgrid) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); }
   .sgrid:not(.book .sgrid) > * { grid-column: 1 / -1; }
   .sgrid:not(.book .sgrid) > .sgrid__head { display: contents; }
   .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow { grid-column: 1; margin: 0; padding-top: 0.7rem; align-self: start; }
@@ -280,7 +280,7 @@ html.motion .mq--rev .mq__track:where(:not(.book *)) { animation-direction: reve
 .sfoot__mean:where(:not(.book *)) { display: block; margin-top: 1.2rem; font-family: var(--font-sans); font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem); font-weight: 400; letter-spacing: -0.005em; color: var(--on-night-dim); line-height: 1.4; }
 .sfoot__up:where(:not(.book *)) { width: 5.5rem; height: 5.5rem; border-radius: 50%; border: 1px solid var(--line-night); background: transparent; color: var(--on-night); font-size: 1.3rem; cursor: pointer; transition: background 0.4s, color 0.4s, border-color 0.4s, transform 0.5s var(--ease-out); }
 .sfoot__up:hover:where(:not(.book *)), .sfoot__up:focus-visible:where(:not(.book *)) { background: var(--on-night); color: var(--ink); border-color: var(--on-night); outline: none; }
-.sfoot__grid:where(:not(.book *)) { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: var(--sp-6); padding-top: var(--sp-7); }
+.sfoot__grid:where(:not(.book *)) { display: grid; grid-template-columns: minmax(0, 1.618fr) repeat(3, minmax(0, 1fr)); gap: var(--sp-6); padding-top: var(--sp-7); }
 .sfoot__mail:where(:not(.book *)) { display: inline-block; margin-top: 0.8rem; color: var(--on-night); text-decoration: none; font-family: var(--font-display); font-weight: var(--d-weight); font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem); letter-spacing: -0.035em; line-height: 1.1; overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.7s var(--ease-out); padding-bottom: 4px; }
 .sfoot__mail:hover:where(:not(.book *)), .sfoot__mail:focus-visible:where(:not(.book *)) { background-size: 100% 1px; outline: none; }
 .sfoot__note:where(:not(.book *)) { margin: 0.9rem 0 0; font-size: 0.88rem; color: var(--on-night-dim); line-height: 1.55; }
@@ -382,7 +382,17 @@ html.is-scrolled .snav.is-open .snav__here:where(:not(.book *)) { opacity: 0; }
 /* chapter openers: the number and the name, nothing else */
 .sopen__in:where(:not(.book *)) { min-height: clamp(17rem, 30vw, 27rem); grid-template-rows: 1fr; padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(1.75rem, 3vw, 2.75rem); }
 .sopen--sub .sopen__in:where(:not(.book *)) { min-height: clamp(14rem, 22vw, 20rem); grid-template-rows: auto 1fr; }
-.sopen__num:where(:not(.book *)) { font-size: clamp(10rem, 25vw, 26rem); top: auto; bottom: clamp(1rem, 2vw, 1.75rem); translate: none; }
+/* the opener is cut at the golden section: the name keeps to the left 61.8 %
+   (wrapping if it must) and the outline number stands in the 38.2 % beside
+   it, so the two never touch */
+.sopen__num:where(:not(.book *)) { font-size: clamp(7rem, 25vw, 26rem); top: auto; bottom: clamp(1rem, 2vw, 1.75rem); translate: none; }
+.sopen__t:where(:not(.book *)) { max-width: min(14ch, 61.8%); }
+/* on a phone one word can be wider than 61.8 %: the number moves up to the
+   top of the opener and the name, at the foot, takes the full width */
+@media (max-width: 30rem) {
+  .sopen__num:where(:not(.book *)) { top: clamp(1rem, 4vw, 1.5rem); bottom: auto; }
+  .sopen__t:where(:not(.book *)) { max-width: none; }
+}
 .sopen__lede:where(:not(.book *)) { margin: 0; max-width: 38rem; color: var(--fg-muted); position: relative; z-index: 1; }
 
 /* the first section after an opener needs less air */
@@ -403,7 +413,7 @@ html.is-scrolled .snav.is-open .snav__here:where(:not(.book *)) { opacity: 0; }
 .fieldnote__by:where(:not(.book *)) { margin: 1.25rem 0 0; font-family: var(--font-sans); font-size: 0.95rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--fg-muted); }
 .fieldnote__by:where(:not(.book *))::before { display: none; }
 @media (min-width: 64rem) {
-  .fieldnote:where(:not(.book *)) { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--grid-gap); align-items: start; }
+  .fieldnote:where(:not(.book *)) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: start; }
   .fieldnote__eyebrow:where(:not(.book *)) { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding-top: 0.9rem; }
   .fieldnote__quote:where(:not(.book *)), .fieldnote__by:where(:not(.book *)) { grid-column: 2; }
   /* hang the opening mark in the margin so the words line up with the titles */

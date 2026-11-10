@@ -14,7 +14,7 @@ import YearCalendar from '../charts/YearCalendar.jsx'
 import YearRank from '../charts/YearRank.jsx'
 import YearMoment from '../charts/YearMoment.jsx'
 import YearDistances from '../charts/YearDistances.jsx'
-import YearVsPrev from '../charts/YearVsPrev.jsx'
+import YearVsPrev, { vsPrevTitle } from '../charts/YearVsPrev.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
 import ColBars from '../charts/ColBars.jsx'
@@ -28,7 +28,7 @@ import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { computeYearStats, YEAR_THEME, YEAR_REPORT } from '../lib/yearStats.js'
 import { buildYearReport } from '../lib/yearReport.js'
-import { fmtInt } from '../lib/format.js'
+import { fmtInt, toNum } from '../lib/format.js'
 import { isNamedCountry } from '../lib/geo.js'
 
 const MONTH_L = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -127,6 +127,32 @@ export default function YearInSport({ year: bookYear } = {}) {
   const Y = activeYear
   const isPartial = Y === latest && s.endISO.slice(5) < '12-31'
   const so = isPartial ? ' so far' : ''
+  // while the year runs, last year up to the same day, so a part year can be
+  // read against a part year too
+  const psSame = (() => {
+    if (!isPartial || !ps) return null
+    const md = s.endISO.slice(5, 10)
+    const FT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
+    const t = { n: 0, footKm: 0, hours: 0, elev: 0, kudos: 0, prs: 0 }
+    for (const a of activities) {
+      if (Number(a.year) !== prevYear || (a.date || '').slice(5, 10) > md) continue
+      const v = (k) => toNum(a[k]) || 0
+      t.n += 1
+      t.hours += v('moving_time_min') / 60
+      t.kudos += v('kudos')
+      t.prs += v('prs')
+      if (FT.has(a.sport_type)) { t.footKm += v('distance_km'); t.elev += v('elevation_gain_m') }
+    }
+    return t
+  })()
+  const vsRows = ps ? [
+    { label: 'Outings', cur: s.n, prev: ps.n, same: psSame?.n },
+    { label: 'Km on foot', cur: Math.round(s.footKm), prev: Math.round(ps.footKm), same: psSame && Math.round(psSame.footKm), unit: 'km' },
+    { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(ps.hours), same: psSame && Math.round(psSame.hours), unit: 'h' },
+    { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(ps.elev), same: psSame && Math.round(psSame.elev), unit: 'm' },
+    { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos), same: psSame && Math.round(psSame.kudos) },
+    { label: 'PRs', cur: Math.round(s.prs), prev: Math.round(ps.prs), same: psSame?.prs },
+  ] : null
   const theme = YEAR_THEME[Y] || `${Y} in sport`
 
   // ---- the months ----
@@ -680,21 +706,14 @@ export default function YearInSport({ year: bookYear } = {}) {
           }}
           left={{ title: 'Outings, year by year', node: <YearRank series={rankSeries} selected={Y} fmt={(v) => fmtInt(v)} /> }}
           right={{
-            title: ps ? `${Y} beside ${prevYear}` : 'The first year',
+            title: ps ? vsPrevTitle(vsRows, prevYear) : 'The first year',
             node: ps ? (
-              <YearVsPrev prevYear={prevYear} rows={[
-                { label: 'Activities', cur: s.n, prev: ps.n },
-                { label: 'Km on foot', cur: Math.round(s.footKm), prev: Math.round(ps.footKm), unit: 'km' },
-                { label: 'Hours moving', cur: Math.round(s.hours), prev: Math.round(ps.hours), unit: 'h' },
-                { label: 'Metres climbed', cur: Math.round(s.elev), prev: Math.round(ps.elev), unit: 'm' },
-                { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos) },
-                { label: 'PRs', cur: Math.round(s.prs), prev: Math.round(ps.prs) },
-              ]} />
+              <YearVsPrev prevYear={prevYear} sameDay={psSame ? fmtDay(s.endISO) : null} rows={vsRows} />
             ) : <p className="yis-empty">{Y} is where my record starts.</p>,
           }}
           read={[
               `Every year of my record by its number of outings, with ${Y} in orange.`,
-              ps ? `${Y} against ${prevYear}, measure by measure: orange is ${Y}, grey is ${prevYear}, and the number is the change.${isPartial ? ` ${Y} is not finished, so it is compared with a full year.` : ''}` : 'The first year has no year before it to compare with.',
+              ps ? `Every bar starts at the ${prevYear} total and points to ${Y}, with the ${Y} total at its tip. Orange went up, grey went down, and the longest bar changed the most. When one measure grew many times over, the scale counts in times as many.${psSame ? ` ${Y} is not finished, so the black mark shows where ${prevYear} stood on ${fmtDay(s.endISO)}.` : ''}` : 'The first year has no year before it to compare with.',
             ]}
           story={[
               `By hours moving it comes ${ORD[rankH - 1]}, by PRs ${ORD[rankP - 1]} and by kudos ${ORD[rankK - 1]}.`,

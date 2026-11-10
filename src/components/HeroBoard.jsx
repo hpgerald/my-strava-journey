@@ -108,7 +108,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
           ) : null}
           {sIdx < N ? (
             <>
-              <p className="hx__note hx__note--now"><b>The streak</b>every day since {streakSinceLabel}</p>
+              <p className="hx__note hx__note--now"><b>The streak</b><span>every day since {streakSinceLabel}</span></p>
               <span className="hx__brk" style={{ left: pc(sIdx) }} />
             </>
           ) : null}

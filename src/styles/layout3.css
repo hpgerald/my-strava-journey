@@ -1,8 +1,10 @@
 /* ==========================================================================
    layout3.css  ·  Layout and motion, version 3.
-   One twelve-column grid for every section, so every edge on the page lands
-   on the same lines: labels on columns 1 to 3, titles and reading text from
-   column 4, number rows in quarters and figures in halves of the same twelve.
+   One golden grid for every section, so every edge on the page lands on the
+   same line: the page is cut at the golden section, 38.2 % for the labels,
+   the numbers and the words that stay while the figures pass, 61.8 % for the
+   titles, the reading text and the figures beside them. Pairs of charts that
+   compare like with like still share the full width in halves.
    A spacing scale sets the rhythm. Story sections take turns between three
    layouts (split, sticky, feature) so a long chapter keeps changing pace.
    Motion is bold and scroll-driven, and runs only under html.motion: never
@@ -10,12 +12,13 @@
    ========================================================================== */
 
 :root {
-  --r1: 0.5rem;
-  --r2: clamp(0.85rem, 0.7rem + 0.4vw, 1.15rem);
-  --r3: clamp(1.25rem, 0.95rem + 0.9vw, 1.9rem);
-  --r4: clamp(1.9rem, 1.3rem + 1.6vw, 3rem);
-  --r5: clamp(2.6rem, 1.7rem + 2.6vw, 4.25rem);
-  --sec-pad: clamp(2.6rem, 1.6rem + 2.6vw, 4.25rem);
+  /* the rhythm steps by the fourth root of phi: every value is a power of phi */
+  --r1: 0.486rem;
+  --r2: clamp(0.786rem, 0.67rem + 0.5vw, 1.128rem);
+  --r3: clamp(1.272rem, 1.09rem + 0.82vw, 1.825rem);
+  --r4: clamp(1.825rem, 1.45rem + 1.67vw, 2.953rem);
+  --r5: clamp(2.618rem, 2.08rem + 2.4vw, 4.236rem);
+  --sec-pad: clamp(2.618rem, 2.08rem + 2.4vw, 4.236rem);
   --rail: calc(var(--nav-h) + 1.25rem);
 }
 @property --wipe { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
@@ -43,15 +46,15 @@ hr.rule.rule--faint:where(:not(.book *)), .yis-report > hr.rule:where(:not(.book
 .eyebrow__l:where(:not(.book *)) { position: relative; }
 .book .eyebrow__n { font-size: inherit; color: inherit; margin-right: 0.5em; font-family: inherit; letter-spacing: inherit; }
 
-/* ------------------------------------------------- wide: the twelve columns */
+/* ------------------------------------------- wide: the golden section */
 @media (min-width: 64rem) {
-  .sgrid:not(.book .sgrid) { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); }
+  .sgrid:not(.book .sgrid) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); }
   .sgrid:not(.book .sgrid) > *, .sgrid:not(.book .sgrid) > .sgrid__lead > * { grid-column: 1 / -1; }
   .sgrid:not(.book .sgrid) > .sgrid__head { display: contents; }
-  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow { grid-column: 1 / span 3; grid-row: 1; margin: 0; padding-top: 0.75rem; align-self: start; }
-  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__title { grid-column: 4 / -1; grid-row: 1; margin-top: 0; }
-  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__sub { grid-column: 4 / -1; grid-row: 2; }
-  .sgrid:not(.book .sgrid) > .sgrid__statement, .sgrid:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 4 / span 7; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow { grid-column: 1; grid-row: 1; margin: 0; padding-top: 0.75rem; align-self: start; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__title { grid-column: 2; grid-row: 1; margin-top: 0; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__sub { grid-column: 2; grid-row: 2; }
+  .sgrid:not(.book .sgrid) > .sgrid__statement, .sgrid:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 2; max-width: none; }
   .sgrid:not(.book .sgrid) > .sgrid__head + * , .sgrid:not(.book .sgrid) > .sgrid__head + .sgrid__lead > :first-child { margin-top: var(--r3); }
 
   /* the numbered label: a big index figure over its words */
@@ -60,23 +63,23 @@ hr.rule.rule--faint:where(:not(.book *)), .yis-report > hr.rule:where(:not(.book
   .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow--n .eyebrow__n::after { content: ''; position: absolute; left: 0.04em; bottom: -0.16em; width: 1.6rem; height: 2px; background: var(--accent); }
 
   /* a group heading (A closer look) sits on the same lines */
-  .closer-head:where(:not(.book *)) { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; }
-  .closer-head:where(:not(.book *)) > .eyebrow { grid-column: 1 / span 3; margin: 0; padding-top: 0.75rem; }
-  .closer-head:where(:not(.book *)) > .section-head__title { grid-column: 4 / -1; margin-top: 0; }
-  .closer-head:where(:not(.book *)) > .section-head__sub { grid-column: 4 / -1; }
+  .closer-head:where(:not(.book *)) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: start; }
+  .closer-head:where(:not(.book *)) > .eyebrow { grid-column: 1; margin: 0; padding-top: 0.75rem; }
+  .closer-head:where(:not(.book *)) > .section-head__title { grid-column: 2; margin-top: 0; }
+  .closer-head:where(:not(.book *)) > .section-head__sub { grid-column: 2; }
 
   /* the quote that closes a chapter sits on the same lines */
-  .fieldnote:where(:not(.book *)) { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .fieldnote__eyebrow:where(:not(.book *)) { grid-column: 1 / span 3; }
-  .fieldnote__quote:where(:not(.book *)), .fieldnote__by:where(:not(.book *)) { grid-column: 4 / -1; }
+  .fieldnote:where(:not(.book *)) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .fieldnote__eyebrow:where(:not(.book *)) { grid-column: 1; }
+  .fieldnote__quote:where(:not(.book *)), .fieldnote__by:where(:not(.book *)) { grid-column: 2; }
 
   /* ---- layout two, sticky: the words stay while the figures pass ---- */
-  .sgrid--sticky:not(.book .sgrid) > .sgrid__lead { display: block; grid-column: 1 / span 4; grid-row: 3; align-self: start; position: sticky; top: var(--rail); margin-top: var(--r4); padding-bottom: var(--r2); }
-  .sgrid--sticky:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { font-size: clamp(1.05rem, 0.92rem + 0.35vw, 1.24rem); line-height: 1.55; max-width: none; margin-top: 0; }
+  .sgrid--sticky:not(.book .sgrid) > .sgrid__lead { display: block; grid-column: 1; grid-row: 3; align-self: start; position: sticky; top: var(--rail); margin-top: var(--r4); padding-bottom: var(--r2); }
+  .sgrid--sticky:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { font-size: clamp(1.062rem, 0.96rem + 0.4vw, 1.272rem); line-height: var(--phi); max-width: none; margin-top: 0; }
   .sgrid--sticky:not(.book .sgrid) > .sgrid__lead > .odds { margin-top: var(--r4); }
   .sgrid--sticky:not(.book .sgrid) .odds__row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--r3) var(--grid-gap); }
   .sgrid--sticky:not(.book .sgrid) .odds__n { font-size: clamp(2rem, 1.2rem + 1.7vw, 3rem); }
-  .sgrid--sticky:not(.book .sgrid) > .sgrid__pair { grid-column: 5 / -1; grid-row: 3; margin-top: var(--r4); grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--r2); }
+  .sgrid--sticky:not(.book .sgrid) > .sgrid__pair { grid-column: 2; grid-row: 3; margin-top: var(--r4); grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--r2); }
   .sgrid--sticky:not(.book .sgrid) > .sgrid__pair > .sgrid__fig--mx { margin-top: var(--r4); padding-top: var(--r3); border-top: 1px solid var(--rule-faint); }
   .sgrid--sticky:not(.book .sgrid) .sgrid__fig { min-height: 22rem; }
   .sgrid--sticky:not(.book .sgrid) > :nth-child(4) { grid-row: 4; }
@@ -85,9 +88,10 @@ hr.rule.rule--faint:where(:not(.book *)), .yis-report > hr.rule:where(:not(.book
   .sgrid--sticky:not(.book .sgrid) > :nth-child(7) { grid-row: 7; }
 
   /* ---- layout three, feature: one number leads, big, beside the words ---- */
-  .sgrid--feature:not(.book .sgrid) > .sgrid__lead { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; margin-top: var(--r3); }
-  .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 7 / -1; grid-row: 1; margin-top: 0; }
-  .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .odds { grid-column: 1 / span 6; grid-row: 1; margin-top: 0; border-top: 0; padding-top: 0; }
+  .sgrid--feature:not(.book .sgrid) > .sgrid__lead { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: start; margin-top: var(--r3); }
+  /* the words take the 38.2 % rail, as in the sticky layout; the numbers lead in the 61.8 % */
+  .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 1; grid-row: 1; margin-top: 0; }
+  .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .odds { grid-column: 2; grid-row: 1; margin-top: 0; border-top: 0; padding-top: 0; }
   .sgrid--feature:not(.book .sgrid) .odds__row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sgrid--feature:not(.book .sgrid) .odds__cell:first-child { grid-column: 1 / -1; padding-bottom: var(--r3); border-bottom: 1px solid var(--rule-faint); }
   .sgrid--feature:not(.book .sgrid) .odds__cell:first-child .odds__n { font-size: clamp(5rem, 1rem + 8.2vw, 10.5rem); font-weight: 300; letter-spacing: -0.06em; line-height: 0.82; }
@@ -123,7 +127,7 @@ hr.rule.rule--faint:where(:not(.book *)), .yis-report > hr.rule:where(:not(.book
 
 /* ------------------------------------------------- phones and tablets */
 @media (max-width: 47.999rem) {
-  :root { --sec-pad: clamp(2.25rem, 1.6rem + 3vw, 3rem); }
+  :root { --sec-pad: clamp(2.058rem, 1.6rem + 3vw, 2.953rem); }
   .sgrid__statement:where(:not(.book *)) { font-size: 1.08rem; line-height: 1.55; }
   .odds__row:where(:not(.book *)) { column-gap: 1.25rem; }
   .odds__n:where(:not(.book *)) { font-size: clamp(2.1rem, 1.4rem + 3.6vw, 2.8rem); }
@@ -346,7 +350,9 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 .hx__note--back span { display: block; }
 .hx__note--gap { bottom: 26%; transform: translateX(-100%); text-align: right; padding: 0 0.6rem 0 0; background: var(--bg); }
 .hx__note--now { top: 0; right: 0; text-align: right; color: var(--accent-ink); }
-.hx__note--now b { color: var(--accent-ink); }
+.hx__note--now b { color: var(--accent-ink); width: fit-content; margin-left: auto; }
+/* on the narrowest phones the streak keeps its name only, clear of the comeback */
+@media (max-width: 22.5rem) { .hx__note--now span { display: none; } }
 .hx__brk { position: absolute; right: 0; top: 2.55rem; height: 0.4rem; border: 1.5px solid var(--accent); border-bottom: 0; }
 
 .hx__seal { position: absolute; left: 0; top: 0; width: clamp(4.6rem, 2.6rem + 6vw, 9rem); aspect-ratio: 1; pointer-events: none; translate: calc(var(--hx, 0) * 1.2vw) calc(var(--hy, 0) * 0.9vh); }

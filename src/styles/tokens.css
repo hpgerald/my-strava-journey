@@ -55,40 +55,45 @@
   --font-sans: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* ---- Fluid type scale (neo-grotesque, big type) ---- */
-  --fs-2xs: clamp(0.66rem, 0.63rem + 0.15vw, 0.72rem);
-  --fs-xs:  clamp(0.74rem, 0.70rem + 0.18vw, 0.82rem);
-  --fs-sm:  clamp(0.84rem, 0.80rem + 0.22vw, 0.94rem);
-  --fs-base: clamp(0.98rem, 0.94rem + 0.28vw, 1.10rem);
-  --fs-md:  clamp(1.14rem, 1.05rem + 0.5vw, 1.35rem);
-  --fs-lg:  clamp(1.35rem, 1.18rem + 0.9vw, 1.85rem);
-  --fs-xl:  clamp(1.7rem, 1.35rem + 1.7vw, 2.6rem);
-  --fs-2xl: clamp(2.2rem, 1.6rem + 3vw, 3.8rem);
-  --fs-3xl: clamp(2.9rem, 1.9rem + 5vw, 5.6rem);
-  --fs-4xl: clamp(3.4rem, 1.9rem + 7.5vw, 8rem);
+  /* ---- Fluid type scale, on the golden ratio ----
+     Every size, small and large, is a power of phi (1.618): the small sizes
+     step by its eighth root, the large ones by its fourth root, so body text
+     is 1 rem, a lead line 1.272 (the square root of phi), a title 1.618 and
+     up, and each display size is phi or its root times the one below. */
+  --phi: 1.618;
+  --fs-2xs: clamp(0.656rem, 0.628rem + 0.12vw, 0.740rem);
+  --fs-xs:  clamp(0.740rem, 0.709rem + 0.14vw, 0.835rem);
+  --fs-sm:  clamp(0.835rem, 0.799rem + 0.16vw, 0.942rem);
+  --fs-base: clamp(1rem, 0.957rem + 0.19vw, 1.128rem);
+  --fs-md:  clamp(1.128rem, 1.080rem + 0.21vw, 1.272rem);
+  --fs-lg:  clamp(1.272rem, 1.088rem + 0.82vw, 1.825rem);
+  --fs-xl:  clamp(1.618rem, 1.285rem + 1.48vw, 2.618rem);
+  --fs-2xl: clamp(2.321rem, 1.843rem + 2.13vw, 3.756rem);
+  --fs-3xl: clamp(2.953rem, 2.141rem + 3.61vw, 5.388rem);
+  --fs-4xl: clamp(3.330rem, 1.863rem + 6.52vw, 7.730rem);
 
   /* ---- Line heights & tracking ---- */
   --lh-tight: 1.02;
   --lh-snug: 1.12;
   --lh-title: 1.05;
-  --lh-body: 1.55;
+  --lh-body: 1.618; /* phi */
   --tr-mega: -0.04em;
   --tr-tight: -0.03em;
   --tr-snug: -0.015em;
   --tr-wide: 0.02em;
   --tr-caps: 0.12em;
 
-  /* ---- Spacing scale (rem) ---- */
-  --sp-1: 0.25rem;
-  --sp-2: 0.5rem;
-  --sp-3: 0.75rem;
+  /* ---- Spacing scale (rem), in steps of the square root of phi ---- */
+  --sp-1: 0.236rem;
+  --sp-2: 0.486rem;
+  --sp-3: 0.786rem;
   --sp-4: 1rem;
-  --sp-5: 1.5rem;
-  --sp-6: 2rem;
-  --sp-7: 3rem;
-  --sp-8: 4rem;
-  --sp-9: 6rem;
-  --sp-10: 8rem;
+  --sp-5: 1.618rem;
+  --sp-6: 2.058rem;
+  --sp-7: 3.33rem;
+  --sp-8: 4.236rem;
+  --sp-9: 5.388rem;
+  --sp-10: 8.719rem;
 
   /* ---- Structure ---- */
   --container: 78rem;
