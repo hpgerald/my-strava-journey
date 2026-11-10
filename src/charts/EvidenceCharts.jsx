@@ -2,6 +2,7 @@ import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { floatStyle } from '../motion/drift.js'
 import { linScale, linePath } from './primitives.js'
+import { usePairH } from './pairHeight.js'
 
 // The charts of "The Habit on Trial": one full-width figure per case, all at
 // the same height, drawn from evidence.json. Lines draw in, bars rise and dots
@@ -10,13 +11,17 @@ import { linScale, linePath } from './primitives.js'
 const pct = (v, d = 0) => `${(v * 100).toFixed(d)}%`
 const mmss = (v) => { const s = Math.round(v * 60); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` }
 
-// shared frame: measures the width, picks the height, reports inView
+// shared frame: measures the width, picks the height, reports inView. Beside a
+// reading column the chart may grow to the column's height (see Case in
+// pages/Evidence.jsx), up to 1.7 times its own height, never shrinking
 function useFrame(Hd = 360, Hn = 300) {
   const [ref, width] = useWidth(720)
   const [root, inView] = useInView()
+  const pairH = usePairH()
   const W = Math.max(300, width)
   const narrow = W < 520
-  return { ref, root, inView, W, narrow, H: narrow ? Hn : Hd }
+  const grow = pairH && pairH > Hd ? Math.round(Math.min(pairH, Hd * 1.7)) : Hd
+  return { ref, root, inView, W, narrow, H: narrow ? Hn : grow }
 }
 
 function Grid({ m, W, y, ticks, fmt }) {

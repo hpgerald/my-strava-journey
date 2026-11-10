@@ -1,11 +1,12 @@
 import { BookLesson } from '../components/BookStory.jsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import Words from '../components/Words.jsx'
 import { Reveal } from '../components/Reveal.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { DfaChart, MomentumChart, ErasChart, SeasonChart, HeapChart, TreadPaceChart, EvScatter, LongDayChart, KudosChart } from '../charts/EvidenceCharts.jsx'
+import { PairH } from '../charts/pairHeight.js'
 import { useSectionPaging } from '../lib/sections.js'
 import { lenisRef } from '../motion/env.js'
 
@@ -49,8 +50,44 @@ function jump(id) {
   else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
+// the chart and its reading sit side by side; the chart grows to the height of
+// the reading, so both columns end on the same line
+function useMatchHeight() {
+  const ref = useRef(null)
+  const [h, setH] = useState(0)
+  useEffect(() => {
+    const box = ref.current
+    if (!box || typeof ResizeObserver === 'undefined') return undefined
+    let raf = 0
+    const measure = () => {
+      raf = 0
+      const fig = box.querySelector(':scope > .ev-fig'), rd = box.querySelector(':scope > .ev-read'), svg = fig && fig.querySelector('.sgrid__chart svg')
+      if (!fig || !rd || !svg) return
+      const fr = fig.getBoundingClientRect(), rr = rd.getBoundingClientRect()
+      if (rr.top - fr.top > 120) { setH(0); return }
+      // the natural height of a column: its pieces added up, with the chart
+      // slot (which stretches) counted by what it holds
+      const sum = (el, skipAuto) => [...el.children].reduce((t, k) => {
+        const cs = getComputedStyle(k)
+        const h = k.classList.contains('sgrid__chart') ? sum(k, false) : k.getBoundingClientRect().height
+        return t + h + (skipAuto && k.classList.contains('ev-limits') ? 0 : parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0)
+      }, 0)
+      const readH = sum(rd, true) + (rr.top - fr.top)
+      const svgH = svg.getBoundingClientRect().height
+      const target = Math.round(svgH + readH - sum(fig, false))
+      setH((prev) => (Math.abs(prev - target) > 3 ? target : prev))
+    }
+    const ro = new ResizeObserver(() => { if (!raf) raf = requestAnimationFrame(measure) })
+    ro.observe(box)
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!raf) raf = requestAnimationFrame(measure) })
+    return () => { ro.disconnect(); cancelAnimationFrame(raf) }
+  }, [])
+  return [ref, h]
+}
+
 function Case({ c }) {
   const id = `ev-c${c.n}`
+  const [showRef, matchH] = useMatchHeight()
   return (
     <section className="sgrid ev-case" id={id} aria-labelledby={`${id}-t`}>
       <div className="sgrid__head">
@@ -75,16 +112,22 @@ function Case({ c }) {
           </table>
         </div>
       </div>
-      <div className={`ev-show${c.chart.wide ? ' ev-show--wide' : ''}`}>
+      <div ref={showRef} className={`ev-show${c.chart.wide ? ' ev-show--wide' : ''}`}>
         <figure className="sgrid__fig ev-fig">
           <figcaption className="sgrid__figtitle">{c.chart.title}</figcaption>
-          <div className="sgrid__chart">{c.chart.node}</div>
+          <div className="sgrid__chart"><PairH.Provider value={c.chart.wide ? 0 : matchH}>{c.chart.node}</PairH.Provider></div>
           <p className="sgrid__note">{c.chart.note}</p>
           <BookLesson of={c.chart.node} />
         </figure>
         <div className="ev-read">
           <h3 className="ev-k">What it shows</h3>
           {c.plain.filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
+          {c.take && c.take.filter(Boolean).length ? (
+            <>
+              <h3 className="ev-k ev-k--take">What I take from it</h3>
+              {c.take.filter(Boolean).map((p, i) => <p key={`t${i}`}>{p}</p>)}
+            </>
+          ) : null}
           <p className="ev-limits"><b>Limits.</b> {c.limits}</p>
         </div>
       </div>
@@ -127,6 +170,14 @@ function buildCases(E) {
         node: <DfaChart curve={c.curve} alpha={c.dfa} shuf={c.dfaShuf} aria={`Detrended fluctuation against window length on log scales: my days have a slope of ${f(c.dfa)}, the shuffled days ${f(c.dfaShuf)}.`} />,
         note: `Detrended fluctuation of my active days against the window length, both on log scales. A slope of 0.5 means no memory. My days climb at ${f(c.dfa)}, so windows of weeks and months are more uneven than chance allows: good spells and quiet spells last.`,
       },
+      take: (() => {
+        const act = Math.round(M.activeShare * M.daysSince)
+        const after = (act - E.c2.nStreaks) / Math.max(1, act)
+        return [
+          `The lesson I take is that today is never only about today. Since the comeback I went out on ${pc(M.activeShare)} of my ${n0(M.daysSince)} days, and ${pc(after)} of those days out came straight after another day out.`,
+          'So I look after the chain one day at a time. A day out is the best help I can give to the day after it.',
+        ]
+      })(),
       plain: [
         V.c1 === 'proven' ? 'Four methods, four different assumptions, one answer.' : 'The main test holds, and one of the checks is weaker.',
         `After a day out, the odds of going out the next day are ${f(c.or, 1)} times higher. My days come in far fewer and longer runs than chance would give, ${n0(c.runs)} against ${n0(c.runsExp)}, and the memory reaches past a week.`,
@@ -166,6 +217,10 @@ function buildCases(E) {
         node: <MomentumChart on={c.memOn} off={c.memOff} aria={`Chance of going out the next day: ${pc(d1[1] / d1[2])} after one day out, ${pc(d7[1] / d7[2])} after seven; ${pc(r1[1] / r1[2])} after one zero day, ${pc(r5[1] / r5[2])} after five.`} />,
         note: 'Orange: after this many days out in a row. Grey: after this many zero days in a row. The dot size is the number of cases behind each point.',
       },
+      take: [
+        `The days to guard are the first ones. Since the comeback I have started ${n0(c.nStreaks)} streaks, and only ${word(c.reach14)} of them reached two weeks. The one I am on now has reached ${n0(E.c3.streak)} days.`,
+        'Once a chain is past its first week, it mostly looks after itself. A new one needs me to show up on purpose, even for a short walk.',
+      ],
       plain: [
         V.c2 === 'proven' ? 'Momentum and rust are both real and both measurable.' : 'Momentum is clear, and rust is weaker.',
         `The first day back is the easiest one to lose: ${pc(1 - d1[1] / d1[2])} of new streaks end there. By the second week a streak nearly carries itself. Zero days work the other way: each extra zero day makes the next one more likely.`,
@@ -247,6 +302,14 @@ function buildCases(E) {
         ),
         note: `Since the comeback, Sunday first. Orange is ${DAY[c.best]}, black is ${DAY[c.worst]}, and the dashed line is the average of all days.`,
       },
+      take: (() => {
+        const mid = c.days.filter((r) => r[0] !== c.best && r[0] !== c.worst).map((r) => r[1] / r[2])
+        const lo = Math.min(...mid), hi = Math.max(...mid)
+        return [
+          sh(c.best) > hi && sh(c.worst) < lo ? `The other five days sit close together: on each of them I went out between ${pc(lo)} and ${pc(hi)} of the time. Only ${DAY[c.best]} rises above them, and only ${DAY[c.worst]} falls below.` : '',
+          `Knowing my weak day helps me. When ${DAY[c.worst]} comes, I already know it is the one most likely to slip, and a short outing is enough to keep it.`,
+        ]
+      })(),
       plain: [
         V.c4 === 'proven' ? 'The weekday pattern survives the strictest version of the test.' : 'The simple test finds the pattern, and the stricter test is weaker.',
         `${DAY[c.best]} is the day I skip least, and ${DAY[c.worst]} is the day I skip most. ${c.outP >= 0.05 ? 'The total number of outings does not differ much by weekday, so the difference is about which days get skipped.' : 'The number of outings also differs by weekday.'}`,
@@ -283,6 +346,14 @@ function buildCases(E) {
         node: <SeasonChart months={c.months} curve={c.curve} low={c.lowMonths} aria={`Share of days with an outing by month, ${c.years[0]} to ${c.years[1]}: ${c.months.map(([m, v]) => `${MONTH[m - 1]} ${pc(v)}`).join(', ')}.`} />,
         note: `The ${word(ny)} full years together. The line is the fitted yearly wave, and the orange bars are the two quietest months.`,
       },
+      take: (() => {
+        const top = [...c.months].sort((a, b) => b[1] - a[1]).slice(0, 2).sort((a, b) => a[0] - b[0])
+        const lowShare = c.months.filter((m) => c.lowMonths.includes(m[0])).map((m) => m[1])
+        return [
+          top.every((m) => m[1] >= 0.7) && lowShare.every((v) => v > 0.44 && v < 0.56) ? `My best months are ${MONTH[top[0][0] - 1]} and ${MONTH[top[1][0] - 1]}, when I went out on about three days in four. In ${lowNames.join(' and ')} it was about one day in two.` : '',
+          'So the dip does not surprise me any more. Those are the two months where a plan matters most for me.',
+        ]
+      })(),
       plain: [
         V.c5 === 'not' ? 'The yearly wave does not pass the strict test.' : 'The wave is there, and it is strong enough to pass a strict test that respects the weekly clustering.',
         c.lowInEachYear ? `In each of the ${word(ny)} years, ${low.map((m) => MONTH[m - 1]).join(' or ')} is one of the three quietest months.` : '',
@@ -355,6 +426,13 @@ function buildCases(E) {
         node: <TreadPaceChart byYear={c.byYear} from={c.from} cur={c.cur} aria={`Median treadmill pace by year: ${c.byYear.map((r) => `${r[0]} ${mmss(r[2])}`).join(', ')} min per km.`} />,
         note: `The dot is the median run and the bar the middle half of runs. Quicker paces sit higher. The years before ${c.from} had few runs and are shown in grey.`,
       },
+      take: (() => {
+        const a = Y(2022), b = Y(c.prev), now = Y(c.cur)
+        return [
+          a && b ? `The treadmill runs also became fewer as they slowed, from ${n0(a[4])} in 2022 to ${n0(b[4])} in ${c.prev}.` : '',
+          now && b && Math.abs(now[4] - b[4]) <= 5 ? `In ${c.cur} I have done ${n0(now[4])} of them so far, about as many as in ${c.prev}, and I set the belt faster again. The number of runs stayed low, and the effort came back.` : '',
+        ]
+      })(),
       plain: [
         V.c7 === 'proven' ? 'Both halves of the claim hold with room to spare.' : 'The trend holds, and the turn is weaker.',
         `The slowdown was steady, about ${Math.round(c.slope * 60)} seconds per kilometre each year, and the ${c.cur} turn is just as clear. Treadmill pace is the belt speed I chose, so this measures the effort I chose to give, year by year.`,
@@ -396,6 +474,10 @@ function buildCases(E) {
         ),
         note: 'Every outdoor walk and hike: climb per kilometre across, pace up. The line is the fitted effect of climb at the average distance.',
       },
+      take: [
+        `When I plan a walk in the hills, I add time for the climb. At 40 m of climb per kilometre, a 10 km walk takes about ${n0(c.slope * 400)} minutes longer than the same distance on flat ground.`,
+        'Pace alone does not tell me how hard a walk was. A slow kilometre on a steep road can be the best work of the week.',
+      ],
       plain: [
         V.c8 === 'proven' ? 'The model, the rank test and the medians all point the same way.' : 'The tests do not agree on this one.',
         `A steep walk is a slow walk, and the price can be put in seconds: on a route with 40 m of climb per kilometre, each kilometre takes about ${mmss(c.slope * 40)} longer than on flat ground.`,
@@ -430,6 +512,10 @@ function buildCases(E) {
         ),
         note: 'Every outdoor run, climb per kilometre across, pace up. The cloud has no slope: steep runs are spread over the same paces as flat ones.',
       },
+      take: [
+        `This case taught me to test what I believe. I was sure the hills slowed my runs the way they slow my walks, and ${n0(c.n)} outdoor runs said no.`,
+        `${cap(word(c.pts.filter((x) => x[2]).length))} of those runs were trail runs, mixed in with road runs and races, and a single number for climb does not sort them out. I keep the walking result and let this belief go.`,
+      ],
       plain: [
         V.c9 === 'not' ? `The rank test finds no link at all${c.slope < 0 ? ', and the model’s slope points the wrong way' : ''}. I keep this case in on purpose. A chapter that only reports the claims that worked would not be honest about how the testing went.` : 'The rank test and the model agree.',
         V.c9 === 'not' ? `My ${n0(c.n)} outdoor runs mix road runs, trail runs and races, and climb per kilometre does not line up with their pace.` : '',
@@ -473,6 +559,12 @@ function buildCases(E) {
         ),
         note: 'One dot per week since the comeback: kilometres run across, kilometres walked up.',
       },
+      take: (() => {
+        const both = c.pts.filter((x) => x[0] > 0 && x[1] > 0).length
+        return [
+          `I do not have to pick one. Of the ${n0(c.weeks)} weeks since the comeback, ${n0(both)} had both a run and a walk in them.`,
+        ]
+      })(),
       plain: trade ? [
         `The weekly totals show no trade-off (ρ = ${f(c.rho)}). The changes do. In a week when I run more than the week before, I usually walk a little less than the week before, and the other way round (ρ = ${f(c.rhoDiff)}). The detrended series agrees (ρ = ${f(c.rhoTrend)}).`,
         `The link is weak: a correlation of ${f(c.rhoDiff)} accounts for about ${pc(c.rhoDiff ** 2)} of the spread in the changes. It still survives the correction for many tests, so the claim that the two never compete does not hold as I wrote it. Over a whole week they mostly live side by side, and at the margin one gives a little way to the other.`,
@@ -518,6 +610,9 @@ function buildCases(E) {
         ),
         note: 'The share of next days with an outing, and how far the next day went when there was one.',
       },
+      take: [
+        'So I do not plan a zero day after a long one. In my record, the days after a long one were usually good days too.',
+      ],
       plain: [
         `Long days come in blocks. The day after a long one is usually another long one, ${f(c.kmLong, 1)} km against ${f(c.kmOther, 1)} km, and a big week is followed by a week that keeps most of it: weekly kilometres have a lag-1 correlation of ${f(c.ac1)}, and the week after a top-10% week keeps ${pc(c.afterBig)} of its distance.`,
         outHeld ? `Both results survive the correction for many tests, so I call the claim ${VLABEL[V.c11].toLowerCase()}.` : `The distance result is strong. The going-out result is just short of the strict line after correction, so I call the whole claim ${VLABEL[V.c11].toLowerCase()}.`,
@@ -546,6 +641,9 @@ function buildCases(E) {
         node: <KudosChart effects={c.effects} aria={`Change in kudos: ${c.effects.map((e) => `${e[0]} ${sg(e[1], 0)}%`).join(', ')}.`} />,
         note: 'Each factor with its 95% interval, the others held fixed. Intervals that cross zero are not significant.',
       },
+      take: [
+        'Kudos tell me what my friends like to see more than how hard I worked. So I read them as company on the road, and I leave the measure of the effort to my own log.',
+      ],
       plain: [
         `Once the sport is known, the size of the outing barely moves the kudos. A trail run earns about ${n0(tr[1])}% more than a walk of the same length and climb, and a run about ${n0(ru[1])}% more.`,
         `The model explains ${pc(c.r2, 1)} of the spread in kudos, so a single outing stays hard to predict, while the pattern across hundreds of outings is clear.`,
