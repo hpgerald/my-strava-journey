@@ -1,0 +1,12 @@
+mountain,trip,activity_key,date,label,sky,temp_c,humidity,source_page
+kilimanjaro,stage-1,a0902,2023-03-06,Marangu Gate to Mandara Hut,Partly cloudy,26.9,22,Mountains
+kilimanjaro,stage-2,a0904,2023-03-07,Mandara Hut to Horombo Hut,Partly cloudy,13.7,51,Mountains
+kilimanjaro,stage-3,a0906,2023-03-08,Horombo Hut to Kibo Hut,Clear,11.1,60,Mountains
+kilimanjaro,stage-4,a0908,2023-03-08,"Kibo Hut towards Uhuru Peak, as far as the watch recorded",Partly cloudy,8.3,70,Mountains
+hanang,hike-2023,a0975,2023-04-30,The first day on Hanang,Cloudy,13.5,94,Mountains
+hanang,race-2025,a1568,2025-05-31,Adventure race 2025,Clear,12.8,76,Mountains
+hanang,race-2026,a1952,2026-07-12,Adventure race 2026,Cloudy,13.3,89,Mountains
+uluguru,bondwa-2022,a0634,2022-06-23,"From the town, June 2022",Clear,15.3,82,Mountains
+uluguru,bondwa-2023,a0883,2023-02-19,February 2023,Partly cloudy,19.0,91,Mountains
+uluguru,bondwa-2025,a1527,2025-03-29,"March 2025, in the rain",Rain,16.9,100,Mountains
+uluguru,bondwa-2026,a1903,2026-05-30,May 2026,Cloudy,16.6,98,Mountains
