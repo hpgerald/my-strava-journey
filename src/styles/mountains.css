@@ -9,9 +9,6 @@
      Uluguru      forest green and mist, the densest of the three
    ========================================================================== */
 
-:root {
-  --font-read: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
-}
 
 .mtn { --m-ground: var(--night); --m-on: var(--on-night); --m-dim: var(--on-night-dim); --m-rule: var(--line-night); --m-key: var(--on-night); --m-wdth: 100%; --m-wght: 600; }
 .mtn--kilimanjaro { --m-ground: #12161a; --m-on: #eef3f6; --m-dim: #a9b6be; --m-rule: rgba(214, 229, 238, 0.22); --m-key: #cfe3ee; --m-tint: #e6eef2; --m-deep: #24313a; --m-wdth: 68%; --m-wght: 640; }

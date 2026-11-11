@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react'
 import { motionOK } from './env.js'
 import { useKeyed } from '../context/DataContext.jsx'
 
-// The first thing a visitor sees, once per visit: an ink screen counting up to
-// the number of outings in the log, then lifting away like a curtain.
+// The first thing a visitor sees, on the first visit only: an ink screen
+// counting up to the number of outings in the log, then lifting away like a
+// curtain. A browser that has seen it once does not see it again.
 export default function Preloader() {
   const meta = useKeyed('meta', 'key', 'value')
   const total = Number(meta.total_activities) || 0
   const [show, setShow] = useState(() => {
     if (!motionOK()) return false
-    try { return !sessionStorage.getItem('su-pre') } catch { return true }
+    try { return !localStorage.getItem('su-pre') } catch { return false }
   })
   const [n, setN] = useState(0)
   const [phase, setPhase] = useState('count')
 
   useEffect(() => {
     if (!show || !total) return
-    try { sessionStorage.setItem('su-pre', '1') } catch { /* private mode */ }
+    try { localStorage.setItem('su-pre', '1') } catch { /* private mode */ }
     let raf = 0, start = 0
     const dur = 1500
     const step = (t) => {

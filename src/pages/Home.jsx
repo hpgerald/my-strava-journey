@@ -28,6 +28,9 @@ import { fmtInt, toNum } from '../lib/format.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import { isNamedCountry } from '../lib/geo.js'
 import YearCharacters from '../components/YearCharacters.jsx'
+import Part from '../components/Part.jsx'
+import Verdict from '../components/Verdict.jsx'
+import { MOUNTAINS } from '../lib/mountainList.js'
 import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { useHeroLive } from '../motion/heroLive.js'
@@ -470,57 +473,16 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   const heroStreakLabel = edStreak.start ? `${MON3[parseInt(edStreak.start.slice(5, 7), 10) - 1]} ${edStreak.start.slice(0, 4)}` : ''
 
-  return (
-    <Layout>
-      {!book && (
-        <div className="shero-scene" data-fx="pin">
-        <section className="shero" aria-hidden="true" ref={heroRef}>
-          <HeroBoard
-            months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
-            gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}
-            nums={{ n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
-          />
-        </section>
-        <div className="shero-scene__run" aria-hidden="true" />
-        </div>
-      )}
-      {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
-      {homeReady && restOn && (<>
-      <Container>
-        {/* ---- Type-led hero: headline left, key figures stacked right --- */}
-        <section className="hero" aria-labelledby="hero-title">
-          <h1 id="hero-title" className="visually-hidden">
-            Gerald Tesha: {years || 7} years on foot, {fmtInt(activities)} activities, one habit.
-          </h1>
-
-          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
-
-          <Reveal as="p" className="hero__statement">
-            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
-            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
-            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
-          </Reveal>
-
-          {yearSummaries.length > 0 && (
-            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
-          )}
-          <BookStory>{[
-            `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
-            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
-            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
-          ]}</BookStory>
-        </section>
-      </Container>
-      {!book && <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
-
-      {/* ===== How the streak holds: momentum + today/tomorrow grid ===== */}
-      {momentum && mWeek && mOneOff && mFiveOff && (
+  // ---- the sections of the page, each by name: the book keeps them in its own
+  // order, the site tells them as a story in time
+  const secStreak = momentum && mWeek && mOneOff && mFiveOff && (
         <Container>
           <hr className="rule" />
           <section className="sgrid" aria-labelledby="streak-title">
             <div className="sgrid__head">
               <Eyebrow>How the streak holds</Eyebrow>
               <h2 id="streak-title" className="section-head__title">One day leads to the&nbsp;next.</h2>
+              <Verdict cases={[1, 2]} />
             </div>
 
             <Reveal as="p" className="sgrid__statement">
@@ -532,8 +494,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               title="Chance the next day is active"
               items={[
                 { value: mFiveOff.p, label: `after ${['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'][mFiveOff.g] || mFiveOff.g} zero days`, tone: 'rest' },
-                { value: mOneOff.p, label: 'after one zero day', tone: 'rest' },
-                { value: momentum.origin, label: 'after a day out', tone: 'move' },
+                { book: true, value: mOneOff.p, label: 'after one zero day', tone: 'rest' },
+                { book: true, value: momentum.origin, label: 'after a day out', tone: 'move' },
                 { value: mWeek.p, label: 'after a week on a roll', tone: 'move' },
               ]}
             />
@@ -559,10 +521,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]}</BookStory>
           </section>
         </Container>
-      )}
-
-      {/* ===== Who does the work: how the distance spreads across days ===== */}
-      {work && work.n > 20 && (
+      )
+  const secWork = work && work.n > 20 && (
         <div className="bleed bleed--level">
           <Container>
             <section className="sgrid" aria-labelledby="work-title">
@@ -581,8 +541,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
                 title="Share of all distance on foot"
                 items={[
                   { value: work.half, label: 'the quietest half of days', tone: 'rest' },
-                  { value: work.fifth, label: 'the busiest fifth of days', tone: 'move' },
-                  { value: work.tenth, label: 'the busiest tenth of days', tone: 'move' },
+                  { book: true, value: work.fifth, label: 'the busiest fifth of days', tone: 'move' },
+                  { book: true, value: work.tenth, label: 'the busiest tenth of days', tone: 'move' },
                   { value: work.one, label: `the ${work.k1} biggest days`, tone: 'move' },
                 ]}
               />
@@ -609,10 +569,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             </section>
           </Container>
         </div>
-      )}
-
-      {/* ===== How each year was made: same time a day, cut differently ===== */}
-      {shapeRows.length > 2 && shapeMulti && (
+      )
+  const secYears = shapeRows.length > 2 && shapeMulti && (
         <Container>
           <hr className="rule" />
           <StorySection
@@ -627,8 +585,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             odds={{
               title: 'How the days were split',
               items: [
-                { value: shapeMulti.multi, label: `of active days doubled up in ${shapeMulti.year}`, tone: 'rest' },
-                { value: shapeNow.multi, label: `of active days doubled up in ${shapeNow.year}`, tone: 'move' },
+                { book: true, value: shapeMulti.multi, label: `of active days doubled up in ${shapeMulti.year}`, tone: 'rest' },
+                { book: true, value: shapeNow.multi, label: `of active days doubled up in ${shapeNow.year}`, tone: 'move' },
                 { num: shapeMulti.avgMin, unit: ' min', label: `the average outing in ${shapeMulti.year}`, tone: 'rest' },
                 { num: shapeNow.avgMin, unit: ' min', label: `the average outing in ${shapeNow.year}`, tone: 'move' },
               ],
@@ -660,20 +618,11 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             source="Activity Log · moving time and outings per active day, by year"
           />
         </Container>
-      )}
-
-      {/* ===== A closer look: six smaller things, each on the section recipe ===== */}
-      <Container>
-        <hr className="rule" />
-        <div className="closer-head">
-          <Eyebrow>A closer look</Eyebrow>
-        </div>
-
-        {/* 1. Where in the world */}
-        {locN > 0 && tzN > 0 && (
+      )
+  const secWhere = locN > 0 && tzN > 0 && (
           <StorySection
             id="where-title"
-            eyebrow="1 · Where I go"
+            eyebrow={book ? '1 · Where I go' : 'Where I go'}
             title="The climbing is in two&nbsp;regions."
             statement={<>
               If I want to climb, I have to travel. Where I live, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
@@ -682,8 +631,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             odds={{
               title: 'Where the outings happen',
               items: [
-                { value: tzN / locN, label: 'of located outings are in Tanzania', tone: 'move' },
-                { value: awayN / locN, label: 'outside Tanzania', tone: 'rest' },
+                { book: true, value: tzN / locN, label: 'of located outings are in Tanzania', tone: 'move' },
+                { book: true, value: awayN / locN, label: 'outside Tanzania', tone: 'rest' },
                 { value: climbTop2A, label: `of Tanzania's outings are in ${climbTop2.map((r) => r.region).join(' and ')}`, tone: 'rest' },
                 { value: climbTop2E, label: "of Tanzania's climbing is there", tone: 'move' },
               ],
@@ -705,13 +654,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]}
             source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
           />
-        )}
-
-        {/* 2. Every way to move */}
+        )
+  const secMove = (
+        <>
         <hr className="rule rule--faint" />
         <StorySection
           id="move-title"
-          eyebrow="2 · Walking and running"
+          eyebrow={book ? '2 · Walking and running' : 'Walking and running'}
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
             I did not plan to become a walker. It happened slowly. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
@@ -723,8 +672,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             items: [
               { value: mixN.walk / mixTot, label: 'walks', tone: 'move' },
               { value: mixN.run / mixTot, label: 'runs', tone: 'move' },
-              { value: mixN.trail / mixTot, label: 'trail runs and hikes', tone: 'move' },
-              { value: mixN.other / mixTot, label: 'other activities', tone: 'rest' },
+              { book: true, value: mixN.trail / mixTot, label: 'trail runs and hikes', tone: 'move' },
+              { book: true, value: mixN.other / mixTot, label: 'other activities', tone: 'rest' },
             ],
           }}
           left={{ title: 'Every outing, by sport', node: <SportTreemap rows={sportBreakdown} /> }}
@@ -745,12 +694,15 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]}
           source="Activity Log · outings by sport type"
         />
-
-        {/* 3. When the day gets moving */}
+        </>
+  )
+  const secHours = (
+        <>
         <hr className="rule rule--faint" />
         <StorySection
           id="hours-title"
-          eyebrow="3 · Time of day"
+          cases={[4]}
+          eyebrow={book ? '3 · Time of day' : 'Time of day'}
           title="Mornings and evenings."
           statement={<>
             The habit fits around my work, so it does not wait for the weekend. Most outings start early in the morning or in the
@@ -761,9 +713,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             title: 'When outings start',
             items: [
               { value: hourShare(0, 10), label: 'before 10 in the morning', tone: 'move' },
-              { value: hourShare(10, 16), label: 'between 10am and 4pm', tone: 'rest' },
+              { book: true, value: hourShare(10, 16), label: 'between 10am and 4pm', tone: 'rest' },
               { value: hourShare(16, 21), label: 'between 4 and 9pm', tone: 'move' },
-              { value: hourShare(21, 24), label: 'after 9pm', tone: 'rest' },
+              { book: true, value: hourShare(21, 24), label: 'after 9pm', tone: 'rest' },
             ],
           }}
           left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={hours} unit="activities" max={400} /> }}
@@ -791,14 +743,15 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]}
           source="Activity Log · start hour and weekday of every outing"
         />
-
-        {/* 4. The year has a season */}
-        {fullYears.length > 1 && (
+        </>
+  )
+  const secSeason = fullYears.length > 1 && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
               id="season-title"
-              eyebrow="4 · Through the year"
+              cases={[5]}
+              eyebrow={book ? '4 · Through the year' : 'Through the year'}
               title="Two quieter months."
               statement={<>
                 Every year has a soft spot, and mine is {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]}. They have been my weakest
@@ -809,9 +762,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               odds={{
                 title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
                 items: [
-                  { value: monthShare[bestIdx], label: `in ${MONTH_NAME[bestIdx]}, the strongest month`, tone: 'rest' },
+                  { book: true, value: monthShare[bestIdx], label: `in ${MONTH_NAME[bestIdx]}, the strongest month`, tone: 'rest' },
                   { value: midShare, label: 'in a typical month', tone: 'rest' },
-                  { value: monthShare[dipIdx[0]], label: `in ${MONTH_NAME[dipIdx[0]]}`, tone: 'move' },
+                  { book: true, value: monthShare[dipIdx[0]], label: `in ${MONTH_NAME[dipIdx[0]]}`, tone: 'move' },
                   { value: monthShare[dipIdx[1]], label: `in ${MONTH_NAME[dipIdx[1]]}`, tone: 'move' },
                 ],
               }}
@@ -847,15 +800,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               source="Activity Log · days with at least one activity, by month"
             />
           </>
-        )}
-
-        {/* 5. Off the treadmill */}
-        {ioFirst && ioLast && (
+        )
+  const secIndoor = ioFirst && ioLast && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
               id="indoor-title"
-              eyebrow="5 · Indoors and out"
+              eyebrow={book ? '5 · Indoors and out' : 'Indoors and out'}
               title="Less treadmill every year."
               statement={<>
                 The treadmill is where I learned to run. Of the {fmtInt(runKm)} km I have run, {fmtInt(runKmIn)} km were on it, and my
@@ -866,8 +817,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
                 items: [
                   { value: ioFirst.indoor / ioFirst.n, label: `of sessions in ${ioYears[0]}`, tone: 'rest' },
                   { value: ioLast.indoor / ioLast.n, label: `of sessions in ${ioYears[ioYears.length - 1]}`, tone: 'move' },
-                  { value: indoorShare('run'), label: 'of all runs', tone: 'rest' },
-                  { value: indoorShare('walk'), label: 'of all walks', tone: 'move' },
+                  { book: true, value: indoorShare('run'), label: 'of all runs', tone: 'rest' },
+                  { book: true, value: indoorShare('walk'), label: 'of all walks', tone: 'move' },
                 ],
               }}
               left={{ title: 'Indoors and outdoors, year by year', node: <IndoorOutdoor activities={activityLog} height={360} heightNarrow={300} /> }}
@@ -899,13 +850,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               source="Activity Log · trainer flag on each session"
             />
           </>
-        )}
-
-        {/* 6. Walking climbs, running runs */}
+        )
+  const secFlip = (
+        <>
         <hr className="rule rule--faint" />
         <StorySection
           id="flip-title"
-          eyebrow="6 · Distance and climb"
+          eyebrow={book ? '6 · Distance and climb' : 'Distance and climb'}
           title="Where the height comes from."
           statement={<>
             Running gives me the kilometres, and walking and the hills give me the height. I climb about{' '}
@@ -917,8 +868,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             items: [
               { value: fShare('Run', 'dist'), label: 'of the distance is running', tone: 'move' },
               { value: fShare('Run', 'elev'), label: 'of the climb is running', tone: 'rest' },
-              { value: fShare('Walk', 'elev'), label: 'of the climb is walking', tone: 'move' },
-              { value: fShare('TrailRun', 'elev') + fShare('Hike', 'elev'), label: 'of the climb is trail runs and hikes', tone: 'move' },
+              { book: true, value: fShare('Walk', 'elev'), label: 'of the climb is walking', tone: 'move' },
+              { book: true, value: fShare('TrailRun', 'elev') + fShare('Hike', 'elev'), label: 'of the climb is trail runs and hikes', tone: 'move' },
             ],
           }}
           left={{ title: 'Distance against climb, by sport', node: <FootFlip items={footFlipData} /> }}
@@ -950,17 +901,180 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]}
           source="Activity Log · distance and climb on foot (run, walk, trail run, hike)"
         />
+        </>
+  )
+
+  // inside My Book the chapter keeps its own order
+  if (book) {
+    return (
+      <Layout>
+        {homeReady && restOn && (<>
+      <Container>
+        {/* ---- Type-led hero: headline left, key figures stacked right --- */}
+        <section className="hero" aria-labelledby="hero-title">
+          <h1 id="hero-title" className="visually-hidden">
+            Gerald Tesha: {years || 7} years on foot, {fmtInt(activities)} activities, one habit.
+          </h1>
+
+          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
+
+          <Reveal as="p" className="hero__statement">
+            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
+            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
+            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
+          </Reveal>
+
+          {book && yearSummaries.length > 0 && (
+            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
+          )}
+          <BookStory>{[
+            `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
+            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
+            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
+          ]}</BookStory>
+        </section>
       </Container>
+        {secStreak}
+        {secWork}
+        {secYears}
+      <Container>
+        <hr className="rule" />
+        <div className="closer-head">
+          <Eyebrow>A closer look</Eyebrow>
+        </div>
+        {secWhere}
+        {secMove}
+        {secHours}
+        {secSeason}
+        {secIndoor}
+        {secFlip}
+      </Container>
+      <Container>
+        <FieldNote seed="/home" align="wide" />
+      </Container>
+        </>)}
+      </Layout>
+    )
+  }
+
+  // ---- the story: a cold open, then six parts in the order they happened ----
+  const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
+  const plates = (ys) => {
+    const s = yearSummaries.filter((y) => ys.includes(y.year))
+    return s.length ? <Container><YearCharacters summaries={s} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} title={s.length > 1 ? 'The years of this part' : 'The year of this part'} /></Container> : null
+  }
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const monthOf = (ym) => `${MONTHS[parseInt(ym.slice(5, 7), 10) - 1]} ${ym.slice(0, 4)}`
+
+  return (
+    <Layout>
+      {!book && (
+        <div className="shero-scene" data-fx="pin">
+        <section className="shero" aria-hidden="true" ref={heroRef}>
+          <HeroBoard
+            months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
+            gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}
+            nums={{ n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
+          />
+        </section>
+        <div className="shero-scene__run" aria-hidden="true" />
+        </div>
+      )}
+      {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
+      {homeReady && restOn && (<>
+      <Container>
+        {/* ---- Type-led hero: headline left, key figures stacked right --- */}
+        <section className="hero" aria-labelledby="hero-title">
+          <h1 id="hero-title" className="visually-hidden">
+            Gerald Tesha: {years || 7} years on foot, {fmtInt(activities)} activities, one habit.
+          </h1>
+
+          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
+
+          <Reveal as="p" className="hero__statement">
+            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
+            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
+            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
+          </Reveal>
+
+          {book && yearSummaries.length > 0 && (
+            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
+          )}
+          <BookStory>{[
+            `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
+            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
+            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
+          ]}</BookStory>
+        </section>
+      </Container>
+      <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />
+
+      <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019"
+        line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}>
+        {plates([2019, 2020])}
+        {heroGap ? (
+          <div className="spart-gap" data-fx="">
+            <Container>
+              <p className="spart-gap__t">Nothing in the log from {monthOf(heroGap.from)} to {monthOf(heroGap.back)}.</p>
+            </Container>
+          </div>
+        ) : null}
+      </Part>
+
+      <Part n="2" name="The comeback" years="mid 2021 to 2022" spine="2021"
+        line={`From ${n0(nOf(2020))} outings in a year to ${n0(nOf(2021))}, then ${n0(nOf(2022))}.`}>
+        {plates([2021, 2022])}
+        {secStreak}
+        {secWork}
+        {secYears}
+        {secIndoor ? <Container>{secIndoor}</Container> : null}
+      </Part>
+
+      <Part n="3" name="The mountains" years="2023" spine="2023"
+        line="This was the year the habit left the flat ground. Three mountains, and each has its own chapter.">
+        {plates([2023])}
+        <Container>
+          <ul className="spart-doors">
+            {MOUNTAINS.map((m) => (
+              <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{m.line}</span></Link></li>
+            ))}
+          </ul>
+        </Container>
+      </Part>
+
+      <Part n="4" name="The road" years="2024" spine="2024"
+        line="Wherever I went that year, the shoes came with me.">
+        {plates([2024])}
+        {secWhere ? <Container>{secWhere}<p className="mtn-link"><Link to="/where">Every place I have been out →</Link></p></Container> : null}
+      </Part>
+
+      <Part n="5" name="No zero days" years="2025 to 2026" spine="2025"
+        line="The streak that is still going started in the last days of 2025.">
+        {plates([2025, 2026])}
+        <Container>
+          {secMove}
+          {secHours}
+          {secSeason}
+          {secFlip}
+        </Container>
+      </Part>
+
+      <Part n="6" name="What it taught me" years="Looking back" spine="Now"
+        line="Seven years of logging, read back as a few plain lessons.">
+        <Container>
+          <p className="mtn-link"><Link to="/what-it-means">Read the lessons →</Link></p>
+        </Container>
+      </Part>
 
       <Container>
         <FieldNote seed="/home" align="wide" />
       </Container>
 
-      {/* ---- The quiet close, then the full index -------------------- */}
+      {/* ---- The Record: the whole analysis, chapter by chapter ---- */}
       <Container>
         <section className="sgrid" aria-labelledby="explore-title">
           <div className="sgrid__head">
-            <Eyebrow>Read on</Eyebrow>
+            <Eyebrow>The Record</Eyebrow>
             <h2 id="explore-title" className="section-head__title">
               {cap(NUMWORD[menuItems.length] || String(menuItems.length))} more chapters.
             </h2>

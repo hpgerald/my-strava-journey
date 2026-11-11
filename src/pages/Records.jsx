@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { useBook } from '../components/BookContext.js'
+import { MOUNTAINS } from '../lib/mountainList.js'
 import { Link } from 'react-router-dom'
 import { BookRead } from '../components/BookStory.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
@@ -61,6 +63,7 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone })
 const fmtDayL = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 
 export default function Records() {
+  const book = useBook()
   const activities = useTable('activities')
   const activityGeo = useTable('activity_geo')
   const kili = useTable('kili_half')
@@ -180,13 +183,33 @@ export default function Records() {
   const stoodIdx = R.distStood.indexOf(stoodLong)
   const stoodRec = stoodIdx >= 0 ? dP[stoodIdx] : null
 
+  // the record book: in My Book it closes the chapter as cards, on the site it
+  // opens the page as a ledger, one line per record
+  const hall = () => (
+        <section className={`sgrid${book ? '' : ' yis-top'}`} aria-labelledby="rc-edges">
+          <div className="sgrid__head">
+            <Eyebrow>{book ? `${num()} · All my records` : 'The ledger'}</Eyebrow>
+            <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
+          </div>
+          <ul className={`yrecs${book ? '' : ' yrecs--ledger'}`}>
+            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" />
+            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" />
+            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" />
+            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" />
+            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} />
+            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} />
+          </ul>
+        </section>
+  )
+
   return (
     <DetailFrame
       {...frame}
     >
       <div className="yis-report">
+        {!book ? <>{hall()}<hr className="rule rule--faint" /></> : null}
         {/* ===== the distance record ===== */}
-        <section className="sgrid yis-top" aria-labelledby="rc-title">
+        <section className={`sgrid${book ? ' yis-top' : ''}`} aria-labelledby="rc-title">
           <div className="sgrid__head">
             <Eyebrow>The distance record</Eyebrow>
             <h2 id="rc-title" className="section-head__title">Against my own&nbsp;longest.</h2>
@@ -201,7 +224,7 @@ export default function Records() {
             title="The longest outing on foot"
             items={[
               { num: dP.length, unit: '', label: 'times the record broke', tone: 'move' },
-              { num: dNow.km, dec: 1, unit: ' km', label: 'the record now', tone: 'move' },
+              { book: true, num: dNow.km, dec: 1, unit: ' km', label: 'the record now', tone: 'move' },
               { num: R.distStanding.days, unit: ' days', label: 'it has stood', tone: 'rest' },
               { num: R.distStanding.outingsSince, unit: '', label: 'outings since, none longer', tone: 'rest' },
             ]}
@@ -238,8 +261,8 @@ export default function Records() {
             items: [
               { num: R.halfUp.length, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
               { num: R.over30.length, unit: '', label: 'outings past 30 km', tone: 'move' },
-              { num: treadOver30.length, unit: '', label: 'of those on a treadmill', tone: 'rest' },
-              { num: longestWalk ? longestWalk.km : 0, dec: 1, unit: ' km', label: 'the longest walk', tone: 'move' },
+              { book: true, num: treadOver30.length, unit: '', label: 'of those on a treadmill', tone: 'rest' },
+              { book: true, num: longestWalk ? longestWalk.km : 0, dec: 1, unit: ' km', label: 'the longest walk', tone: 'move' },
             ],
           }}
           left={{
@@ -286,9 +309,9 @@ export default function Records() {
             title: 'The biggest climb on foot',
             items: [
               { num: cP.length, unit: '', label: 'times the record broke', tone: 'move' },
-              { num: cNow.elev, unit: ' m', label: 'the record now', tone: 'move' },
+              { book: true, num: cNow.elev, unit: ' m', label: 'the record now', tone: 'move' },
               { num: R.climbStanding.days, unit: ' days', label: 'it has stood', tone: 'rest' },
-              { num: bigDayClimb.elev, unit: ' m', label: `in one day, ${fmtDay(bigDayClimb.date)}`, tone: 'move' },
+              { book: true, num: bigDayClimb.elev, unit: ' m', label: `in one day, ${fmtDay(bigDayClimb.date)}`, tone: 'move' },
             ],
           }}
           left={{
@@ -335,8 +358,8 @@ export default function Records() {
           odds={{
             title: 'The biggest stretches',
             items: [
-              { num: wk.km, unit: ' km', label: `in the week of ${fmtDay(wk.start)}`, tone: 'move' },
-              { num: moKm.km, unit: ' km', label: `in ${fmtMonth(moKm.month)}`, tone: 'move' },
+              { book: true, num: wk.km, unit: ' km', label: `in the week of ${fmtDay(wk.start)}`, tone: 'move' },
+              { book: true, num: moKm.km, unit: ' km', label: `in ${fmtMonth(moKm.month)}`, tone: 'move' },
               { num: moEl.elev, unit: ' m', label: `climbed in ${fmtMonth(moEl.month)}`, tone: 'move' },
               { value: moEl.elev / EVEREST, label: 'of an Everest in that month', tone: 'rest' },
             ],
@@ -370,8 +393,26 @@ export default function Records() {
           source="Activity Log · distance and climb on foot by week and by month"
         />
 
+        {/* ===== the mountains: on the site they have their own chapters ===== */}
+        {!book && (
+          <>
+            <hr className="rule rule--faint" />
+            <section className="sgrid" aria-labelledby="rc-mtn">
+              <div className="sgrid__head">
+                <Eyebrow>{num()} · The mountains</Eyebrow>
+                <h2 id="rc-mtn" className="section-head__title">Three records were set on&nbsp;mountains.</h2>
+              </div>
+              <ul className="spart-doors">
+                {MOUNTAINS.map((m) => (
+                  <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{{ kilimanjaro: 'The highest point', hanang: 'The longest day', uluguru: 'The biggest climb' }[m.id]}</span></Link></li>
+                ))}
+              </ul>
+            </section>
+          </>
+        )}
+
         {/* ===== the Kilimanjaro expedition ===== */}
-        {KX && (
+        {book && KX && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
@@ -427,7 +468,7 @@ export default function Records() {
         )}
 
         {/* ===== the long day on Mount Hanang ===== */}
-        {HN && HN.first && (
+        {book && HN && HN.first && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
@@ -498,8 +539,8 @@ export default function Records() {
             items: [
               { num: totalKm, unit: ' km', label: 'on foot in all', tone: 'move' },
               { num: totalEl / EVEREST, dec: 1, unit: '', label: 'Everests climbed', tone: 'move' },
-              { num: ev[0].days, unit: ' days', label: 'for the first Everest', tone: 'rest' },
-              { num: evLast.days, unit: ' days', label: `for the ${ORD[evLast.k] || ordS(evLast.k)}`, tone: 'move' },
+              { book: true, num: ev[0].days, unit: ' days', label: 'for the first Everest', tone: 'rest' },
+              { book: true, num: evLast.days, unit: ' days', label: `for the ${ORD[evLast.k] || ordS(evLast.k)}`, tone: 'move' },
             ],
           }}
           left={{
@@ -550,8 +591,8 @@ export default function Records() {
             items: [
               { num: R.prTotal, unit: '', label: 'PRs in all', tone: 'move' },
               { num: R.prOutings, unit: '', label: 'outings that set at least one', tone: 'rest' },
-              { num: prLast.prs, unit: '', label: `in ${lastYear}${so}`, tone: 'move' },
-              { num: prLast.rate, dec: 2, unit: '', label: `per outing in ${lastYear}`, tone: 'move' },
+              { book: true, num: prLast.prs, unit: '', label: `in ${lastYear}${so}`, tone: 'move' },
+              { book: true, num: prLast.rate, dec: 2, unit: '', label: `per outing in ${lastYear}`, tone: 'move' },
             ],
           }}
           left={{
@@ -599,9 +640,9 @@ export default function Records() {
           odds={{
             title: 'In a row',
             items: [
-              { num: S.any.len, unit: ' days', label: S.any.current === S.any.len ? 'with an outing, still going' : 'with an outing, the best', tone: 'move' },
+              { book: true, num: S.any.len, unit: ' days', label: S.any.current === S.any.len ? 'with an outing, still going' : 'with an outing, the best', tone: 'move' },
               { num: S.week.len, unit: ' weeks', label: 'with at least one outing', tone: 'move' },
-              { num: S.run.len, unit: ' days', label: 'running in a row', tone: 'move' },
+              { book: true, num: S.run.len, unit: ' days', label: 'running in a row', tone: 'move' },
               { num: S.longGap.len, unit: ' days', label: 'the longest layoff', tone: 'rest' },
             ],
           }}
@@ -650,9 +691,9 @@ export default function Records() {
                 title: 'Climbs by region of Tanzania',
                 items: [
                   { num: regTop[0][1], unit: '', label: `of the top ${top20N} climbs in ${regTop[0][0]}`, tone: 'move' },
-                  { num: regs[0].elev, unit: ' m', label: `the biggest, in ${regs[0].region}`, tone: 'move' },
-                  { num: regs[1].elev, unit: ' m', label: `the biggest in ${regs[1].region}`, tone: 'rest' },
-                  { num: regs[2].elev, unit: ' m', label: `the biggest in ${regs[2].region}`, tone: 'rest' },
+                  { book: true, num: regs[0].elev, unit: ' m', label: `the biggest, in ${regs[0].region}`, tone: 'move' },
+                  { book: true, num: regs[1].elev, unit: ' m', label: `the biggest in ${regs[1].region}`, tone: 'rest' },
+                  { book: true, num: regs[2].elev, unit: ' m', label: `the biggest in ${regs[2].region}`, tone: 'rest' },
                 ],
               }}
               left={{
@@ -703,9 +744,9 @@ export default function Records() {
           odds={{
             title: 'Records against chance',
             items: [
-              { num: dP.length, unit: '', label: 'times the distance record broke', tone: 'move' },
+              { book: true, num: dP.length, unit: '', label: 'times the distance record broke', tone: 'move' },
               { num: R.expected, dec: 1, unit: '', label: 'times chance would give', tone: 'rest' },
-              { num: SR.Run.broken / SR.Run.expected, dec: 1, unit: '×', label: 'chance, for runs alone', tone: 'move' },
+              { book: true, num: SR.Run.broken / SR.Run.expected, dec: 1, unit: '×', label: 'chance, for runs alone', tone: 'move' },
               { value: pEarly, label: 'chance the record would stand this long', tone: 'rest' },
             ],
           }}
@@ -739,22 +780,8 @@ export default function Records() {
           source="Activity Log · record counts against the harmonic expectation for a random order"
         />
 
-        {/* ===== 11. the hall of fame ===== */}
-        <hr className="rule rule--faint" />
-        <section className="sgrid" aria-labelledby="rc-edges">
-          <div className="sgrid__head">
-            <Eyebrow>{num()} · All my records</Eyebrow>
-            <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
-          </div>
-          <ul className="yrecs">
-            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" />
-            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" />
-            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" />
-            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" />
-            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} />
-            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} />
-          </ul>
-        </section>
+        {/* ===== 11. the hall of fame (the book closes on it) ===== */}
+        {book ? <><hr className="rule rule--faint" />{hall()}</> : null}
       </div>
     </DetailFrame>
   )

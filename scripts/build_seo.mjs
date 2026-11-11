@@ -79,18 +79,19 @@ const DESC = `Gerald Tesha's ${word(years)} years on foot, mostly in Tanzania: $
 const OG_DESC = `${n0(F.n)} outings, ${n0(F.km)} km on foot and a ${n0(F.streak)}-day streak so far. ${cap(word(years))} years of Gerald Tesha's Strava log, read as data.`
 
 const routes = {
+  // the story first, then the Record, as in the menu
   '/': { title: TITLE, description: DESC },
+  '/kilimanjaro': { title: 'Kilimanjaro', description: 'Kilimanjaro by the Marangu route, one hut at a time: the GPS line of the climb, every stage, and the summit night my watch did not finish.' },
+  '/hanang': { title: 'Hanang', description: 'Mount Hanang, my longest day on foot: the hike told by the clock from before sunrise to after midnight, and the two races that took me back.' },
+  '/uluguru': { title: 'Uluguru', description: 'Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing.' },
+  '/what-it-means': { title: 'What It Means', description: `What ${word(years)} years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson.` },
   '/numbers': { title: 'Year in Sport', description: `Every year of my log as its own report, from ${n0(byYear[F.firstYear])} outings in ${F.firstYear} to ${n0(byYear[F.lastYear])} in ${F.lastYear}${last.slice(5) < '12-31' ? ' so far' : ''}.` },
   '/sports': { title: 'Sports', description: `My four sports on foot: ${n0(F.runKm)} km of running and ${n0(F.walkKm)} km of walking, with trail runs and hikes, and the treadmill kept apart from the road.` },
   '/records': { title: 'Records', description: `My longest, highest and hardest days on foot: ${F.longest.toFixed(1)} km in one outing, ${n0(F.climb)} m of climbing in one outing, and a ${n0(F.streak)}-day streak.` },
   '/where': { title: 'Where', description: `Where I go out: ${word(F.countries)} African countries and ${word(F.regions)} regions of Tanzania, mapped from where each outing started.` },
   '/timeline': { title: 'Timeline', description: `${cap(word(years))} years in the order they happened: milestones, firsts on foot, trips, streaks and breaks.` },
   '/goals': { title: 'Goals', description: 'The same three targets held against every year: 1,000 km of walking, 1,000 km of running and 24,000 m of climbing on foot.' },
-  '/what-it-means': { title: 'What It Means', description: `What ${word(years)} years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson.` },
   '/on-trial': { title: 'The Habit on Trial', description: E ? `Twelve things I believe about my habit, tested with statistics against the log: ${word(vc('proven'))} proven, ${word(vc('supported'))} supported and ${word(vc('not'))} not proven.` : 'Twelve things I believe about my habit, tested with statistics against the log.' },
-  '/kilimanjaro': { title: 'Kilimanjaro', description: 'Kilimanjaro by the Marangu route, one hut at a time: the GPS line of the climb, every stage, and the summit night my watch did not finish.' },
-  '/hanang': { title: 'Hanang', description: 'Mount Hanang, my longest day on foot: the hike told by the clock from before sunrise to after midnight, and the two races that took me back.' },
-  '/uluguru': { title: 'Uluguru', description: 'Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing.' },
   '/book': { title: 'My Book', description: `Showing Up, the whole story as a free book, with every chart drawn from the log up to ${fmtDay(last)}. Read it online or download the PDF.` },
   '/about': { title: 'About', description: 'How this site was made, what the data covers and how to reach me.' },
   '/data': { title: 'The Data', description: 'Every table behind the site, what it holds and where it comes from.' },

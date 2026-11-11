@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
+import { Link } from 'react-router-dom'
 
 // A filled map of places, shaded by a value on a log scale so one dominant place
 // (home) does not wash out the rest; places with nothing logged stay pale grey.
@@ -11,7 +12,9 @@ import { useInView } from '../components/Reveal.jsx'
 //   metrics [{ key, label, unit, fmt }], labels [names to name on the map],
 //   maxHeight, crop [lonMin, latMin, lonMax, latMax] (optional), aria,
 //   nudge { name: [dx, dy] } moves a label off a small place, with a leader line
-//   (dx, dy are fractions of the map width)
+//   (dx, dy are fractions of the map width),
+//   pins [{ key, label, at: [lat, lng], to, side: 'l' | 'r' }] mark single points
+//   (the mountains) with a small peak that opens a chapter
 const RAMP = ['#ffe0d1', '#ffb38f', '#ff7a3c', '#fc4c02', '#b23400']
 const h2 = (x) => parseInt(x, 16)
 function lerp(a, b, t) {
@@ -25,7 +28,7 @@ function ramp(t) {
 // dark text on the light end of the ramp, light text on the dark end
 const inkOn = (t) => (t > 0.62 ? 'var(--paper)' : 'var(--ink)')
 
-export default function PlaceMap({ src, nameKey, values, metrics, labels = [], nudge = {}, maxHeight = 560, crop, aria }) {
+export default function PlaceMap({ src, nameKey, values, metrics, labels = [], nudge = {}, maxHeight = 560, crop, aria, pins = [] }) {
   const [ref, width] = useWidth(720)
   const [root, inView] = useInView({ threshold: 0.15 })
   const [fc, setFc] = useState(null)
@@ -109,7 +112,7 @@ export default function PlaceMap({ src, nameKey, values, metrics, labels = [], n
         </div>
       )}
       <div ref={root} className="pmap__plot" style={{ position: 'relative' }}>
-        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${aria} Shaded by ${m.label.toLowerCase()}: ${ranked.map((k) => `${k} ${m.fmt(valOf(k))}`).join(', ')}.`} style={{ display: 'block' }}
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role={pins.length ? 'group' : 'img'} aria-label={`${aria} Shaded by ${m.label.toLowerCase()}: ${ranked.map((k) => `${k} ${m.fmt(valOf(k))}`).join(', ')}.`} style={{ display: 'block' }}
           onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setPos({ x: e.clientX - r.left, y: e.clientY - r.top }) }}
           onMouseLeave={() => setHover(null)}>
           {shapes.map((s) => (
@@ -137,6 +140,16 @@ export default function PlaceMap({ src, nameKey, values, metrics, labels = [], n
               </g>
             )
           })}
+          {pins.map((pn, i) => {
+            const x = px(pn.at[1]), y = py(pn.at[0])
+            const left = pn.side === 'l'
+            return (
+              <Link key={pn.key} to={pn.to} className="pmap__pin" style={{ '--d': `${900 + i * 140}ms` }} aria-label={`${pn.label}. Open the chapter.`}>
+                <path d={`M${x - 7} ${y + 5}L${x} ${y - 8}L${x + 7} ${y + 5}Z`} className="pmap__peak" />
+                {narrow ? null : <text x={left ? x - 11 : x + 11} y={y + 3} textAnchor={left ? 'end' : 'start'} className="pmap__pl">{pn.label}</text>}
+              </Link>
+            )
+          })}
         </svg>
         {hv && (
           <div className="chart-tip" style={{ left: Math.min(Math.max(pos.x, 70), W - 70), top: Math.max(pos.y - 64, 0) }}>
@@ -145,6 +158,12 @@ export default function PlaceMap({ src, nameKey, values, metrics, labels = [], n
           </div>
         )}
       </div>
+      {pins.length && narrow ? (
+        <p className="pmap__pins">
+          <span className="pmap__pk"><i className="pmap__pi" aria-hidden="true" />The mountains</span>
+          {pins.map((pn) => <Link key={pn.key} to={pn.to}>{pn.label}</Link>)}
+        </p>
+      ) : null}
       <div className="pmap__key" aria-hidden="true">
         <span>less</span>
         <i className="pmap__ramp" style={{ background: `linear-gradient(90deg, ${RAMP.join(',')})` }} />

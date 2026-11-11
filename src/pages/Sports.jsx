@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { BookRead } from '../components/BookStory.jsx'
+import { useBook } from '../components/BookContext.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -54,6 +55,7 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone })
 }
 
 export default function Sports() {
+  const book = useBook()
   const activities = useTable('activities')
   const { prev, next } = useSectionPaging('/sports')
   const r = useMemo(() => (activities.length ? buildFootReport(activities) : null), [activities])
@@ -160,12 +162,9 @@ export default function Sports() {
   const dblMax = Math.max(...Object.values(D.perYear))
   const gapMax = Math.max(...D.gapBins.map((b) => b.n))
 
-  return (
-    <DetailFrame
-      {...frame}
-    >
-      <div className="yis-report">
-        {/* ===== the four sports in one view ===== */}
+  // ===== the four sports in one view =====
+  const sec_top = () => (
+    <>
         <section className="sgrid yis-top" aria-labelledby="sp-title">
           <div className="sgrid__head">
             <Eyebrow>The whole picture</Eyebrow>
@@ -191,8 +190,12 @@ export default function Sports() {
             ['What the clouds say', 'Each way of moving gathers into its own cloud, named at its middle. Where two clouds overlap, the two ways of moving are alike in pace and climb; where a cloud stands apart, it is a different kind of effort.', null],
           ]} />
         </section>
+    </>
+  )
 
-        {/* ===== 1. who does what ===== */}
+  // ===== 1. who does what =====
+  const sec_who = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-split"
@@ -208,8 +211,8 @@ export default function Sports() {
             items: [
               { value: share('km', 'Run'), label: 'of the distance was run', tone: 'move' },
               { value: share('hours', 'Walk'), label: 'of the hours were walked', tone: 'rest' },
-              { value: share('elev', 'TrailRun'), label: 'of the climb came on trail runs', tone: 'move' },
-              { value: share('elev', 'Hike'), label: `of the climb came on ${word(S.Hike.n)} hikes`, tone: 'rest' },
+              { book: true, value: share('elev', 'TrailRun'), label: 'of the climb came on trail runs', tone: 'move' },
+              { book: true, value: share('elev', 'Hike'), label: `of the climb came on ${word(S.Hike.n)} hikes`, tone: 'rest' },
             ],
           }}
           left={{
@@ -247,8 +250,12 @@ export default function Sports() {
             ]}
           source="Activity Log · runs, walks, trail runs and hikes; distance and climb on foot only"
         />
+    </>
+  )
 
-        {/* ===== 2. the mix over the years ===== */}
+  // ===== 2. the mix over the years =====
+  const sec_mix = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-mix"
@@ -264,8 +271,8 @@ export default function Sports() {
             items: [
               { num: latest.km.Walk, unit: ' km', label: `walked in ${LY}${so}`, tone: 'rest' },
               { num: latest.km.Run, unit: ' km', label: `run in ${LY}${so}`, tone: 'move' },
-              { num: runPeak.km.Run, unit: ' km', label: `run in ${runPeak.year}`, tone: 'move' },
-              { num: trailPeak.km.TrailRun, unit: ' km', label: `on trails in ${trailPeak.year}, the trail peak`, tone: 'move' },
+              { book: true, num: runPeak.km.Run, unit: ' km', label: `run in ${runPeak.year}`, tone: 'move' },
+              { book: true, num: trailPeak.km.TrailRun, unit: ' km', label: `on trails in ${trailPeak.year}, the trail peak`, tone: 'move' },
             ],
           }}
           left={{
@@ -303,8 +310,12 @@ export default function Sports() {
             ]}
           source="Activity Log · distance on foot by sport and year"
         />
+    </>
+  )
 
-        {/* ===== 3. the treadmill ===== */}
+  // ===== 3. the treadmill =====
+  const sec_tread = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-tread"
@@ -319,8 +330,8 @@ export default function Sports() {
             title: 'Running indoors',
             items: [
               { num: M.tread.n, unit: '', label: 'treadmill runs', tone: 'move' },
-              { value: indoorShare(peakIndoor), label: `of running km indoors in ${peakIndoor.year}`, tone: 'move' },
-              { value: indoorShare(latest), label: `indoors in ${LY}${so}`, tone: 'rest' },
+              { book: true, value: indoorShare(peakIndoor), label: `of running km indoors in ${peakIndoor.year}`, tone: 'move' },
+              { book: true, value: indoorShare(latest), label: `indoors in ${LY}${so}`, tone: 'rest' },
               { value: r.roundFive, label: 'of treadmill runs stopped on a whole 5 km', tone: 'move' },
             ],
           }}
@@ -356,8 +367,12 @@ export default function Sports() {
             ]}
           source="Activity Log · runs marked as treadmill (trainer) against runs outdoors"
         />
+    </>
+  )
 
-        {/* ===== 4. pace ===== */}
+  // ===== 4. pace =====
+  const sec_pace = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-pace"
@@ -372,9 +387,9 @@ export default function Sports() {
             title: 'Median minutes per kilometre',
             items: [
               { num: M.tread.pace.med, dec: 1, unit: ' min', label: 'a treadmill km', tone: 'move' },
-              { num: M.road.pace.med, dec: 1, unit: ' min', label: 'an outdoor run km', tone: 'move' },
+              { book: true, num: M.road.pace.med, dec: 1, unit: ' min', label: 'an outdoor run km', tone: 'move' },
               { num: M.walk.pace.med, dec: 1, unit: ' min', label: 'a walking km', tone: 'rest' },
-              { num: M.hike.pace.med, dec: 1, unit: ' min', label: 'a hiking km', tone: 'rest' },
+              { book: true, num: M.hike.pace.med, dec: 1, unit: ' min', label: 'a hiking km', tone: 'rest' },
             ],
           }}
           left={{
@@ -410,8 +425,12 @@ export default function Sports() {
             ]}
           source={`Activity Log · moving time over distance; ${r.oddTread} treadmill runs logged quicker than ${pace(TREAD_MIN)} a km left out of pace as likely misreadings`}
         />
+    </>
+  )
 
-        {/* ===== 5. walks ===== */}
+  // ===== 5. walks =====
+  const sec_walks = () => (
+    <>
         {w0 && w1 && w0 !== w1 && (
           <>
             <hr className="rule rule--faint" />
@@ -429,8 +448,8 @@ export default function Sports() {
                 items: [
                   { num: w0.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w0.year}`, tone: 'rest' },
                   { num: w1.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w1.year}${w1.year === LY ? so : ''}`, tone: 'move' },
-                  { value: w0.walkShort, label: `of ${w0.year} walks under 3 km`, tone: 'rest' },
-                  { value: w1.walkShort, label: `of ${w1.year} walks under 3 km`, tone: 'move' },
+                  { book: true, value: w0.walkShort, label: `of ${w0.year} walks under 3 km`, tone: 'rest' },
+                  { book: true, value: w1.walkShort, label: `of ${w1.year} walks under 3 km`, tone: 'move' },
                 ],
               }}
               left={{
@@ -468,8 +487,12 @@ export default function Sports() {
             />
           </>
         )}
+    </>
+  )
 
-        {/* ===== 6. the long days ===== */}
+  // ===== 6. the long days =====
+  const sec_long = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-long"
@@ -485,8 +508,8 @@ export default function Sports() {
             items: [
               { num: longAll, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
               { value: longTread / Math.max(1, longAll), label: 'of them on a treadmill', tone: 'rest' },
-              { num: latest.longN, unit: '', label: `in ${LY}${so}`, tone: 'move' },
-              { num: lastLongOut, unit: '', label: `of those ${latest.longN} outside`, tone: 'move' },
+              { book: true, num: latest.longN, unit: '', label: `in ${LY}${so}`, tone: 'move' },
+              { book: true, num: lastLongOut, unit: '', label: `of those ${latest.longN} outside`, tone: 'move' },
             ],
           }}
           left={{
@@ -520,8 +543,12 @@ export default function Sports() {
             ]}
           source="Activity Log · outings of 21.1 km or more by way of moving"
         />
+    </>
+  )
 
-        {/* ===== 7. climb ===== */}
+  // ===== 7. climb =====
+  const sec_climb = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-climb"
@@ -537,9 +564,9 @@ export default function Sports() {
             title: 'Metres climbed for each kilometre',
             items: [
               { num: M.hike.mPerKm, unit: ' m', label: 'per km on a hike', tone: 'move' },
-              { num: M.trail.mPerKm, unit: ' m', label: 'per km on a trail run', tone: 'move' },
+              { book: true, num: M.trail.mPerKm, unit: ' m', label: 'per km on a trail run', tone: 'move' },
               { num: M.walk.mPerKm, unit: ' m', label: 'per km on a walk', tone: 'rest' },
-              { num: big.elev, unit: ' m', label: 'my biggest single climb', tone: 'move' },
+              { book: true, num: big.elev, unit: ' m', label: 'my biggest single climb', tone: 'move' },
             ],
           }}
           left={{
@@ -570,8 +597,12 @@ export default function Sports() {
             ]}
           source="Activity Log · elevation gain on foot over distance on foot"
         />
+    </>
+  )
 
-        {/* ===== 8. when ===== */}
+  // ===== 8. when =====
+  const sec_when = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-when"
@@ -587,8 +618,8 @@ export default function Sports() {
             items: [
               { value: M.tread.night, label: 'of treadmill runs after 8pm or before 5am', tone: 'move' },
               { value: walkEve, label: 'of walks between 4 and 7pm', tone: 'rest' },
-              { value: M.trail.weekend, label: 'of trail runs at the weekend', tone: 'move' },
-              { value: M.tread.weekend, label: 'of treadmill runs at the weekend', tone: 'rest' },
+              { book: true, value: M.trail.weekend, label: 'of trail runs at the weekend', tone: 'move' },
+              { book: true, value: M.tread.weekend, label: 'of treadmill runs at the weekend', tone: 'rest' },
             ],
           }}
           left={{
@@ -625,8 +656,12 @@ export default function Sports() {
             ]}
           source="Activity Log · local start hour and weekday of every outing on foot"
         />
+    </>
+  )
 
-        {/* ===== 9. doubles ===== */}
+  // ===== 9. doubles =====
+  const sec_dbl = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-doubles"
@@ -643,7 +678,7 @@ export default function Sports() {
               { num: D.total, unit: ' days', label: 'with a run and a walk', tone: 'move' },
               { value: D.runFirst / Math.max(1, D.total), label: 'of them with the run first', tone: 'move' },
               { num: D.medGap / 60, dec: 1, unit: ' h', label: 'between them, the median', tone: 'rest' },
-              { num: dblPeak[1], unit: ' days', label: `in ${dblPeak[0]}, the most`, tone: 'move' },
+              { book: true, num: dblPeak[1], unit: ' days', label: `in ${dblPeak[0]}, the most`, tone: 'move' },
             ],
           }}
           left={{
@@ -676,8 +711,12 @@ export default function Sports() {
             ]}
           source="Activity Log · start time and moving time of runs and walks on the same date"
         />
+    </>
+  )
 
-        {/* ===== 10. effort and reward ===== */}
+  // ===== 10. effort and reward =====
+  const sec_effort = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-effort"
@@ -692,8 +731,8 @@ export default function Sports() {
             title: 'Effort per hour, kudos and records per outing',
             items: [
               { num: M[rated[0]].effortPerHour, unit: '', label: `effort per hour, ${MODE_NAME[rated[0]].toLowerCase()}`, tone: 'move' },
-              { num: M.walk.effortPerHour, unit: '', label: 'effort per hour, walk', tone: 'rest' },
-              { num: M[kudosTop].kudosPer, unit: '', label: `kudos per ${MODE_NAME[kudosTop].toLowerCase()}`, tone: 'move' },
+              { book: true, num: M.walk.effortPerHour, unit: '', label: 'effort per hour, walk', tone: 'rest' },
+              { book: true, num: M[kudosTop].kudosPer, unit: '', label: `kudos per ${MODE_NAME[kudosTop].toLowerCase()}`, tone: 'move' },
               { num: M.road.prsPer, dec: 1, unit: '', label: 'PRs per outdoor run', tone: 'move' },
             ],
           }}
@@ -726,8 +765,12 @@ export default function Sports() {
             ]}
           source="Activity Log · Strava relative effort (heart rate), kudos and PRs"
         />
+    </>
+  )
 
-        {/* ===== 11. the maths ===== */}
+  // ===== 11. the maths =====
+  const sec_maths = () => (
+    <>
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-maths"
@@ -741,10 +784,10 @@ export default function Sports() {
           odds={{
             title: 'Four numbers from the fits',
             items: [
-              { num: F.r, dec: 2, unit: '', label: 'treadmill distance against pace', tone: 'move' },
+              { book: true, num: F.r, dec: 2, unit: '', label: 'treadmill distance against pace', tone: 'move' },
               { num: secPerKm, unit: ' s', label: 'quicker per km for each extra km', tone: 'move' },
               { num: gain, unit: ' s', label: 'per km quicker at 21 km than at 5 km', tone: 'move' },
-              { num: WF.r, dec: 2, unit: '', label: 'weekly running km against walking km', tone: 'rest' },
+              { book: true, num: WF.r, dec: 2, unit: '', label: 'weekly running km against walking km', tone: 'rest' },
             ],
           }}
           left={{
@@ -781,8 +824,12 @@ export default function Sports() {
             ]}
           source={`Activity Log · least-squares fits; treadmill runs quicker than ${pace(TREAD_MIN)} a km left out`}
         />
+    </>
+  )
 
-        {/* ===== 12. the far edges ===== */}
+  // ===== 12. the far edges =====
+  const sec_edges = () => (
+    <>
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="sp-edges">
           <div className="sgrid__head">
@@ -798,8 +845,12 @@ export default function Sports() {
             <RecordCard kicker="Running streak" value={r.streak.run.len} unit="days" label="in a row with a run or trail run" sub={`${fmtDay(r.streak.run.startISO)} to ${fmtDay(r.streak.run.endISO)}`} />
           </ul>
         </section>
+    </>
+  )
 
-        {/* ===== each sport on its own ===== */}
+  // ===== each sport on its own =====
+  const sec_each = () => (
+    <>
         <hr className="rule rule--faint" />
         <section className="sgrid" aria-labelledby="sp-each">
           <div className="sgrid__head">
@@ -822,8 +873,69 @@ export default function Sports() {
             I also logged {n0(T.all - T.n)} other activities. They count in my outings, hours and kudos, but not in distance or climb.
           </p>
         </section>
+    </>
+  )
+
+  return (
+    <DetailFrame
+      {...frame}
+    >
+      <div className="yis-report">
+        {book ? (
+          <>
+            {sec_top()}
+            {sec_who()}
+            {sec_mix()}
+            {sec_tread()}
+            {sec_pace()}
+            {sec_walks()}
+            {sec_long()}
+            {sec_climb()}
+            {sec_when()}
+            {sec_dbl()}
+            {sec_effort()}
+            {sec_maths()}
+            {sec_edges()}
+            {sec_each()}
+          </>
+        ) : (
+          <>
+            {sec_top()}
+            <Movement n="I" name="The treadmill" line="Running started indoors for me." />
+            {sec_tread()}
+            {sec_when()}
+            {sec_pace()}
+            {sec_maths()}
+            <Movement n="II" name="The walk takes over" line="Walking came later and stayed." />
+            {sec_who()}
+            {sec_mix()}
+            {sec_walks()}
+            {sec_dbl()}
+            <Movement n="III" name="The hills" line="Hikes, trail runs and the long days." />
+            {sec_climb()}
+            {sec_long()}
+            {sec_effort()}
+            {sec_edges()}
+            {sec_each()}
+          </>
+        )}
       </div>
     </DetailFrame>
+  )
+}
+
+// The site tells the sports in three movements. Each opens with its numeral,
+// its name and one line.
+function Movement({ n, name, line }) {
+  return (
+    <header className="spart spart--mv">
+      <div className="spart__head" data-fx="">
+        <p className="spart__k">Movement {n} of III</p>
+        <span className="spart__n" aria-hidden="true">{n}</span>
+        <h2 className="spart__t">{name}</h2>
+        <p className="spart__l">{line}</p>
+      </div>
+    </header>
   )
 }
 

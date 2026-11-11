@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useInView, useCountUp } from './Reveal.jsx'
+import { useBook } from './BookContext.js'
 
 // A row of four equal cells on the site grid: a number and the condition it
 // belongs to. `tone` colours the number like the chart it summarises
 // ('rest' grey, 'move' accent). Numbers count up as the row arrives.
 // A cell is a share (value 0-1, shown as %) or a plain number (num + unit, with
 // `dec` decimals); `sign` prints a plus on positive changes. Pointing at a
-// number plays its count again.
+// number plays its count again. A cell marked `book` repeats what a chart
+// beside it shows, and is printed only in My Book.
 // the number itself; remounting it (a new key) plays the count again
 function Num({ target, run, dec, sign, unit, isNum }) {
   const v = useCountUp(target, run, { dur: 1400, decimals: dec })
@@ -30,11 +32,16 @@ function OddsCell({ value, num, unit, dec = 0, sign = false, label, tone, delay,
 
 export default function OddsRow({ title, items }) {
   const [ref, inView] = useInView({ threshold: 0.2, rootMargin: '0px' })
+  // a number the charts beside it already show is marked `book`: My Book, which
+  // has the room, prints it; the site leaves it to the chart
+  const book = useBook()
+  const shown = book ? items : items.filter((it) => !it.book)
+  if (!shown.length) return null
   return (
     <div ref={ref} className={`odds${inView ? ' is-in' : ''}`}>
       <p className="odds__title">{title}</p>
       <ol className="odds__row">
-        {items.map((it, i) => (
+        {shown.map(({ book: _b, ...it }, i) => (
           <OddsCell key={it.label} {...it} delay={i * 110} run={inView} />
         ))}
       </ol>

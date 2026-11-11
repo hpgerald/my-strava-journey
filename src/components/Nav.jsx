@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { lenisRef } from '../motion/env.js'
+import { MOUNTAINS } from '../lib/mountainList.js'
 
 // The studio nav: a slim bar with the mark, the chapter you are in and a Menu
-// button. The menu opens a full-screen ink index of every chapter, rising in
-// line by line.
+// button. The menu opens a full-screen ink index in two groups, the story and
+// the Record, rising in line by line.
 export default function Nav() {
   const rows = useTable('nav_index')
   const meta = useKeyed('meta', 'key', 'value')
@@ -40,6 +41,17 @@ export default function Nav() {
 
   const total = Number(meta.total_activities) || 0
 
+  // two groups: the story, read in order, and the Record, the whole analysis
+  // chapter by chapter
+  const row = (route) => rows.find((r) => r.route === route)
+  const story = [
+    row('/'),
+    ...MOUNTAINS.map((m) => ({ route: m.to, title: m.name })),
+    row('/what-it-means'),
+  ].filter(Boolean)
+  const record = rows.filter((r) => r.route !== '/' && r.route !== '/what-it-means')
+  const groups = [{ k: 'The story', items: story }, { k: 'The Record', items: record }]
+
   return (
     <header className={`snav${open ? ' is-open' : ''}`}>
       <div className="snav__bar">
@@ -65,26 +77,24 @@ export default function Nav() {
 
       <div id="site-menu" ref={panel} className="smenu" role="dialog" aria-modal="true" aria-label="Chapters" hidden={!open} data-lenis-prevent>
         <nav aria-label="Primary" className="smenu__nav">
-          <ol className="smenu__list">
-            {rows.map((r, i) => (
-              <li key={r.number} className="smenu__item" style={{ '--i': i }}>
-                <Link to={r.route} className={`smenu__link${r.route === base ? ' is-here' : ''}`} aria-current={r.route === base ? 'page' : undefined} onClick={() => setOpen(false)}>
-                  <span className="smenu__num">{r.number}</span>
-                  <span className="smenu__t">{r.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ol>
+          {groups.map((g, gi) => (
+            <div key={g.k} className="smenu__group">
+              <p className="smenu__k" id={`smenu-${gi}`}>{g.k}</p>
+              <ol className="smenu__list" aria-labelledby={`smenu-${gi}`}>
+                {g.items.map((r, i) => (
+                  <li key={r.route} className="smenu__item" style={{ '--i': i + gi * 3 }}>
+                    <Link to={r.route} className={`smenu__link${r.route === base ? ' is-here' : ''}`} aria-current={r.route === base ? 'page' : undefined} onClick={() => setOpen(false)}>
+                      <span className="smenu__t">{r.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
         </nav>
         <aside className="smenu__side">
           <p className="smenu__k">The log</p>
           <p className="smenu__big">{total.toLocaleString('en-US')}<span>outings so far</span></p>
-          <p className="smenu__k">The mountains</p>
-          <ul className="smenu__mtn">
-            <li><Link to="/kilimanjaro" onClick={() => setOpen(false)}>Kilimanjaro</Link></li>
-            <li><Link to="/hanang" onClick={() => setOpen(false)}>Hanang</Link></li>
-            <li><Link to="/uluguru" onClick={() => setOpen(false)}>Uluguru</Link></li>
-          </ul>
           <p className="smenu__k">More</p>
           <ul className="smenu__more">
             <li><Link to="/about" onClick={() => setOpen(false)}>About ↗</Link></li>

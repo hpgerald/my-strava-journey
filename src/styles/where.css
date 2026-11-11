@@ -33,6 +33,20 @@
 .pmap__ln { font-size: var(--fs-2xs); font-weight: 700; }
 .pmap__lab.is-out text { paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
 .pmap__lv { font-family: var(--font-mono); font-size: var(--fs-2xs); font-variant-numeric: tabular-nums; }
+/* the mountains as pins: a small peak that opens the chapter */
+.pmap__pin { opacity: 0; transition: opacity 0.6s var(--ease); transition-delay: var(--d, 0ms); cursor: pointer; }
+.pmap.is-in .pmap__pin { opacity: 1; }
+.pmap__peak { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; stroke-linejoin: round; transition: fill 0.3s var(--ease); }
+.pmap__pl { font-size: var(--fs-2xs); font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.pmap__pin:hover .pmap__peak, .pmap__pin:focus-visible .pmap__peak { fill: var(--accent); }
+.pmap__pin:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pmap__pins { margin: var(--sp-3) 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2) var(--sp-4); font-size: var(--fs-sm); }
+.pmap__pk { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.pmap__pi { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 11px solid var(--ink); }
+.pmap__pins a { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.pmap__pins a:hover { color: var(--accent-ink); }
+.pmap__pins a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.book .pmap__pins { display: none; }
 .pmap__key { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); }
 .pmap__ramp { width: 120px; height: 10px; display: inline-block; }
 .pmap__none { width: 12px; height: 10px; display: inline-block; background: var(--grey-06); border: 1px solid var(--grey-25); margin-left: var(--sp-2); }
@@ -59,6 +73,6 @@
   .wh-africa { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pmap__shape, .pmap__lab, .wh-ledger__row { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .pmap__shape, .pmap__lab, .pmap__pin, .wh-ledger__row { transition: none !important; opacity: 1 !important; transform: none !important; }
   .pmap__shape.is-on { fill: var(--fill); }
 }

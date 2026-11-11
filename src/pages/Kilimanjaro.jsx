@@ -63,6 +63,8 @@ export default function Kilimanjaro() {
   return (
     <Mountain
       id="kilimanjaro"
+      plate={<RouteMap lines={lines} marks={marks} ratio={0.74} aria="The Marangu route on Kilimanjaro, from Marangu Gate past Mandara Hut, Horombo Hut and Kibo Hut towards Uhuru Peak." />}
+      plateNote="The orange line is the GPS track of the four stages. The dotted line is the part of the summit night my watch did not record."
       hero="kili-hero"
       standfirst={<>The mountain is climbed one hut at a time. In March 2023 I went up the Marangu route and reached Uhuru Peak, {n0(KX_TOP)} m, on my first try.</>}
       facts={[

@@ -153,8 +153,8 @@ export default function WhatItMeans() {
             items: [
               { num: pc(kmDrop), unit: '%', label: 'less distance per day', tone: 'rest' },
               { num: pc(dayDrop), unit: '%', label: 'fewer days out', tone: 'move' },
-              { num: low.long, unit: ' days', label: `of ${LONG_KM} km or more in ${low.year}, from ${peak.long}`, tone: 'rest' },
-              { num: cur.days, unit: ` of ${cur.ndays}`, label: `days out in ${cur.year}${cur.partial ? ' so far' : ''}`, tone: 'move' },
+              { book: true, num: low.long, unit: ' days', label: `of ${LONG_KM} km or more in ${low.year}, from ${peak.long}`, tone: 'rest' },
+              { book: true, num: cur.days, unit: ` of ${cur.ndays}`, label: `days out in ${cur.year}${cur.partial ? ' so far' : ''}`, tone: 'move' },
             ],
           }}
           left={{
@@ -204,7 +204,7 @@ export default function WhatItMeans() {
             title: `Streak savers since ${habitYear}`,
             items: [
               { num: M.smallDays, unit: ' days', label: `under ${SMALL_KM} km on foot`, tone: 'move' },
-              { value: smallShare, label: 'of all my days out', tone: 'move' },
+              { book: true, value: smallShare, label: 'of all my days out', tone: 'move' },
               { value: M.smallNextActive, label: 'out again the next day', tone: 'move' },
               { value: M.restNextActive, label: 'out again after a zero day', tone: 'rest' },
             ],
@@ -257,8 +257,8 @@ export default function WhatItMeans() {
                 items: [
                   { num: Math.floor(wNow.min), unit: ' km', label: `my lowest week of ${cur.year}`, tone: 'move' },
                   { num: wNow.under10, unit: ' weeks', label: `under 10 km in ${cur.year}`, tone: 'move' },
-                  { num: under10Between, unit: ' weeks', label: `under 10 km, ${between[0].year} to ${between[between.length - 1].year}`, tone: 'rest' },
-                  { num: bestPerDay.kmPerDay, dec: 1, unit: ' km', label: `a day in ${bestPerDay.year}`, tone: 'move' },
+                  { book: true, num: under10Between, unit: ' weeks', label: `under 10 km, ${between[0].year} to ${between[between.length - 1].year}`, tone: 'rest' },
+                  { book: true, num: bestPerDay.kmPerDay, dec: 1, unit: ' km', label: `a day in ${bestPerDay.year}`, tone: 'move' },
                 ],
               }}
               left={{
@@ -308,8 +308,8 @@ export default function WhatItMeans() {
             items: [
               { num: M.longDays, unit: ' days', label: `of ${LONG_KM} km or more on foot`, tone: 'move' },
               { value: M.longNextActive / M.longDays, label: 'followed by another day out', tone: 'move' },
-              { num: after.km, dec: 1, unit: ' km', label: `the next day, against ${k1(M.avgDayKm)} km on a typical day`, tone: 'move' },
-              { value: lrShare('rest'), label: `full rest after a ${LONG_RUN_KM} km run`, tone: 'rest' },
+              { book: true, num: after.km, dec: 1, unit: ' km', label: `the next day, against ${k1(M.avgDayKm)} km on a typical day`, tone: 'move' },
+              { book: true, value: lrShare('rest'), label: `full rest after a ${LONG_RUN_KM} km run`, tone: 'rest' },
             ],
           }}
           left={{
@@ -361,9 +361,9 @@ export default function WhatItMeans() {
             title: 'The two levers',
             items: [
               { num: 1000 / 365, dec: 1, unit: ' km', label: 'a day makes 1,000 km a year', tone: 'rest' },
-              { num: longYear.kmPerActive, dec: 1, unit: ' km', label: `per day out in ${longYear.year}, the longest`, tone: 'move' },
+              { book: true, num: longYear.kmPerActive, dec: 1, unit: ' km', label: `per day out in ${longYear.year}, the longest`, tone: 'move' },
               { value: cur.share, label: `of days out in ${cur.year}${cur.partial ? ' so far' : ''}`, tone: 'move' },
-              { num: lowYear.km, unit: ' km', label: `in ${lowYear.year}, low on both`, tone: 'rest' },
+              { book: true, num: lowYear.km, unit: ' km', label: `in ${lowYear.year}, low on both`, tone: 'rest' },
             ],
           }}
           left={{

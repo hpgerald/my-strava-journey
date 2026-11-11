@@ -6,7 +6,8 @@ import { lenisRef } from '../motion/env.js'
 // and turns orange, and the section's title slides out beside it on hover.
 // A click scrolls to that section. It also draws the reading line along the
 // top of the page. Built from the sections on the page, so every chapter gets
-// it without any set-up.
+// it without any set-up. On the story page the ticks are the years of its
+// parts, so the rail reads as a spine of years.
 export default function SectionMap() {
   const [items, setItems] = useState([])
   const [on, setOn] = useState(-1)
@@ -17,12 +18,15 @@ export default function SectionMap() {
     if (!main) return undefined
     let raf = 0
     const read = () => {
-      const secs = [...main.querySelectorAll('section.sgrid[aria-labelledby]')].filter((s) => !s.closest('.book'))
+      // a page told in parts (the story) is mapped by its parts, each with its
+      // year: the map becomes a spine of years
+      const parts = [...main.querySelectorAll('section.spart[data-spine][aria-labelledby]')].filter((s) => !s.closest('.book'))
+      const secs = parts.length >= 3 ? parts : [...main.querySelectorAll('section.sgrid[aria-labelledby]')].filter((s) => !s.closest('.book'))
       const next = secs.map((s) => {
         const h = document.getElementById(s.getAttribute('aria-labelledby'))
-        return { id: s.getAttribute('aria-labelledby'), label: h ? h.textContent.replace(/\s+/g, ' ').trim() : '' }
+        return { id: s.getAttribute('aria-labelledby'), label: h ? h.textContent.replace(/\s+/g, ' ').trim() : '', spine: s.getAttribute('data-spine') || '' }
       }).filter((x) => x.label)
-      setItems((cur) => (cur.length === next.length && cur.every((c, i) => c.id === next[i].id && c.label === next[i].label) ? cur : next))
+      setItems((cur) => (cur.length === next.length && cur.every((c, i) => c.id === next[i].id && c.label === next[i].label && c.spine === next[i].spine) ? cur : next))
     }
     const mo = new MutationObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(read) })
     mo.observe(main, { childList: true, subtree: true })
@@ -66,12 +70,12 @@ export default function SectionMap() {
     <>
       <div className="sread" aria-hidden="true" ref={bar}><span /></div>
       {items.length >= 3 ? (
-        <nav className="smap" aria-label="Sections of this page">
+        <nav className={`smap${items[0].spine ? ' smap--spine' : ''}`} aria-label={items[0].spine ? 'The story, year by year' : 'Sections of this page'}>
           <ol>
             {items.map((it, i) => (
               <li key={it.id} className={i === on ? 'is-on' : i < on ? 'is-past' : ''}>
                 <button type="button" onClick={() => go(it.id)} aria-current={i === on ? 'true' : undefined}>
-                  <span className="smap__n">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="smap__n">{it.spine || String(i + 1).padStart(2, '0')}</span>
                   <span className="smap__t">{it.label}</span>
                 </button>
               </li>

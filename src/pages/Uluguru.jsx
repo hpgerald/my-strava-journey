@@ -53,6 +53,8 @@ export default function Uluguru() {
   return (
     <Mountain
       id="uluguru"
+      plate={<RouteMap lines={lines} marks={marks} ratio={0.8} aria={`The GPS lines of ${times} trips to Bondwa Peak in the Uluguru Mountains.`} />}
+      plateNote={`Orange is ${fmtMonth(best.date)}. The faint line is ${fmtMonth(first.date)}, from the town. Black are the other trips.`}
       hero="uluguru-hero"
       standfirst={<>Bondwa Peak stands above Morogoro, in the Uluguru Mountains, and I keep going back to it. I have been up {times} times, and the most I have climbed in one outing was on its slopes.</>}
       facts={[

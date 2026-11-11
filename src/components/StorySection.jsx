@@ -2,6 +2,7 @@ import { Reveal } from './Reveal.jsx'
 import Eyebrow from './Eyebrow.jsx'
 import Words from './Words.jsx'
 import OddsRow from './OddsRow.jsx'
+import Verdict from './Verdict.jsx'
 import BookStory, { BookRead } from './BookStory.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { PairH } from '../charts/pairHeight.js'
@@ -16,7 +17,7 @@ import { useSectionVariant } from './SectionCount.js'
 // keep the last two words together so a wrapped headline never ends on one word
 const tie = (t) => (typeof t === 'string' ? t.replace(/ (\S+)$/, '\u00A0$1') : t)
 
-export default function StorySection({ id, eyebrow, title, sub, statement, odds, left, right, leftNote, rightNote, source, read, story, children, variant: want }) {
+export default function StorySection({ id, eyebrow, title, sub, statement, odds, left, right, leftNote, rightNote, source, read, story, children, cases, variant: want }) {
   const ref = useRef(null)
   const variant = useSectionVariant(ref, want, !!odds)
   // one height for the pair: measure what each chart needs on its own (with the
@@ -71,6 +72,7 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
         <Eyebrow>{eyebrow}</Eyebrow>
         <h2 id={id} className="section-head__title"><Words>{tie(title)}</Words></h2>
         {sub && <p className="section-head__sub">{sub}</p>}
+        {cases ? <Verdict cases={cases} /> : null}
       </div>
 
       <div className="sgrid__lead">

@@ -6,7 +6,6 @@ import { DataProvider } from './context/DataContext.jsx'
 
 import '@fontsource-variable/archivo/wdth.css'
 import '@fontsource-variable/inter'
-import '@fontsource-variable/inter-tight'
 import '@fontsource-variable/newsreader'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -22,6 +21,7 @@ import './styles/book.css'
 import './styles/studio.css'
 import './styles/layout3.css'
 import './styles/mountains.css'
+import './styles/story.css'
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,5 +1,7 @@
 import { BookLesson } from '../components/BookStory.jsx'
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { useBook } from '../components/BookContext.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import Words from '../components/Words.jsx'
@@ -85,28 +87,22 @@ function useMatchHeight() {
   return [ref, h]
 }
 
-function Case({ c }) {
-  const id = `ev-c${c.n}`
+// the file of a case: the claim, what was tested and how, the results, the
+// chart and its reading. H is the heading level of its small titles.
+function CaseFile({ c, H = 'h3' }) {
   const [showRef, matchH] = useMatchHeight()
   return (
-    <section className="sgrid ev-case" id={id} aria-labelledby={`${id}-t`}>
-      <div className="sgrid__head">
-        <div className="ev-side">
-          <Eyebrow>Case {String(c.n).padStart(2, '0')}</Eyebrow>
-          <p className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</p>
-        </div>
-        <h2 id={`${id}-t`} className="section-head__title"><Words>{tie(c.title)}</Words></h2>
-      </div>
+    <>
       <Reveal as="p" className="sgrid__statement">{c.claim}</Reveal>
       <div className="ev-file">
         <div className="ev-file__col">
-          <h3 className="ev-k">What I tested</h3>
+          <H className="ev-k">What I tested</H>
           <p className="ev-p">{c.tested}</p>
-          <h3 className="ev-k">Methods</h3>
+          <H className="ev-k">Methods</H>
           <ol className="ev-methods">{c.methods.map((m) => <li key={m}>{m}</li>)}</ol>
         </div>
         <div className="ev-file__col">
-          <h3 className="ev-k">Results</h3>
+          <H className="ev-k">Results</H>
           <table className="ev-res">
             <tbody>{c.results.map(([k, v]) => <tr key={k}><th scope="row">{k}</th><td>{v}</td></tr>)}</tbody>
           </table>
@@ -120,21 +116,57 @@ function Case({ c }) {
           <BookLesson of={c.chart.node} />
         </figure>
         <div className="ev-read">
-          <h3 className="ev-k">What it shows</h3>
+          <H className="ev-k">What it shows</H>
           {c.plain.filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
           {c.take && c.take.filter(Boolean).length ? (
             <>
-              <h3 className="ev-k ev-k--take">What I take from it</h3>
+              <H className="ev-k ev-k--take">What I take from it</H>
               {c.take.filter(Boolean).map((p, i) => <p key={`t${i}`}>{p}</p>)}
             </>
           ) : null}
           <p className="ev-limits"><b>Limits.</b> {c.limits}</p>
         </div>
       </div>
+    </>
+  )
+}
+
+// in My Book every case is printed in full, one after the other
+function Case({ c }) {
+  const id = `ev-c${c.n}`
+  return (
+    <section className="sgrid ev-case" id={id} aria-labelledby={`${id}-t`}>
+      <div className="sgrid__head">
+        <div className="ev-side">
+          <Eyebrow>Case {String(c.n).padStart(2, '0')}</Eyebrow>
+          <p className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</p>
+        </div>
+        <h2 id={`${id}-t`} className="section-head__title"><Words>{tie(c.title)}</Words></h2>
+      </div>
+      <CaseFile c={c} />
     </section>
   )
 }
 
+// on the site a case is one line of the verdict board: its number, the claim,
+// the key result and the verdict. The line opens the file under it.
+function Docket({ c, open, onToggle }) {
+  const id = `ev-c${c.n}`
+  return (
+    <li className={`ev-dk ev-dk--${c.verdict}${open ? ' is-open' : ''}`} id={id}>
+      <h3 className="ev-dk__h">
+        <button type="button" className="ev-dk__btn" aria-expanded={open} aria-controls={`${id}-file`} onClick={onToggle}>
+          <span className="ev-dk__n">{String(c.n).padStart(2, '0')}</span>
+          <span className="ev-dk__t">{c.short}</span>
+          <span className="ev-dk__key">{c.key}</span>
+          <span className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</span>
+          <span className="ev-dk__ico" aria-hidden="true" />
+        </button>
+      </h3>
+      {open ? <div className="sgrid ev-dk__file" id={`${id}-file`}><CaseFile c={c} H="h4" /></div> : null}
+    </li>
+  )
+}
 function buildCases(E) {
   const M = E.meta, V = E.verdicts, H = E.holmAdj
   const since = fmtDay(M.comeback)
@@ -757,6 +789,20 @@ export default function Evidence() {
     return () => { live = false }
   }, [])
 
+  // which cases are open, and which verdict the board is narrowed to. A link
+  // such as /on-trial?case=3 arrives with that case open.
+  const book = useBook()
+  const [params] = useSearchParams()
+  const asked = Number(params.get('case')) || 0
+  const [openSet, setOpenSet] = useState(() => new Set(asked ? [asked] : []))
+  const [only, setOnly] = useState(null)
+  useEffect(() => {
+    if (!asked || !E) return undefined
+    setOpenSet((s) => (s.has(asked) ? s : new Set([...s, asked])))
+    const t = setTimeout(() => jump(`ev-c${asked}`), 350)
+    return () => clearTimeout(t)
+  }, [asked, E])
+
   const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'The Habit on Trial' }], number: '09', title: 'The Habit on Trial', prev, next }
   if (!E) return <DetailFrame {...frame} />
 
@@ -769,6 +815,11 @@ export default function Evidence() {
     S ? `${word(S)} held up with a weaker second check` : '',
     N ? `${word(N)} did not hold up` : '',
   ].filter(Boolean)
+
+  const tally = ['proven', 'supported', 'not'].map((v) => ({ v, n: count(v) })).filter((t) => t.n)
+  const shown = only ? cases.filter((c) => c.verdict === only) : cases
+  const allOpen = shown.length > 0 && shown.every((c) => openSet.has(c.n))
+  const toggle = (n) => setOpenSet((s0) => { const s1 = new Set(s0); if (s1.has(n)) s1.delete(n); else s1.add(n); return s1 })
 
   return (
     <DetailFrame {...frame}>
@@ -789,35 +840,66 @@ export default function Evidence() {
         </div>
       </section>
 
-      <hr className="rule rule--faint" />
-      <section className="sgrid ev-board" aria-labelledby="ev-board-t">
-        <div className="sgrid__head">
-          <Eyebrow>The verdicts</Eyebrow>
-          <h2 id="ev-board-t" className="section-head__title"><Words>{tie('The verdicts at a glance.')}</Words></h2>
-        </div>
-        <div className="ev-tbl">
-          <table className="ev-board__t">
-            <thead><tr><th scope="col">#</th><th scope="col">The claim</th><th scope="col">Key result</th><th scope="col">Verdict</th></tr></thead>
-            <tbody>
-              {cases.map((c) => (
-                <tr key={c.n}>
-                  <td className="ev-n">{String(c.n).padStart(2, '0')}</td>
-                  <td><button type="button" className="ev-jump" onClick={() => jump(`ev-c${c.n}`)}>{c.short}</button></td>
-                  <td className="ev-num">{c.key}</td>
-                  <td><span className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {book ? (
+        <>
+        <hr className="rule rule--faint" />
+        <section className="sgrid ev-board" aria-labelledby="ev-board-t">
+          <div className="sgrid__head">
+            <Eyebrow>The verdicts</Eyebrow>
+            <h2 id="ev-board-t" className="section-head__title"><Words>{tie('The verdicts at a glance.')}</Words></h2>
+          </div>
+          <div className="ev-tbl">
+            <table className="ev-board__t">
+              <thead><tr><th scope="col">#</th><th scope="col">The claim</th><th scope="col">Key result</th><th scope="col">Verdict</th></tr></thead>
+              <tbody>
+                {cases.map((c) => (
+                  <tr key={c.n}>
+                    <td className="ev-n">{String(c.n).padStart(2, '0')}</td>
+                    <td><button type="button" className="ev-jump" onClick={() => jump(`ev-c${c.n}`)}>{c.short}</button></td>
+                    <td className="ev-num">{c.key}</td>
+                    <td><span className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      {cases.map((c) => (
-        <div key={c.n}>
+        {cases.map((c) => (
+          <div key={c.n}>
+            <hr className="rule rule--faint" />
+            <Case c={c} />
+          </div>
+        ))}
+        </>
+      ) : (
+        <>
           <hr className="rule rule--faint" />
-          <Case c={c} />
-        </div>
-      ))}
+          <section className="sgrid ev-board" aria-labelledby="ev-board-t">
+            <div className="sgrid__head">
+              <Eyebrow>The verdicts</Eyebrow>
+              <h2 id="ev-board-t" className="section-head__title"><Words>{tie('The verdict board.')}</Words></h2>
+            </div>
+            <div className="ev-tally" role="group" aria-label="Show the cases with one verdict">
+              {tally.map((t) => (
+                <button key={t.v} type="button" className={`ev-tally__b ev-tally__b--${t.v}${only === t.v ? ' is-on' : ''}`} aria-pressed={only === t.v} onClick={() => setOnly(only === t.v ? null : t.v)}>
+                  <span className="ev-tally__n">{t.n}</span>
+                  <span className="ev-tally__l">{VLABEL[t.v]}</span>
+                </button>
+              ))}
+            </div>
+            <div className="ev-dkbar">
+              <p className="ev-dkbar__t">{only ? `${shown.length} of ${cases.length} cases shown.` : 'Open a case to read its file.'}</p>
+              <button type="button" className="ev-dkbar__b" onClick={() => setOpenSet(allOpen ? new Set() : new Set(shown.map((c) => c.n)))}>
+                {allOpen ? 'Close all' : 'Open all'}
+              </button>
+            </div>
+            <ol className="ev-dks">
+              {shown.map((c) => <Docket key={c.n} c={c} open={openSet.has(c.n)} onToggle={() => toggle(c.n)} />)}
+            </ol>
+          </section>
+        </>
+      )}
 
       <hr className="rule rule--faint" />
       <section className="sgrid ev-holm" aria-labelledby="ev-holm-t">

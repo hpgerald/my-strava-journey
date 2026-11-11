@@ -2,7 +2,6 @@
    a local Arial scaled to the width and line height of each web font, so the
    swap does not move the page. */
 @font-face { font-family: 'Archivo Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 104.73%; ascent-override: 83.83%; descent-override: 20.05%; line-gap-override: 0%; }
-@font-face { font-family: 'Inter Tight Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 105.05%; ascent-override: 92.21%; descent-override: 22.96%; line-gap-override: 0%; }
 @font-face { font-family: 'Inter Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); size-adjust: 107.01%; ascent-override: 90.53%; descent-override: 22.54%; line-gap-override: 0%; }
 
 /* ============================================================================
@@ -51,7 +50,9 @@
      digits still align. No monospace/serif font is loaded, so there is no
      serif fallback anywhere. */
   --font-display: 'Archivo Variable', 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-hero: 'Inter Tight Variable', 'Inter Tight', 'Inter Tight Fallback', system-ui, sans-serif;
+  /* the masthead face: Archivo again, heavy and a little narrow (set font-stretch: var(--hero-wdth) with it) */
+  --font-hero: var(--font-display);
+  --hero-wdth: 95%;
   --font-sans: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'Inter Variable', 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
@@ -61,6 +62,8 @@
      is 1 rem, a lead line 1.272 (the square root of phi), a title 1.618 and
      up, and each display size is phi or its root times the one below. */
   --phi: 1.618;
+  /* the reading face: one serif for the lines that are read as sentences */
+  --font-read: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
   --fs-2xs: clamp(0.656rem, 0.628rem + 0.12vw, 0.740rem);
   --fs-xs:  clamp(0.740rem, 0.709rem + 0.14vw, 0.835rem);
   --fs-sm:  clamp(0.835rem, 0.799rem + 0.16vw, 0.942rem);

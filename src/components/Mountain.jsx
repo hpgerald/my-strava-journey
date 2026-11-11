@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useBook } from './BookContext.js'
+import { MOUNTAINS } from '../lib/mountainList.js'
 import { Link } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
@@ -10,22 +12,46 @@ import { SceneH } from './SceneContext.js'
 // type and pace (styles/mountains.css). A chapter opens on a full screen in its
 // own colour, then runs as bands: scenes on the golden grid, photographs, a
 // night band where the story goes dark, and a door to the next mountain.
-export const MOUNTAINS = [
-  { id: 'kilimanjaro', to: '/kilimanjaro', name: 'Kilimanjaro', line: 'The roof' },
-  { id: 'hanang', to: '/hanang', name: 'Hanang', line: 'The long day' },
-  { id: 'uluguru', to: '/uluguru', name: 'Uluguru', line: 'The mountain I go back to' },
-]
+export { MOUNTAINS }
 
-export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, children }) {
+export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, plate, plateNote, children }) {
+  const book = useBook()
   const i = MOUNTAINS.findIndex((m) => m.id === id)
   const me = MOUNTAINS[i]
   const others = [MOUNTAINS[(i + 1) % 3], MOUNTAINS[(i + 2) % 3]]
   useEffect(() => {
+    if (book) return undefined
     document.title = `${me.name}: ${me.line} · My Strava Journey`
     // the bar over a dark threshold reads light (Hanang's ochre keeps the ink)
     if (id !== 'hanang') document.documentElement.setAttribute('data-mtn-dark', '')
     return () => { document.title = SITE_TITLE; document.documentElement.removeAttribute('data-mtn-dark') }
-  }, [me, id])
+  }, [me, id, book])
+  // in My Book a mountain is one plate: its name, what it was, the route as the
+  // watch drew it and four figures
+  if (book) {
+    if (!standfirst) return null
+    return (
+      <section className="bk-page bk-plate" id={`bk-mtn-${id}`} aria-labelledby={`bk-mtn-${id}-t`}>
+        <p className="bk-plate__k">The mountains · Plate {i + 1} of 3</p>
+        <h2 id={`bk-mtn-${id}-t`} className="bk-plate__t">{me.name}</h2>
+        <p className="bk-plate__l">{me.line}</p>
+        <p className="bk-plate__s">{standfirst}</p>
+        {plate ? (
+          <figure className="bk-plate__fig">
+            {plate}
+            {plateNote ? <figcaption>{plateNote}</figcaption> : null}
+          </figure>
+        ) : null}
+        {facts.length ? (
+          <dl className="bk-plate__facts">
+            {facts.map((f) => (
+              <div key={f.label}><dt>{f.label}</dt><dd>{f.value}{f.unit ? <span> {f.unit}</span> : null}</dd></div>
+            ))}
+          </dl>
+        ) : null}
+      </section>
+    )
+  }
   return (
     <Layout>
       <article className={`mtn mtn--${id}`}>

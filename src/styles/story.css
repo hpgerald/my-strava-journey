@@ -1,0 +1,87 @@
+/* ==========================================================================
+   The story: the home page told in time, in six parts. A part opens with its
+   number, its years, its name and one sentence, then holds the years and the
+   findings that belong to it.
+   ========================================================================== */
+
+.spart { position: relative; margin-top: var(--sec-pad, 6.854rem); border-top: 3px solid var(--ink); }
+.spart__head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding-block: var(--sp-5) var(--sp-6); }
+.spart__k { margin: 0; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.spart__n { font-family: var(--font-display); font-stretch: 62%; font-weight: 700; font-size: clamp(6.854rem, 3rem + 17vw, 17.944rem); line-height: 0.78; letter-spacing: -0.05em; color: var(--accent-strong); margin-top: var(--sp-4); font-variant-numeric: lining-nums; }
+.spart__t { margin: var(--sp-4) 0 0; font-family: var(--font-display); font-weight: 640; font-size: clamp(2.618rem, 1.6rem + 4.6vw, 6.854rem); line-height: 0.92; letter-spacing: -0.04em; text-wrap: balance; }
+.spart__l { margin: var(--sp-5) 0 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.272rem, 1.1rem + 0.7vw, 1.825rem); line-height: 1.4; text-wrap: pretty; }
+
+/* on wide screens the numeral holds the short column and the words the long one */
+@media (min-width: 48rem) {
+  .spart__head { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: end; }
+  .spart__k { grid-column: 1 / -1; }
+  .spart__n { grid-column: 1; grid-row: 2 / span 2; margin-top: var(--sp-5); }
+  .spart__t { grid-column: 2; grid-row: 2; margin-top: var(--sp-5); }
+  .spart__l { grid-column: 2; grid-row: 3; }
+}
+
+/* the years of a part fill the row, however many there are */
+.spart .ycards { border-top: 0; padding-top: 0; }
+.spart .ycards__row { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.spart .ycard__year { font-size: var(--fs-2xl, 2.618rem); }
+.spart .ycard__line { font-size: var(--fs-base); line-height: 1.5; }
+
+/* the layoff: one dark band, one sentence */
+.spart-gap { margin-top: var(--sec-pad, 6.854rem); background: var(--night, #121212); color: var(--on-night, #f2f0eb); padding-block: clamp(4.236rem, 3rem + 6vw, 11.09rem); }
+.spart-gap__t { margin: 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.618rem, 1.1rem + 2.4vw, 4.236rem); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
+
+/* the three mountains as doors */
+.spart-doors { list-style: none; margin: var(--sp-6) 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3) var(--grid-gap); }
+.spart-doors .mtn-next__link { min-height: clamp(11.09rem, 8rem + 12vw, 17.944rem); }
+@media (min-width: 48rem) { .spart-doors { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* a part's last link sits clear of what is above it */
+.spart > .container > .mtn-link { margin-top: var(--sp-6); }
+
+/* ---- verdict stamps: a claim in the story, tied to the case that tests it ---- */
+.vstamp { margin: var(--sp-4) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-4); }
+.vstamp__k { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); }
+.vstamp__a { display: inline-flex; align-items: center; gap: var(--sp-2); text-decoration: none; color: var(--ink); }
+.vstamp__c { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: var(--tr-wide); text-transform: uppercase; border-bottom: 1px solid var(--rule-faint); transition: border-color 0.3s var(--ease), color 0.3s var(--ease); }
+.vstamp__a:hover .vstamp__c { border-bottom-color: var(--accent); color: var(--accent-ink); }
+.vstamp__a:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+@media (min-width: 64rem) {
+  /* on wide screens the stamps stand under the label, in the short column */
+  .sgrid:not(.book .sgrid) > .sgrid__head > .vstamp { grid-column: 1; grid-row: 1 / span 2; align-self: start; margin-top: 2.9rem; flex-direction: column; align-items: flex-start; }
+}
+
+/* ---- a movement: a smaller part opener inside a chapter of the Record ---- */
+.spart--mv { margin-top: var(--r5, 4.236rem); }
+.spart--mv .spart__n { font-size: clamp(4.236rem, 2.4rem + 8vw, 9rem); font-stretch: 70%; }
+.spart--mv .spart__t { font-size: clamp(2.058rem, 1.5rem + 2.6vw, 4.236rem); }
+.spart--mv .spart__head { padding-bottom: 0; }
+.spart--mv + hr.rule { display: none; }
+
+/* ---- the ledger: the record book set as lines, one record to a line ---- */
+.yrecs--ledger { display: block; padding-top: 0; border-top: 3px solid var(--ink); }
+.yrecs--ledger .yrec { border-top: 0; border-bottom: 1px solid var(--rule-faint); padding: var(--sp-4) 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "k s" "v v" "l l"; gap: var(--sp-1) var(--sp-4); align-items: baseline; }
+.yrecs--ledger .yrec__k { grid-area: k; }
+.yrecs--ledger .yrec__v { grid-area: v; margin: 0; font-size: clamp(2.618rem, 1.6rem + 4vw, 5.388rem); letter-spacing: -0.04em; line-height: 0.95; color: var(--ink); white-space: nowrap; }
+.yrecs--ledger .yrec--hot .yrec__v { color: var(--accent-ink); }
+.yrecs--ledger .yrec__l { grid-area: l; margin: 0; font-family: var(--font-read); font-size: clamp(1.128rem, 1.05rem + 0.35vw, 1.272rem); }
+.yrecs--ledger .yrec__s { grid-area: s; text-align: right; white-space: nowrap; }
+@media (min-width: 64rem) {
+  /* the name in the short column, the figure and its words in the long one */
+  .yrecs--ledger .yrec { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.618fr); grid-template-areas: "k v l" "s v l"; column-gap: var(--grid-gap); row-gap: var(--sp-1); padding: var(--sp-5) 0; align-items: center; }
+  .yrecs--ledger .yrec__k { align-self: end; }
+  .yrecs--ledger .yrec__s { text-align: left; align-self: start; }
+}
+
+/* ---- a row of two numbers stands on the page's two columns ---- */
+@media (min-width: 48rem) {
+  .sgrid:not(.book .sgrid):not(.sgrid--sticky):not(.sgrid--feature) .odds__row:has(> .odds__cell:nth-child(2):last-child) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+}
+
+/* ---- scenes tied to the scroll (only where motion is welcome): the numeral
+   of a part drifts a little slower than its words, and the sentence of the
+   layoff comes out of the dark as the band rises ---- */
+html.motion .spart__head[data-fx] .spart__n { transform: translate3d(0, calc((0.5 - var(--fx-in, 0.5)) * 7vh), 0); will-change: transform; }
+html.motion .spart-gap[data-fx] .spart-gap__t { opacity: calc(0.12 + var(--fx-in, 1) * 1.5); transform: translate3d(0, calc((1 - var(--fx-in, 1)) * 5vh), 0); will-change: transform, opacity; }
+@media (prefers-reduced-motion: reduce) {
+  .spart__head[data-fx] .spart__n, .spart-gap[data-fx] .spart-gap__t { transform: none !important; opacity: 1 !important; }
+}

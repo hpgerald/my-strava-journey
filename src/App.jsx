@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import TitleManager from './components/TitleManager.jsx'
 import SmoothScroll from './motion/SmoothScroll.jsx'
-import Cursor from './motion/Cursor.jsx'
 import Preloader from './motion/Preloader.jsx'
 import PageTransition from './motion/PageTransition.jsx'
 import Home from './pages/Home.jsx'
@@ -36,7 +35,6 @@ export default function App() {
       <TitleManager />
       <Preloader />
       <PageTransition />
-      <Cursor />
       <Suspense fallback={<div className="route-wait" />}>
       <Routes>
         <Route path="/" element={<Home />} />

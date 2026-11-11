@@ -177,8 +177,8 @@ export default function Timeline() {
             items: [
               { num: firstStep.days, unit: ' days', label: `to the ${ORD(firstStep.n)}`, tone: 'rest' },
               { num: fastest.days, unit: ' days', label: `the quickest 250, to the ${ORD(fastest.n)}`, tone: 'move' },
-              { num: slowest.days, unit: ' days', label: `the slowest since, to the ${ORD(slowest.n)}`, tone: 'rest' },
-              { num: steps[steps.length - 1].days, unit: ' days', label: `to the ${ORD(steps[steps.length - 1].n)}, the latest`, tone: 'move' },
+              { book: true, num: slowest.days, unit: ' days', label: `the slowest since, to the ${ORD(slowest.n)}`, tone: 'rest' },
+              { book: true, num: steps[steps.length - 1].days, unit: ' days', label: `to the ${ORD(steps[steps.length - 1].n)}, the latest`, tone: 'move' },
             ],
           }}
           left={{
@@ -229,8 +229,8 @@ export default function Timeline() {
             items: [
               { num: F.length, unit: '', label: 'firsts on foot', tone: 'move' },
               { num: F.filter((f) => f.mode === 'tread').length, unit: '', label: 'of them on the treadmill', tone: 'rest' },
-              { num: Math.max(...firstsBy.map((y) => y.n)), unit: '', label: `in ${firstsBy.reduce((b, y) => (y.n > b.n ? y : b), firstsBy[0]).year}, the most in a year`, tone: 'move' },
-              { num: (Date.parse(lastFirst.date) - Date.parse(F[0].date)) / (365.25 * 86400000), dec: 1, unit: ' years', label: 'from the first to the latest', tone: 'move' },
+              { book: true, num: Math.max(...firstsBy.map((y) => y.n)), unit: '', label: `in ${firstsBy.reduce((b, y) => (y.n > b.n ? y : b), firstsBy[0]).year}, the most in a year`, tone: 'move' },
+              { book: true, num: (Date.parse(lastFirst.date) - Date.parse(F[0].date)) / (365.25 * 86400000), dec: 1, unit: ' years', label: 'from the first to the latest', tone: 'move' },
             ],
           }}
           left={{
@@ -271,7 +271,7 @@ export default function Timeline() {
         <section className="sgrid" aria-labelledby="tl-rail">
           <div className="sgrid__head">
             <Eyebrow>{num()} · Year by year</Eyebrow>
-            <h2 id="tl-rail" className="section-head__title">{C.events.length} moments in {word(lastYear - Number(C.firstISO.slice(0, 4)) + 1)} years.</h2>
+            <h2 id="tl-rail" className="section-head__title">{C.events.length} moments in {word(Math.floor((Date.parse(C.lastISO) - Date.parse(C.firstISO)) / (365.25 * 86400000)))} years.</h2>
           </div>
           <ol className="trail">
             {byYear.map((y) => <YearBlock key={y.year} year={y.year} items={y.items} />)}

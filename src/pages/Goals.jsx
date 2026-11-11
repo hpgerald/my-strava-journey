@@ -247,7 +247,7 @@ export default function Goals() {
               { num: closedYears('run').length, unit: '', label: `running, best ${unitOf(R, bestOf('run').run.total)} in ${bestOf('run').year}`, tone: 'move' },
               { num: closedYears('walk').length, unit: '', label: `walking, best ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`, tone: 'move' },
               { num: closedYears('elev').length, unit: '', label: `climbing, best ${unitOf(E, bestOf('elev').elev.total)} in ${bestOf('elev').year}`, tone: 'rest' },
-              { num: habit.filter((y) => y.walk.closed != null && y.run.closed != null).length, unit: '', label: 'years with both 1,000 km rings closed', tone: 'move' },
+              { book: true, num: habit.filter((y) => y.walk.closed != null && y.run.closed != null).length, unit: '', label: 'years with both 1,000 km rings closed', tone: 'move' },
             ],
           }}
           left={{
@@ -293,7 +293,7 @@ export default function Goals() {
                   { num: toGo, unit: ' m', label: `still to climb in ${n0(G.daysLeft)} days`, tone: 'rest' },
                   { num: S.needPerDay, unit: ' m', label: 'a day needed from here', tone: 'rest' },
                   { num: S.perDay, unit: ' m', label: `a day so far in ${cur.year}`, tone: 'move' },
-                  { value: S.hit, label: `of ${n0(S.finals.length)} replays close the ring`, tone: 'move' },
+                  { book: true, value: S.hit, label: `of ${n0(S.finals.length)} replays close the ring`, tone: 'move' },
                 ],
               }}
               left={{
@@ -417,10 +417,10 @@ export default function Goals() {
               odds={{
                 title: 'Ras Kilomoni',
                 items: [
-                  { num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
+                  { book: true, num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
                   { num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
                   { num: rkKm, unit: ' km', label: `there and back, ${k1(rkKm / rk.length)} km a trip`, tone: 'move' },
-                  { num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
+                  { book: true, num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
                 ],
               }}
               left={{
@@ -470,8 +470,8 @@ export default function Goals() {
             items: [
               { num: G.streak, unit: ' months', label: `in a row with an outing, since ${fmtMon(`${G.streakFrom.key}-01`)}`, tone: 'move' },
               { num: G.century.length, unit: ' months', label: 'with 100 km or more on foot', tone: 'move' },
-              { num: centCur.n, unit: ` of ${centCur.of}`, label: `months of ${cur.year} past 100 km`, tone: 'move' },
-              { num: empty.length, unit: ' months', label: `with no outing, all before ${fmtMon(`${G.streakFrom.key}-01`)}`, tone: 'rest' },
+              { book: true, num: centCur.n, unit: ` of ${centCur.of}`, label: `months of ${cur.year} past 100 km`, tone: 'move' },
+              { book: true, num: empty.length, unit: ' months', label: `with no outing, all before ${fmtMon(`${G.streakFrom.key}-01`)}`, tone: 'rest' },
             ],
           }}
           left={{

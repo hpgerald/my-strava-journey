@@ -58,7 +58,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
     const ro = new ResizeObserver(fit)
     ro.observe(box)
     const late = setTimeout(show, 800)
-    if (document.fonts && document.fonts.load) document.fonts.load('800 100px "Inter Tight Variable"').then(show, show)
+    if (document.fonts && document.fonts.load) document.fonts.load('800 100px "Archivo Variable"').then(show, show)
     else show()
     return () => { live = false; clearTimeout(late); ro.disconnect() }
   }, [])

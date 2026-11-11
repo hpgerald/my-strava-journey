@@ -5,12 +5,12 @@ import { useInView } from './Reveal.jsx'
 // the one line on how that year was made. Every card opens the year's report.
 // Cards arrive in a stagger as the row scrolls in.
 // summaries: [{ year, label, line }], quietUntil (years up to here read grey),
-//   current (the year in progress, accent)
-export default function YearCharacters({ summaries, quietUntil, current }) {
+//   current (the year in progress, accent), title (the line over the row)
+export default function YearCharacters({ summaries, quietUntil, current, title = 'Open a year' }) {
   const [ref, inView] = useInView({ threshold: 0.15, rootMargin: '0px' })
   return (
     <div ref={ref} className={`ycards${inView ? ' is-in' : ''}`}>
-      <p className="odds__title">Open a year</p>
+      <p className="odds__title">{title}</p>
       <ol className="ycards__row">
         {summaries.map((y, i) => (
           <li key={y.year} className="ycards__cell" style={{ transitionDelay: `${i * 70}ms` }}>

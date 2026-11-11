@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { useBook } from '../components/BookContext.js'
+import { MOUNTAINS } from '../lib/mountainList.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -40,6 +42,7 @@ function Ledger({ children }) {
 }
 
 export default function Where() {
+  const book = useBook()
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
   const { prev, next } = useSectionPaging('/where')
@@ -126,15 +129,12 @@ export default function Where() {
   const placeCards = [...R.slice(0, 4).map((r) => ({ name: r.region, kind: 'Region', n: r.n, km: r.km, elev: r.elev })),
     ...P.abroad.filter((c) => ['Kenya', 'Malawi', 'South Africa', 'Rwanda'].includes(c.country)).map((c) => ({ name: c.country, kind: 'Country', n: c.n, km: c.km, elev: c.elev }))]
 
-  return (
-    <DetailFrame
-      {...frame}
-    >
-      <div className="yis-report">
-        {/* ===== Africa ===== */}
-        <section className="sgrid yis-top" aria-labelledby="wh-title">
+  // the two openers: My Book starts with Africa and then Tanzania; the site
+  // opens on the map of Tanzania, with the three mountains pinned on it
+  const secAfrica = () => (
+        <section className={`sgrid${book ? ' yis-top' : ''}`} aria-labelledby="wh-title">
           <div className="sgrid__head">
-            <Eyebrow>Across Africa</Eyebrow>
+            <Eyebrow>{book ? 'Across Africa' : `${num()} · Across Africa`}</Eyebrow>
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -146,8 +146,8 @@ export default function Where() {
             title="The outings by place"
             items={[
               { num: nCountries, unit: '', label: 'countries with an outing', tone: 'move' },
-              { num: tzC.n, unit: '', label: 'outings in Tanzania', tone: 'move' },
-              { num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
+              { book: true, num: tzC.n, unit: '', label: 'outings in Tanzania', tone: 'move' },
+              { book: true, num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
               { num: P.indoor, unit: '', label: 'outings with no GPS start', tone: 'rest' },
             ]}
           />
@@ -178,12 +178,11 @@ export default function Where() {
           </div>
           <BookRead items={[['Africa, by outings', null, <PlaceMap />], ['Each country, busiest first', null, ['ledger']]]} />
         </section>
-
-        {/* ===== 1. Tanzania ===== */}
-        <hr className="rule rule--faint" />
-        <section className="sgrid" aria-labelledby="wh-tz">
+  )
+  const secTz = () => (
+        <section className={`sgrid${book ? '' : ' yis-top'}`} aria-labelledby="wh-tz">
           <div className="sgrid__head">
-            <Eyebrow>{num()} · Tanzania</Eyebrow>
+            <Eyebrow>{book ? `${num()} · Tanzania` : 'Tanzania'}</Eyebrow>
             <h2 id="wh-tz" className="section-head__title">Three places carry most of&nbsp;it.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
@@ -196,15 +195,16 @@ export default function Where() {
             items={[
               { num: R.length, unit: '', label: 'regions with an outing', tone: 'move' },
               { value: home.n / P.tzTot.n, label: `of the outings in ${home.region}`, tone: 'move' },
-              { value: reg('Kilimanjaro').elev / P.tzTot.elev, label: 'of the climb in Kilimanjaro', tone: 'move' },
-              { num: P.tzTot.days, unit: ' days', label: 'out in Tanzania', tone: 'rest' },
+              { book: true, value: reg('Kilimanjaro').elev / P.tzTot.elev, label: 'of the climb in Kilimanjaro', tone: 'move' },
+              { book: true, num: P.tzTot.days, unit: ' days', label: 'out in Tanzania', tone: 'rest' },
             ]}
           />
           <figure className="sgrid__fig wh-tzmap">
             <figcaption className="sgrid__figtitle">Tanzania, by region</figcaption>
             <PlaceMap
               src="data/tz_regions.geojson" nameKey="region" values={tzValues} metrics={metrics}
-              labels={R.filter((r) => r.n >= 24).map((r) => r.region)} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} maxHeight={680}
+              labels={R.filter((r) => r.n >= 24).map((r) => r.region)} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} maxHeight={book ? 680 : 760}
+              pins={book ? [] : MOUNTAINS.map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: m.id === 'kilimanjaro' ? 'r' : 'l' }))}
               aria="Map of Tanzania's regions."
             />
           </figure>
@@ -238,6 +238,14 @@ export default function Where() {
             `${dar.region} and Kilimanjaro have almost the same number of outings, ${n0(dar.n)} and ${n0(kili.n)}. The difference is the ground. Kilimanjaro climbed ${n0(kili.elev)} m and Dar es Salaam ${n0(dar.elev)} m, so Kilimanjaro gave about ${Math.round(kili.elev / Math.max(1, dar.elev))} times as much. One is home and one is where I go for the hills.`,
           ]}</BookStory>
         </section>
+  )
+
+  return (
+    <DetailFrame
+      {...frame}
+    >
+      <div className="yis-report">
+        {book ? <>{secAfrica()}<hr className="rule rule--faint" />{secTz()}</> : <>{secTz()}<hr className="rule rule--faint" />{secAfrica()}</>}
 
         {/* ===== 2. flat at home, steep away ===== */}
         <hr className="rule rule--faint" />
@@ -255,8 +263,8 @@ export default function Where() {
             title: 'Metres climbed for each kilometre',
             items: [
               ...steep.map((r) => ({ num: r.mpk, unit: ' m', label: `per km in ${r.region}`, tone: 'move' })),
-              { num: home.mpk, dec: 1, unit: ' m', label: `per km in ${home.region}`, tone: 'rest' },
-              { num: reg('Dar es Salaam').mpk, dec: 1, unit: ' m', label: 'per km in Dar es Salaam', tone: 'rest' },
+              { book: true, num: home.mpk, dec: 1, unit: ' m', label: `per km in ${home.region}`, tone: 'rest' },
+              { book: true, num: reg('Dar es Salaam').mpk, dec: 1, unit: ' m', label: 'per km in Dar es Salaam', tone: 'rest' },
             ].slice(0, 4),
           }}
           left={{
@@ -296,7 +304,7 @@ export default function Where() {
           </>}
           odds={{
             title: 'The lead, year by year',
-            items: leaders.slice(-4).map((l, i, arr) => ({ value: l.n / l.of, label: `${l.region} in ${l.year}${l.year === lastYear ? so : ''}`, tone: i === arr.length - 1 ? 'move' : 'rest' })),
+            items: leaders.slice(-4).map((l, i, arr) => ({ value: l.n / l.of, label: `${l.region} in ${l.year}${l.year === lastYear ? so : ''}`, tone: i === arr.length - 1 ? 'move' : 'rest', book: i < arr.length - 2 })),
           }}
           left={{
             title: 'Outings in Tanzania by region, year by year',
@@ -345,9 +353,9 @@ export default function Where() {
             title: 'New regions',
             items: [
               { num: disc.length, unit: '', label: 'regions of 30 with an outing', tone: 'move' },
-              { num: Math.max(...newBy.map((y) => y.n)), unit: '', label: `new in ${newBy.reduce((b, y) => (y.n > b.n ? y : b), newBy[0]).year}, the most`, tone: 'move' },
-              { num: newLast.n, unit: '', label: `new in ${lastYear}${so}`, tone: 'move' },
-              { num: 30 - disc.length, unit: '', label: 'regions still blank', tone: 'rest' },
+              { book: true, num: Math.max(...newBy.map((y) => y.n)), unit: '', label: `new in ${newBy.reduce((b, y) => (y.n > b.n ? y : b), newBy[0]).year}, the most`, tone: 'move' },
+              { book: true, num: newLast.n, unit: '', label: `new in ${lastYear}${so}`, tone: 'move' },
+              { book: true, num: 30 - disc.length, unit: '', label: 'regions still blank', tone: 'rest' },
             ],
           }}
           left={{
@@ -396,7 +404,7 @@ export default function Where() {
             title: 'Outside Tanzania',
             items: [
               { num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
-              { num: awayNamed.length, unit: '', label: 'other countries', tone: 'move' },
+              { book: true, num: awayNamed.length, unit: '', label: 'other countries', tone: 'move' },
               { num: P.abroad.reduce((s, c) => s + c.km, 0), unit: ' km', label: 'on foot abroad', tone: 'move' },
               { num: P.abroad.reduce((s, c) => s + c.days, 0), unit: ' days', label: 'out abroad', tone: 'rest' },
             ],
@@ -445,8 +453,8 @@ export default function Where() {
             title: 'Outings with no GPS start',
             items: [
               { num: P.indoor, unit: '', label: 'outings in all', tone: 'rest' },
-              { num: P.indoorBy.tread, unit: '', label: 'treadmill runs', tone: 'move' },
-              { value: iFirst.share, label: `of ${iFirst.year} outings`, tone: 'rest' },
+              { book: true, num: P.indoorBy.tread, unit: '', label: 'treadmill runs', tone: 'move' },
+              { book: true, value: iFirst.share, label: `of ${iFirst.year} outings`, tone: 'rest' },
               { value: iLast.share, label: `of ${iLast.year} outings${so}`, tone: 'move' },
             ],
           }}
@@ -501,8 +509,8 @@ export default function Where() {
             title: 'How the outings spread',
             items: [
               { num: P.lifeEffective, dec: 1, unit: '', label: 'effective regions, all years', tone: 'move' },
-              { num: effBest.effective, dec: 1, unit: '', label: `in ${effBest.year}, the widest`, tone: 'move' },
-              { num: effLow.effective, dec: 1, unit: '', label: `in ${effLow.year}, the narrowest`, tone: 'rest' },
+              { book: true, num: effBest.effective, dec: 1, unit: '', label: `in ${effBest.year}, the widest`, tone: 'move' },
+              { book: true, num: effLow.effective, dec: 1, unit: '', label: `in ${effLow.year}, the narrowest`, tone: 'rest' },
               { value: top3Share, label: 'of outings in the busiest three', tone: 'rest' },
             ],
           }}

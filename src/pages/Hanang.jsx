@@ -46,6 +46,8 @@ export default function Hanang() {
   return (
     <Mountain
       id="hanang"
+      plate={<RouteMap lines={lines} marks={marks} ratio={0.6} aria="The GPS lines of three days on Mount Hanang." />}
+      plateNote={`Orange is the hike to the top. Grey and black are the adventure races of ${races.map((t) => t.date.slice(0, 4)).join(' and ')}.`}
       hero="hanang-hero"
       standfirst={<>A mountain does not care about the clock. On Mount Hanang in Manyara I set out before six in the morning, reached the top in the late afternoon and was back down after two the next morning.</>}
       facts={[

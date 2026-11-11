@@ -10,6 +10,9 @@ import Timeline from './Timeline.jsx'
 import Goals from './Goals.jsx'
 import WhatItMeans from './WhatItMeans.jsx'
 import Evidence from './Evidence.jsx'
+import Kilimanjaro from './Kilimanjaro.jsx'
+import Hanang from './Hanang.jsx'
+import Uluguru from './Uluguru.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildBookFacts } from '../lib/bookFacts.js'
@@ -36,7 +39,7 @@ const word = (n) => WORD[n] || String(n)
 
 // the parts of the book and the chapters inside each
 const PARTS = [
-  { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where, and what I do.', chapters: [['01', 'The Journey']] },
+  { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where, and what I do.', chapters: [['01', 'The Journey']], plates: 'The mountains: Kilimanjaro, Hanang, Uluguru' },
   { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year on its own, from the quiet first months to the year with no zero day.', chapters: [['02', 'Year in Sport']] },
   { n: 'III', name: 'Part three', title: 'The work', line: 'My sports on foot, the records I set and the places I went.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
   { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I set myself each year.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
@@ -220,6 +223,7 @@ function Contents() {
               {p.chapters.map(([num, t]) => (
                 <li key={num}><a href="#/book" onClick={jump(`bk-ch-${num}`)}><span className="bk-toc__cn">{num}</span>{t}</a></li>
               ))}
+              {p.plates ? <li><a href="#/book" onClick={jump('bk-mtn-kilimanjaro')}><span className="bk-toc__cn">Plates</span>{p.plates}</a></li> : null}
             </ol>
           </li>
         ))}
@@ -505,6 +509,11 @@ export default function Book() {
             </div>
             <Home />
           </section>
+
+          {/* the three mountains, one plate each, with the route as the watch drew it */}
+          <Kilimanjaro />
+          <Hanang />
+          <Uluguru />
 
           <PartOpener p={PARTS[1]} />
           <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">

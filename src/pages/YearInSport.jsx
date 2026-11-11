@@ -206,6 +206,11 @@ export default function YearInSport({ year: bookYear } = {}) {
   // sections still counts 1, 2, 3 without gaps
   let secN = 0
   const num = () => ++secN
+  // a year with only a few outings gets a short report on the site: the months,
+  // the sports, the calendar and its place among the years. The charts that
+  // need many outings to say anything are left for the fuller years. My Book
+  // prints every year in full.
+  const thin = !book && s.n < 60
   const wkStep = wkMax > 100 ? 50 : wkMax > 40 ? 20 : wkMax > 15 ? 5 : 2
   const wkTicks = []
   const wkKmMax = Math.max(1, ...r.weekly.series.map((w) => w.km))
@@ -335,8 +340,8 @@ export default function YearInSport({ year: bookYear } = {}) {
           odds={{
             title: `${Y} by the month`,
             items: [
-              { num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}`, tone: 'move' },
-              { num: s.monthsActivities[quiet], unit: '', label: `in ${MONTH_F[quiet]}, the quietest`, tone: 'rest' },
+              { book: true, num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}`, tone: 'move' },
+              { book: true, num: s.monthsActivities[quiet], unit: '', label: `in ${MONTH_F[quiet]}, the quietest`, tone: 'rest' },
               { num: perMonth, unit: '', label: 'outings in an average month', tone: 'move' },
               { num: s.footKm / Math.max(1, moIdx.length), unit: ' km', label: 'on foot in an average month', tone: 'move' },
             ],
@@ -376,8 +381,8 @@ export default function YearInSport({ year: bookYear } = {}) {
                 items: [
                   { value: mix.walk / s.n, label: 'walks', tone: 'move' },
                   { value: mix.run / s.n, label: 'runs', tone: 'move' },
-                  { value: mix.trail / s.n, label: 'trail runs and hikes', tone: 'move' },
-                  { value: mix.other / s.n, label: 'other activities', tone: 'rest' },
+                  { book: true, value: mix.trail / s.n, label: 'trail runs and hikes', tone: 'move' },
+                  { book: true, value: mix.other / s.n, label: 'other activities', tone: 'rest' },
                 ],
               }}
               left={{ title: 'Every outing, by sport', node: <SportTreemap rows={r.sportRows} /> }}
@@ -398,7 +403,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         )}
 
         {/* ===== 3. when it happened ===== */}
-        {s.n >= 10 && (
+        {s.n >= 10 && !thin && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
@@ -415,9 +420,9 @@ export default function YearInSport({ year: bookYear } = {}) {
                 title: 'When outings started',
                 items: [
                   { value: morning, label: 'before 10am', tone: 'move' },
-                  { value: midday, label: 'between 10am and 4pm', tone: 'rest' },
+                  { book: true, value: midday, label: 'between 10am and 4pm', tone: 'rest' },
                   { value: evening, label: 'between 4 and 9pm', tone: 'move' },
-                  { value: late, label: 'after 9pm', tone: 'rest' },
+                  { book: true, value: late, label: 'after 9pm', tone: 'rest' },
                 ],
               }}
               left={{ title: 'Every outing, by the hour it began', node: <RadialHours counts={s.hours24} unit="activities" max={400} /> }}
@@ -464,8 +469,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               { num: s.streakLen, unit: ' days', label: s.streakGoing ? 'in a row, still going' : 'the longest run in a row', tone: 'move' },
               { num: r.longGap.len, unit: ' days', label: r.longGap.len >= 7 ? 'the longest layoff' : 'the longest break', tone: 'rest' },
               r.restDays === 0
-                ? { value: multiDays / Math.max(1, s.activeDays), label: 'of days were doubles', tone: 'move' }
-                : { value: r.gaps.total ? r.gaps.next / gapsTot : 0, label: 'of outings followed the very next day', tone: 'move' },
+                ? { book: true, value: multiDays / Math.max(1, s.activeDays), label: 'of days were doubles', tone: 'move' }
+                : { book: true, value: r.gaps.total ? r.gaps.next / gapsTot : 0, label: 'of outings followed the very next day', tone: 'move' },
             ],
           }}
           left={{ title: `Every day of ${Y}`, node: <YearCalendar activeSet={s.activeSet} year={Y} endISO={r.endISO} firstISO={r.startISO} streak={{ startISO: s.streakStartISO, endISO: s.streakEndISO }} /> }}
@@ -512,7 +517,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         />
 
         {/* ===== 5. the typical outing ===== */}
-        {s.footN >= 20 && (
+        {s.footN >= 20 && !thin && (
           <>
             <hr className="rule rule--faint" />
             <StorySection
@@ -528,9 +533,9 @@ export default function YearInSport({ year: bookYear } = {}) {
                 title: 'Distance on foot',
                 items: [
                   { num: s.medianFoot, dec: 1, unit: ' km', label: 'the middle outing', tone: 'move' },
-                  { num: meanFoot, dec: 1, unit: ' km', label: 'the average outing', tone: 'rest' },
+                  { book: true, num: meanFoot, dec: 1, unit: ' km', label: 'the average outing', tone: 'rest' },
                   { num: longestFoot, dec: 1, unit: ' km', label: 'the longest', tone: 'move' },
-                  { value: r.top10 || 0, label: 'of the distance on the busiest tenth of days', tone: 'move' },
+                  { book: true, value: r.top10 || 0, label: 'of the distance on the busiest tenth of days', tone: 'move' },
                 ],
               }}
               left={{ title: 'Every outing on foot, by distance', node: <YearDistances bins={s.footBins} peaks={s.peakBins} /> }}
@@ -567,9 +572,9 @@ export default function YearInSport({ year: bookYear } = {}) {
                 items: [
                   { value: r.p11, label: 'went out again the day after a day out', tone: 'move' },
                   r.restDays === 0
-                    ? { num: r.weekly.mean, unit: ' km', label: 'in an average week', tone: 'rest' }
-                    : { value: r.p01, label: 'went out the day after a zero day', tone: 'rest' },
-                  { num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were, where 0 is all the same', tone: 'rest' },
+                    ? { book: true, num: r.weekly.mean, unit: ' km', label: 'in an average week', tone: 'rest' }
+                    : { book: true, value: r.p01, label: 'went out the day after a zero day', tone: 'rest' },
+                  { book: true, num: r.gini || 0, dec: 2, unit: '', label: 'how uneven my days were, where 0 is all the same', tone: 'rest' },
                   { num: r.tail.mark / r.tail.mean, dec: 1, unit: '×', label: 'my longest outing against the average one', tone: 'move' },
                 ],
               }}
@@ -601,43 +606,47 @@ export default function YearInSport({ year: bookYear } = {}) {
         )}
 
         {/* ===== 7. the far edges ===== */}
-        <hr className="rule rule--faint" />
-        <section className="sgrid" aria-labelledby={idp('yis-edges')}>
-          <div className="sgrid__head">
-            <Eyebrow>{num()} · Biggest days</Eyebrow>
-            <h2 id={idp('yis-edges')} className="section-head__title">The biggest days of {Y}.</h2>
-          </div>
-          <ul className="yrecs">
-            {s.biggestFoot && s.biggestFoot.val > 0 && <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} decimals={1} unit="km" label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} tone="hot" />}
-            {s.longestTime && s.longestTime.val > 0 && <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} />}
-            {s.highestClimb && s.highestClimb.val > 0 && <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of climb in one outing" sub={fmtMonth(s.highestClimb.date)} />}
-            {s.hardest && s.hardest.val > 0 && <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative effort, Strava's score for how hard it was" sub={fmtMonth(s.hardest.date)} />}
-            <RecordCard kicker="PRs" value={Math.round(s.prs)} label="best times on Strava segments" sub={`${Y}`} tone="hot" />
-            <RecordCard kicker="Most cheered" value={s.mostKudos ? s.mostKudos.kudos : 0} label={s.mostKudos ? `kudos on one ${/^other/i.test(s.mostKudos.sport) ? 'other activity' : s.mostKudos.sport.toLowerCase()}` : 'kudos on one outing'} sub={s.mostKudos ? fmtMonth(s.mostKudos.date) : ''} />
-            <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
-            <RecordCard kicker="Dar to Dodoma" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma, on foot" sub={`${n0(s.footKm)} km on foot`} />
-          </ul>
-          <BookStory>{(() => {
-            const big = s.biggestFoot, climb = s.highestClimb, long = s.longestTime
-            const out = []
-            if (big && big.val > 0 && s.medianFoot > 0) {
-              const k = big.val / s.medianFoot
-              out.push(`A big day sits far from an ordinary one. My usual outing on foot in ${Y} was ${s.medianFoot.toFixed(1)} km, so the furthest, ${big.val.toFixed(1)} km in ${fmtMonth(big.date).split(' ')[0]}, was ${k >= 10 ? n0(k) : k.toFixed(1)} times a normal day out.`)
-            }
-            if (big && climb && long && big.val > 0) {
-              const sameClimb = climb.date === big.date, sameLong = long.date === big.date
-              if (sameClimb && sameLong) out.push('The furthest outing was also the longest in time and the one with the most climbing. One day held all three records of the year.')
-              else if (sameLong) out.push(`The furthest outing was also the longest in time, ${hm(long.val)} on my feet. The most climbing came on a different day, ${n0(climb.val)} m in ${fmtMonth(climb.date).split(' ')[0]}.`)
-              else if (sameClimb) out.push(`The furthest outing was also the one with the most climbing. The longest in time came on a different day, ${hm(long.val)} in ${fmtMonth(long.date).split(' ')[0]}.`)
-              else out.push(`The three biggest days of the year were three different outings: the furthest, the longest in time and the one with the most climbing each came on its own day.`)
-            }
-            if (ps) {
-              const d = Math.round(s.prs) - Math.round(ps.prs)
-              out.push(d > 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(d)} more than in ${ps.year}.` : d < 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(-d)} fewer than in ${ps.year}.` : `I set ${n0(s.prs)} PRs on Strava segments, the same number as in ${ps.year}.`)
-            }
-            return out
-          })()}</BookStory>
-        </section>
+        {!thin && (
+          <>
+          <hr className="rule rule--faint" />
+          <section className="sgrid" aria-labelledby={idp('yis-edges')}>
+            <div className="sgrid__head">
+              <Eyebrow>{num()} · Biggest days</Eyebrow>
+              <h2 id={idp('yis-edges')} className="section-head__title">The biggest days of {Y}.</h2>
+            </div>
+            <ul className="yrecs">
+              {s.biggestFoot && s.biggestFoot.val > 0 && <RecordCard kicker="Furthest on foot" value={s.biggestFoot.val} decimals={1} unit="km" label="in a single outing" sub={fmtMonth(s.biggestFoot.date)} tone="hot" />}
+              {s.longestTime && s.longestTime.val > 0 && <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} />}
+              {s.highestClimb && s.highestClimb.val > 0 && <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of climb in one outing" sub={fmtMonth(s.highestClimb.date)} />}
+              {s.hardest && s.hardest.val > 0 && <RecordCard kicker="Hardest effort" value={Math.round(s.hardest.val)} label="relative effort, Strava's score for how hard it was" sub={fmtMonth(s.hardest.date)} />}
+              <RecordCard kicker="PRs" value={Math.round(s.prs)} label="best times on Strava segments" sub={`${Y}`} tone="hot" />
+              <RecordCard kicker="Most cheered" value={s.mostKudos ? s.mostKudos.kudos : 0} label={s.mostKudos ? `kudos on one ${/^other/i.test(s.mostKudos.sport) ? 'other activity' : s.mostKudos.sport.toLowerCase()}` : 'kudos on one outing'} sub={s.mostKudos ? fmtMonth(s.mostKudos.date) : ''} />
+              <RecordCard kicker="Everests" value={everests} decimals={1} unit="×" label={`the height of Everest, from ${n0(s.elev)} m climbed`} sub={`${Y}`} />
+              <RecordCard kicker="Dar to Dodoma" value={s.footKm / DAR_DODOMA_KM} decimals={1} unit="×" label="the road from Dar es Salaam to Dodoma, on foot" sub={`${n0(s.footKm)} km on foot`} />
+            </ul>
+            <BookStory>{(() => {
+              const big = s.biggestFoot, climb = s.highestClimb, long = s.longestTime
+              const out = []
+              if (big && big.val > 0 && s.medianFoot > 0) {
+                const k = big.val / s.medianFoot
+                out.push(`A big day sits far from an ordinary one. My usual outing on foot in ${Y} was ${s.medianFoot.toFixed(1)} km, so the furthest, ${big.val.toFixed(1)} km in ${fmtMonth(big.date).split(' ')[0]}, was ${k >= 10 ? n0(k) : k.toFixed(1)} times a normal day out.`)
+              }
+              if (big && climb && long && big.val > 0) {
+                const sameClimb = climb.date === big.date, sameLong = long.date === big.date
+                if (sameClimb && sameLong) out.push('The furthest outing was also the longest in time and the one with the most climbing. One day held all three records of the year.')
+                else if (sameLong) out.push(`The furthest outing was also the longest in time, ${hm(long.val)} on my feet. The most climbing came on a different day, ${n0(climb.val)} m in ${fmtMonth(climb.date).split(' ')[0]}.`)
+                else if (sameClimb) out.push(`The furthest outing was also the one with the most climbing. The longest in time came on a different day, ${hm(long.val)} in ${fmtMonth(long.date).split(' ')[0]}.`)
+                else out.push(`The three biggest days of the year were three different outings: the furthest, the longest in time and the one with the most climbing each came on its own day.`)
+              }
+              if (ps) {
+                const d = Math.round(s.prs) - Math.round(ps.prs)
+                out.push(d > 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(d)} more than in ${ps.year}.` : d < 0 ? `I set ${n0(s.prs)} PRs on Strava segments, ${n0(-d)} fewer than in ${ps.year}.` : `I set ${n0(s.prs)} PRs on Strava segments, the same number as in ${ps.year}.`)
+              }
+              return out
+            })()}</BookStory>
+          </section>
+          </>
+        )}
 
         {/* ===== 8. where it happened ===== */}
         {r.located >= 15 && (
@@ -654,10 +663,10 @@ export default function YearInSport({ year: bookYear } = {}) {
               odds={{
                 title: 'Where the outings were',
                 items: [
-                  { num: r.located, unit: '', label: 'outings with a GPS start point', tone: 'move' },
+                  { book: true, num: r.located, unit: '', label: 'outings with a GPS start point', tone: 'move' },
                   { num: nCountries, unit: '', label: nCountries === 1 ? 'country' : 'countries', tone: 'move' },
                   { num: r.regionCount, unit: '', label: r.regionCount === 1 ? 'region of Tanzania' : 'regions of Tanzania', tone: 'rest' },
-                  { value: r.regRows ? r.regRows[0].a : 1, label: `of outings in ${r.regRows ? r.regRows[0].label : 'one place'}`, tone: 'move' },
+                  { book: true, value: r.regRows ? r.regRows[0].a : 1, label: `of outings in ${r.regRows ? r.regRows[0].label : 'one place'}`, tone: 'move' },
                 ],
               }}
               left={{ title: 'Home against away', node: <GeoBubbles rows={r.countries} /> }}
@@ -693,15 +702,15 @@ export default function YearInSport({ year: bookYear } = {}) {
           odds={{
             title: ps ? `${Y} against ${prevYear}` : `${Y} among the years`,
             items: ps ? [
-              { value: chg(s.n, ps.n) || 0, sign: true, label: 'outings', tone: (chg(s.n, ps.n) || 0) >= 0 ? 'move' : 'rest' },
-              { value: chg(s.footKm, ps.footKm) || 0, sign: true, label: 'distance on foot', tone: (chg(s.footKm, ps.footKm) || 0) >= 0 ? 'move' : 'rest' },
-              { value: chg(s.elev, ps.elev) || 0, sign: true, label: 'metres climbed', tone: (chg(s.elev, ps.elev) || 0) >= 0 ? 'move' : 'rest' },
-              { value: chg(s.prs, ps.prs) || 0, sign: true, label: 'PRs', tone: (chg(s.prs, ps.prs) || 0) >= 0 ? 'move' : 'rest' },
+              { book: true, value: chg(s.n, ps.n) || 0, sign: true, label: 'outings', tone: (chg(s.n, ps.n) || 0) >= 0 ? 'move' : 'rest' },
+              { book: true, value: chg(s.footKm, ps.footKm) || 0, sign: true, label: 'distance on foot', tone: (chg(s.footKm, ps.footKm) || 0) >= 0 ? 'move' : 'rest' },
+              { book: true, value: chg(s.elev, ps.elev) || 0, sign: true, label: 'metres climbed', tone: (chg(s.elev, ps.elev) || 0) >= 0 ? 'move' : 'rest' },
+              { book: true, value: chg(s.prs, ps.prs) || 0, sign: true, label: 'PRs', tone: (chg(s.prs, ps.prs) || 0) >= 0 ? 'move' : 'rest' },
             ] : [
               { num: rankN, unit: '', label: 'rank by outings', tone: 'move' },
               { num: rankKm, unit: '', label: 'rank by distance', tone: 'move' },
               { num: rankEl, unit: '', label: 'rank by climb', tone: 'move' },
-              { num: years.length, unit: '', label: 'years on record', tone: 'rest' },
+              { book: true, num: years.length, unit: '', label: 'calendar years on record', tone: 'rest' },
             ],
           }}
           left={{ title: 'Outings, year by year', node: <YearRank series={rankSeries} selected={Y} fmt={(v) => fmtInt(v)} /> }}
