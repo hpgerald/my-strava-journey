@@ -1,0 +1,180 @@
+/* ==========================================================================
+   mountains.css  ·  The three mountain chapters and the pieces they introduce
+   to the story: the reading face, the photograph plate, the route map.
+   Each mountain has its own ground and its own setting of the display type.
+   The mountain colour is ground and rule only: orange stays the one colour of
+   the data, here as everywhere.
+     Kilimanjaro  night and ice, tall narrow type, the summit told in the dark
+     Hanang       volcanic ochre, wide type, a day that ends at night
+     Uluguru      forest green and mist, the densest of the three
+   ========================================================================== */
+
+:root {
+  --font-read: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+}
+
+.mtn { --m-ground: var(--night); --m-on: var(--on-night); --m-dim: var(--on-night-dim); --m-rule: var(--line-night); --m-key: var(--on-night); --m-wdth: 100%; --m-wght: 600; }
+.mtn--kilimanjaro { --m-ground: #12161a; --m-on: #eef3f6; --m-dim: #a9b6be; --m-rule: rgba(214, 229, 238, 0.22); --m-key: #cfe3ee; --m-tint: #e6eef2; --m-deep: #24313a; --m-wdth: 68%; --m-wght: 640; }
+.mtn--hanang { --m-ground: #c98a3c; --m-on: #1a130a; --m-dim: #33230d; --m-rule: rgba(26, 19, 10, 0.3); --m-key: #1a130a; --m-tint: #f1e3cd; --m-deep: #7a4a14; --m-wdth: 122%; --m-wght: 560; }
+.mtn--uluguru { --m-ground: #1c3a2b; --m-on: #e6efe4; --m-dim: #a9c1ad; --m-rule: rgba(214, 232, 214, 0.22); --m-key: #cfe6cf; --m-tint: #e2ebdf; --m-deep: #2c5a41; --m-wdth: 100%; --m-wght: 640; }
+
+/* ---- the threshold: a full screen in the mountain's colour ---- */
+.mtn-open { background: var(--m-ground); color: var(--m-on); min-height: min(92svh, 58rem); display: grid; align-items: end; margin-top: calc(-1 * var(--nav-h, 4.5rem)); padding: calc(var(--nav-h, 4.5rem) + var(--sp-7)) 0 var(--sp-7); }
+.mtn-open__in { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+.mtn-open__k { margin: 0 0 var(--sp-5); font-family: var(--font-sans); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--m-key); }
+.mtn-open__t { margin: 0; font-family: var(--font-display); font-stretch: var(--m-wdth); font-weight: var(--m-wght); font-size: clamp(3.33rem, 0.6rem + 15vw, 17.94rem); line-height: 0.82; letter-spacing: -0.045em; white-space: nowrap; padding-bottom: 0.16em; /* room for the j and the g */ }
+/* each name is sized to stay on one line at every width, in its own setting */
+.mtn--kilimanjaro .mtn-open__t { font-size: clamp(3.33rem, 0.5rem + 20vw, 24rem); letter-spacing: -0.03em; line-height: 0.8; }
+.mtn--hanang .mtn-open__t { font-size: clamp(3.33rem, 0.6rem + 16vw, 17.94rem); letter-spacing: -0.05em; }
+.mtn--uluguru .mtn-open__t { font-size: clamp(3.33rem, 0.6rem + 15.5vw, 17.94rem); }
+.mtn-open__l { margin: var(--sp-5) 0 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.618rem, 1.2rem + 1.6vw, 2.618rem); line-height: 1.05; letter-spacing: -0.02em; color: var(--m-key); }
+.mtn-open__s { margin: var(--sp-6) 0 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.272rem, 1.1rem + 0.7vw, 1.825rem); line-height: 1.4; text-wrap: pretty; }
+.mtn-facts { margin: var(--sp-7) 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); border-top: 1px solid var(--m-rule); padding-top: var(--sp-4); }
+.mtn-facts div { display: flex; flex-direction: column; min-width: 0; }
+.mtn-facts dd { order: 1; margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.825rem, 1.2rem + 2.2vw, 3.33rem); line-height: 1; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
+.mtn-facts dd span { font-size: 0.42em; letter-spacing: 0; color: var(--m-dim); }
+.mtn-facts dt { order: 2; margin-top: var(--sp-2); font-size: 0.835rem; line-height: 1.35; color: var(--m-dim); }
+@media (min-width: 60rem) {
+  .mtn-open__in { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); }
+  .mtn-open__k, .mtn-open__t, .mtn-facts { grid-column: 1 / -1; }
+  .mtn-open__l { grid-column: 1; }
+  .mtn-open__s { grid-column: 2; margin-top: var(--sp-5); }
+}
+@media (max-width: 40rem) { .mtn-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* over a dark threshold the bar reads in the mountain's light colour until the page scrolls */
+html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__bar { color: #eef3f6; }
+html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { background: #eef3f6; color: #141414; }
+
+/* ---- bands ---- */
+.mtn-band { padding-block: clamp(2.618rem, 2rem + 3vw, 5.388rem); }
+.mtn-band + .mtn-band:not(.mtn-band--night) { padding-top: 0; }
+.mtn-band--night + .mtn-band { padding-top: clamp(2.618rem, 2rem + 3vw, 5.388rem); }
+.mtn-band > .container > * + * { margin-top: clamp(2.058rem, 1.6rem + 2vw, 4.236rem); }
+/* where the story goes dark, the charts and the type follow the ground */
+.mtn-band--night {
+  --paper: var(--m-night, #141414); --bg: var(--m-night, #141414); --ink: #f2f0eb; --fg: #f2f0eb; --fg-muted: #b4b0a8; --fg-faint: #a3a09a;
+  --rule: #f2f0eb; --rule-faint: rgba(242, 240, 235, 0.16); --accent-ink: #ff8a50; --grey-03: #1f1f1f; --grey-06: #262626; --grey-10: #2e2e2e; --grey-15: #3a3a3a; --grey-25: #555; --grey-35: #777;
+  background: var(--m-night, #141414); color: #f2f0eb;
+}
+.mtn--kilimanjaro .mtn-band--night { --m-night: #12161a; }
+.mtn--hanang .mtn-band--night { --m-night: #17130d; }
+.mtn--uluguru .mtn-band--night { --m-night: #12241b; }
+
+/* ---- a scene on the golden grid ---- */
+.mtn-scene { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); align-items: start; border-top: 1px solid var(--rule-faint); padding-top: var(--sp-4); }
+.mtn-scene__k { margin: 0 0 var(--sp-4); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.mtn-scene__k::before { content: ''; display: inline-block; width: 1.6rem; height: 3px; margin-right: 0.8rem; vertical-align: 0.22em; background: var(--m-deep, var(--ink)); }
+.mtn-band--night .mtn-scene__k::before { background: var(--m-key); }
+.mtn-scene__t { margin: 0 0 var(--sp-5); font-family: var(--font-display); font-stretch: var(--m-wdth); font-weight: 500; font-size: clamp(2.058rem, 1.3rem + 2.6vw, 3.756rem); line-height: 1.02; letter-spacing: -0.035em; text-wrap: balance; }
+.mtn--hanang .mtn-scene__t { font-stretch: 108%; }
+.mtn--kilimanjaro .mtn-scene__t { font-stretch: 82%; letter-spacing: -0.02em; }
+.mtn-scene__head > p:not(.mtn-scene__k) { margin: 0 0 var(--sp-4); font-family: var(--font-read); font-size: clamp(1.128rem, 1.05rem + 0.35vw, 1.272rem); line-height: var(--phi); text-wrap: pretty; }
+/* the words start level with the figure and their ledger ends level with it */
+.mtn-scene__text { display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-5); min-width: 0; }
+.mtn-ledger { margin: 0; border-top: 1px solid var(--ink); }
+.mtn-ledger div { display: grid; grid-template-columns: minmax(4.6rem, auto) minmax(0, 1fr); gap: var(--sp-4); align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid var(--rule-faint); }
+.mtn-ledger dt { font-size: 0.835rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.mtn-ledger dd { margin: 0; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mtn-ledger dd b { font-size: 0.942rem; font-weight: 500; }
+.mtn-ledger dd span { font-size: 0.835rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.mtn-scene__more { font-family: var(--font-sans) !important; font-size: 0.942rem !important; margin-top: var(--sp-5) !important; }
+.mtn-scene__more a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.mtn-scene__more a:hover { color: var(--accent-ink); }
+.mtn-scene__more a:focus-visible, .mtn-scene__note a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mtn-scene__fig { margin: 0; min-width: 0; display: flex; flex-direction: column; }
+/* a photograph beside the words fills the height the words set */
+.mtn-scene__chart { min-width: 0; }
+.mtn-scene__chart:has(> .plate) { flex: 1 0 auto; display: flex; }
+.mtn-scene__chart > .plate { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+.mtn-scene__chart > .plate > .plate__hold, .mtn-scene__chart > .plate > .plate__img { flex: 1 0 auto; width: 100%; }
+.mtn-scene__ft { margin: 0 0 var(--sp-4); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.mtn-scene__note { margin-top: var(--sp-4); font-size: 0.887rem; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
+.mtn-scene__note a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+@media (min-width: 56rem) {
+  .mtn-scene { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); align-items: stretch; }
+  .mtn-scene--text { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .mtn-scene--text .mtn-scene__text, .mtn-scene--text .mtn-scene__head { display: contents; }
+  .mtn-scene--text .mtn-scene__k { grid-column: 1; grid-row: 1; }
+  .mtn-scene--text .mtn-scene__t { grid-column: 2; grid-row: 1; }
+  .mtn-scene--text .mtn-scene__head > p:not(.mtn-scene__k) { grid-column: 2; font-size: clamp(1.272rem, 1.1rem + 0.6vw, 1.618rem); line-height: 1.5; }
+}
+
+/* ---- one fact at stage size ---- */
+.mtn-big { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4) var(--grid-gap); align-items: end; }
+.mtn--hanang .mtn-big__n { font-size: clamp(4.236rem, 1rem + 14vw, 13.5rem); }
+.mtn-big__n { margin: 0; font-family: var(--font-display); font-stretch: var(--m-wdth); font-weight: 500; font-size: clamp(5.388rem, 1rem + 19vw, 17.94rem); line-height: 0.8; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; color: var(--accent); white-space: nowrap; }
+.mtn-big__n span { font-size: 0.22em; letter-spacing: -0.01em; color: var(--fg-muted); }
+.mtn-big__l { margin: 0; font-family: var(--font-read); font-size: clamp(1.272rem, 1.1rem + 0.6vw, 1.618rem); line-height: 1.35; text-wrap: balance; }
+@media (min-width: 60rem) { .mtn-big { grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--sp-7); } .mtn-big__l { padding-bottom: 0.6em; max-width: 24ch; } }
+
+/* ---- a saying ---- */
+.mtn-say { margin-inline: 0; font-family: var(--font-read); font-size: clamp(1.435rem, 1.1rem + 1.4vw, 2.618rem); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; border-top: 1px solid var(--rule-faint); padding-top: var(--sp-5); }
+.mtn-say [lang='sw'] { font-weight: 600; }
+
+/* ---- photographs ---- */
+.plate { margin: 0; }
+.plate__img { display: block; width: 100%; aspect-ratio: var(--ratio, 3 / 2); object-fit: cover; }
+.plate--bw .plate__img { filter: grayscale(1) contrast(1.05); }
+.plate__hold { aspect-ratio: var(--ratio, 3 / 2); display: grid; align-content: center; justify-items: center; gap: var(--sp-2); padding: var(--sp-5); text-align: center;
+  border: 1px dashed var(--fg-faint); color: var(--fg-muted);
+  background: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--ink) 5%, transparent) 14px 15px); }
+.plate__k { font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+.plate__w { max-width: 34ch; font-family: var(--font-read); font-size: clamp(1.128rem, 1rem + 0.5vw, 1.435rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
+.plate__f { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.04em; color: var(--fg-faint); }
+.plate__cap { margin-top: var(--sp-3); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.mtn-plates { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); }
+@media (min-width: 48rem) { .mtn-plates { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); align-items: end; } .mtn-plates > .plate:last-child { --ratio: 4 / 5 !important; } }
+@media (max-width: 40rem) { .plate__hold, .plate__img { aspect-ratio: 4 / 5; } .mtn-plates > .plate .plate__hold { aspect-ratio: 3 / 2; } }
+
+/* ---- the route map ---- */
+.rmap__line { stroke-linejoin: round; stroke-linecap: round; }
+.rmap__line--main { stroke: var(--accent); stroke-width: 3; }
+.rmap__line--back { stroke: var(--ink); stroke-width: 1.5; }
+.rmap__line--faint { stroke: var(--grey-45); stroke-width: 1.5; }
+.rmap__line.is-dashed { stroke-dasharray: 2 6; stroke-width: 2; }
+.rmap__dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1.75; }
+.rmap__mark--start .rmap__dot { fill: var(--ink); }
+.rmap__mark--open .rmap__dot { fill: var(--paper); stroke: var(--accent); stroke-width: 2.5; }
+.rmap__tri { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
+.rmap__lbl { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.rmap__sub { font-family: var(--font-sans); font-size: 11.5px; fill: var(--fg-muted); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.rmap__scale line { stroke: var(--ink); stroke-width: 1.25; }
+.rmap__scale text, .rmap__north text { font-family: var(--font-sans); font-size: 11.5px; fill: var(--fg-muted); }
+.rmap__north path { fill: var(--ink); }
+
+/* ---- every trip to Bondwa Peak ---- */
+.bwc__line { stroke: var(--grey-45); stroke-width: 1.5; stroke-linejoin: round; }
+.bwc__line.is-on { stroke: var(--accent); stroke-width: 3; }
+.bwc__end { fill: var(--grey-55); }
+.bwc__end.is-on { fill: var(--accent); }
+.bwc__yr { font-family: var(--font-sans); font-size: 12.5px; font-weight: 500; fill: var(--fg-muted); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+.bwc__yr.is-on { fill: var(--accent-ink); font-weight: 700; }
+
+/* ---- the door to the other mountains ---- */
+.mtn-next { border-top: 1px solid var(--ink); padding-block: var(--sp-6) var(--sp-8); }
+.mtn-next__k { margin: 0 0 var(--sp-4); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.mtn-next__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3) var(--grid-gap); }
+.mtn-next__link { display: flex; flex-direction: column; gap: var(--sp-2); min-height: 9rem; justify-content: flex-end; padding: var(--sp-5); text-decoration: none; color: #f2f0eb; background: #141414; transition: transform 0.5s var(--ease-out, ease); }
+.mtn-next__link--kilimanjaro { background: #12161a; color: #eef3f6; }
+.mtn-next__link--hanang { background: #c98a3c; color: #1a130a; }
+.mtn-next__link--uluguru { background: #1c3a2b; color: #e6efe4; }
+.mtn-next__link--back { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.mtn-next__link b { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.825rem, 1.3rem + 1.8vw, 2.953rem); line-height: 0.95; letter-spacing: -0.035em; }
+.mtn-next__link span { font-size: 0.942rem; opacity: 0.85; }
+.mtn-next__link:hover { transform: translateY(-4px); }
+.mtn-next__link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (min-width: 48rem) { .mtn-next__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* ---- links into the chapters from Records and the menu ---- */
+.mtn-link { margin: var(--r3, 1.5rem) 0 0; }
+.mtn-link a { display: inline-flex; align-items: baseline; gap: 0.6ch; font-family: var(--font-display); font-weight: 600; font-size: var(--fs-md); color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.mtn-link a:hover { color: var(--accent-ink); }
+.mtn-link a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.book .mtn-link { display: none; }
+@media (min-width: 64rem) { .sgrid:not(.book .sgrid) > .mtn-link { grid-column: 2; } }
+.smenu__mtn { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); }
+.smenu__mtn a { color: var(--on-night); text-decoration: none; font-family: var(--font-display); font-weight: 500; font-size: 1.435rem; letter-spacing: -0.02em; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.5s var(--ease-out); }
+.smenu__mtn a:hover, .smenu__mtn a:focus-visible { background-size: 100% 1px; outline: none; }
+@media (prefers-reduced-motion: reduce) { .mtn-next__link { transition: none; } .mtn-next__link:hover { transform: none; } }
+@media print { .mtn-open { min-height: 0; margin-top: 0; } }

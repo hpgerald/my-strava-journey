@@ -79,6 +79,12 @@ export default function Nav() {
         <aside className="smenu__side">
           <p className="smenu__k">The log</p>
           <p className="smenu__big">{total.toLocaleString('en-US')}<span>outings so far</span></p>
+          <p className="smenu__k">The mountains</p>
+          <ul className="smenu__mtn">
+            <li><Link to="/kilimanjaro" onClick={() => setOpen(false)}>Kilimanjaro</Link></li>
+            <li><Link to="/hanang" onClick={() => setOpen(false)}>Hanang</Link></li>
+            <li><Link to="/uluguru" onClick={() => setOpen(false)}>Uluguru</Link></li>
+          </ul>
           <p className="smenu__k">More</p>
           <ul className="smenu__more">
             <li><Link to="/about" onClick={() => setOpen(false)}>About ↗</Link></li>

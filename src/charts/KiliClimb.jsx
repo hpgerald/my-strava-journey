@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { useSceneH, fitH } from '../components/SceneContext.js'
 
 // The Kilimanjaro expedition as one climb: the altitude of every stage on foot,
 // side by side, from the gate to the huts and up the summit night, then back
@@ -15,10 +16,11 @@ const GAP_KM = 9 // the width given to the part of the summit night not recorded
 export default function KiliClimb({ stages, profile, peaks, aria }) {
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
+  const want = useSceneH()
   if (!stages || stages.length < 5) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = narrow ? 320 : 380
+  const H = fitH(narrow ? 320 : 380, want)
   const m = { t: 34, r: narrow ? 10 : 16, b: 40, l: narrow ? 40 : 52 }
 
   // stage spans along x: recorded kilometres, plus the unrecorded band after stage 4

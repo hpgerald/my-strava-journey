@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_SOURCE_PAGE = {
     "activities", "activity_geo", "comparisons", "countries", "fun_journey", "gear",
     "hr_zones", "indoor_outdoor", "hanang_2023", "kili_expedition", "kili_expedition_profile", "kili_half", "kili_half_course", "kili_half_km", "kili_half_parts", "kili_half_profile", "kudos_leaderboard", "lifetime_totals", "meta",
-    "monthly_totals", "most_repeated_titles", "nav_index", "pace_zones", "power_zones",
+    "monthly_totals", "most_repeated_titles", "mountain_routes", "mountain_trips", "bondwa_profiles", "nav_index", "pace_zones", "power_zones",
     "pr_activities", "pr_elevation", "pr_longest", "ras_kilomoni", "relative_effort_by_year",
     "sport_breakdown", "streaks", "tanzania_regions", "time_of_day_patterns", "timeline",
     "weekday_patterns", "yearly_by_sport", "yearly_totals",
@@ -87,7 +87,7 @@ def main():
         print("\nFAILED")
         print("\n".join(f"- {failure}" for failure in failures))
         raise SystemExit(1)
-    print(f"\nPASS: {len(files)} CSVs; {expected} public activity records; no precise location fields.")
+    print(f"\nPASS: {len(files)} CSVs; {expected} public activity records; no precise location fields in the activity tables (route lines exist only for the three mountains).")
 
 
 if __name__ == "__main__":

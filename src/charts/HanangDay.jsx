@@ -1,6 +1,7 @@
 import { useWidth } from './useWidth.js'
 import { useInView } from '../components/Reveal.jsx'
 import { linScale } from './primitives.js'
+import { useSceneH, fitH } from '../components/SceneContext.js'
 
 // One long day on Mount Hanang against the clock: the altitude of the hike from
 // the early-morning start to the top, then down through the night, back after
@@ -18,10 +19,11 @@ const TICKS = [[360, '6 am'], [540, '9 am'], [720, 'noon'], [900, '3 pm'], [1080
 export default function HanangDay({ points, start, aria }) {
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
+  const want = useSceneH()
   if (!points || points.length < 3) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = narrow ? 320 : 380
+  const H = fitH(narrow ? 320 : 380, want)
   const m = { t: 58, r: narrow ? 12 : 18, b: 30, l: narrow ? 40 : 64 }
   const s0 = parseInt(start.slice(11, 13), 10) * 60 + parseInt(start.slice(14, 16), 10)
   const pts = points.map((p) => ({ c: s0 + p.t, alt: p.alt }))

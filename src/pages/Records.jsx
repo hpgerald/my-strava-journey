@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { BookRead } from '../components/BookStory.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -16,6 +17,7 @@ import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildRecordReport } from '../lib/recordReport.js'
 import { MODE_NAME } from '../lib/footReport.js'
+import { buildKX, buildHN } from '../lib/mountains.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -69,39 +71,9 @@ export default function Records() {
   const geo = useMemo(() => Object.fromEntries(activityGeo.map((g) => [g.activity_key, g])), [activityGeo])
   const R = useMemo(() => (activities.length ? buildRecordReport(activities, geo, kili) : null), [activities, geo, kili])
 
-  // the Kilimanjaro expedition, March 2023 (scripts/build_kili_expedition.py)
-  const KX = useMemo(() => {
-    if (!kxStages.length || !kxProfile.length) return null
-    const s = kxStages.map((r) => ({ stage: +r.stage, from: r.from_place, to: r.to_place, dist: +r.distance_km, km: +r.recorded_km, climb: +r.climb_m, elapsed: +r.elapsed_min, start: +r.start_alt_m, end: +r.end_alt_m, high: +r.high_alt_m })).sort((a, b) => a.stage - b.stage)
-    if (s.length < 5) return null
-    const profile = {}
-    kxProfile.forEach((r) => { (profile[+r.stage] = profile[+r.stage] || []).push({ f: +r.frac, alt: +r.alt_m }) })
-    const climb = s.slice(0, 4).reduce((a, x) => a + x.climb, 0)
-    return { s, profile, climb, km: s.reduce((a, x) => a + x.dist, 0), dayClimb: Math.round(s.slice(0, 3).reduce((a, x) => a + x.climb, 0) / 3 / 100) * 100 }
-  }, [kxStages, kxProfile])
+  const KX = useMemo(() => buildKX(kxStages, kxProfile), [kxStages, kxProfile])
 
-  // the long day on Mount Hanang, April 2023 (scripts/build_hanang.py), and the longest days out on foot
-  const HN = useMemo(() => {
-    if (!hnRows.length || !activities.length) return null
-    const key = hnRows[0].activity_key
-    const a = activities.find((r) => r.activity_key === key)
-    if (!a) return null
-    const pts = hnRows.map((r) => ({ t: +r.t_min, alt: +r.alt_m })).sort((p, q) => p.t - q.t)
-    const top = pts.reduce((b, p) => (p.alt > b.alt ? p : b), pts[0])
-    const at = (min) => pts.reduce((b, p) => (Math.abs(p.t - min) < Math.abs(b.t - min) ? p : b), pts[0]).alt
-    const s0 = parseInt(hnRows[0].start.slice(11, 13), 10) * 60 + parseInt(hnRows[0].start.slice(14, 16), 10)
-    const near = pts.find((p) => p.alt >= top.alt - 300)
-    const FOOTS = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-    const modeOf = (r) => (r.sport_type === 'Run' ? (r.trainer === 'Yes' ? 'tread' : 'road') : r.sport_type === 'TrailRun' ? 'trail' : r.sport_type === 'Walk' ? 'walk' : 'hike')
-    const longest = activities.filter((r) => FOOTS.has(r.sport_type)).map((r) => ({ key: r.activity_key, date: r.date.slice(0, 10), mode: modeOf(r), km: +r.distance_km || 0, elev: +r.elevation_gain_m || 0, out: +r.elapsed_time_min || 0, region: (geo[r.activity_key] || {}).region }))
-      .sort((p, q) => q.out - p.out)
-    const back = longest.filter((r) => r.region === 'Manyara' && r.elev >= 500 && r.date > a.date.slice(0, 10)).sort((p, q) => (p.date < q.date ? -1 : 1))
-    return {
-      pts, start: hnRows[0].start, date: a.date.slice(0, 10), km: +a.distance_km, climb: +a.elevation_gain_m, out: +a.elapsed_time_min, moving: +a.moving_time_min,
-      top, upMin: Math.round(top.t), downMin: Math.round(pts[pts.length - 1].t) - Math.round(top.t), lastUp: top.t - near.t,
-      at9: at(21 * 60 - s0), atMid: at(24 * 60 - s0), first: longest[0] && longest[0].key === key, longest: longest.slice(0, 5), back,
-    }
-  }, [hnRows, activities, geo])
+  const HN = useMemo(() => buildHN(hnRows, activities, geo), [hnRows, activities, geo])
 
   const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Records' }], number: '04', title: 'Records', subtitle: 'My longest, highest and hardest days', prev, next }
   if (!R || !R.n) return <DetailFrame {...frame} />
@@ -448,7 +420,9 @@ export default function Records() {
                 <><span lang="sw">Mwenda pole hajikwai</span>, the one who goes slowly does not stumble. That is the lesson of the mountain, and it is the lesson of this whole record.</>,
               ]}
               source="Strava activities of the expedition · distance, climb and time from the Activity Log; altitude from the Strava streams of each stage"
-            />
+            >
+              <p className="mtn-link"><Link to="/kilimanjaro">Read the Kilimanjaro chapter →</Link></p>
+            </StorySection>
           </>
         )}
 
@@ -502,7 +476,9 @@ export default function Records() {
                 <><span lang="sw">Subira huvuta heri</span>, patience brings good things. That day on Hanang was mostly patience.</>,
               ]}
               source="Activity Log · time from start to finish, climb and distance of the hike; altitude from the Strava stream of the hike"
-            />
+            >
+              <p className="mtn-link"><Link to="/hanang">Read the Hanang chapter →</Link></p>
+            </StorySection>
           </>
         )}
 
@@ -707,7 +683,9 @@ export default function Records() {
               regsNow.length ? `${regsNow.map((f) => f.region).join(' and ')} ${regsNow.length > 1 ? 'are' : 'is'} on the list because of trips in ${lastYear}. Each new region I visit can add a line to this chart.` : '',
             ]}
               source="Activity Log and Strava GPS start points · Tanzania regions"
-            />
+            >
+              {regTop[0][0] === 'Morogoro' ? <p className="mtn-link"><Link to="/uluguru">Read the Uluguru chapter →</Link></p> : null}
+            </StorySection>
           </>
         )}
 

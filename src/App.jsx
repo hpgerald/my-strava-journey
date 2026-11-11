@@ -21,6 +21,9 @@ const Goals = lazy(() => import('./pages/Goals.jsx'))
 const WhatItMeans = lazy(() => import('./pages/WhatItMeans.jsx'))
 const Evidence = lazy(() => import('./pages/Evidence.jsx'))
 const Book = lazy(() => import('./pages/Book.jsx'))
+const Kilimanjaro = lazy(() => import('./pages/Kilimanjaro.jsx'))
+const Hanang = lazy(() => import('./pages/Hanang.jsx'))
+const Uluguru = lazy(() => import('./pages/Uluguru.jsx'))
 const Data = lazy(() => import('./pages/Data.jsx'))
 const About = lazy(() => import('./pages/About.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
@@ -57,6 +60,11 @@ export default function App() {
         <Route path="/what-it-means" element={<WhatItMeans />} />
         <Route path="/on-trial" element={<Evidence />} />
         <Route path="/book" element={<Book />} />
+
+        {/* The three mountain chapters */}
+        <Route path="/kilimanjaro" element={<Kilimanjaro />} />
+        <Route path="/hanang" element={<Hanang />} />
+        <Route path="/uluguru" element={<Uluguru />} />
 
         {/* Data + About (Phase 8) */}
         <Route path="/data" element={<Data />} />
