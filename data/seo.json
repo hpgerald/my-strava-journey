@@ -5,6 +5,22 @@
    "title": "Gerald Tesha · My Strava Journey · Seven years on foot",
    "description": "Gerald Tesha's seven years on foot, mostly in Tanzania: 2,076 outings and 13,295 km from his Strava log, with maps, records, tested habits and a free book."
   },
+  "/kilimanjaro": {
+   "title": "Kilimanjaro",
+   "description": "Kilimanjaro by the Marangu route, one hut at a time: the GPS line of the climb, every stage, and the summit night my watch did not finish."
+  },
+  "/hanang": {
+   "title": "Hanang",
+   "description": "Mount Hanang, my longest day on foot: the hike told by the clock from before sunrise to after midnight, and the two races that took me back."
+  },
+  "/uluguru": {
+   "title": "Uluguru",
+   "description": "Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing."
+  },
+  "/what-it-means": {
+   "title": "What It Means",
+   "description": "What seven years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson."
+  },
   "/numbers": {
    "title": "Year in Sport",
    "description": "Every year of my log as its own report, from 27 outings in 2019 to 338 in 2026 so far."
@@ -29,25 +45,9 @@
    "title": "Goals",
    "description": "The same three targets held against every year: 1,000 km of walking, 1,000 km of running and 24,000 m of climbing on foot."
   },
-  "/what-it-means": {
-   "title": "What It Means",
-   "description": "What seven years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson."
-  },
   "/on-trial": {
    "title": "The Habit on Trial",
    "description": "Twelve things I believe about my habit, tested with statistics against the log: seven proven, three supported and two not proven."
-  },
-  "/kilimanjaro": {
-   "title": "Kilimanjaro",
-   "description": "Kilimanjaro by the Marangu route, one hut at a time: the GPS line of the climb, every stage, and the summit night my watch did not finish."
-  },
-  "/hanang": {
-   "title": "Hanang",
-   "description": "Mount Hanang, my longest day on foot: the hike told by the clock from before sunrise to after midnight, and the two races that took me back."
-  },
-  "/uluguru": {
-   "title": "Uluguru",
-   "description": "Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing."
   },
   "/book": {
    "title": "My Book",
