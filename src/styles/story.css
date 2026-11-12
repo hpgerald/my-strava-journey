@@ -10,6 +10,10 @@
 .spart__n { font-family: var(--font-display); font-stretch: 62%; font-weight: 700; font-size: clamp(6.854rem, 3rem + 17vw, 17.944rem); line-height: 0.78; letter-spacing: -0.05em; color: var(--accent-strong); margin-top: var(--sp-4); font-variant-numeric: lining-nums; }
 .spart__t { margin: var(--sp-4) 0 0; font-family: var(--font-display); font-weight: 640; font-size: clamp(2.618rem, 1.6rem + 4.6vw, 6.854rem); line-height: 0.92; letter-spacing: -0.04em; text-wrap: balance; }
 .spart__l { margin: var(--sp-5) 0 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.272rem, 1.1rem + 0.7vw, 1.825rem); line-height: 1.4; text-wrap: pretty; }
+.spart__s { margin-top: var(--sp-4); }
+.spart__s p { margin: 0; max-width: none; font-family: var(--font-read); font-size: clamp(1rem, 0.96rem + 0.25vw, 1.15rem); line-height: 1.6; text-wrap: pretty; }
+.spart__s p + p { margin-top: var(--sp-3); }
+.spart-gap__s { margin: var(--sp-4) 0 0; max-width: none; font-family: var(--font-read); font-size: clamp(1rem, 0.96rem + 0.25vw, 1.15rem); line-height: 1.6; color: inherit; }
 
 /* on wide screens the numeral holds the short column and the words the long one */
 @media (min-width: 48rem) {
@@ -18,6 +22,7 @@
   .spart__n { grid-column: 1; grid-row: 2 / span 2; margin-top: var(--sp-5); }
   .spart__t { grid-column: 2; grid-row: 2; margin-top: var(--sp-5); }
   .spart__l { grid-column: 2; grid-row: 3; }
+  .spart__s { grid-column: 2; grid-row: 4; }
 }
 
 /* the years of a part fill the row, however many there are */
@@ -268,7 +273,7 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   /* part openers: the numeral, and the name right beside it */
   .spart__head { grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(1.618rem, 1rem + 2vw, 4.236rem); }
   .spart__n { grid-column: 1; }
-  .spart__t, .spart__l { grid-column: 2; }
+  .spart__t, .spart__l, .spart__s { grid-column: 2; }
   .spart-doors--one { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
   .spart-doors--one > li { grid-column: 1; }
 

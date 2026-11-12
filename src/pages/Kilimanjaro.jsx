@@ -93,7 +93,7 @@ export default function Kilimanjaro() {
         ground: kiliGround,
       }}
       hero="kili-hero"
-      standfirst={<>The mountain is climbed one hut at a time. In March 2023 I went up the Marangu route and reached Uhuru Peak, {n0(KX_TOP)} m, on my first try.</>}
+      standfirst={<>I went up Kilimanjaro knowing nothing about climbing it. I joined a group of friends who were getting ready for it, five of us in all, and in March 2023 we went up the Marangu route to Uhuru Peak, {n0(KX_TOP)} m.</>}
       facts={[
         { label: 'climbed in four days', value: n0(KX.climb), unit: 'm' },
         { label: 'on foot, up and back to Horombo', value: k1(KX.km), unit: 'km' },
@@ -108,13 +108,14 @@ export default function Kilimanjaro() {
           figTitle="The Marangu route, as my watch drew it"
           fig={<RouteMap lines={lines} marks={marks} ratio={0.74}
             aria={`The Marangu route from Marangu Gate at ${n0(s[0].start)} m past Mandara Hut, Horombo Hut and Kibo Hut at ${n0(s[2].end)} m. The recorded line ends at ${n0(s[3].high)} m on the summit night; Uhuru Peak, ${n0(KX_TOP)} m, is marked beyond it.`} />}
-          note="The orange line is the GPS track of the four stages. The dotted line is the part of the summit night my watch did not record."
+          note="My watch drew all four stages. The dotted end is the part of the summit night it missed."
           foot={<Ledger rows={s.slice(0, 4).map((x, i) => ({
             k: KX_DAY[i],
             v: i < 3 ? `${x.from} to ${x.to}` : 'Kibo Hut towards the top',
             sub: `${i < 3 ? `${k1(x.dist)} km · ${hm(x.elapsed)}` : `${k1(x.km)} km recorded`}${stages[i] && stages[i].temp != null ? ` · ${Math.round(stages[i].temp)}° at the start` : ''}`,
           }))} />}
         >
+          <p>Marangu is known as the Coca-Cola route, the easy one, while Machame is the Whiskey route. I was born and raised in Moshi, at the foot of the mountain, so I thought the height would not trouble me.</p>
           <p>From the gate at {n0(s[0].start)} m to Kibo Hut at {n0(s[2].end)} m took three days and {k1(three)} km, and every night was spent higher than the night before.</p>
           {temp.length === 4 ? <p>The air cooled at every hut. It was {Math.round(temp[0].temp)} degrees when I left the gate and {Math.round(temp[3].temp)} when I left Kibo Hut for the top.</p> : null}
         </Scene>
@@ -130,7 +131,7 @@ export default function Kilimanjaro() {
       <Band at={[s[1].end, s[2].end]}>
         <Scene
           label="One hut at a time"
-          title={`About ${n0(KX.dayClimb)} m a day.`}
+          title="I almost quit at the first hut."
           figTitle="The climb, stage by stage"
           fig={<KiliClimb stages={s} profile={KX.profile} peaks={{ rim: KX_RIM, top: KX_TOP }}
             aria={`Altitude of the Kilimanjaro expedition: Marangu Gate ${n0(s[0].start)} m, Mandara Hut ${n0(s[0].end)} m, Horombo Hut ${n0(s[1].end)} m, Kibo Hut ${n0(s[2].end)} m. On the summit night the watch recorded up to ${n0(s[3].high)} m and stopped; Gilman's Point ${n0(KX_RIM)} m and Uhuru Peak ${n0(KX_TOP)} m follow as a dashed line.`} />}
@@ -142,7 +143,8 @@ export default function Kilimanjaro() {
             rows={s.slice(0, 4).map((x, i) => ({ key: 'trail', label: KX_DAY[i], sub: i < 3 ? undefined : 'until the watch stopped', value: x.climb, display: `${n0(x.climb)} m` }))}
           />}
         >
-          <p>The days before the summit carried most of the climb: {n0(s[0].climb + s[1].climb + s[2].climb)} m of the {n0(KX.climb)} m. I slept at each hut and started again in the morning.</p>
+          <p>We reached Mandara Hut around eight at night, and it was colder than anything I had felt before. I asked myself what the higher camps would be like. The sunrise in the morning brought warmth, and I could tell it was going to be a good day.</p>
+          <p>The days before the summit carried most of the climb: {n0(s[0].climb + s[1].climb + s[2].climb)} m of the {n0(KX.climb)} m, about {n0(KX.dayClimb)} m a day.</p>
         </Scene>
       </Band>
 
@@ -150,12 +152,13 @@ export default function Kilimanjaro() {
 
       <Band night at={[s[2].end, KX_TOP]}>
         <Scene label="The summit night" title="The part my watch did not finish.">
-          <p>Before midnight on the third day I set out from Kibo Hut for the top.</p>
-          <p>The power saver stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. The top is missing from the record. I carry it in my memory.</p>
+          <p>At Kibo Hut my head ached like never before, and I thought I would not wake up in time to join the summit team at midnight. I did some deep breathing, fell asleep, and woke around ten at night to go.</p>
+          <p>The early sunrise caught us near Gilman’s Point. I have never seen anything like it in my life. The top was clear and there was no crowd. We reached Uhuru Peak around half past ten in the morning, and after about 30 minutes a storm was coming, so we started down.</p>
+          <p>My watch saw none of it. The cold and the power saver stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. One day I will go back and record the whole way.</p>
         </Scene>
         <BigNumber value={n0(KX_TOP)} unit="m">Uhuru Peak. The last {n0(KX_TOP - s[3].high)} m are not in the log.</BigNumber>
         <Plate slot="kili-summit" ratio="16 / 9" caption={`Uhuru Peak · ${n0(KX_TOP)} m · 9 March 2023`} />
-        <Saying sw="Mwenda pole hajikwai">, the one who goes slowly does not stumble. That is the lesson of the mountain, and it is the lesson of this whole record.</Saying>
+        <Saying sw="Mwenda pole hajikwai">, the one who goes slowly does not stumble.</Saying>
       </Band>
 
       {half.length ? (
@@ -172,7 +175,8 @@ export default function Kilimanjaro() {
               <p className="mtn-scene__more"><Link to="/goals">The race, kilometre by kilometre →</Link></p>
             </>}
           >
-            <p>I go back to the foot of the mountain every year for the Kilimanjaro Half. It is the same road each time, so it shows me plainly where I stand.</p>
+            <p>The Kilimanjaro Half is part of the Kilimanjaro International Marathon, run in Moshi, the town where I was born and raised. The half is my size. The race is close to 25 years old, and the week around it is one big celebration in town, the kind you have to be there to feel.</p>
+            <p>I never ran it until this habit started. Now I go back every year, and the same road shows me plainly where I stand.</p>
             {back ? <p>In {back.year}, {['', 'the day', 'two days', 'three days'][back.days]} after the race, I walked back up to Mandara Hut: {k1(back.km)} km and {n0(back.climb)} m of climbing in one afternoon.</p> : null}
           </Scene>
         </Band>

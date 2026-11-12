@@ -48,12 +48,12 @@ export default function YearMoment({ year, stats }) {
   if (year <= 2019) {
     kicker = 'First steps'
     title = 'Where it began.'
-    body = `Looking at it now, nothing there looked like the start of a habit.`
+    body = `I heard about Strava and decided to give it a try. Most of that first year was runs on the treadmill, and nothing yet looked like the start of a habit.`
     figure = <div className="ymom__chips">{chip('activities', s.n)}{chip('active days', s.activeDays)}{chip('kilometres on foot', Math.round(s.footKm))}</div>
   } else if (year === 2020) {
     kicker = 'The quiet year'
     title = 'Then I stopped.'
-    body = `After the middle of the year I stopped logging, and it stayed like that for months.`
+    body = `I changed jobs and moved from Arusha to Kilimanjaro, in the time of COVID-19. After the middle of the year the log went quiet, and it stayed quiet for almost a year.`
     figure = <div className="ymom__chips">{chip('activities', s.n)}{chip('active days', s.activeDays)}{chip('longest streak', s.streakLen)}</div>
   } else if (year === 2021) {
     kicker = 'Coming back'
@@ -61,12 +61,12 @@ export default function YearMoment({ year, stats }) {
     const jun = s.monthsActivities[5] || 0
     const jul = s.monthsActivities[6] || 0
     const aug = s.monthsActivities[7] || 0
-    body = `For the first half of the year there is almost nothing. Then, in the middle of the year, a few outings a month became dozens, and before the year ended I was on a ${s.streakLen}-day streak.`
+    body = `A medical check-up told me to move about 30 minutes a day. For the first half of the year there is almost nothing. Then a few outings a month became dozens, and before the year ended I was on a ${s.streakLen}-day streak.`
     figure = <JumpBars items={[{ label: 'Jun', v: jun }, { label: 'Jul', v: jul, hot: true }, { label: 'Aug', v: aug }]} />
   } else if (year === 2022) {
     kicker = 'The busiest'
     title = 'My busiest year.'
-    body = `More activities than any other year. It was also the first year I walked more often than I ran.`
+    body = `More activities than any other year. It was also the first year I walked more often than I ran, and the year of my first marathon, on the treadmill.`
     figure = (
       <div className="ymom__versus">
         <div className="ymom__vrow"><span className="ymom__vlbl">Walk</span><span className="ymom__vbar" style={{ width: `${Math.min(100, (s.walkN / Math.max(s.walkN, s.runN)) * 100)}%`, background: 'var(--accent)' }} /><span className="mono">{s.walkN}</span></div>
@@ -76,7 +76,7 @@ export default function YearMoment({ year, stats }) {
   } else if (year === 2023) {
     kicker = 'The summit'
     title = 'To the top of Kilimanjaro.'
-    body = `In March I walked up Kilimanjaro one hut at a time and reached Uhuru Peak on my first attempt. Later that month I ran a 100 km stage race, over four evenings in a row.`
+    body = `In March I went up Kilimanjaro with four friends and reached Uhuru Peak. Later that month I took a challenge from the Activate Uganda team, 25 km a day on the treadmill, four evenings in a row. In April came the longest day in my log, on Hanang.`
     const peak = s.monthsElev.indexOf(Math.max(...s.monthsElev))
     figure = (
       <>
@@ -87,7 +87,7 @@ export default function YearMoment({ year, stats }) {
   } else if (year === 2024) {
     kicker = 'Travelling'
     title = 'The map at its widest.'
-    body = `Most outings were at home in Tanzania. The rest were across the border.`
+    body = `A remote job and a few consultancies took me across borders. Most outings were still in Tanzania, and the rest were spread over the countries below.`
     figure = (
       <Reveal className="ymom__stamps">
         {s.countries.map((c, i) => (
@@ -100,13 +100,13 @@ export default function YearMoment({ year, stats }) {
   } else if (year === 2025) {
     kicker = 'The highest point'
     title = 'My biggest climb.'
-    body = `One ${s.highestClimb ? s.highestClimb.sport.toLowerCase() : 'outing'} that year climbed more than any other single outing I have done.`
+    body = `One ${s.highestClimb ? s.highestClimb.sport.toLowerCase() : 'outing'} that year climbed more than any other single outing I have done, on Bondwa Peak in the rain. In the last days of the year I started the streak that is still going.`
     figure = <div className="ymom__chips">{chip('metres in a day', Math.round(s.highestClimb ? s.highestClimb.val : 0))}{chip('metres in the year', Math.round(s.elev))}</div>
   } else {
     // 2026 and any later year: the unbroken streak
     kicker = 'Every day'
     title = 'One day at a time.'
-    body = `Every day of the year so far, at home and away.`
+    body = year === 2026 ? `I started this streak on purpose, and my first target is to reach 31 December without a zero day. So far every day of the year has an outing, in Tanzania and away.` : `Every day of the year so far, in Tanzania and away.`
     figure = <div className="ymom__chips">{chip('day streak', s.streakLen)}{chip('hours moving', Math.round(s.hours))}</div>
   }
 

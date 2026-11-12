@@ -12,7 +12,7 @@ const FACT = {
   2020: 'A near-dormant year. Thirty-five activities, most of them in one short summer run.',
   2021: 'The switch: two activities in June become fifty-eight the next month, and it never fully stops again.',
   2022: 'The biggest year on record, 443 activities and close to 2,900 km on foot.',
-  2023: 'March holds the 100 km stage race, four nights back to back.',
+  2023: 'March holds the four-day challenge, 25 km a night, back to back.',
   2024: 'Quieter by distance, but not one calendar month goes unlogged.',
   2025: 'The climb back. Distance rises again, week after week.',
   2026: 'Still going, already past three hundred activities with months to spare.',

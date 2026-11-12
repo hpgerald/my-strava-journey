@@ -32,7 +32,7 @@ export default function MapStage({ regions, metrics, nudge, pins }) {
   return (
     <div className="mstage">
       <div className="mstage__map">
-        <p className="mstage__yr" aria-hidden="true"><b>{year}</b><span>{shown.length} of 30 regions</span></p>
+        <p className="mstage__yr" aria-hidden="true"><b>{year}</b><span>{shown.length} of 31 regions</span></p>
         <PlaceMap
           src="data/tz_regions.geojson" nameKey="region" values={values} metrics={[metrics[0]]}
           labels={fresh} nudge={nudge} pins={pins} maxHeight={480}
@@ -51,7 +51,7 @@ export default function MapStage({ regions, metrics, nudge, pins }) {
                   ? <>{nw.length === 1 ? 'One new region' : `${nw.length} new regions`}: {list(nw.map((r) => r.region))}.</>
                   : 'No new region.'}
               </p>
-              <p className="mstage__s">{nw.length ? `The first came in ${MON[parseInt(nw[0].first.slice(5, 7), 10) - 1]}. ` : ''}{upto} of 30 regions {y === all[all.length - 1] ? 'so far' : `by the end of ${y}`}.</p>
+              <p className="mstage__s">{nw.length ? `The first came in ${MON[parseInt(nw[0].first.slice(5, 7), 10) - 1]}. ` : ''}{upto} of 31 regions {y === all[all.length - 1] ? 'so far' : `by the end of ${y}`}.</p>
             </li>
           )
         })}

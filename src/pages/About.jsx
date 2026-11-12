@@ -73,9 +73,9 @@ export default function About() {
               The numbers are as logged on Strava. Distance and climb count only my sports on foot: running, walking,
               trail running and hiking. Everything else still counts as an outing, and in my hours and kudos, but not in
               distance or climb. Countries and regions come from where each activity started, so they can be a little off
-              near a border. There is more on the{' '}
+              near a border. There is more in the{' '}
               <Link to="/about?s=about-data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                data page
+                colophon below
               </Link>
               . This is a personal record. It is not coaching, medical or training advice.
             </p>

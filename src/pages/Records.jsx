@@ -213,7 +213,8 @@ export default function Records() {
             Records come quickly at the start, and then they slow down. In the early years the distance record moved again and again:
             10 km on my second day, a half marathon a few months later, 30 km in{' '}
             {firstOver(30) ? fmtMonth(firstOver(30).date) : '2021'}. Then came the {dNow.km >= 42.195 ? 'marathon' : `${k1(dNow.km)} km`} on
-            the {lower(dNow.mode).replace(' run', '')}, and nothing has beaten it since.
+            the {lower(dNow.mode).replace(' run', '')}, and nothing has beaten it since.{dNow.date.slice(0, 7) === '2022-05' ? ` It was raining outside that day, and I wanted to break
+            the marathon barrier, so I ran it indoors with a few pauses. By the end I had lost all feeling in my fingernails. They were fine afterwards.` : ''}
           </Reveal>
           <OddsRow
             title="The longest outing on foot"
@@ -582,8 +583,8 @@ export default function Records() {
               eyebrow={`${num()} · Where the records were set`}
               title={`${regTop[0][0]} has my big climbs.`}
               statement={<>
-                Every big climb in my log meant a trip, to {regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}. At
-                home the ground is fairly flat. The hike in Manyara went up more than 1,700 m, my record at the time.
+                Every big climb in my log meant a trip, to {regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}. Where I
+                go out most the ground is fairly flat. The hike in Manyara went up more than 1,700 m, my record at the time.
               </>}
               odds={{
                 title: 'Climbs by region of Tanzania',

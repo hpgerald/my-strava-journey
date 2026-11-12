@@ -48,7 +48,7 @@ export const BOOK_INTROS = {
     paras: [
       'This chapter lays the whole record along one line of time, from my first upload to the last day in this edition. It looks at the gaps as much as at the outings, because the gaps tell where the habit broke and how it came back.',
       'The first sections look at the breaks: how long they were and how they became shorter. Then the chapter follows the change from the treadmill to the hills, and it ends with a chronicle of the moments that mattered, each one in its place on the line.',
-      'Polepole ndio mwendo, slowly is the way to go. The timeline shows that the habit did not appear in one day. It grew over seasons, with a long silence in the middle.',
+      'Pole pole ndio mwendo, slowly is the way to go. The timeline shows that the habit did not appear in one day. It grew over seasons, with a long silence in the middle.',
     ],
     design: 'A timeline is the simplest chart there is, and the hardest to keep readable when many things happen. The chronicle in this chapter solves it with lanes: one row for each kind of event, all sharing the same time axis.',
   },

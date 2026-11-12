@@ -25,8 +25,11 @@ export function buildHN(hnRows, activities, geo) {
     const s0 = parseInt(hnRows[0].start.slice(11, 13), 10) * 60 + parseInt(hnRows[0].start.slice(14, 16), 10)
     const near = pts.find((p) => p.alt >= top.alt - 300)
     const FOOTS = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])
-    const modeOf = (r) => (r.sport_type === 'Run' ? (r.trainer === 'Yes' ? 'tread' : 'road') : r.sport_type === 'TrailRun' ? 'trail' : r.sport_type === 'Walk' ? 'walk' : 'hike')
-    const longest = activities.filter((r) => FOOTS.has(r.sport_type)).map((r) => ({ key: r.activity_key, date: r.date.slice(0, 10), mode: modeOf(r), km: +r.distance_km || 0, elev: +r.elevation_gain_m || 0, out: +r.elapsed_time_min || 0, region: (geo[r.activity_key] || {}).region }))
+    // the Kilimanjaro climb was logged as trail runs; on the mountain it was a hike
+    const kiliClimb = (r) => r.sport_type === 'TrailRun' && r.date >= '2023-03-06' && r.date < '2023-03-10' && (geo[r.activity_key] || {}).region === 'Kilimanjaro'
+    const modeOf = (r) => (r.sport_type === 'Run' ? (r.trainer === 'Yes' ? 'tread' : 'road') : kiliClimb(r) ? 'hike' : r.sport_type === 'TrailRun' ? 'trail' : r.sport_type === 'Walk' ? 'walk' : 'hike')
+    // a trail run logged indoors is a treadmill session saved under the wrong sport, not a day out
+    const longest = activities.filter((r) => FOOTS.has(r.sport_type) && !(r.sport_type === 'TrailRun' && r.trainer === 'Yes')).map((r) => ({ key: r.activity_key, date: r.date.slice(0, 10), mode: modeOf(r), km: +r.distance_km || 0, elev: +r.elevation_gain_m || 0, out: +r.elapsed_time_min || 0, region: (geo[r.activity_key] || {}).region }))
       .sort((p, q) => q.out - p.out)
     const back = longest.filter((r) => r.region === 'Manyara' && r.elev >= 500 && r.date > a.date.slice(0, 10)).sort((p, q) => (p.date < q.date ? -1 : 1))
     return {

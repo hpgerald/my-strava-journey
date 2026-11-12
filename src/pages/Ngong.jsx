@@ -50,7 +50,7 @@ export default function Ngong() {
       id="ngong"
       relief={<Relief lines={[N.pts.map((p) => ({ x: p.d / N.end.d, alt: p.alt }))]} />}
       hero="ngong-hero"
-      standfirst={<>This one is across the border. In {fmtMonth(T.date)} I went along the ridge of the Ngong Hills in Kenya{N.abroadTop ? <>, and the {n0(T.climb)} m I climbed there is the most I have climbed in one outing outside Tanzania</> : null}.</>}
+      standfirst={<>I went to the Ngong Hills for one memorable day, and I did not get all of it. In {fmtMonth(T.date)} I was in Nairobi with a friend, and I wanted to walk the whole ridge, from Ngong town to Kiserian. Time ran short, so we turned at the highest point and came back.</>}
       facts={[
         { label: 'along the ridge and back', value: k1(T.km), unit: 'km' },
         { label: 'climbed', value: n0(T.climb), unit: 'm' },
@@ -65,7 +65,7 @@ export default function Ngong() {
           figTitle="Altitude along the ridge"
           fig={<RidgeProfile pts={N.pts} turnI={N.turnI} level={level}
             aria={`Altitude along the Ngong Hills ridge against distance: from ${n0(start.alt)} m at the start, over several tops, to ${n0(turn.alt)} m at the far end after ${k1(turn.d)} km, back over the same tops, and down to ${n0(end.alt)} m at the finish after ${k1(end.d)} km.`} />}
-          note="Orange is the way out and black is the way back. The dotted line is the height of the start."
+          note="Out is orange and back is black. The dotted line is where I started."
           foot={<Ledger rows={[
             { k: T.start, v: 'The start', sub: `${n0(start.alt)} m${T.sky ? ` · ${T.sky.toLowerCase()}${T.temp != null ? `, ${Math.round(T.temp)}°` : ''}` : ''}` },
             { k: clock(T.start, turn.t), v: 'The far end', sub: `${n0(turn.alt)} m on my watch · ${k1(turn.d)} km` },
@@ -74,8 +74,7 @@ export default function Ngong() {
           ]} />}
         >
           <p>A ridge keeps going up and down. Every top was followed by a drop, and then by the next top. The far end was the highest, {n0(turn.alt - start.alt)} m above where I started.</p>
-          <p>I turned there and came back over the same tops.{end.alt < start.alt ? ` The finish was ${n0(start.alt - end.alt)} m lower than the start, so the last part was all downhill.` : ''}</p>
-          <p>Of the {hm(T.out)} out, {hm(T.moving)} counted as moving.</p>
+          <p>We turned there, came back over the same tops and kept going down to Ngong town.{end.alt < start.alt ? ` The finish was ${n0(start.alt - end.alt)} m lower than the start, so the last part was all downhill.` : ''}</p>
         </Scene>
       </Band>
 
@@ -90,7 +89,7 @@ export default function Ngong() {
         <BigNumber value={n0(T.climb)} unit="m">
           {N.abroadTop && next ? `The most I have climbed in one outing outside Tanzania, ${k1(T.climb / next.climb)} times the next, ${SPORT[next.sport] || 'an outing'} in ${next.country}.` : 'Climbed along the ridge.'}
         </BigNumber>
-        <Saying sw="Milima haikutani, binadamu hukutana">, mountains do not meet, but people do. I crossed a border to reach this one.</Saying>
+        <Saying sw="Milima haikutani, binadamu hukutana">, mountains do not meet, but people do. On the ridge my friend gave the day a name, the Ngong wisdom: you do not always get what you wanted.</Saying>
       </Band>
 
       <Band>
@@ -105,7 +104,7 @@ export default function Ngong() {
             rows={N.countries.map((c) => ({ key: c.country === 'Kenya' ? 'trail' : 'walk', label: c.country, sub: `${fmtMonth(c.date)} · ${k1(c.km)} km`, value: c.climb, display: `${n0(c.climb)} m` }))}
           />}
         >
-          <p>My climbing is at home. Outside Tanzania my outings have been flatter, and the bars below show it: the biggest climb I have in each country.</p>
+          <p>My climbing is at home. Outside Tanzania my outings have been flatter, and this day stands far above the rest of them.</p>
           {N.before > 0 ? <p>Before this day the most I had climbed in Kenya was {n0(N.before)} m.</p> : null}
           {N.rank ? <p>In the whole record this day ranks {N.rank === 1 ? 'first' : `number ${N.rank}`} for climbing in one outing.</p> : null}
         </Scene>

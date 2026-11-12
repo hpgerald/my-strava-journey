@@ -191,7 +191,7 @@ export default function Where() {
           </div>
           <Reveal as="p" className="sgrid__statement">
             {home.region} is where the habit took hold. I started going out there a few weeks after I came back, and it is where I
-            have spent the most days out. Dar es Salaam is my other home, and in 2026 it is where I go out most. Kilimanjaro and
+            have spent the most days out. In 2026 Dar es Salaam took the lead. Kilimanjaro and
             Morogoro are where I go for the hills, and the other regions came mostly from trips.
           </Reveal>
           <OddsRow
@@ -274,7 +274,7 @@ export default function Where() {
           statement={<>
             To climb, I have to travel. In Dar es Salaam I climb about {k1(reg('Dar es Salaam').mpk)} m for every kilometre. In
             Morogoro it is {n0(reg('Morogoro').mpk)}, so one kilometre there climbs as much as{' '}
-            {Math.round(reg('Morogoro').mpk / Math.max(0.1, reg('Dar es Salaam').mpk))} at home. Most of my trail runs and hikes,{' '}
+            {Math.round(reg('Morogoro').mpk / Math.max(0.1, reg('Dar es Salaam').mpk))} in Dar es Salaam. Most of my trail runs and hikes,{' '}
             {steep.reduce((s, r) => s + r.trail, 0)} of them, started in the hilly regions I travel to.
           </>}
           odds={{
@@ -317,7 +317,7 @@ export default function Where() {
           eyebrow={`${num()} · The busiest region, year by year`}
           title={`${runOf.region} led for ${word(Number(runOf.to) - Number(runOf.from) + 1)} ${Number(runOf.to) === Number(runOf.from) ? 'year' : 'years'}.`}
           statement={<>
-            Where I live decides where I go out.{' '}
+            My busiest region moves from year to year.{' '}
             {(() => { const runs = []; for (const l of leaders) { const last = runs[runs.length - 1]; if (last && last.region === l.region) last.to = l.year; else runs.push({ region: l.region, from: l.year, to: l.year }) } return runs.map((x, i) => `${x.from === x.to ? `In ${x.from}` : `From ${x.from} to ${x.to}`} ${i === 0 ? 'I went out most in' : 'it was'} ${x.region}`).join('. ') + '.' })()}
           </>}
           odds={{
@@ -365,12 +365,12 @@ export default function Where() {
           statement={<>
             Every new region came with a trip, and they came in bunches, in the years I travelled.
             {(() => { const last = disc[disc.length - 1]; return last ? ` The latest is ${last.region}, my ${ORDW[disc.length] || `${disc.length}th`}.` : '' })()}
-            {' '}There is still a lot of Tanzania to see.
+            {' '}{31 - disc.length > 0 ? `${cap(word(31 - disc.length))} of the 31 are still waiting.` : ''}
           </>}
           odds={{
             title: 'New regions',
             items: [
-              { num: disc.length, unit: '', label: 'regions of 30 with an outing', tone: 'move' },
+              { num: disc.length, unit: '', label: 'regions of 31 with an outing', tone: 'move' },
               { book: true, num: Math.max(...newBy.map((y) => y.n)), unit: '', label: `new in ${newBy.reduce((b, y) => (y.n > b.n ? y : b), newBy[0]).year}, the most`, tone: 'move' },
               { book: true, num: newLast.n, unit: '', label: `new in ${lastYear}${so}`, tone: 'move' },
               { book: true, num: 30 - disc.length, unit: '', label: 'regions still blank', tone: 'rest' },
@@ -521,7 +521,7 @@ export default function Where() {
             My outings are more spread across Tanzania than they used to be. To measure it I used the effective number of regions:
             if a year counts as four, it is as if my outings were shared equally between four regions. In my narrowest year,{' '}
             {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings. Later years spread out as I travelled and
-            as my home base moved.
+            as my busiest region moved.
           </>}
           odds={{
             title: 'How the outings spread',

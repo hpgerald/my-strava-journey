@@ -71,7 +71,7 @@ export default function Hanang() {
         ground: (v) => hanangGround(HN.start, v),
       }}
       hero="hanang-hero"
-      standfirst={<>A mountain does not care about the clock. On Mount Hanang in Manyara I set out before six in the morning, reached the top in the late afternoon and was back down after two the next morning.</>}
+      standfirst={<>Coming down can take as long as going up. On Mount Hanang in Manyara I set out before six in the morning and was not back down until after two the next morning.</>}
       facts={[
         { label: 'from the start to the finish', value: k1(HN.out / 60), unit: 'h' },
         { label: 'climbed', value: n0(HN.climb), unit: 'm' },
@@ -82,11 +82,11 @@ export default function Hanang() {
       <Band at={[0, HN.top.t]}>
         <Scene
           label={fmtDay(HN.date)}
-          title="The day, hour by hour."
+          title="The top came slowly."
           figTitle="Altitude against the clock"
           fig={<HanangDay points={HN.pts} start={HN.start}
             aria={`Altitude of the Mount Hanang hike against the time of day: from ${n0(HN.pts[0].alt)} m at the start to ${n0(HN.top.alt)} m at the top after ${hm(HN.upMin)}, then ${hm(HN.downMin)} back down to ${n0(HN.pts[HN.pts.length - 1].alt)} m.`} />}
-          note="The orange line is the way up and the black line the way down. The brackets give the hours each took, and the dotted line marks midnight."
+          note="Up is orange and down is black, and the two fill almost the same stretch of the day."
           read="The hike against the clock, from the early-morning start to the finish after midnight. The orange line is the way up and the black line the way down, and the brackets above give the hours each took. The dotted line marks midnight."
           lesson
           foot={<Ledger rows={[
@@ -97,8 +97,8 @@ export default function Hanang() {
             { k: clock(HN.start, HN.pts[HN.pts.length - 1].t), v: 'Back down', sub: `${n0(HN.pts[HN.pts.length - 1].alt)} m` },
           ]} />}
         >
-          <p>The top came slowly. The last 300 m took {hm(HN.lastUp)}, about a third of the whole way up. I kept going one step at a time.</p>
-          <p>I stood on the top at {clock(HN.start, HN.top.t)}, {hm(HN.upMin)} after the start.</p>
+          <p>The last 300 m of height took {hm(HN.lastUp)}, about a third of my time on the way up. I was with a friend who was very tired, so we took it easy. It was raining hard, the path up there had no marks and we had no guide, so for a while we were lost.</p>
+          <p>We stood on the top at {clock(HN.start, HN.top.t)}, {hm(HN.upMin)} after the start.</p>
         </Scene>
       </Band>
 
@@ -111,27 +111,32 @@ export default function Hanang() {
 
       <Band night at={[minAt(HN.start, '19:00'), HN.pts[HN.pts.length - 1].t]}>
         <Scene label="After dark" title="Most of the way down came at night.">
-          <p>The way down took almost as long as the way up. At nine in the evening I was still at {n0(Math.round(HN.at9 / 10) * 10)} m, and at midnight I was at {n0(Math.round(HN.atMid / 10) * 10)} m.</p>
+          <p>Coming down took {hm(HN.downMin)}, only {hm(HN.upMin - HN.downMin)} less than going up. At nine in the evening I was still at {n0(Math.round(HN.at9 / 10) * 10)} m, and at midnight at {n0(Math.round(HN.atMid / 10) * 10)} m.</p>
+          <p>The rain did not stop. Halfway down we waited for other friends to reach us, so we could all go down together. I had no lamp of my own, so I used a friend’s torch first and then the torch on my phone.</p>
         </Scene>
-        <BigNumber value={k1(HN.out / 60)} unit="hours">{HN.first ? 'The longest day out on foot in my whole record.' : 'From the start to the finish.'}</BigNumber>
+        <BigNumber value={k1(HN.out / 60)} unit="hours">On my feet, stops included.</BigNumber>
         <Plate slot="hanang-night" ratio="16 / 9" caption="The way down, after dark" />
-        <Saying sw="Subira huvuta heri">, patience brings good things. That day on Hanang was mostly patience.</Saying>
+        <Saying sw="Subira huvuta heri">, patience brings good things.</Saying>
       </Band>
 
       {HN.longest && HN.longest.length > 1 ? (
         <Band>
           <Scene
             label="Against my other days"
-            title={HN.first ? 'No day out has been longer.' : 'Among my longest days.'}
+            title={HN.first ? 'No other day in my log is this long.' : 'Among my longest days.'}
             figTitle="My longest days out on foot, from the start to the finish"
             fig={<HBars
               aria={`The longest outings on foot by time from start to finish: ${HN.longest.map((r) => `${fmtDay(r.date)}, ${hm(r.out)}`).join('; ')}.`}
               rows={HN.longest.map((r) => ({ key: r.mode, label: fmtDay(r.date), sub: `${MODE_NAME[r.mode].toLowerCase()} · ${k1(r.km)} km · ${n0(r.elev)} m up${r.region ? ` · ${r.region}` : ''}`, value: r.out, display: `${(r.out / 60).toFixed(1)} h` }))}
             />}
-            note="Time is counted from the start to the finish, stops included."
+            note="The five longest, each counted from the start to the finish."
             read="My five longest outings on foot, counted from the start to the finish, stops included. The line under each date gives the kind of outing, the distance, the climb and the region."
           >
-            <p>{HN.first ? `The day after it in the list took ${hm(HN.longest[1].out)}, ${hm(HN.out - HN.longest[1].out)} less.` : `The longest took ${hm(HN.longest[0].out)}.`}</p>
+            <p>{HN.first
+              ? (HN.longest[1].region === 'Kilimanjaro' && HN.longest[1].date.slice(0, 4) === HN.date.slice(0, 4)
+                ? `The next longest is my summit night on Kilimanjaro, in March of the same year. It was ${hm(HN.out - HN.longest[1].out)} shorter.`
+                : `The next longest was ${hm(HN.out - HN.longest[1].out)} shorter.`)
+              : `The longest took ${hm(HN.longest[0].out)}.`}</p>
           </Scene>
         </Band>
       ) : null}
@@ -143,13 +148,15 @@ export default function Hanang() {
           figTitle="Three days on Hanang"
           fig={<RouteMap lines={lines} marks={marks} ratio={0.6}
             aria={`The GPS lines of three days on Mount Hanang. The hike of ${fmtDay(HN.date)} goes from the start at ${n0(HN.pts[0].alt)} m to the top at ${n0(HN.top.alt)} m and back. The adventure races of ${races.map((t) => t.date.slice(0, 4)).join(' and ')} keep to the lower slopes.`} />}
-          note={`Orange is the hike to the top. Grey and black are the adventure races of ${races.map((t) => t.date.slice(0, 4)).join(' and ')}.`}
+          note="The hike to the top is orange. The races stay on the lower half of the mountain."
           foot={<HBars
             aria={`Time from start to finish on each day on Hanang: ${trips.map((t) => `${fmtDay(t.date)}, ${hm(t.out)}`).join('; ')}.`}
             rows={rows}
           />}
         >
-          {races.length ? <p>I returned for the adventure race in {races.map((t) => t.date.slice(0, 4)).join(' and ')}. The races keep to the lower slopes, so those days were shorter.</p> : null}
+          {races.length ? <>
+            <p>The forest reserve on Hanang runs an adventure race, and I went back for it in {races.map((t) => t.date.slice(0, 4)).join(' and ')}. It goes about halfway up and then turns to a place called Little Ngorongoro, shaped like a crater. There is camping too, and for me it is time away from the busy city. After the race in 2026 I walked all the way down to the bus stand.</p>
+          </> : null}
         </Scene>
         <Plate slot="hanang-race" ratio="21 / 9" caption="The Mount Hanang adventure race" />
       </Band>

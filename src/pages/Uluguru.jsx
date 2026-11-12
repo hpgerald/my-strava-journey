@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import Mountain, { Band, Scene, Ledger, BigNumber, Saying, Plates } from '../components/Mountain.jsx'
+import Mountain, { Band, Scene, Ledger, BigNumber, Plates } from '../components/Mountain.jsx'
 import Plate from '../components/Plate.jsx'
 import BondwaClimbs from '../charts/BondwaClimbs.jsx'
 import HBars from '../charts/HBars.jsx'
@@ -35,6 +35,8 @@ export default function Uluguru() {
   const { trips, best } = U
   const first = trips[0]
   const later = trips.slice(1)
+  // the trips before Kilimanjaro, March 2023, were training for it
+  const training = trips.filter((t) => t.date < '2023-03-06').length
   const times = WORD[trips.length] || String(trips.length)
   // Bondwa Peak on the map: the highest point of the featured trip is the southern end of its line
   const bestLine = routes[best.trip]
@@ -56,7 +58,7 @@ export default function Uluguru() {
       id="uluguru"
       relief={<Relief lines={trips.map((t) => { const d = t.profile[t.profile.length - 1].d || 1; return t.profile.map((p) => ({ x: p.d / d, alt: p.alt })) })} />}
       hero="uluguru-hero"
-      standfirst={<>Bondwa Peak stands above Morogoro, in the Uluguru Mountains, and I keep going back to it. I have been up {times} times, and the most I have climbed in one outing was on its slopes.</>}
+      standfirst={<>A mountain you can reach becomes a habit of its own. Bondwa Peak stands above Morogoro, in the Uluguru Mountains, and I have been up {times} times.</>}
       facts={[
         { label: 'trips to Bondwa Peak', value: String(trips.length) },
         { label: `climbed on ${fmtDay(best.date)}`, value: n0(best.climb), unit: 'm' },
@@ -67,7 +69,7 @@ export default function Uluguru() {
       <Band>
         <Scene
           label={`${cap(times)} times up`}
-          title="The same peak, again."
+          title="First for training, then for camping."
           figTitle="Every trip to Bondwa Peak, altitude against distance"
           fig={<BondwaClimbs trips={trips} feature={best.trip}
             aria={`Altitude along each trip to Bondwa Peak: ${trips.map((t) => `${fmtMonth(t.date)}, from ${n0(t.startAlt)} m to ${n0(t.hi)} m over ${k1(t.km)} km`).join('; ')}.`} />}
@@ -78,7 +80,9 @@ export default function Uluguru() {
             sub: `${hm(t.out)} from start to finish${t.sky ? ` · ${t.sky.toLowerCase()}${t.temp != null ? `, ${Math.round(t.temp)}°` : ''}` : ''}`,
           }))} />}
         >
-          <p>The first time, in {fmtMonth(first.date)}, I started down in the town at {n0(first.startAlt)} m and climbed {n0(first.climb)} m.</p>
+          {training > 1 ? <p>The first {WORD[training] || training} trips were training for Kilimanjaro. On the first, in {fmtMonth(first.date)}, I started down in the town at {n0(first.startAlt)} m and climbed {n0(first.climb)} m.</p>
+            : <p>The first time, in {fmtMonth(first.date)}, I started down in the town at {n0(first.startAlt)} m and climbed {n0(first.climb)} m.</p>}
+          <p>After Kilimanjaro I go for the camping. With friends I camp at Morningside, go up to the peak, come back to camp, and leave for town the next day. We take it easy now.</p>
           {later.length ? <p>The later trips start higher, near {n0(r10(later.reduce((s, t) => s + t.startAlt, 0) / later.length))} m, and top out at about {n0(r10(later.reduce((s, t) => s + t.hi, 0) / later.length))} m.</p> : null}
         </Scene>
       </Band>
@@ -92,11 +96,10 @@ export default function Uluguru() {
 
       <Band night>
         <Scene label={fmtDay(best.date)} title={wet ? 'My biggest climb came in the rain.' : 'My biggest climb.'}>
-          <p>{wet ? `It rained on the mountain that day and the air was at ${n0(best.humidity)}% humidity. ` : ''}{dip ? 'The path went up, came down and went up again: ' : 'The day was '}{k1(best.km)} km in {hm(best.out)} from start to finish.</p>
+          <p>{wet ? `It rained hard that day, the air was at ${n0(best.humidity)}% humidity and everything was slippery. The scenery was beautiful all the same. ` : ''}{dip ? 'The path went up, came down and went up again: ' : 'The day was '}{k1(best.km)} km in {hm(best.out)} from start to finish.</p>
         </Scene>
         <BigNumber value={n0(best.climb)} unit="m">{U.bestIsRecord ? 'The most I have climbed in one outing.' : 'Climbed in one outing.'}</BigNumber>
         <Plate slot="uluguru-rain" ratio="16 / 9" caption={`Bondwa Peak · ${fmtDay(best.date)}`} />
-        <Saying sw="Penye nia pana njia">, where there is a will there is a way.</Saying>
       </Band>
 
       <Band>

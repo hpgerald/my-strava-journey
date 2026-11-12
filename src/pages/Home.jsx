@@ -543,8 +543,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             </div>
 
             <Reveal as="p" className="sgrid__statement">
-              The hardest day to go out is the day after a break. One missed day once grew into almost a year without going out.
-              Now, after a week in a row, I almost never skip the next day. On a tired day, a short walk is enough to keep the chain.
+              The hardest day to go out is the day after a break. The longer a chain of days runs, the easier the next day gets,
+              and the longer a break runs, the harder it is to end. On a tired day, a short walk is enough to keep the chain.
             </Reveal>
 
             <OddsRow
@@ -589,9 +589,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               </div>
 
               <Reveal as="p" className="sgrid__statement">
-                A big day feels good, but the ordinary days make the total. My marathon, the longest day I have, is less than half
-                of one percent of all my distance. Most of it came from plain days of 10 km or more, and the short days in between
-                kept the habit going.
+                Most of my distance came from plain days of 10 km or more. Even my marathon, the longest day I have, is less than half
+                of one percent of the total, so no single day decides much. The short days in between kept me going out.
               </Reveal>
 
               <OddsRow
@@ -682,7 +681,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             eyebrow="Where I go"
             title="The climbing is in two&nbsp;regions."
             statement={<>
-              If I want to climb, I have to travel. Where I live, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
+              If I want to climb, I have to travel. Where I go out most, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
               and in {busiestRegion && busiestRegion.region}, where I go out most, it would take me about sixty outings to climb that much.
             </>}
             odds={{
@@ -720,7 +719,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           eyebrow="Walking and running"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
-            I did not plan to become a walker. It happened slowly. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
+            I chose walking. Running for me is mostly indoors, a hard session when time is short. Walking takes me outside, where I
+            can enjoy nature, and it builds perseverance. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
             and this year it is about {Math.round(walkMedOf(gridYears[gridYears.length - 1]))} km. Since {walkLeadYear || 'then'} I have
             walked more often than I have run, every year.
           </>}
@@ -762,9 +762,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           eyebrow="Time of day"
           title="Mornings and evenings."
           statement={<>
-            The habit fits around my work, so it does not wait for the weekend. Most outings start early in the morning or in the
-            evening, with {fmtHour(peakHour)} the busiest hour, and every day of the week gets about the same share. Once in a while
-            it is very early or very late: one walk started just before two in the morning, and one run almost at midnight.
+            The habit fits around an office job, so it does not wait for the weekend. Most outings start early in the morning or in the
+            evening, with {fmtHour(peakHour)} the busiest hour, and every day of the week gets about the same share. When I am chasing
+            a target it can be very early or very late: one walk started just before two in the morning, and one run almost at midnight.
           </>}
           odds={{
             title: 'When outings start',
@@ -811,8 +811,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               eyebrow="Through the year"
               title="Two quieter months."
               statement={<>
-                Every year has a soft spot, and mine is {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]}. They have been my weakest
-                months {dipYears === fullYears.length ? 'every year' : 'most years'}, and the quietest of all was September 2024, with
+                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my weakest months{' '}
+                {dipYears === fullYears.length ? 'every year' : 'most years'}, and the quietest of all was September 2024, with
                 only eight days out. In {gridYears[gridYears.length - 1]} I went
                 out on every day of both.
               </>}
@@ -1030,13 +1030,15 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       {book ? null : <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
 
       <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019" from={heroMonths.length ? heroMonths[0].k : undefined} to={heroGap ? heroGap.from : undefined}
-        line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}>
+        line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}
+        story={['I heard about Strava and decided to give it a try. The push to move came from Jocko Willink and his words, discipline equals freedom. I listened to many of his episodes, and to the story of David Goggins too.']}>
         {plates([2019, 2020])}
         <Moments events={events} from={heroMonths.length ? heroMonths[0].k : ''} to={heroGap ? heroGap.from : ''} />
         {heroGap ? (
           <div className="spart-gap" data-fx="">
             <Container>
               <p className="spart-gap__t">Nothing in the log from {monthOf(heroGap.from)} to {monthOf(heroGap.back)}.</p>
+              <p className="spart-gap__s">I changed jobs and moved from Arusha to Kilimanjaro, in the time of COVID-19. For almost a year I did nothing.</p>
             </Container>
           </div>
         ) : null}
@@ -1045,7 +1047,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="2" name="The comeback" years="mid 2021 to 2022" spine="2021" from={heroGap ? heroGap.back : undefined} to="2022-12"
-        line={`From ${n0(nOf(2020))} outings in a year to ${n0(nOf(2021))}, then ${n0(nOf(2022))}.`}>
+        line={`From ${n0(nOf(2020))} outings in a year to ${n0(nOf(2021))}, then ${n0(nOf(2022))}.`}
+        story={[`A medical check-up told me to move about 30 minutes a day, so I started again. Since then my longest layoff has been ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`]}>
         {plates([2021, 2022])}
         {secStreak}
         {secWork}
@@ -1057,7 +1060,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="3" name="The mountains" years="2023" spine="2023" from="2023-01" to="2023-12"
-        line="This was the year the habit left the flat ground. Three mountains, and each has its own chapter.">
+        line="This was the year the habit left the flat ground: Kilimanjaro in March, Hanang in April, and Bondwa Peak, where I trained for Kilimanjaro."
+        story={['In the same March I took a challenge from the Activate Uganda team: 25 km a day for four days in a row, on the treadmill, on dates I chose.']}>
         {plates([2023])}
         <Container>
           {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 3).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (
@@ -1074,7 +1078,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="4" name="The road" years="2024" spine="2024" from="2024-01" to="2024-12"
-        line="Wherever I went that year, the shoes came with me.">
+        line="Wherever I went that year, the shoes came with me."
+        story={['A remote job and a few consultancies took me across borders, and the habit came along.']}>
         {plates([2024])}
         {secWhere ? <Container>{secWhere}<p className="mtn-link"><Link to="/where">Every place I have been out →</Link></p></Container> : null}
         <Moments events={events} from="2024-01" to="2024-12" />
@@ -1083,7 +1088,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="5" name="No zero days" years="2025 to 2026" spine="2025" from="2025-01" to={heroMonths.length ? heroMonths[heroMonths.length - 1].k : undefined}
-        line="The streak that is still going started in the last days of 2025.">
+        line="The streak that is still going started in the last days of 2025."
+        story={['I started it on purpose. My first target is to reach 31 December 2026 without a zero day.']}>
         {plates([2025, 2026])}
         <Container>
           {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 5).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (

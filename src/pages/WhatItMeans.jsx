@@ -112,8 +112,8 @@ export default function WhatItMeans() {
             <h2 id="wm-title" className="section-head__title">It costs&nbsp;time.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            It is not much in one day, about the time of a long lunch, but it adds up. Most of it is walking and easy running,
-            nothing heavy. These are the lessons I took from it.
+            It costs about the time of a long lunch each day. Most of it is walking and easy running, nothing heavy. A medical
+            check-up once told me to move 30 minutes a day, and I now give it more than twice that.
           </Reveal>
           <OddsRow
             title="What it cost"
@@ -198,9 +198,8 @@ export default function WhatItMeans() {
           title="Streak savers count."
           statement={<>
             <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Many of my days were small ones,
-            less than {SMALL_KM} km on foot. They add almost nothing to my distance, but I logged them all the same. Later the
-            numbers showed me why they matter: after one of these streak savers, I was much more likely to go out again than after a zero day.
-            On a bad day, I try to do a small version.
+            less than {SMALL_KM} km on foot. They add almost nothing to my distance, but I logged them all the same. After one of
+            these streak savers I went out again the next day far more often than after a zero day. On a bad day, I try to do a small version.
           </>}
           odds={{
             title: `Streak savers since ${habitYear}`,
@@ -252,7 +251,7 @@ export default function WhatItMeans() {
               statement={<>
                 My peak weeks have not changed much over the years. What changed is the down weeks. From 2022 to 2025 some weeks
                 slipped very low. In {cur.year} none has, and the middle half of my weeks are between{' '}
-                {n0(wNow.q25)} and {n0(wNow.q75)} km. If the bad weeks are not too bad, the year takes care of itself.
+                {n0(wNow.q25)} and {n0(wNow.q75)} km.
               </>}
               odds={{
                 title: 'Weekly volume',
@@ -356,7 +355,7 @@ export default function WhatItMeans() {
           statement={<>
             A year&rsquo;s total is just two things: how often I go out, and how far I go each time. 1,000 km a year is a short
             outing every day, or about {k1(twoThirds)} km on two days in three. I have done it both ways. {longYear.year} was a year
-            of long days on about half the days. {cur.year} is a year of going every day, shorter each time. {lowYear.year} was low
+            of long days on about half the days. {cur.year} is a year of going every day, with fewer kilometres each day out. {lowYear.year} was low
             on both, and it became my lowest year since the habit started.
           </>}
           odds={{
@@ -406,8 +405,8 @@ export default function WhatItMeans() {
             <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            That is what seven years of logging say to me. Nothing here is special. It is about an hour a day, a small version
-            on the bad days, not letting a week get too thin, and long days in the middle of busy weeks.
+            Seven years of logging come down to a few things I can keep doing: about an hour a day, a small version on the bad
+            days, no week left too thin, and long days in the middle of busy weeks.
             {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<span lang="sw">Kesho tena</span>, tomorrow again.
           </Reveal>
         </section>

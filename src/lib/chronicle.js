@@ -92,7 +92,7 @@ export function buildChronicle(activities, geoRows = [], gearRows = [], extra = 
   const regionFirst = new Map()
   for (const a of acts) if (a.region && !regionFirst.has(a.region)) regionFirst.set(a.region, a.date)
   const regions = [...regionFirst.entries()].map(([region, date]) => ({ region, date })).sort((a, b) => (a.date < b.date ? -1 : 1))
-  regions.forEach((r, i) => events.push({ lane: 'region', date: r.date, title: r.region, sub: `region ${i + 1} of ${regions.length} so far`, key: 'quiet' }))
+  regions.forEach((r, i) => events.push({ lane: 'region', date: r.date, title: r.region, sub: `region ${i + 1} of 31`, key: 'quiet' }))
 
   // ---- shoes: each pair from its first outing to its last ----
   const gearById = Object.fromEntries(gearRows.map((g) => [String(g.gear_id), g]))

@@ -72,6 +72,7 @@
 .book .spart__n { grid-column: 1; grid-row: 2 / span 2; font-size: var(--t8); line-height: 0.8; margin-top: var(--g3); transform: none; }
 .book .spart__t { grid-column: 2; grid-row: 2; margin-top: var(--g3); font-size: var(--t4); line-height: 1; }
 .book .spart__l { grid-column: 2; grid-row: 3; margin-top: var(--g2); font-size: var(--t1); }
+.book .spart__s { grid-column: 2; grid-row: 4; margin-top: var(--g2); }
 .book .spart-gap { margin-top: var(--g5); background: none; color: inherit; padding-block: var(--g4); border-block: 1px solid var(--ink); }
 .book .spart-gap__t { font-size: var(--t3); opacity: 1; transform: none; }
 .spart-ref, .bk-refs { margin: var(--g4) 0 0; font-family: var(--font-display); font-weight: 600; font-size: var(--t1); }

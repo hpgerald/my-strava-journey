@@ -287,7 +287,8 @@ export default function Goals() {
               statement={<>
                 If I keep to my average, I will finish {S.perDay >= S.needPerDay ? 'just over' : 'just short'}. I played out the
                 rest of the year many times, using my own days of {cur.year} picked at random, to see how often it gets there.
-                What worries me is my recent pace. Since 1 {MONTH[m0]} I have climbed only {n0(recentRate)} m a day.
+                Since 1 {MONTH[m0]} I have climbed only {n0(recentRate)} m a day. Lately I have chosen walking, for the enjoyment and
+                to build perseverance, and the climbing has slowed with it.
               </>}
               odds={{
                 title: `The climb, ${cur.year}`,
@@ -414,7 +415,8 @@ export default function Goals() {
                 different kind of target: to reach the headland at Ras Kilomoni {rk.length === 50 ? 'fifty' : n0(rk.length)} times. I counted
                 the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs. For the first
                 three months I kept a steady count. Then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} came with {rkTop.n} trips, and after
-                that the target was within reach.
+                that the target was within reach. The route runs from the beach to the headland, through baobab trees and then on hard
+                gravel. It misses the morning traffic and the heat of Dar es Salaam, and the gravel made it a good test of endurance.
               </>}
               odds={{
                 title: 'Ras Kilomoni',
@@ -518,7 +520,7 @@ export default function Goals() {
             <GoalCard kicker="Walking ring" value={closedYears('walk').length} unit={closedYears('walk').length === 1 ? 'time' : 'times'} label={`closed, ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`} sub={closedYears('walk').length ? `on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''} tone="hot" />
             <GoalCard kicker="Climbing ring" value={Math.round(cur.elev.share * 100)} unit="%" label={`of ${unitOf(E, E.target)} in ${cur.year}${so}`} sub={S ? `${Math.round(S.hit * 100)}% chance it closes` : ''} />
             {G.marathon && <GoalCard id="marathon" kicker="The marathon" text={clock(G.marathon.min)} label={`${k1(G.marathon.dist)} km${G.marathon.min < 180 ? ' in under three hours' : ''}${G.marathon.trainer ? ', on the treadmill' : ''}`} sub={fmtMonth(G.marathon.date)} tone="hot" />}
-            {G.stage && <GoalCard id="stage-race" kicker="The stage race" value={G.stage.km} decimals={1} unit="km" label={`in ${word(G.stage.days.length)} days back to back, ${k1(G.stage.km / G.stage.days.length)} km a day`} sub={`${fmtShort(G.stage.days[0].date)} to ${fmtDay(G.stage.days[G.stage.days.length - 1].date)}`} />}
+            {G.stage && <GoalCard id="stage-race" kicker="The four-day challenge" value={G.stage.km} decimals={1} unit="km" label={`in ${word(G.stage.days.length)} days back to back, ${k1(G.stage.km / G.stage.days.length)} km a day`} sub={`${fmtShort(G.stage.days[0].date)} to ${fmtDay(G.stage.days[G.stage.days.length - 1].date)}`} />}
             {race.length > 0 && <GoalCard kicker="Kilimanjaro Half" text={hmin(quick.moving)} label={`the quickest of ${word(race.length)}, ${n0(first.moving - last.moving)} min under ${first.year}`} sub={`${quick.year} edition`} />}
             {rk.length > 0 && <GoalCard kicker="Ras Kilomoni" value={rk.length} unit="trips" label={`${n0(rkKm)} km, target met exactly`} sub={`${fmtShort(rk[0].date)} to ${fmtDay(rkLast.date)}`} />}
             <GoalCard kicker="Months in a row" value={G.streak} unit="months" label="with at least one outing, still going" sub={`since ${fmtMon(`${G.streakFrom.key}-01`)}`} />
