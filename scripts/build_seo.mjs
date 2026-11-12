@@ -84,6 +84,7 @@ const routes = {
   '/kilimanjaro': { title: 'Kilimanjaro', description: 'Kilimanjaro by the Marangu route, one hut at a time: the GPS line of the climb, every stage, and the summit night my watch did not finish.' },
   '/hanang': { title: 'Hanang', description: 'Mount Hanang, my longest day on foot: the hike told by the clock from before sunrise to after midnight, and the two races that took me back.' },
   '/uluguru': { title: 'Uluguru', description: 'Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing.' },
+  '/ngong': { title: 'Ngong Hills', description: 'The Ngong Hills in Kenya, the ridge across the border: the GPS line out along the tops and back, the altitude of every top, and my biggest climb outside Tanzania.' },
   '/what-it-means': { title: 'What It Means', description: `What ${word(years)} years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson.` },
   '/numbers': { title: 'Year in Sport', description: `Every year of my log as its own report, from ${n0(byYear[F.firstYear])} outings in ${F.firstYear} to ${n0(byYear[F.lastYear])} in ${F.lastYear}${last.slice(5) < '12-31' ? ' so far' : ''}.` },
   '/sports': { title: 'Sports', description: `My four sports on foot: ${n0(F.runKm)} km of running and ${n0(F.walkKm)} km of walking, with trail runs and hikes, and the treadmill kept apart from the road.` },

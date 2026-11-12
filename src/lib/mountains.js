@@ -90,3 +90,42 @@ export function buildUluguru(tripRows, profileRows, activities, geo) {
     climbs: [...mor].sort((a, b) => b.climb - a.climb).slice(0, 6),
   }
 }
+
+// Ngong Hills: one outing along the ridge, with its altitude line, and where
+// its climb stands among my outings outside Tanzania
+export function buildNgong(tripRows, profileRows, activities, geo) {
+  if (!tripRows.length || !profileRows.length || !activities.length) return null
+  const trip = tripsOf(tripRows, activities, 'ngong')[0]
+  if (!trip) return null
+  const pts = profileRows.map((r) => ({ i: +r.i, d: +r.d_km, alt: +r.alt_m, t: +r.t_min })).sort((a, b) => a.i - b.i)
+  if (pts.length < 3) return null
+  const turnI = pts.reduce((b, q, i) => (q.alt > pts[b].alt ? i : b), 0)
+  const start = pts[0], turn = pts[turnI], end = pts[pts.length - 1]
+  // the way back: the first point after the turn that is level with the start again
+  const levelI = pts.findIndex((q, i) => i > turnI && q.alt <= start.alt)
+  const level = levelI > 0 ? pts[levelI] : null
+  // the biggest climb in one outing on foot, in each named country
+  const best = {}
+  activities.forEach((a) => {
+    if (!FOOT.has(a.sport_type)) return
+    const c = (geo[a.activity_key] || {}).country
+    if (!c || c === 'Other') return
+    const climb = +a.elevation_gain_m || 0
+    if (!best[c] || climb > best[c].climb) best[c] = { country: c, climb, date: a.date.slice(0, 10), km: +a.distance_km || 0, sport: a.sport_type, key: a.activity_key }
+  })
+  const countries = Object.values(best).sort((a, b) => b.climb - a.climb)
+  const abroad = activities.filter((a) => FOOT.has(a.sport_type) && (geo[a.activity_key] || {}).country && (geo[a.activity_key] || {}).country !== 'Tanzania')
+    .map((a) => ({ key: a.activity_key, climb: +a.elevation_gain_m || 0, country: geo[a.activity_key].country, sport: a.sport_type }))
+    .sort((a, b) => b.climb - a.climb)
+  const foot = activities.filter((a) => FOOT.has(a.sport_type)).map((a) => ({ key: a.activity_key, climb: +a.elevation_gain_m || 0 })).sort((a, b) => b.climb - a.climb)
+  return {
+    trip, pts, start, turn, end, level, turnI,
+    hi: turn.alt, lo: Math.min(...pts.map((q) => q.alt)),
+    countries,
+    abroadTop: abroad.length && abroad[0].key === trip.key,
+    abroadNext: abroad.find((a) => a.key !== trip.key) || null,
+    rank: foot.findIndex((a) => a.key === trip.key) + 1,
+    // the most I had climbed in that country before this day
+    before: Math.max(0, ...activities.filter((a) => FOOT.has(a.sport_type) && (geo[a.activity_key] || {}).country === 'Kenya' && a.date.slice(0, 10) < trip.date).map((a) => +a.elevation_gain_m || 0)),
+  }
+}

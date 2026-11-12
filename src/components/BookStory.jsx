@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
+import { routeOf } from '../lib/chapters.js'
 import { useBook } from './BookContext.js'
 import { getLessons } from '../lib/lessonsRegistry.js'
 import { BOOK_INTROS } from '../lib/bookIntros.js'
@@ -95,7 +96,7 @@ function useEndTogether(bodyRef, boxRef) {
 // the opening essay of a chapter, printed only in My Book
 export function BookIntro({ number }) {
   const book = useBook()
-  const x = BOOK_INTROS[number]
+  const x = BOOK_INTROS[routeOf(number)]
   const bodyRef = useRef(null)
   const boxRef = useRef(null)
   useEndTogether(bodyRef, boxRef)

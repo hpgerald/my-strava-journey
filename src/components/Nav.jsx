@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { lenisRef } from '../motion/env.js'
-import { MOUNTAINS } from '../lib/mountainList.js'
 
 // The studio nav: a slim bar with the mark, the chapter you are in and a Menu
 // button. The menu opens a full-screen ink index in two groups, the story and
@@ -43,13 +42,8 @@ export default function Nav() {
 
   // two groups: the story, read in order, and the Record, the whole analysis
   // chapter by chapter
-  const row = (route) => rows.find((r) => r.route === route)
-  const story = [
-    row('/'),
-    ...MOUNTAINS.map((m) => ({ route: m.to, title: m.name })),
-    row('/what-it-means'),
-  ].filter(Boolean)
-  const record = rows.filter((r) => r.route !== '/' && r.route !== '/what-it-means')
+  const story = rows.filter((r) => r.category === 'story')
+  const record = rows.filter((r) => r.category !== 'story')
   const groups = [{ k: 'The story', items: story }, { k: 'The Record', items: record }]
 
   return (

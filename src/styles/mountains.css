@@ -13,6 +13,7 @@
 .mtn { --m-ground: var(--night); --m-on: var(--on-night); --m-dim: var(--on-night-dim); --m-rule: var(--line-night); --m-key: var(--on-night); --m-wdth: 100%; --m-wght: 600; }
 .mtn--kilimanjaro { --m-ground: #12161a; --m-on: #eef3f6; --m-dim: #a9b6be; --m-rule: rgba(214, 229, 238, 0.22); --m-key: #cfe3ee; --m-tint: #e6eef2; --m-deep: #24313a; --m-wdth: 68%; --m-wght: 640; }
 .mtn--hanang { --m-ground: #c98a3c; --m-on: #1a130a; --m-dim: #33230d; --m-rule: rgba(26, 19, 10, 0.3); --m-key: #1a130a; --m-tint: #f1e3cd; --m-deep: #7a4a14; --m-wdth: 122%; --m-wght: 560; }
+.mtn--ngong { --m-ground: #d9e5ea; --m-on: #0f1f2a; --m-dim: #37505e; --m-rule: rgba(15, 31, 42, 0.28); --m-key: #0f1f2a; --m-tint: #eef3f5; --m-deep: #3f6274; --m-wdth: 86%; --m-wght: 520; }
 .mtn--uluguru { --m-ground: #1c3a2b; --m-on: #e6efe4; --m-dim: #a9c1ad; --m-rule: rgba(214, 232, 214, 0.22); --m-key: #cfe6cf; --m-tint: #e2ebdf; --m-deep: #2c5a41; --m-wdth: 100%; --m-wght: 640; }
 
 /* ---- the threshold: a full screen in the mountain's colour ---- */
@@ -24,6 +25,7 @@
 .mtn--kilimanjaro .mtn-open__t { font-size: clamp(3.33rem, 0.5rem + 20vw, 24rem); letter-spacing: -0.03em; line-height: 0.8; }
 .mtn--hanang .mtn-open__t { font-size: clamp(3.33rem, 0.6rem + 16vw, 17.94rem); letter-spacing: -0.05em; }
 .mtn--uluguru .mtn-open__t { font-size: clamp(3.33rem, 0.6rem + 15.5vw, 17.94rem); }
+.mtn--ngong .mtn-open__t { font-size: clamp(2.8rem, 0.4rem + 14.5vw, 17.94rem); letter-spacing: -0.04em; }
 .mtn-open__l { margin: var(--sp-5) 0 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.618rem, 1.2rem + 1.6vw, 2.618rem); line-height: 1.05; letter-spacing: -0.02em; color: var(--m-key); }
 .mtn-open__s { margin: var(--sp-6) 0 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.272rem, 1.1rem + 0.7vw, 1.825rem); line-height: 1.4; text-wrap: pretty; }
 .mtn-facts { margin: var(--sp-7) 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-5) var(--grid-gap); border-top: 1px solid var(--m-rule); padding-top: var(--sp-4); }
@@ -57,6 +59,7 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 .mtn--kilimanjaro .mtn-band--night { --m-night: #12161a; }
 .mtn--hanang .mtn-band--night { --m-night: #17130d; }
 .mtn--uluguru .mtn-band--night { --m-night: #12241b; }
+.mtn--ngong .mtn-band--night { --m-night: #14222b; }
 
 /* ---- a scene on the golden grid ---- */
 .mtn-scene { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); align-items: start; border-top: 1px solid var(--rule-faint); padding-top: var(--sp-4); }
@@ -94,6 +97,8 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
   .mtn-scene--text .mtn-scene__text, .mtn-scene--text .mtn-scene__head { display: contents; }
   .mtn-scene--text .mtn-scene__k { grid-column: 1; grid-row: 1; }
   .mtn-scene--text .mtn-scene__t { grid-column: 2; grid-row: 1; }
+  /* what stands under the words of a text scene sits beside them, under the label */
+  .mtn-scene--text .mtn-scene__foot { grid-column: 1; grid-row: 2 / span 2; align-self: start; min-width: 0; }
   .mtn-scene--text .mtn-scene__head > p:not(.mtn-scene__k) { grid-column: 2; font-size: clamp(1.272rem, 1.1rem + 0.6vw, 1.618rem); line-height: 1.5; }
 }
 
@@ -141,6 +146,18 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 .rmap__north path { fill: var(--ink); }
 
 /* ---- every trip to Bondwa Peak ---- */
+/* the ridge profile */
+.rdg__area { fill: var(--m-ground, var(--grey-10)); opacity: 0.6; }
+.rdg__line { stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.rdg__line--out { stroke: var(--accent); stroke-width: 3; }
+.rdg__line--back { stroke: var(--ink); }
+.rdg__level { stroke: var(--grey-45); stroke-dasharray: 2 5; stroke-width: 1.25; }
+.rdg__dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1.75; }
+.rdg__dot--start { fill: var(--ink); }
+.rdg__tri { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
+.rdg__lbl { font-family: var(--font-sans); font-size: 12.5px; font-weight: 500; fill: var(--fg-muted); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.rdg__lbl--b { fill: var(--ink); font-weight: 700; }
+.rdg__lbl--q { font-weight: 400; }
 .bwc__line { stroke: var(--grey-45); stroke-width: 1.5; stroke-linejoin: round; }
 .bwc__line.is-on { stroke: var(--accent); stroke-width: 3; }
 .bwc__end { fill: var(--grey-55); }
@@ -156,12 +173,14 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 .mtn-next__link--kilimanjaro { background: #12161a; color: #eef3f6; }
 .mtn-next__link--hanang { background: #c98a3c; color: #1a130a; }
 .mtn-next__link--uluguru { background: #1c3a2b; color: #e6efe4; }
+.mtn-next__link--ngong { background: #d9e5ea; color: #0f1f2a; }
 .mtn-next__link--back { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
 .mtn-next__link b { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.825rem, 1.3rem + 1.8vw, 2.953rem); line-height: 0.95; letter-spacing: -0.035em; }
 .mtn-next__link span { font-size: 0.942rem; opacity: 0.85; }
 .mtn-next__link:hover { transform: translateY(-4px); }
 .mtn-next__link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-@media (min-width: 48rem) { .mtn-next__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 48rem) { .mtn-next__list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 64rem) { .mtn-next__list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 /* ---- links into the chapters from Records and the menu ---- */
 .mtn-link { margin: var(--r3, 1.5rem) 0 0; }

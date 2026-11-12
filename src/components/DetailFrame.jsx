@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { routeOf } from '../lib/chapters.js'
 import { Link, useLocation } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
@@ -12,7 +13,7 @@ import { SITE_TITLE } from '../lib/siteTitle.js'
 const CHAPTER_ATMO = { '/where': 'where' }
 
 // One frame for every detail page: breadcrumb, big header, content, prev/next paging.
-// `number` shows the 01..10 index for top-level sections; omit it for sub-item pages.
+// `number` shows the chapter's index for top-level sections; omit it for sub-item pages.
 export default function DetailFrame({ crumbs = [], number, title, subtitle, lede, children, prev, next }) {
   const location = useLocation()
   const book = useBook()
@@ -35,7 +36,7 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
   // inside My Book: the chapter opener, the content and the logbook note as an
   // epigraph; no breadcrumb and no paging. `bare` prints the content alone.
   if (book) {
-    const seed = BOOK_SEED[number] || location.pathname
+    const seed = routeOf(number) || location.pathname
     if (book.bare) return <Container>{children}</Container>
     return (
       <section className="bk-ch" id={`bk-ch-${number}`} aria-labelledby={`bk-ch-${number}-t`}>
@@ -100,9 +101,6 @@ export default function DetailFrame({ crumbs = [], number, title, subtitle, lede
     </Layout>
   )
 }
-
-// the logbook note each chapter carries on the site, kept for its book chapter
-const BOOK_SEED = { '02': '/numbers', '03': '/sports', '04': '/records', '05': '/where', '06': '/timeline', '07': '/goals', '08': '/what-it-means', '09': '/on-trial' }
 
 export function PagingLink({ item, dir }) {
   if (!item) return <span className="sturn__gap" />

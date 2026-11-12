@@ -1,4 +1,5 @@
 import { BookLesson } from '../components/BookStory.jsx'
+import { numOf } from '../lib/chapters.js'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useBook } from '../components/BookContext.js'
@@ -12,7 +13,7 @@ import { PairH } from '../charts/pairHeight.js'
 import { useSectionPaging } from '../lib/sections.js'
 import { lenisRef } from '../motion/env.js'
 
-// Chapter 09, The Habit on Trial: twelve things I believe about my habit,
+// The Habit on Trial: twelve things I believe about my habit,
 // each tested against the log with more than one method. Every number, chart
 // and verdict comes from data/evidence.json, which scripts/build_evidence.py
 // writes at each weekly update, so the words follow the results.
@@ -803,7 +804,7 @@ export default function Evidence() {
     return () => clearTimeout(t)
   }, [asked, E])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'The Habit on Trial' }], number: '09', title: 'The Habit on Trial', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'The Habit on Trial' }], number: numOf('/on-trial'), title: 'The Habit on Trial', prev, next }
   if (!E) return <DetailFrame {...frame} />
 
   const M = E.meta

@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import { useBook } from '../components/BookContext.js'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import { Link } from 'react-router-dom'
@@ -12,22 +13,16 @@ import RecordStairs from '../charts/RecordStairs.jsx'
 import CumLine from '../charts/CumLine.jsx'
 import ChanceRows from '../charts/ChanceRows.jsx'
 import HBars from '../charts/HBars.jsx'
-import KiliClimb from '../charts/KiliClimb.jsx'
-import HanangDay from '../charts/HanangDay.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildRecordReport } from '../lib/recordReport.js'
 import { MODE_NAME } from '../lib/footReport.js'
-import { buildKX, buildHN } from '../lib/mountains.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const EVEREST = 8849
 // the summit and the crater rim on the Marangu route, as signed on the mountain
-const KX_TOP = 5895
-const KX_RIM = 5685
-const KX_DAY = ['Day 1', 'Day 2', 'Day 3', 'Summit night']
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
 const k1 = (v) => (v || 0).toFixed(1)
 const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
@@ -67,18 +62,11 @@ export default function Records() {
   const activities = useTable('activities')
   const activityGeo = useTable('activity_geo')
   const kili = useTable('kili_half')
-  const kxStages = useTable('kili_expedition')
-  const kxProfile = useTable('kili_expedition_profile')
-  const hnRows = useTable('hanang_2023')
   const { prev, next } = useSectionPaging('/records')
   const geo = useMemo(() => Object.fromEntries(activityGeo.map((g) => [g.activity_key, g])), [activityGeo])
   const R = useMemo(() => (activities.length ? buildRecordReport(activities, geo, kili) : null), [activities, geo, kili])
 
-  const KX = useMemo(() => buildKX(kxStages, kxProfile), [kxStages, kxProfile])
-
-  const HN = useMemo(() => buildHN(hnRows, activities, geo), [hnRows, activities, geo])
-
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Records' }], number: '04', title: 'Records', subtitle: 'My longest, highest and hardest days', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Records' }], number: numOf('/records'), title: 'Records', subtitle: 'My longest, highest and hardest days', prev, next }
   if (!R || !R.n) return <DetailFrame {...frame} />
 
   let secN = 0
@@ -393,8 +381,21 @@ export default function Records() {
           source="Activity Log · distance and climb on foot by week and by month"
         />
 
-        {/* ===== the mountains: on the site they have their own chapters ===== */}
-        {!book && (
+        {/* ===== the mountains have their own chapters: doors on the site, a line in the book ===== */}
+        {book ? (
+          <>
+            <hr className="rule rule--faint" />
+            <section className="sgrid" aria-labelledby="rc-mtn">
+              <div className="sgrid__head">
+                <Eyebrow>{num()} · The mountains</Eyebrow>
+                <h2 id="rc-mtn" className="section-head__title">Three records were set on&nbsp;mountains.</h2>
+              </div>
+              <ul className="bk-refs">
+                {MOUNTAINS.filter((m) => m.record).map((m) => <li key={m.id}><b>{m.record}</b><span>{m.name}, chapter {Number(numOf(m.to))}</span></li>)}
+              </ul>
+            </section>
+          </>
+        ) : (
           <>
             <hr className="rule rule--faint" />
             <section className="sgrid" aria-labelledby="rc-mtn">
@@ -403,123 +404,11 @@ export default function Records() {
                 <h2 id="rc-mtn" className="section-head__title">Three records were set on&nbsp;mountains.</h2>
               </div>
               <ul className="spart-doors">
-                {MOUNTAINS.map((m) => (
-                  <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{{ kilimanjaro: 'The highest point', hanang: 'The longest day', uluguru: 'The biggest climb' }[m.id]}</span></Link></li>
+                {MOUNTAINS.filter((m) => m.record).map((m) => (
+                  <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{m.record}</span></Link></li>
                 ))}
               </ul>
             </section>
-          </>
-        )}
-
-        {/* ===== the Kilimanjaro expedition ===== */}
-        {book && KX && (
-          <>
-            <hr className="rule rule--faint" />
-            <StorySection
-              id="rc-kili"
-              eyebrow={`${num()} · The roof of Africa`}
-              title="Uhuru Peak, on my first try."
-              statement={<>
-                The mountain is climbed one hut at a time. I went up the Marangu route close to {n0(KX.dayClimb)} m a day, slept at
-                each hut, and before midnight on the third day I set out from Kibo Hut for the top. I reached Uhuru Peak,
-                {' '}{n0(KX_TOP)} m, on my first attempt.
-              </>}
-              odds={{
-                title: 'Kilimanjaro, on foot',
-                items: [
-                  { num: KX.climb, unit: ' m', label: 'climbed in four days', tone: 'move' },
-                  { num: KX_TOP - KX.s[0].start, unit: ' m', label: 'from the gate to the summit', tone: 'move' },
-                  { num: KX.km, dec: 1, unit: ' km', label: 'on foot, up and back to Horombo', tone: 'move' },
-                  { num: KX.s[3].high, unit: ' m', label: 'the last point my watch recorded', tone: 'rest' },
-                ],
-              }}
-              left={{
-                title: 'The climb, stage by stage',
-                node: (
-                  <KiliClimb
-                    stages={KX.s} profile={KX.profile} peaks={{ rim: KX_RIM, top: KX_TOP }}
-                    aria={`Altitude of the Kilimanjaro expedition: Marangu Gate ${n0(KX.s[0].start)} m, Mandara Hut ${n0(KX.s[0].end)} m, Horombo Hut ${n0(KX.s[1].end)} m, Kibo Hut ${n0(KX.s[2].end)} m. On the summit night the watch recorded up to ${n0(KX.s[3].high)} m and stopped; Gilman's Point ${n0(KX_RIM)} m and Uhuru Peak ${n0(KX_TOP)} m were not recorded. The way back down ended at Horombo Hut, ${n0(KX.s[4].end)} m.`}
-                  />
-                ),
-              }}
-              right={{
-                title: 'Metres up, each day',
-                node: (
-                  <HBars
-                    aria={`Metres climbed on each stage of the way up: ${KX.s.slice(0, 4).map((x, i) => `${KX_DAY[i]} ${n0(x.climb)} m`).join(', ')}.`}
-                    rows={KX.s.slice(0, 4).map((x, i) => ({ key: 'trail', label: KX_DAY[i], sub: i < 3 ? `${x.from} to ${x.to} · ${k1(x.dist)} km · ${hm(x.elapsed)}` : 'Kibo Hut, until the watch stopped', value: x.climb, display: `${n0(x.climb)} m` }))}
-                  />
-                ),
-              }}
-              read={[
-                'The whole way up, one stage after another, each as wide as the ground it covered. The orange line is what my watch recorded. On the summit night it stopped near the crater rim, so the dashed line in the grey band is the part of the night it missed: Gilman’s Point, Uhuru Peak and the way back to Kibo Hut. The grey line is the walk down to Horombo that same afternoon.',
-                'The metres I climbed on each day of the way up. The summit night counts only what the watch recorded before it stopped.',
-              ]}
-              story={[
-                `The days before the summit carried most of the climb. From the gate at ${n0(KX.s[0].start)} m to Kibo Hut at ${n0(KX.s[2].end)} m took three days and ${k1(KX.s[0].dist + KX.s[1].dist + KX.s[2].dist)} km, and every night was spent higher than the night before.`,
-                `The summit night is the one my watch did not finish. Its power saver stopped the recording at ${n0(KX.s[3].high)} m, about ${n0(Math.round((KX_RIM - KX.s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. The top is missing from the record. I carry it in my memory.`,
-                <><span lang="sw">Mwenda pole hajikwai</span>, the one who goes slowly does not stumble. That is the lesson of the mountain, and it is the lesson of this whole record.</>,
-              ]}
-              source="Strava activities of the expedition · distance, climb and time from the Activity Log; altitude from the Strava streams of each stage"
-            >
-              <p className="mtn-link"><Link to="/kilimanjaro">Read the Kilimanjaro chapter →</Link></p>
-            </StorySection>
-          </>
-        )}
-
-        {/* ===== the long day on Mount Hanang ===== */}
-        {book && HN && HN.first && (
-          <>
-            <hr className="rule rule--faint" />
-            <StorySection
-              id="rc-hanang"
-              eyebrow={`${num()} · The longest day`}
-              title="Mount Hanang, my longest day."
-              statement={<>
-                A mountain does not care about the clock. On Mount Hanang in Manyara I set out before six in the morning, reached
-                the top in the late afternoon and was back down after two the next morning.
-              </>}
-              odds={{
-                title: `Mount Hanang, ${fmtMonth(HN.date)}`,
-                items: [
-                  { num: HN.out / 60, dec: 1, unit: ' h', label: 'from the start to the finish', tone: 'move' },
-                  { num: HN.climb, unit: ' m', label: 'climbed', tone: 'move' },
-                  { num: HN.km, dec: 1, unit: ' km', label: 'up and back down', tone: 'move' },
-                  { num: HN.moving / 60, dec: 1, unit: ' h', label: 'of it counted as moving', tone: 'rest' },
-                ],
-              }}
-              left={{
-                title: 'The day, hour by hour',
-                node: (
-                  <HanangDay
-                    points={HN.pts} start={HN.start}
-                    aria={`Altitude of the Mount Hanang hike against the time of day: from ${n0(HN.pts[0].alt)} m at the start to ${n0(HN.top.alt)} m at the top after ${hm(HN.upMin)}, then ${hm(HN.downMin)} back down to ${n0(HN.pts[HN.pts.length - 1].alt)} m.`}
-                  />
-                ),
-              }}
-              right={{
-                title: 'My longest days out on foot',
-                node: (
-                  <HBars
-                    aria={`The longest outings on foot by time from start to finish: ${HN.longest.map((r) => `${fmtDay(r.date)}, ${hm(r.out)}`).join('; ')}.`}
-                    rows={HN.longest.map((r) => ({ key: r.mode, label: fmtDay(r.date), sub: `${lower(r.mode)} · ${k1(r.km)} km · ${n0(r.elev)} m up${r.region ? ` · ${r.region}` : ''}`, value: r.out, display: `${(r.out / 60).toFixed(1)} h` }))}
-                  />
-                ),
-              }}
-              read={[
-                'The hike against the clock, from the early-morning start to the finish after midnight. The orange line is the way up and the black line the way down, and the brackets above give the hours each took. The dotted line marks midnight.',
-                'My five longest outings on foot, counted from the start to the finish, stops included. The line under each date gives the kind of outing, the distance, the climb and the region.',
-              ]}
-              story={[
-                `The top came slowly. The last 300 m took ${hm(HN.lastUp)}, about a third of the whole way up. I kept going one step at a time.`,
-                `The way down took almost as long as the way up, and most of it came after six in the evening. At nine in the evening I was still at ${n0(Math.round(HN.at9 / 10) * 10)} m, and at midnight I was at ${n0(Math.round(HN.atMid / 10) * 10)} m, with more than ${n0(Math.floor((HN.atMid - HN.pts[HN.pts.length - 1].alt) / 100) * 100)} m still to go down.`,
-                HN.back.length ? `Hanang called me back. I returned for the adventure race ${HN.back.length > 1 ? `in ${HN.back.map((r) => r.date.slice(0, 4)).join(' and ')}` : `in ${HN.back[0].date.slice(0, 4)}`}, and those days took ${HN.back.map((r) => hm(r.out)).join(' and ')}.` : '',
-                <><span lang="sw">Subira huvuta heri</span>, patience brings good things. That day on Hanang was mostly patience.</>,
-              ]}
-              source="Activity Log · time from start to finish, climb and distance of the hike; altitude from the Strava stream of the hike"
-            >
-              <p className="mtn-link"><Link to="/hanang">Read the Hanang chapter →</Link></p>
-            </StorySection>
           </>
         )}
 

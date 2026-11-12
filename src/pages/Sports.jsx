@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
 import Eyebrow from '../components/Eyebrow.jsx'
@@ -60,7 +61,7 @@ export default function Sports() {
   const { prev, next } = useSectionPaging('/sports')
   const r = useMemo(() => (activities.length ? buildFootReport(activities) : null), [activities])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Sports' }], number: '03', title: 'Sports', subtitle: 'My four sports on foot', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Sports' }], number: numOf('/sports'), title: 'Sports', subtitle: 'My four sports on foot', prev, next }
   if (!r) return <DetailFrame {...frame} />
 
   const { total: T, sport: S, mode: M, byYear: BY } = r

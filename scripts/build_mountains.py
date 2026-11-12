@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Build the tables behind the three mountain chapters.
+"""Build the tables behind the mountain chapters.
 
 Reads scripts/mountain_streams/routes.json, pulled once from Strava:
   routes           the reduced GPS polyline of each mountain outing
   bondwa_profiles  distance and altitude along each trip to Bondwa Peak
+  ngong_profile    distance, altitude and time along the ridge of the Ngong Hills
 
 Writes
   public/data/mountain_routes.csv   one row per point of each route line
   public/data/mountain_trips.csv    one row per trip, tied to its activity, with
                                     Strava's weather at the start
   public/data/bondwa_profiles.csv   altitude along each trip to Bondwa Peak
+  public/data/ngong_profile.csv     altitude and time along the Ngong Hills ridge
 
 Privacy. The site publishes no exact location for any other outing. These
 routes are the one exception, by choice: public mountain trails, far from home.
@@ -112,6 +114,13 @@ def main():
             for i, (d, alt) in enumerate(zip(s["distance"], s["altitude"])):
                 w.writerow([trip, i, round((d - d0) / 1000, 3), round(alt), "Mountains"])
             print(f"{trip:<12} profile {len(s['distance'])} points, {min(s['altitude']):.0f} to {max(s['altitude']):.0f} m")
+    with open(os.path.join(DATA, "ngong_profile.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["i", "d_km", "alt_m", "t_min", "source_page"])
+        s = src["ngong_profile"]
+        for i, (d, alt, t) in enumerate(zip(s["distance"], s["altitude"], s["time"])):
+            w.writerow([i, round(d / 1000, 3), round(alt), round(t / 60, 1), "Mountains"])
+        print(f"ngong        profile {len(s['distance'])} points, {min(s['altitude']):.0f} to {max(s['altitude']):.0f} m")
 
 
 if __name__ == "__main__":

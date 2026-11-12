@@ -1,10 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Children, isValidElement, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useBook } from './BookContext.js'
+import { BookLesson } from './BookStory.jsx'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import { Link } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
 import Plate from './Plate.jsx'
+import { PHOTOS } from '../lib/photos.js'
+import { numOf } from '../lib/chapters.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
 import { SceneH } from './SceneContext.js'
 
@@ -14,41 +17,42 @@ import { SceneH } from './SceneContext.js'
 // night band where the story goes dark, and a door to the next mountain.
 export { MOUNTAINS }
 
-export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, plate, plateNote, children }) {
+export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, children }) {
   const book = useBook()
   const i = MOUNTAINS.findIndex((m) => m.id === id)
   const me = MOUNTAINS[i]
-  const others = [MOUNTAINS[(i + 1) % 3], MOUNTAINS[(i + 2) % 3]]
+  const others = MOUNTAINS.filter((m) => m.id !== id)
   useEffect(() => {
     if (book) return undefined
     document.title = `${me.name}: ${me.line} · My Strava Journey`
-    // the bar over a dark threshold reads light (Hanang's ochre keeps the ink)
-    if (id !== 'hanang') document.documentElement.setAttribute('data-mtn-dark', '')
+    // the bar over a dark threshold reads light (a light ground keeps the ink)
+    if (me.dark) document.documentElement.setAttribute('data-mtn-dark', '')
     return () => { document.title = SITE_TITLE; document.documentElement.removeAttribute('data-mtn-dark') }
   }, [me, id, book])
-  // in My Book a mountain is one plate: its name, what it was, the route as the
-  // watch drew it and four figures
+  // in My Book a mountain is a chapter of its own: the opener, the standfirst,
+  // four figures, then the same scenes as on the site, on paper
   if (book) {
     if (!standfirst) return null
+    const num = numOf(me.to)
     return (
-      <section className="bk-page bk-plate" id={`bk-mtn-${id}`} aria-labelledby={`bk-mtn-${id}-t`}>
-        <p className="bk-plate__k">The mountains · Plate {i + 1} of 3</p>
-        <h2 id={`bk-mtn-${id}-t`} className="bk-plate__t">{me.name}</h2>
-        <p className="bk-plate__l">{me.line}</p>
-        <p className="bk-plate__s">{standfirst}</p>
-        {plate ? (
-          <figure className="bk-plate__fig">
-            {plate}
-            {plateNote ? <figcaption>{plateNote}</figcaption> : null}
-          </figure>
-        ) : null}
-        {facts.length ? (
-          <dl className="bk-plate__facts">
-            {facts.map((f) => (
-              <div key={f.label}><dt>{f.label}</dt><dd>{f.value}{f.unit ? <span> {f.unit}</span> : null}</dd></div>
-            ))}
-          </dl>
-        ) : null}
+      <section className="bk-ch bk-mtn" id={`bk-ch-${num}`} aria-labelledby={`bk-ch-${num}-t`}>
+        <Container>
+          <header className="bk-open">
+            <p className="bk-open__k">Chapter <b>{Number(num)}</b></p>
+            <span className="bk-open__n" aria-hidden="true">{num}</span>
+            <h2 id={`bk-ch-${num}-t`} className="bk-open__t">{me.name}</h2>
+            <p className="bk-open__lede">{me.line}</p>
+          </header>
+          <p className="bk-mtn__s">{standfirst}</p>
+          {facts.length ? (
+            <dl className="bk-plate__facts">
+              {facts.map((f) => (
+                <div key={f.label}><dt>{f.label}</dt><dd>{f.value}{f.unit ? <span> {f.unit}</span> : null}</dd></div>
+              ))}
+            </dl>
+          ) : null}
+        </Container>
+        {children}
       </section>
     )
   }
@@ -57,7 +61,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
       <article className={`mtn mtn--${id}`}>
         <header className="mtn-open" aria-labelledby="mtn-title">
           <Container className="mtn-open__in">
-            <p className="mtn-open__k">The mountains · {i + 1} of 3</p>
+            <p className="mtn-open__k">Chapter {Number(numOf(me.to))} · The mountains</p>
             <h1 id="mtn-title" className="mtn-open__t">{me.name}</h1>
             <p className="mtn-open__l">{me.line}</p>
             <p className="mtn-open__s">{standfirst}</p>
@@ -90,11 +94,32 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
 
 // one band of the chapter, full width; `night` turns the ground dark
 export function Band({ night, children }) {
+  const book = useBook()
+  // on paper there is no dark ground, and a band that holds only photographs
+  // still to come is left out
+  if (book) {
+    const kids = Children.toArray(children).filter((c) => !isEmptyPhoto(c))
+    if (!kids.length) return null
+    return <div className="mtn-band bk-mtn__band"><Container>{kids}</Container></div>
+  }
   return <section className={`mtn-band${night ? ' mtn-band--night' : ''}`}><Container>{children}</Container></section>
 }
 
+// a photograph slot with no file yet, or a pair of them
+function isEmptyPhoto(c) {
+  if (!isValidElement(c)) return false
+  if (c.type === Plate) return !(PHOTOS[c.props.slot] || {}).file
+  if (c.type === Plates) return Children.toArray(c.props.children).every(isEmptyPhoto)
+  return false
+}
+
 // a scene on the golden grid: the words in the 38.2 %, the figure in the 61.8 %
-export function Scene({ label, title, children, foot, figTitle, fig, note }) {
+// `read` is the longer how-to-read note My Book prints in place of `note`, and
+// `lesson` asks the book for the design lesson of the figure
+export function Scene({ label, title, children, foot, figTitle, fig, note, read, lesson }) {
+  const book = useBook()
+  // in the book a figure that is only a photograph still to come is left out
+  const hasFig = !!fig && !(book && isEmptyPhoto(fig))
   const text = useRef(null)
   const figure = useRef(null)
   const [want, setWant] = useState(0)
@@ -119,7 +144,7 @@ export function Scene({ label, title, children, foot, figTitle, fig, note }) {
     return () => { ro.disconnect(); window.removeEventListener('resize', measure) }
   }, [])
   return (
-    <div className={`mtn-scene${fig ? '' : ' mtn-scene--text'}`}>
+    <div className={`mtn-scene${hasFig ? '' : ' mtn-scene--text'}`}>
       <div className="mtn-scene__text" ref={text}>
         <div className="mtn-scene__head">
           {label ? <p className="mtn-scene__k">{label}</p> : null}
@@ -128,11 +153,12 @@ export function Scene({ label, title, children, foot, figTitle, fig, note }) {
         </div>
         {foot ? <div className="mtn-scene__foot">{foot}</div> : null}
       </div>
-      {fig ? (
+      {hasFig ? (
         <figure className="mtn-scene__fig" ref={figure}>
           {figTitle ? <p className="mtn-scene__ft">{figTitle}</p> : null}
           <div className="mtn-scene__chart" data-scene-chart><SceneH.Provider value={want}>{fig}</SceneH.Provider></div>
-          {note ? <figcaption className="mtn-scene__note">{note}</figcaption> : null}
+          {(book && read) || note ? <figcaption className="mtn-scene__note">{book && read ? read : note}</figcaption> : null}
+          {book && lesson ? <BookLesson of={fig} /> : null}
         </figure>
       ) : null}
     </div>

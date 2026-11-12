@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { numOf, CHAPTERS } from '../lib/chapters.js'
+import { MOUNTAINS } from '../lib/mountainList.js'
+import Ngong from './Ngong.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { BookContext } from '../components/BookContext.js'
 import Home from './Home.jsx'
@@ -37,14 +40,15 @@ const fmtMonth = (iso) => (iso ? `${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
 const word = (n) => WORD[n] || String(n)
 
-// the parts of the book and the chapters inside each
+// the parts of the book and the chapters inside each, in the order of the site:
+// the story, the mountains, the lessons, then the Record and its proof
+const ch = (route) => { const c = CHAPTERS.find((x) => x.route === route); return [c.n, c.title] }
 const PARTS = [
-  { n: 'I', name: 'Part one', title: 'The habit', line: 'The whole record at once: how often I go out, when, where, and what I do.', chapters: [['01', 'The Journey']], plates: 'The mountains: Kilimanjaro, Hanang, Uluguru' },
-  { n: 'II', name: 'Part two', title: 'Year by year', line: 'Each year on its own, from the quiet first months to the year with no zero day.', chapters: [['02', 'Year in Sport']] },
-  { n: 'III', name: 'Part three', title: 'The work', line: 'My sports on foot, the records I set and the places I went.', chapters: [['03', 'Sports'], ['04', 'Records'], ['05', 'Where']] },
-  { n: 'IV', name: 'Part four', title: 'The long view', line: 'Everything in the order it happened, and the targets I set myself each year.', chapters: [['06', 'Timeline'], ['07', 'Goals']] },
-  { n: 'V', name: 'Part five', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [['08', 'What It Means']] },
-  { n: 'VI', name: 'Part six', title: 'The proof', line: 'Twelve things I believe about my habit, each one tested against the log.', chapters: [['09', 'The Habit on Trial']] },
+  { n: 'I', name: 'Part one', title: 'The story', line: 'Seven years in the order they happened, from the quiet first months to the year with no zero day.', chapters: [ch('/')] },
+  { n: 'II', name: 'Part two', title: 'The mountains', line: 'Four mountains, each with the line my watch drew on it.', chapters: MOUNTAINS.map((m) => ch(m.to)) },
+  { n: 'III', name: 'Part three', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [ch('/what-it-means')] },
+  { n: 'IV', name: 'Part four', title: 'The Record', line: 'Each year on its own, my sports, my records, the places I went, the timeline and my goals.', chapters: ['/numbers', '/sports', '/records', '/where', '/timeline', '/goals'].map(ch) },
+  { n: 'V', name: 'Part five', title: 'The proof', line: 'Twelve things I believe about my habit, each one tested against the log.', chapters: [ch('/on-trial')] },
 ]
 
 // glossary terms for measures this book never uses
@@ -223,7 +227,6 @@ function Contents() {
               {p.chapters.map(([num, t]) => (
                 <li key={num}><a href="#/book" onClick={jump(`bk-ch-${num}`)}><span className="bk-toc__cn">{num}</span>{t}</a></li>
               ))}
-              {p.plates ? <li><a href="#/book" onClick={jump('bk-mtn-kilimanjaro')}><span className="bk-toc__cn">Plates</span>{p.plates}</a></li> : null}
             </ol>
           </li>
         ))}
@@ -252,7 +255,7 @@ function Prologue({ F }) {
         This book is me going back through that record, all {n0(F.n)} activities of it.
       </p>
       <p>
-        There are six parts: the habit as a whole, each year on its own, my sports, records and places, the timeline and my goals, what I think it all means, and last, the tests that check whether it is true.
+        There are five parts: the story of the seven years, the four mountains, what I think it all means, the record in full, and last, the tests that check whether it is true.
         To everyone who gave me kudos along the way, <span lang="sw">asanteni sana</span>, thank you very much.
       </p>
       <h3 className="bk-prose__h">How to read it</h3>
@@ -463,7 +466,7 @@ export default function Book() {
 
   const frame = {
     crumbs: [{ label: 'Home', to: '/' }, { label: 'My Book' }],
-    number: '10',
+    number: numOf('/book'),
     title: 'My Book',
     subtitle: 'The whole story, as a book',
     prev,
@@ -502,24 +505,28 @@ export default function Book() {
           <Prologue F={F} />
 
           <PartOpener p={PARTS[0]} />
-          <section className="bk-ch" id="bk-ch-01" aria-labelledby="bk-ch-01-t">
+          <section className="bk-ch bk-ch--parts" id={`bk-ch-${numOf('/')}`} aria-labelledby={`bk-ch-${numOf('/')}-t`}>
             <div className="container">
-              <Opener number="01" title="The Journey" subtitle="Seven years of one habit" />
-              <BookIntro number="01" />
+              <Opener number={numOf('/')} title="The Journey" subtitle="Seven years of one habit" />
+              <BookIntro number={numOf('/')} />
             </div>
             <Home />
           </section>
 
-          {/* the three mountains, one plate each, with the route as the watch drew it */}
+          <PartOpener p={PARTS[1]} />
           <Kilimanjaro />
           <Hanang />
           <Uluguru />
+          <Ngong />
 
-          <PartOpener p={PARTS[1]} />
-          <section className="bk-ch" id="bk-ch-02" aria-labelledby="bk-ch-02-t">
+          <PartOpener p={PARTS[2]} />
+          <WhatItMeans />
+
+          <PartOpener p={PARTS[3]} />
+          <section className="bk-ch" id={`bk-ch-${numOf('/numbers')}`} aria-labelledby={`bk-ch-${numOf('/numbers')}-t`}>
             <div className="container">
-              <Opener number="02" title="Year in Sport" subtitle="One year at a time" />
-              <BookIntro number="02" />
+              <Opener number={numOf('/numbers')} title="Year in Sport" subtitle="One year at a time" />
+              <BookIntro number={numOf('/numbers')} />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">
@@ -530,20 +537,13 @@ export default function Book() {
               </div>
             ))}
           </section>
-
-          <PartOpener p={PARTS[2]} />
           <Sports />
           <Records />
           <Where />
-
-          <PartOpener p={PARTS[3]} />
           <Timeline />
           <Goals />
 
           <PartOpener p={PARTS[4]} />
-          <WhatItMeans />
-
-          <PartOpener p={PARTS[5]} />
           <Evidence />
 
           <Epilogue F={F} />

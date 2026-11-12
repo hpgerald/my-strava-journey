@@ -31,6 +31,7 @@ import YearCharacters from '../components/YearCharacters.jsx'
 import Part from '../components/Part.jsx'
 import Verdict from '../components/Verdict.jsx'
 import { MOUNTAINS } from '../lib/mountainList.js'
+import { numOf } from '../lib/chapters.js'
 import FieldNote from '../components/FieldNote.jsx'
 import OddsRow from '../components/OddsRow.jsx'
 import { useHeroLive } from '../motion/heroLive.js'
@@ -444,9 +445,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const hikeN = activityLog.filter((a) => a.sport_type === 'Hike').length
   const km30Top = (() => { const m = {}; const byDay = {}; for (const a of activityLog) if (FOOT_HOME.has(a.sport_type)) { const d = (a.date || '').slice(0, 10); byDay[d] = (byDay[d] || 0) + (toNum(a.distance_km) || 0) } for (const [d, v] of Object.entries(byDay)) if (v >= 30) m[d.slice(0, 4)] = (m[d.slice(0, 4)] || 0) + 1; return Object.entries(m).sort((x, z) => z[1] - x[1])[0]?.[0] || '' })()
 
-  // use each chapter's own number from nav_index so the index matches the number
-  // shown on the chapter's own page (02-10), not a re-sequenced 01-09
-  const menuItems = nav.filter((r) => r.route !== '/')
+  // the Record and the book, each with its own chapter number from nav_index
+  const menuItems = nav.filter((r) => r.category !== 'story')
 
   // the hero's strip: outings in every month of the record, and the month the
   // current streak began
@@ -622,7 +622,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const secWhere = locN > 0 && tzN > 0 && (
           <StorySection
             id="where-title"
-            eyebrow={book ? '1 · Where I go' : 'Where I go'}
+            eyebrow="Where I go"
             title="The climbing is in two&nbsp;regions."
             statement={<>
               If I want to climb, I have to travel. Where I live, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
@@ -660,7 +660,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <hr className="rule rule--faint" />
         <StorySection
           id="move-title"
-          eyebrow={book ? '2 · Walking and running' : 'Walking and running'}
+          eyebrow="Walking and running"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
             I did not plan to become a walker. It happened slowly. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
@@ -702,7 +702,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <StorySection
           id="hours-title"
           cases={[4]}
-          eyebrow={book ? '3 · Time of day' : 'Time of day'}
+          eyebrow="Time of day"
           title="Mornings and evenings."
           statement={<>
             The habit fits around my work, so it does not wait for the weekend. Most outings start early in the morning or in the
@@ -751,7 +751,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             <StorySection
               id="season-title"
               cases={[5]}
-              eyebrow={book ? '4 · Through the year' : 'Through the year'}
+              eyebrow="Through the year"
               title="Two quieter months."
               statement={<>
                 Every year has a soft spot, and mine is {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]}. They have been my weakest
@@ -806,7 +806,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             <hr className="rule rule--faint" />
             <StorySection
               id="indoor-title"
-              eyebrow={book ? '5 · Indoors and out' : 'Indoors and out'}
+              eyebrow="Indoors and out"
               title="Less treadmill every year."
               statement={<>
                 The treadmill is where I learned to run. Of the {fmtInt(runKm)} km I have run, {fmtInt(runKmIn)} km were on it, and my
@@ -856,7 +856,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <hr className="rule rule--faint" />
         <StorySection
           id="flip-title"
-          eyebrow={book ? '6 · Distance and climb' : 'Distance and climb'}
+          eyebrow="Distance and climb"
           title="Where the height comes from."
           statement={<>
             Running gives me the kilometres, and walking and the hills give me the height. I climb about{' '}
@@ -904,59 +904,6 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         </>
   )
 
-  // inside My Book the chapter keeps its own order
-  if (book) {
-    return (
-      <Layout>
-        {homeReady && restOn && (<>
-      <Container>
-        {/* ---- Type-led hero: headline left, key figures stacked right --- */}
-        <section className="hero" aria-labelledby="hero-title">
-          <h1 id="hero-title" className="visually-hidden">
-            Gerald Tesha: {years || 7} years on foot, {fmtInt(activities)} activities, one habit.
-          </h1>
-
-          <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
-
-          <Reveal as="p" className="hero__statement">
-            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
-            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
-            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
-          </Reveal>
-
-          {book && yearSummaries.length > 0 && (
-            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
-          )}
-          <BookStory>{[
-            `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
-            'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
-            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
-          ]}</BookStory>
-        </section>
-      </Container>
-        {secStreak}
-        {secWork}
-        {secYears}
-      <Container>
-        <hr className="rule" />
-        <div className="closer-head">
-          <Eyebrow>A closer look</Eyebrow>
-        </div>
-        {secWhere}
-        {secMove}
-        {secHours}
-        {secSeason}
-        {secIndoor}
-        {secFlip}
-      </Container>
-      <Container>
-        <FieldNote seed="/home" align="wide" />
-      </Container>
-        </>)}
-      </Layout>
-    )
-  }
-
   // ---- the story: a cold open, then six parts in the order they happened ----
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
   const plates = (ys) => {
@@ -997,17 +944,14 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
           </Reveal>
 
-          {book && yearSummaries.length > 0 && (
-            <YearCharacters summaries={yearSummaries} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} />
-          )}
           <BookStory>{[
             `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
             'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
-            'The cards are the years in one line each. Read them from left to right and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
+            'Each part below opens with its years as cards, one line each. Read them in order and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
           ]}</BookStory>
         </section>
       </Container>
-      <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />
+      {book ? null : <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
 
       <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019"
         line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}>
@@ -1034,11 +978,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         line="This was the year the habit left the flat ground. Three mountains, and each has its own chapter.">
         {plates([2023])}
         <Container>
-          <ul className="spart-doors">
-            {MOUNTAINS.map((m) => (
-              <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{m.line}</span></Link></li>
-            ))}
-          </ul>
+          {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 3).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (
+            <ul className="spart-doors">
+              {MOUNTAINS.filter((m) => m.part === 3).map((m) => (
+                <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{m.line}</span></Link></li>
+              ))}
+            </ul>
+          )}
         </Container>
       </Part>
 
@@ -1052,6 +998,15 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         line="The streak that is still going started in the last days of 2025.">
         {plates([2025, 2026])}
         <Container>
+          {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 5).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (
+            <ul className="spart-doors spart-doors--one">
+              {MOUNTAINS.filter((m) => m.part === 5).map((m) => (
+                <li key={m.id}><Link to={m.to} className={`mtn-next__link mtn-next__link--${m.id}`}><b>{m.name}</b><span>{m.line}</span></Link></li>
+              ))}
+            </ul>
+          )}
+        </Container>
+        <Container>
           {secMove}
           {secHours}
           {secSeason}
@@ -1062,7 +1017,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       <Part n="6" name="What it taught me" years="Looking back" spine="Now"
         line="Seven years of logging, read back as a few plain lessons.">
         <Container>
-          <p className="mtn-link"><Link to="/what-it-means">Read the lessons →</Link></p>
+          {book ? <p className="spart-ref">What It Means, chapter {Number(numOf('/what-it-means'))}</p> : <p className="mtn-link"><Link to="/what-it-means">Read the lessons →</Link></p>}
         </Container>
       </Part>
 
@@ -1070,6 +1025,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <FieldNote seed="/home" align="wide" />
       </Container>
 
+      {book ? null : (<>
       {/* ---- The Record: the whole analysis, chapter by chapter ---- */}
       <Container>
         <section className="sgrid" aria-labelledby="explore-title">
@@ -1082,6 +1038,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           <IndexHub items={menuItems} />
         </section>
       </Container>
+      </>)}
       </>)}
     </Layout>
   )

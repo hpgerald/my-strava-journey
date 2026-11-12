@@ -34,6 +34,9 @@
 .spart-doors { list-style: none; margin: var(--sp-6) 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3) var(--grid-gap); }
 .spart-doors .mtn-next__link { min-height: clamp(11.09rem, 8rem + 12vw, 17.944rem); }
 @media (min-width: 48rem) { .spart-doors { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* one door on its own takes the long column */
+.spart-doors--one .mtn-next__link { min-height: clamp(8rem, 6rem + 8vw, 11.09rem); }
+@media (min-width: 48rem) { .spart-doors--one { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); } .spart-doors--one > li { grid-column: 2; } }
 
 /* a part's last link sits clear of what is above it */
 .spart > .container > .mtn-link { margin-top: var(--sp-6); }

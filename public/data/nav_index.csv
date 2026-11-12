@@ -1,11 +1,15 @@
 number,title,subtitle,route,category,source_page
-01,The Journey,Seven years of one habit,/,overview,authored
-02,Year in Sport,Pick a year and read it,/numbers,report,authored
-03,Sports,My four sports on foot,/sports,section,authored
-04,Records,"My longest, highest and hardest days",/records,section,authored
-05,Where,Five countries. Seventeen regions.,/where,geography,authored
-06,Timeline,From my first upload to now,/timeline,timeline,authored
-07,Goals,What I aim for each year,/goals,dashboard,authored
-08,What It Means,What I have learned from it,/what-it-means,personas,authored
-09,The Habit on Trial,"Twelve claims, tested",/on-trial,evidence,authored
-10,My Book,"The whole story, as a book",/book,book,authored
+01,The Journey,Seven years of one habit,/,story,authored
+02,Kilimanjaro,The roof,/kilimanjaro,story,authored
+03,Hanang,The long day,/hanang,story,authored
+04,Uluguru,The mountain I go back to,/uluguru,story,authored
+05,Ngong Hills,The ridge across the border,/ngong,story,authored
+06,What It Means,What I have learned from it,/what-it-means,story,authored
+07,Year in Sport,Pick a year and read it,/numbers,record,authored
+08,Sports,My four sports on foot,/sports,record,authored
+09,Records,"My longest, highest and hardest days",/records,record,authored
+10,Where,Five countries. Seventeen regions.,/where,record,authored
+11,Timeline,From my first upload to now,/timeline,record,authored
+12,Goals,What I aim for each year,/goals,record,authored
+13,The Habit on Trial,"Twelve claims, tested",/on-trial,record,authored
+14,My Book,"The whole story, as a book",/book,book,authored

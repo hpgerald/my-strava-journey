@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import { useBook } from '../components/BookContext.js'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import Eyebrow from '../components/Eyebrow.jsx'
@@ -48,7 +49,7 @@ export default function Where() {
   const { prev, next } = useSectionPaging('/where')
   const P = useMemo(() => (activities.length && geoRows.length ? buildPlaceReport(activities, geoRows) : null), [activities, geoRows])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Where' }], number: '05', title: 'Where', subtitle: 'Five countries. Seventeen regions.', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Where' }], number: numOf('/where'), title: 'Where', subtitle: 'Five countries. Seventeen regions.', prev, next }
   if (!P) return <DetailFrame {...frame} />
 
   let secN = 0
@@ -156,7 +157,8 @@ export default function Where() {
               <figcaption className="sgrid__figtitle">Africa, by outings</figcaption>
               <PlaceMap
                 src="data/africa.geojson" nameKey="name" values={africaValues} metrics={[metrics[0]]}
-                labels={['Tanzania', 'Kenya', 'Malawi', 'South Africa', 'Rwanda']} nudge={{ Rwanda: [-0.09, -0.02], Malawi: [0.08, 0.03] }} maxHeight={620}
+                labels={['Tanzania', 'Kenya', 'Malawi', 'South Africa', 'Rwanda']} nudge={{ Rwanda: [-0.09, -0.02], Malawi: [0.08, 0.03], Kenya: [0.09, -0.06] }} maxHeight={620}
+                pins={book ? [] : MOUNTAINS.filter((m) => m.country !== 'Tanzania').map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: 'r' }))}
                 aria="Map of Africa shaded by outings in each country."
               />
             </figure>
@@ -204,7 +206,7 @@ export default function Where() {
             <PlaceMap
               src="data/tz_regions.geojson" nameKey="region" values={tzValues} metrics={metrics}
               labels={R.filter((r) => r.n >= 24).map((r) => r.region)} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} maxHeight={book ? 680 : 760}
-              pins={book ? [] : MOUNTAINS.map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: m.id === 'kilimanjaro' ? 'r' : 'l' }))}
+              pins={book ? [] : MOUNTAINS.filter((m) => m.country === 'Tanzania').map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: m.id === 'kilimanjaro' ? 'r' : 'l' }))}
               aria="Map of Tanzania's regions."
             />
           </figure>

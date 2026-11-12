@@ -23,6 +23,7 @@ const Book = lazy(() => import('./pages/Book.jsx'))
 const Kilimanjaro = lazy(() => import('./pages/Kilimanjaro.jsx'))
 const Hanang = lazy(() => import('./pages/Hanang.jsx'))
 const Uluguru = lazy(() => import('./pages/Uluguru.jsx'))
+const Ngong = lazy(() => import('./pages/Ngong.jsx'))
 const Data = lazy(() => import('./pages/Data.jsx'))
 const About = lazy(() => import('./pages/About.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
@@ -39,7 +40,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        {/* Year in Sport report (chapter 02); /numbers/:year deep-links a year */}
+        {/* Year in Sport report; /numbers/:year deep-links a year */}
         <Route path="/numbers" element={<YearInSport />} />
         <Route path="/numbers/:year" element={<YearInSport />} />
 
@@ -59,10 +60,11 @@ export default function App() {
         <Route path="/on-trial" element={<Evidence />} />
         <Route path="/book" element={<Book />} />
 
-        {/* The three mountain chapters */}
+        {/* The mountain chapters */}
         <Route path="/kilimanjaro" element={<Kilimanjaro />} />
         <Route path="/hanang" element={<Hanang />} />
         <Route path="/uluguru" element={<Uluguru />} />
+        <Route path="/ngong" element={<Ngong />} />
 
         {/* Data + About (Phase 8) */}
         <Route path="/data" element={<Data />} />

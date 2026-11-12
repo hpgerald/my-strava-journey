@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -40,7 +41,7 @@ export default function WhatItMeans() {
   const { prev, next } = useSectionPaging('/what-it-means')
   const M = useMemo(() => (activities.length ? buildMeaningReport(activities) : null), [activities])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'What It Means' }], number: '08', title: 'What It Means', subtitle: 'What I have learned from it', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'What It Means' }], number: numOf('/what-it-means'), title: 'What It Means', subtitle: 'What I have learned from it', prev, next }
   if (!M) return <DetailFrame {...frame} />
 
   let secN = 0

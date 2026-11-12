@@ -22,4 +22,8 @@ export const PHOTOS = {
   'uluguru-rain': { file: null, alt: '', want: 'The wet day, March 2025' },
   'uluguru-top': { file: null, alt: '', want: 'Bondwa Peak, at the top' },
   'uluguru-people': { file: null, alt: '', want: 'The people you went up with, if they agree' },
+  // Ngong Hills
+  'ngong-hero': { file: null, alt: '', want: 'The Ngong Hills ridge from a distance' },
+  'ngong-ridge': { file: null, alt: '', want: 'The path along the ridge, with the tops ahead' },
+  'ngong-top': { file: null, alt: '', want: 'The far end of the ridge, the highest point' },
 }

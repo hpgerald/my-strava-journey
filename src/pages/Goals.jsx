@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -106,7 +107,7 @@ export default function Goals() {
     return () => clearTimeout(timer)
   }, [location.hash, G])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Goals' }], number: '07', title: 'Goals', subtitle: 'What I aim for each year', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Goals' }], number: numOf('/goals'), title: 'Goals', subtitle: 'What I aim for each year', prev, next }
   if (!G) return <DetailFrame {...frame} />
 
   let secN = 0

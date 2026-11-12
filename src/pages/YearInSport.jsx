@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
+import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { useParams } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -121,7 +122,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   }
 
   if (!s || !r) {
-    return <DetailFrame crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]} number="02" title="Year in Sport" subtitle="Pick a year. See the whole story." />
+    return <DetailFrame crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]} number={numOf('/numbers')} title="Year in Sport" subtitle="Pick a year. See the whole story." />
   }
 
   const Y = activeYear
@@ -282,7 +283,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]}
-      number="02"
+      number={numOf('/numbers')}
       title="Year in Sport"
       subtitle="Pick a year and read it."
       prev={prev}

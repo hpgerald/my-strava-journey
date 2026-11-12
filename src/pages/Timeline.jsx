@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
@@ -65,7 +66,7 @@ export default function Timeline() {
   }, [kx])
   const C = useMemo(() => (activities.length ? buildChronicle(activities, geoRows, gearRows, summit) : null), [activities, geoRows, gearRows, summit])
 
-  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: '06', title: 'Timeline', subtitle: 'From my first upload to now', prev, next }
+  const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: numOf('/timeline'), title: 'Timeline', subtitle: 'From my first upload to now', prev, next }
   if (!C) return <DetailFrame {...frame} />
 
   let secN = 0
