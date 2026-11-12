@@ -15,7 +15,7 @@ export default function BondwaClimbs({ trips, feature, aria }) {
   if (!trips || !trips.length) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = fitH(narrow ? 320 : 400, want)
+  const H = fitH(narrow ? 300 : 340, want)
   const m = { t: 20, r: narrow ? 14 : 22, b: 40, l: narrow ? 52 : 58 }
   const maxD = Math.max(...trips.flatMap((t) => t.profile.map((p) => p.d)))
   const lo = Math.floor(Math.min(...trips.flatMap((t) => t.profile.map((p) => p.alt))) / 500) * 500

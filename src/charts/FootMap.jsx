@@ -54,7 +54,7 @@ export default function FootMap({ rows }) {
   const narrow = W < 640
   const m = { l: narrow ? 34 : 46, r: narrow ? 8 : 16, t: 18, b: 44 }
   const floorH = narrow ? 30 : 38
-  const plotH = narrow ? 300 : 380
+  const plotH = narrow ? 280 : 320
   const H = m.t + plotH + 10 + floorH + m.b
   const yFloor0 = m.t + plotH + 10, yFloor1 = yFloor0 + floorH
   const X = (p) => m.l + ((Math.max(P0, Math.min(P1, p)) - P0) / (P1 - P0)) * (W - m.l - m.r)

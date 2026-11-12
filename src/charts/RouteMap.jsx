@@ -17,7 +17,8 @@ export default function RouteMap({ lines = [], marks = [], aria, ratio = 0.72 })
   if (!all.length) return <div ref={ref} />
   const W = Math.max(280, width)
   const narrow = W < 520
-  const H = fitH(Math.round(W * (narrow ? Math.max(ratio, 0.9) : ratio)), want)
+  // a modest map: never taller than 440 px on a wide screen, 360 on a narrow one
+  const H = fitH(Math.min(narrow ? 360 : 440, Math.round(W * (narrow ? Math.max(ratio, 0.9) : ratio))), want)
   const leftLabel = marks.some((m) => m.side === 'l')
   const pad = { t: narrow ? 30 : 50, r: narrow ? 104 : 124, b: 44, l: leftLabel ? (narrow ? 92 : 104) : narrow ? 20 : 34 }
 

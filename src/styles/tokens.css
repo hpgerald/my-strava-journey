@@ -62,8 +62,10 @@
      is 1 rem, a lead line 1.272 (the square root of phi), a title 1.618 and
      up, and each display size is phi or its root times the one below. */
   --phi: 1.618;
-  /* the reading face: one serif for the lines that are read as sentences */
-  --font-read: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+  /* two faces only: Archivo for titles, numbers and single display lines,
+     Inter for everything that is read. --font-read is kept as a name for the
+     reading lines and points at Inter. */
+  --font-read: var(--font-sans);
   --fs-2xs: clamp(0.656rem, 0.628rem + 0.12vw, 0.740rem);
   --fs-xs:  clamp(0.740rem, 0.709rem + 0.14vw, 0.835rem);
   --fs-sm:  clamp(0.835rem, 0.799rem + 0.16vw, 0.942rem);

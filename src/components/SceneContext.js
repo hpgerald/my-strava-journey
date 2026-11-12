@@ -5,5 +5,6 @@ import { createContext, useContext } from 'react'
 // line. 0 means "no wish": the chart keeps its own height.
 export const SceneH = createContext(0)
 export const useSceneH = () => useContext(SceneH)
-// a chart's own height, raised to the scene's wish, never past 1.7 times its own
-export const fitH = (own, want) => (want > own ? Math.round(Math.min(want, own * 1.7)) : own)
+// a chart's own height, raised a little to the scene's wish, never past 1.15
+// times its own: charts stay a modest size even beside long text
+export const fitH = (own, want) => (want > own ? Math.round(Math.min(want, own * 1.15)) : own)

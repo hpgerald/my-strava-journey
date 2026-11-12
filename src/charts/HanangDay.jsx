@@ -23,7 +23,7 @@ export default function HanangDay({ points, start, aria }) {
   if (!points || points.length < 3) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = fitH(narrow ? 320 : 380, want)
+  const H = fitH(narrow ? 300 : 340, want)
   const m = { t: 58, r: narrow ? 12 : 18, b: 30, l: narrow ? 40 : 64 }
   const s0 = parseInt(start.slice(11, 13), 10) * 60 + parseInt(start.slice(14, 16), 10)
   const pts = points.map((p) => ({ c: s0 + p.t, alt: p.alt }))

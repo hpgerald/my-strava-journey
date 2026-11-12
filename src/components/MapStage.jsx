@@ -35,7 +35,7 @@ export default function MapStage({ regions, metrics, nudge, pins }) {
         <p className="mstage__yr" aria-hidden="true"><b>{year}</b><span>{shown.length} of 30 regions</span></p>
         <PlaceMap
           src="data/tz_regions.geojson" nameKey="region" values={values} metrics={[metrics[0]]}
-          labels={fresh} nudge={nudge} pins={pins} maxHeight={620}
+          labels={fresh} nudge={nudge} pins={pins} maxHeight={480}
           aria={`Map of Tanzania with the regions I had gone out in by ${year}: ${shown.map((r) => r.region).join(', ')}.`}
         />
       </div>

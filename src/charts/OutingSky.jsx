@@ -150,7 +150,7 @@ export default function OutingSky({ activities, year, recordFirstISO, recordLast
   const marg = !narrow
   const lanes = !narrow
   const m = { l: narrow ? 40 : 44, r: marg ? 88 : 6, t: lanes ? 92 : 40, b: 38 }
-  const H = (narrow ? 250 : yearMode ? 300 : 330) + m.t + m.b
+  const H = (narrow ? 240 : yearMode ? 270 : 290) + m.t + m.b
   const plotH = H - m.t - m.b
   const tSpan = model ? [model.t0, model.t1] : [0, 1]
   const X = (t) => m.l + ((t - tSpan[0]) / (tSpan[1] - tSpan[0])) * (W - m.l - m.r)

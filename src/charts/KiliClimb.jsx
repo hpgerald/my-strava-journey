@@ -20,7 +20,7 @@ export default function KiliClimb({ stages, profile, peaks, aria }) {
   if (!stages || stages.length < 5) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = fitH(narrow ? 320 : 380, want)
+  const H = fitH(narrow ? 340 : 340, want)
   const m = { t: 34, r: narrow ? 10 : 16, b: 40, l: narrow ? 40 : 52 }
 
   // stage spans along x: recorded kilometres, plus the unrecorded band after stage 4

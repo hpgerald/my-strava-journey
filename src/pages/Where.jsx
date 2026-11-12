@@ -159,7 +159,7 @@ export default function Where() {
               <figcaption className="sgrid__figtitle">Africa, by outings</figcaption>
               <PlaceMap
                 src="data/africa.geojson" nameKey="name" values={africaValues} metrics={[metrics[0]]}
-                labels={['Tanzania', 'Kenya', 'Malawi', 'South Africa', 'Rwanda']} nudge={{ Rwanda: [-0.09, -0.02], Malawi: [0.08, 0.03], Kenya: [0.09, -0.06] }} maxHeight={620}
+                labels={['Tanzania', 'Kenya', 'Malawi', 'South Africa', 'Rwanda']} nudge={{ Rwanda: [-0.09, -0.02], Malawi: [0.08, 0.03], Kenya: [0.09, -0.06] }} maxHeight={book ? 620 : 440}
                 pins={book ? [] : MOUNTAINS.filter((m) => m.country !== 'Tanzania').map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: 'r' }))}
                 aria="Map of Africa shaded by outings in each country."
               />
@@ -207,7 +207,7 @@ export default function Where() {
             <figcaption className="sgrid__figtitle">Tanzania, by region</figcaption>
             <PlaceMap
               src="data/tz_regions.geojson" nameKey="region" values={tzValues} metrics={metrics}
-              labels={R.filter((r) => r.n >= 24).map((r) => r.region)} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} maxHeight={book ? 680 : 760}
+              labels={R.filter((r) => r.n >= 24).map((r) => r.region)} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} maxHeight={book ? 680 : 480}
               pins={book ? [] : MOUNTAINS.filter((m) => m.country === 'Tanzania').map((m) => ({ key: m.id, label: m.peak, at: m.pin, to: m.to, side: m.id === 'kilimanjaro' ? 'r' : 'l' }))}
               aria="Map of Tanzania's regions."
             />

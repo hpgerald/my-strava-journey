@@ -16,7 +16,7 @@ export default function RidgeProfile({ pts, turnI, level, aria }) {
   if (!pts || pts.length < 3) return <div ref={ref} />
   const W = Math.max(300, width)
   const narrow = W < 560
-  const H = fitH(narrow ? 300 : 380, want)
+  const H = fitH(narrow ? 280 : 330, want)
   const m = { t: 34, r: narrow ? 16 : 26, b: 40, l: narrow ? 50 : 58 }
   const maxD = pts[pts.length - 1].d
   const lo = Math.floor((Math.min(...pts.map((p) => p.alt)) - 20) / 100) * 100

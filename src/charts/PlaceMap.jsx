@@ -117,7 +117,7 @@ export default function PlaceMap({ src, nameKey, values, metrics, labels = [], n
           onMouseLeave={() => setHover(null)}>
           {shapes.map((s) => (
             <path key={s.i} d={s.d} fillRule="evenodd" className={`pmap__shape${s.v > 0 ? ' is-on' : ''}${hover === s.i ? ' is-hover' : ''}`}
-              style={{ '--fill': s.v > 0 ? ramp(tOf(s.v)) : 'var(--grey-06)', '--d': `${s.rank >= 0 ? 200 + s.rank * 70 : 0}ms` }}
+              style={{ '--fill': s.v > 0 ? ramp(tOf(s.v)) : 'var(--grey-10)', '--d': `${s.rank >= 0 ? 200 + s.rank * 70 : 0}ms` }}
               onMouseEnter={() => setHover(s.i)} />
           ))}
           {labelled.map((s) => {

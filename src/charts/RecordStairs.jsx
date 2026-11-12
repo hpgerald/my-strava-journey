@@ -27,7 +27,7 @@ export default function RecordStairs({ points, records, endT, notes = [], yMax, 
   const W = Math.max(300, width)
   const narrow = W < 640
   const m = { l: narrow ? 46 : 52, r: narrow ? 10 : 18, t: narrow ? 72 : 78, b: 30 }
-  const plotH = narrow ? 280 : tall ? 380 : 320
+  const plotH = narrow ? 260 : tall ? 320 : 280
   const H = m.t + plotH + m.b
   const t0 = useMemo(() => { const d = new Date(Math.min(...points.map((p) => p.t))); return Date.UTC(d.getUTCFullYear(), 0, 1) }, [points])
   const t1 = endT + 20 * 86400000

@@ -28,7 +28,7 @@
 
 /* the layoff: one dark band, one sentence */
 .spart-gap { margin-top: var(--sec-pad, 6.854rem); background: var(--night, #121212); color: var(--on-night, #f2f0eb); padding-block: clamp(4.236rem, 3rem + 6vw, 11.09rem); }
-.spart-gap__t { margin: 0; max-width: none; font-family: var(--font-read); font-size: clamp(1.618rem, 1.1rem + 2.4vw, 4.236rem); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
+.spart-gap__t { margin: 0; max-width: none; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.618rem, 1.1rem + 2.4vw, 4.236rem); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
 
 /* the three mountains as doors */
 .spart-doors { list-style: none; margin: var(--sp-6) 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3) var(--grid-gap); }
@@ -98,7 +98,7 @@ html.motion .shero-scene__run--beats { height: 260vh; }
 .hx__beats { display: grid; }
 .hx__beats li.is-on { opacity: 1; translate: 0 0; }
 .hx__bk { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
-.hx__bt { font-family: var(--font-read); font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance; }
+.hx__bt { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance; }
 .hx.is-beat3 .hx__bk { color: var(--accent-ink); }
 .hx .hx__nums { transition: opacity 0.45s var(--ease-out); }
 .hx.is-beat .hx__nums { opacity: 0; }
@@ -177,7 +177,7 @@ html.menu-open .spine { opacity: 0; }
 
 /* ---- the lesson learned in a part ---- */
 .slesson { margin: var(--r4, 2.618rem) 0 0; display: grid; grid-template-columns: minmax(0, 1fr); border-top: 3px solid var(--ink); padding-top: var(--sp-4); }
-.slesson__t { font-family: var(--font-read); font-weight: 400; font-size: clamp(1.618rem, 1.2rem + 1.8vw, 3.33rem); line-height: 1.1; letter-spacing: -0.015em; color: var(--ink); text-decoration: none; }
+.slesson__t { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.03em; font-size: clamp(1.618rem, 1.2rem + 1.8vw, 3.33rem); line-height: 1.1; letter-spacing: -0.015em; color: var(--ink); text-decoration: none; }
 a.slesson__t:hover { color: var(--accent-ink); }
 a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 @media (min-width: 48rem) { .slesson { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: baseline; } .slesson__k { margin: 0; } }
@@ -194,7 +194,7 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
 
 /* ---- the story reads in the reading face; the Record keeps the working face ---- */
 .spart .sgrid__statement:where(:not(.book *)), .hero__statement:where(:not(.book *)), .smom ~ .sgrid__statement { font-family: var(--font-read); letter-spacing: 0; }
-.spart .sgrid__statement:where(:not(.book *)) { font-size: clamp(1.18rem, 1.05rem + 0.55vw, 1.5rem); line-height: 1.55; }
+
 
 /* in the book: the moments in two columns, the lesson as a ruled line */
 .book .smom__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -240,4 +240,55 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
    two charts one above the other, each across the full width ---- */
 @media (min-width: 64rem) {
   .spart--mv + hr.rule + .sgrid:not(.book .sgrid) > .sgrid__pair, .spart--mv + .sgrid:not(.book .sgrid) > .sgrid__pair { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--sp-4); }
+}
+
+/* ==========================================================================
+   Titles start on the left, everywhere. The label sits above its title, the
+   title begins at the left edge of the column, and the text under it runs the
+   full width. The two-column grid stays for what sits beside what (a sticky
+   text beside its charts, a map beside its years), never for a title.
+   ========================================================================== */
+@media (min-width: 48rem) {
+  .sgrid:not(.book .sgrid) > .sgrid__head { display: block; grid-column: 1 / -1; grid-row: auto; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow { margin: 0 0 var(--sp-3); padding-top: 0; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow--n { flex-direction: row; align-items: baseline; gap: var(--sp-3); }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow--n .eyebrow__n { font-size: clamp(1.618rem, 1.2rem + 1vw, 2.058rem); }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .eyebrow--n .eyebrow__n::after { display: none; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__title { margin-top: 0; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .section-head__sub { margin-top: var(--r2, 1rem); }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .vstamp { margin-top: var(--sp-3); flex-direction: row; align-items: center; }
+  .sgrid:not(.book .sgrid) > .sgrid__head > .ev-side { flex-direction: row; align-items: center; padding-top: 0; margin-bottom: var(--sp-3); }
+  .sgrid:not(.book .sgrid) > .sgrid__statement, .sgrid:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 1 / -1; }
+  .sgrid:not(.book .sgrid) > .mtn-link, .sgrid:not(.book .sgrid) > .ev-read, .sgrid:not(.book .sgrid) > .ev-colophon { grid-column: 1 / -1; }
+  .closer-head:where(:not(.book *)) { display: block; }
+  .closer-head:where(:not(.book *)) > .eyebrow { margin: 0 0 var(--sp-3); padding-top: 0; }
+  .fieldnote:where(:not(.book *)) { grid-template-columns: minmax(0, 1fr); }
+  .fieldnote__eyebrow:where(:not(.book *)), .fieldnote__quote:where(:not(.book *)), .fieldnote__by:where(:not(.book *)) { grid-column: 1; }
+
+  /* part openers: the numeral, and the name right beside it */
+  .spart__head { grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(1.618rem, 1rem + 2vw, 4.236rem); }
+  .spart__n { grid-column: 1; }
+  .spart__t, .spart__l { grid-column: 2; }
+  .spart-doors--one { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .spart-doors--one > li { grid-column: 1; }
+
+  /* the lesson of a part: its label above it */
+  .slesson { grid-template-columns: minmax(0, 1fr); }
+  .slesson__k { margin: 0 0 var(--sp-3); }
+
+  /* the cold open: the beat's label above its line */
+  .hx__beats li { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
+}
+@media (min-width: 56rem) {
+  /* a mountain scene with no figure reads down one column */
+  .mtn-scene--text { grid-template-columns: minmax(0, 1fr); }
+  .mtn-scene--text .mtn-scene__k, .mtn-scene--text .mtn-scene__t, .mtn-scene--text .mtn-scene__head > p:not(.mtn-scene__k), .mtn-scene--text .mtn-scene__foot { grid-column: 1; grid-row: auto; }
+}
+@media (min-width: 60rem) {
+  /* a mountain's opening: the line and the standfirst under the name */
+  .mtn-open__l, .mtn-open__s { grid-column: 1 / -1; }
+}
+@media (min-width: 64rem) {
+  /* the feature layout keeps its words beside its lead number */
+  .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 1; }
 }

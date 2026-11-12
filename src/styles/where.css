@@ -25,7 +25,7 @@
 .pmap__btn { font: inherit; font-size: var(--fs-xs); font-weight: 600; padding: 6px 12px; border: 1px solid var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink); cursor: pointer; }
 .pmap__btn.is-on { background: var(--ink); color: var(--paper); }
 .pmap__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.pmap__shape { fill: var(--grey-06); stroke: var(--paper); stroke-width: 0.6; transition: fill 0.7s var(--ease); transition-delay: var(--d, 0ms); }
+.pmap__shape { fill: var(--grey-10); stroke: color-mix(in srgb, var(--ink) 38%, transparent); stroke-width: 0.6; vector-effect: non-scaling-stroke; transition: fill 0.7s var(--ease); transition-delay: var(--d, 0ms); }
 .pmap.is-in .pmap__shape.is-on { fill: var(--fill); }
 .pmap__shape.is-hover { stroke: var(--ink); stroke-width: 1.4; }
 .pmap__lab { opacity: 0; transition: opacity 0.6s var(--ease); transition-delay: calc(var(--d, 0ms) + 0.5s); pointer-events: none; }
@@ -49,7 +49,7 @@
 .book .pmap__pins { display: none; }
 .pmap__key { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-2); font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--fg-muted); letter-spacing: var(--tr-wide); }
 .pmap__ramp { width: 120px; height: 10px; display: inline-block; }
-.pmap__none { width: 12px; height: 10px; display: inline-block; background: var(--grey-06); border: 1px solid var(--grey-25); margin-left: var(--sp-2); }
+.pmap__none { width: 12px; height: 10px; display: inline-block; background: var(--grey-10); border: 1px solid var(--grey-25); margin-left: var(--sp-2); }
 
 /* ---- Africa: the map beside the country ledger ---- */
 .wh-africa { display: grid; grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); gap: var(--grid-gap); align-items: start; margin: 0 0 var(--sp-3); }
