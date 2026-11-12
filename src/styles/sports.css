@@ -155,6 +155,18 @@
 .sp-card a:hover .sp-card__go, .sp-card a:focus-visible .sp-card__go { text-decoration: underline; }
 .sp-other { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
 
+/* ---- wide screens: a finding with no numbers beside it puts its title in the
+   short column and its words in the long one, so the words keep a reading
+   measure and the section loses a row */
+@media (min-width: 64rem) {
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head { display: contents; }
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head > .eyebrow { grid-column: 1 / -1; grid-row: 1; }
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head > .section-head__title { grid-column: 1; grid-row: 2; }
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__lead > .sgrid__statement { grid-column: 2; grid-row: 2; margin-top: 0; }
+  .sp-report > .sgrid.sgrid--split:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__pair { grid-column: 1 / -1; grid-row: 3; }
+}
+
 @media (max-width: 60rem) {
   .sp-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

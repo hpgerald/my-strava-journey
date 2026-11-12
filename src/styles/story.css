@@ -59,10 +59,21 @@
 }
 
 /* ---- a movement: a smaller part opener inside a chapter of the Record ---- */
+/* a movement on the Sports page: one slim band, the numeral and the name on the
+   left, the line in the number column, level with the sections under it */
 .spart--mv { margin-top: var(--r5, 4.236rem); }
-.spart--mv .spart__n { font-size: clamp(4.236rem, 2.4rem + 8vw, 9rem); font-stretch: 70%; }
-.spart--mv .spart__t { font-size: clamp(2.058rem, 1.5rem + 2.6vw, 4.236rem); }
-.spart--mv .spart__head { padding-bottom: 0; }
+.spart--mv .spart__head { grid-template-columns: minmax(0, 1fr); padding-block: var(--r3, 1.618rem) 0; }
+.spart--mv .spart__head > * { grid-column: 1 / -1; grid-row: auto; }
+.spart--mv .spart__name { display: flex; align-items: flex-end; gap: clamp(0.8rem, 0.5rem + 1vw, 1.618rem); margin-top: var(--r2, 1rem); }
+.spart--mv .spart__n { margin: 0; font-size: clamp(2.618rem, 1.8rem + 3vw, 5.545rem); font-stretch: 70%; line-height: 0.78; }
+.spart--mv .spart__t { margin: 0; font-size: clamp(1.9rem, 1.4rem + 2vw, 3.427rem); line-height: 0.95; }
+.spart--mv .spart__l { margin: var(--r2, 1rem) 0 0; font-size: clamp(1.128rem, 1rem + 0.4vw, 1.375rem); line-height: 1.4; }
+@media (min-width: 64rem) {
+  .spart--mv .spart__head { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); column-gap: calc(var(--grid-gap) * 1.618); align-items: end; }
+  .spart--mv .spart__head > .spart__k { grid-column: 1 / -1; grid-row: 1; }
+  .spart--mv .spart__head > .spart__name { grid-column: 1; grid-row: 2; }
+  .spart--mv .spart__head > .spart__l { grid-column: 2; grid-row: 2; margin: 0; padding-left: calc(var(--grid-gap) * 0.809); border-left: 1px solid var(--rule-faint); }
+}
 .spart--mv + hr.rule { display: none; }
 
 /* ---- the ledger: the record book set as lines, one record to a line ---- */
@@ -241,11 +252,6 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
 .book .mstage__steps li { opacity: 1; min-height: 0; }
 @media (prefers-reduced-motion: reduce) { .mstage__steps li { transition: none; } }
 
-/* ---- a movement opens on one large chart: the first finding after it sets its
-   two charts one above the other, each across the full width ---- */
-@media (min-width: 64rem) {
-  .spart--mv + hr.rule + .sgrid:not(.book .sgrid) > .sgrid__pair, .spart--mv + .sgrid:not(.book .sgrid) > .sgrid__pair { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--sp-4); }
-}
 
 /* ==========================================================================
    Titles start on the left, everywhere. The label sits above its title, the

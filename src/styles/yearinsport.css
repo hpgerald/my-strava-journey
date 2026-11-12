@@ -244,6 +244,8 @@
 .yrec__l { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--fg); line-height: 1.35; text-wrap: pretty; }
 .yrec__s { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-faint); }
 @media (max-width: 59.999rem) { .yrecs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* six cards fill two rows of three, with no hole at the end of the second */
+@media (min-width: 60rem) { .yrecs:not(.yrecs--ledger):where(:not(.book *)):has(> :nth-child(6):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .yis-cta { padding: var(--sp-6) 0 var(--sp-5); }
 .yis-cta__row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3); }
 .sky__future { fill: var(--grey-03); }

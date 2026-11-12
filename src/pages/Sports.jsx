@@ -321,7 +321,7 @@ export default function Sports() {
         <hr className="rule rule--faint" />
         <StorySection
           id="sp-tread"
-          eyebrow={`${num()} · The treadmill`}
+          eyebrow={`${num()} · ${book ? 'The treadmill' : 'Indoors and out'}`}
           title={`${pc(treadShare)}% of running was indoors.`}
           statement={<>
             More of my running is outside every year. The treadmill years peaked with a full marathon in one room, 42.7 km, and in 2026,
@@ -881,7 +881,7 @@ export default function Sports() {
     <DetailFrame
       {...frame}
     >
-      <div className="yis-report">
+      <div className="yis-report sp-report">
         {book ? (
           <>
             {sec_top()}
@@ -925,15 +925,17 @@ export default function Sports() {
   )
 }
 
-// The site tells the sports in three movements. Each opens with its numeral,
-// its name and one line.
+// The site tells the sports in three movements. Each opens on one slim band:
+// its numeral and name on the left, its one line in the number column.
 function Movement({ n, name, line }) {
   return (
     <header className="spart spart--mv">
       <div className="spart__head" data-fx="">
         <p className="spart__k">Movement {n} of III</p>
-        <span className="spart__n" aria-hidden="true">{n}</span>
-        <h2 className="spart__t">{name}</h2>
+        <div className="spart__name">
+          <span className="spart__n" aria-hidden="true">{n}</span>
+          <h2 className="spart__t">{name}</h2>
+        </div>
         <p className="spart__l">{line}</p>
       </div>
     </header>
