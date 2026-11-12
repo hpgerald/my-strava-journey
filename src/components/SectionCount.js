@@ -20,6 +20,9 @@ export function useSectionVariant(ref, want, hasOdds) {
     const next = v === 'feature' && !hasOdds ? 'split' : v
     if (next !== auto) setAuto(next)
   })
+  // the site now uses one compact layout for every story section (the words on
+  // the left, the numbers beside them, the two charts under both); the turn is
+  // kept only where a page asks for a layout by name
   if (book) return 'split'
-  return want || auto
+  return want || 'split'
 }

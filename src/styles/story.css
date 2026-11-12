@@ -303,3 +303,22 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
 .share:hover { color: var(--accent-ink); }
 .share:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
 .share__ico { width: 0.6rem; height: 0.6rem; border-top: 1.5px solid currentColor; border-right: 1.5px solid currentColor; transform: translateY(1px) rotate(0deg); }
+
+/* ---------------------------------------------------------------------------
+   One compact layout for every story section on wide screens. The statement
+   reads in the long column, the numbers that support it sit beside it in the
+   short one, and the pair of charts runs under both. Nothing is left as an
+   empty band: a section without numbers lets its statement run full width.  */
+@media (min-width: 64rem) {
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); column-gap: calc(var(--grid-gap) * 1.618); align-items: start; padding-top: var(--r4); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__head { grid-row: 1; }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__statement,
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__lead > .sgrid__statement { grid-column: 1; grid-row: 2; margin-top: var(--r3); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__statement,
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__lead > .sgrid__statement { grid-column: 1 / -1; }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .odds,
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__lead > .odds { grid-column: 2; grid-row: 2; margin-top: var(--r3); padding: 0 0 0 calc(var(--grid-gap) * 0.809); border-top: 0; border-left: 1px solid var(--rule-faint); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--r3) var(--grid-gap); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__n { font-size: clamp(1.9rem, 1.1rem + 1.4vw, 2.618rem); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__pair { margin-top: var(--r3); padding-top: var(--r3); }
+}
