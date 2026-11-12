@@ -21,14 +21,16 @@ import TwoLines from '../charts/TwoLines.jsx'
 import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
 import { lorenz, topShare } from '../lib/stats.js'
-import { memo, useEffect, useMemo, useState, startTransition } from 'react'
-import { Link } from 'react-router-dom'
+import { memo, useEffect, useMemo, useRef, useState, startTransition } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTable, useKeyed } from '../context/DataContext.jsx'
 import { fmtInt, toNum } from '../lib/format.js'
 import { buildYearSummaries } from '../lib/yearStats.js'
 import { isNamedCountry } from '../lib/geo.js'
 import YearCharacters from '../components/YearCharacters.jsx'
 import Part from '../components/Part.jsx'
+import { Moments, Lesson, HandOff, RasPart } from '../components/StoryBits.jsx'
+import { buildChronicle } from '../lib/chronicle.js'
 import Verdict from '../components/Verdict.jsx'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import { numOf } from '../lib/chapters.js'
@@ -67,6 +69,7 @@ export default function Home() {
   useEffect(() => {
     document.title = SITE_TITLE
   }, [])
+  usePartJump()
   const lifetime0 = useTable('lifetime_totals')
   const metaRows = useTable('meta')
   const countries0 = useTable('countries')
@@ -97,6 +100,57 @@ export default function Home() {
       tzRegions={ready(tzRegions0)}
       nav={ready(nav0)}
     />
+  )
+}
+
+// a link from the spine on another page lands here with ?part=n: scroll to
+// that part once it has been drawn
+function usePartJump() {
+  const { search } = useLocation()
+  useEffect(() => {
+    const n = new URLSearchParams(search).get('part')
+    if (!n) return undefined
+    let tries = 0
+    const t = setInterval(() => {
+      const el = document.getElementById(`part-${n}`)
+      if (el || ++tries > 40) { clearInterval(t); if (el) el.scrollIntoView({ block: 'start' }) }
+    }, 150)
+    return () => clearInterval(t)
+  }, [search])
+}
+
+// The cold open: the board holds the screen while three beats pass over it,
+// the layoff, the comeback and the streak, each lighting its own stretch of the
+// bars. The beat follows the scroll, so the reader sets the pace; without motion
+// the board stands still and the same story is told in the parts below.
+function ColdOpen({ heroRef, beats, ...board }) {
+  const scene = useRef(null)
+  const [beat, setBeat] = useState(0)
+  useEffect(() => {
+    const el = scene.current
+    if (!el || !beats.length) return undefined
+    let raf = 0
+    const read = () => {
+      raf = 0
+      const r = el.getBoundingClientRect()
+      const run = Math.max(1, r.height - window.innerHeight)
+      const p = Math.min(1, Math.max(0, -r.top / run))
+      const b = p < 0.1 ? 0 : Math.min(beats.length, 1 + Math.floor(((p - 0.1) / 0.9) * beats.length))
+      setBeat((x) => (x === b ? x : b))
+    }
+    const on = () => { if (!raf) raf = requestAnimationFrame(read) }
+    window.addEventListener('scroll', on, { passive: true })
+    window.addEventListener('resize', on)
+    read()
+    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); cancelAnimationFrame(raf) }
+  }, [beats.length])
+  return (
+    <div className="shero-scene" data-fx="pin" ref={scene}>
+      <section className="shero" aria-hidden="true" ref={heroRef}>
+        <HeroBoard {...board} beats={beats} beat={beat} />
+      </section>
+      <div className={`shero-scene__run${beats.length ? ' shero-scene__run--beats' : ''}`} aria-hidden="true" />
+    </div>
   )
 }
 
@@ -470,6 +524,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
     }
     return best
   })()
+  // outings a month before the layoff, and in the year after the comeback
+  const preMonthAvg = (() => { const m = heroGap ? heroMonths.filter((x) => x.k < heroGap.from) : []; return m.length ? m.reduce((s, x) => s + x.n, 0) / m.length : 0 })()
+  const postMonthAvg = (() => { const m = heroGap ? heroMonths.filter((x) => x.k > heroGap.back).slice(0, 12) : []; return m.length ? m.reduce((s, x) => s + x.n, 0) / m.length : 0 })()
   const MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   const heroStreakLabel = edStreak.start ? `${MON3[parseInt(edStreak.start.slice(5, 7), 10) - 1]} ${edStreak.start.slice(0, 4)}` : ''
 
@@ -905,10 +962,33 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   )
 
   // ---- the story: a cold open, then six parts in the order they happened ----
+  // the cold open: three beats over the board, from the layoff to the streak
+  const heroBeats = heroGap ? [
+    { k: 'The layoff', t: `Then I stopped. For ${n0(heroGap.days)} days there is nothing in the log.` },
+    { k: 'The comeback', t: `When I came back, about ${n0(preMonthAvg)} outings a month became about ${n0(postMonthAvg)}.` },
+    { k: 'The streak', t: `Since ${heroStreakLabel} I have not missed a day: ${n0(toNum(curStreak))} days in a row.` },
+  ] : []
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
+  // the moments of the timeline, to be set inside the parts they belong to
+  const chron = activityLog.length ? buildChronicle(activityLog, activityGeo, [], []) : null
+  const events = chron ? chron.events : []
+  const lastMonth = heroMonths.length ? heroMonths[heroMonths.length - 1].k : '9999-12'
+  // three numbers and the strip of days for each year card
+  const yearFacts = (() => {
+    const out = {}
+    for (const a of activityLog) {
+      const y = (a.date || '').slice(0, 4), d = (a.date || '').slice(0, 10)
+      if (!y) continue
+      const o = out[y] || (out[y] = { n: 0, km: 0, days: new Set() })
+      o.n += 1
+      if (FOOT_HOME.has(a.sport_type)) o.km += toNum(a.distance_km) || 0
+      o.days.add(d)
+    }
+    return out
+  })()
   const plates = (ys) => {
     const s = yearSummaries.filter((y) => ys.includes(y.year))
-    return s.length ? <Container><YearCharacters summaries={s} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} title={s.length > 1 ? 'The years of this part' : 'The year of this part'} /></Container> : null
+    return s.length ? <Container><YearCharacters facts={yearFacts} streakFrom={edStreak.start || ''} summaries={s} quietUntil={quietUntil} current={gridYears[gridYears.length - 1]} title={s.length > 1 ? 'The years of this part' : 'The year of this part'} /></Container> : null
   }
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   const monthOf = (ym) => `${MONTHS[parseInt(ym.slice(5, 7), 10) - 1]} ${ym.slice(0, 4)}`
@@ -916,16 +996,12 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   return (
     <Layout>
       {!book && (
-        <div className="shero-scene" data-fx="pin">
-        <section className="shero" aria-hidden="true" ref={heroRef}>
-          <HeroBoard
+        <ColdOpen heroRef={heroRef} beats={heroBeats}
+
             months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
             gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}
             nums={{ n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
-          />
-        </section>
-        <div className="shero-scene__run" aria-hidden="true" />
-        </div>
+        />
       )}
       {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
       {homeReady && restOn && (<>
@@ -953,9 +1029,10 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Container>
       {book ? null : <Marquee items={['Haba na haba hujaza kibaba', 'Pole pole ndio mwendo', 'Bandu bandu humaliza gogo', 'Kawia ufike', 'Kesho tena']} speed={46} tone="ink" size="lg" />}
 
-      <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019"
+      <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019" from={heroMonths.length ? heroMonths[0].k : undefined} to={heroGap ? heroGap.from : undefined}
         line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}>
         {plates([2019, 2020])}
+        <Moments events={events} from={heroMonths.length ? heroMonths[0].k : ''} to={heroGap ? heroGap.from : ''} />
         {heroGap ? (
           <div className="spart-gap" data-fx="">
             <Container>
@@ -963,18 +1040,23 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             </Container>
           </div>
         ) : null}
+        <Lesson to="wm-days" title="Keep the days." />
+        <HandOff n="2" name="The comeback" years="mid 2021 to 2022" />
       </Part>
 
-      <Part n="2" name="The comeback" years="mid 2021 to 2022" spine="2021"
+      <Part n="2" name="The comeback" years="mid 2021 to 2022" spine="2021" from={heroGap ? heroGap.back : undefined} to="2022-12"
         line={`From ${n0(nOf(2020))} outings in a year to ${n0(nOf(2021))}, then ${n0(nOf(2022))}.`}>
         {plates([2021, 2022])}
         {secStreak}
         {secWork}
         {secYears}
         {secIndoor ? <Container>{secIndoor}</Container> : null}
+        <Moments events={events} from={heroGap ? heroGap.back : ''} to="2022-12" />
+        <Lesson to="wm-small" title="Streak savers count." />
+        <HandOff n="3" name="The mountains" years="2023" />
       </Part>
 
-      <Part n="3" name="The mountains" years="2023" spine="2023"
+      <Part n="3" name="The mountains" years="2023" spine="2023" from="2023-01" to="2023-12"
         line="This was the year the habit left the flat ground. Three mountains, and each has its own chapter.">
         {plates([2023])}
         <Container>
@@ -986,15 +1068,21 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             </ul>
           )}
         </Container>
+        <Moments events={events} from="2023-01" to="2023-12" />
+        <Lesson to="wm-long" title="Long days come in bunches." />
+        <HandOff n="4" name="The road" years="2024" />
       </Part>
 
-      <Part n="4" name="The road" years="2024" spine="2024"
+      <Part n="4" name="The road" years="2024" spine="2024" from="2024-01" to="2024-12"
         line="Wherever I went that year, the shoes came with me.">
         {plates([2024])}
         {secWhere ? <Container>{secWhere}<p className="mtn-link"><Link to="/where">Every place I have been out →</Link></p></Container> : null}
+        <Moments events={events} from="2024-01" to="2024-12" />
+        <Lesson to="wm-floor" title="Keep a floor." />
+        <HandOff n="5" name="No zero days" years="2025 to 2026" />
       </Part>
 
-      <Part n="5" name="No zero days" years="2025 to 2026" spine="2025"
+      <Part n="5" name="No zero days" years="2025 to 2026" spine="2025" from="2025-01" to={heroMonths.length ? heroMonths[heroMonths.length - 1].k : undefined}
         line="The streak that is still going started in the last days of 2025.">
         {plates([2025, 2026])}
         <Container>
@@ -1012,6 +1100,10 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           {secSeason}
           {secFlip}
         </Container>
+        <RasPart />
+        <Moments events={events} from="2025-01" to={lastMonth} />
+        <Lesson to="wm-maths" title="How a year adds up." />
+        <HandOff n="6" name="What it taught me" years="Looking back" />
       </Part>
 
       <Part n="6" name="What it taught me" years="Looking back" spine="Now"

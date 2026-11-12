@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { numOf } from '../lib/chapters.js'
 import { useBook } from '../components/BookContext.js'
 import { MOUNTAINS } from '../lib/mountainList.js'
+import MapStage from '../components/MapStage.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
@@ -16,7 +17,7 @@ import StackCols from '../charts/StackCols.jsx'
 import PairBars from '../charts/PairBars.jsx'
 import CumLine from '../charts/CumLine.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { useSectionPaging } from '../lib/sections.js'
+import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
 import { buildPlaceReport } from '../lib/placeReport.js'
 
@@ -46,6 +47,7 @@ export default function Where() {
   const book = useBook()
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
+  useSectionJump()
   const { prev, next } = useSectionPaging('/where')
   const P = useMemo(() => (activities.length && geoRows.length ? buildPlaceReport(activities, geoRows) : null), [activities, geoRows])
 
@@ -127,8 +129,8 @@ export default function Where() {
   const blankYears = newBy.filter((y) => y.year >= 2021 && y.year < lastYear && !y.n).map((y) => y.year)
   const top3Min = Math.min(...eff.map((y) => y.top3))
 
-  const placeCards = [...R.slice(0, 4).map((r) => ({ name: r.region, kind: 'Region', n: r.n, km: r.km, elev: r.elev })),
-    ...P.abroad.filter((c) => ['Kenya', 'Malawi', 'South Africa', 'Rwanda'].includes(c.country)).map((c) => ({ name: c.country, kind: 'Country', n: c.n, km: c.km, elev: c.elev }))]
+  const placeCards = [...R.slice(0, 4).map((r) => ({ name: r.region, kind: 'Region', n: r.n, km: r.km, elev: r.elev, first: r.first })),
+    ...P.abroad.filter((c) => ['Kenya', 'Malawi', 'South Africa', 'Rwanda'].includes(c.country)).map((c) => ({ name: c.country, kind: 'Country', n: c.n, km: c.km, elev: c.elev, first: c.first }))]
 
   // the two openers: My Book starts with Africa and then Tanzania; the site
   // opens on the map of Tanzania, with the three mountains pinned on it
@@ -247,7 +249,21 @@ export default function Where() {
       {...frame}
     >
       <div className="yis-report">
-        {book ? <>{secAfrica()}<hr className="rule rule--faint" />{secTz()}</> : <>{secTz()}<hr className="rule rule--faint" />{secAfrica()}</>}
+        {book ? <>{secAfrica()}<hr className="rule rule--faint" />{secTz()}</> : (
+          <>
+            {secTz()}
+            <hr className="rule rule--faint" />
+            <section className="sgrid" aria-labelledby="wh-stage">
+              <div className="sgrid__head">
+                <Eyebrow>Year by year</Eyebrow>
+                <h2 id="wh-stage" className="section-head__title">The map filled in one trip at&nbsp;a&nbsp;time.</h2>
+              </div>
+              <MapStage regions={R.filter((r) => r.first)} metrics={metrics} nudge={{ 'Dar es Salaam': [0.06, -0.03], Pwani: [0.03, 0.07], Kilimanjaro: [0.05, -0.02], Arusha: [-0.03, -0.03] }} />
+            </section>
+            <hr className="rule rule--faint" />
+            {secAfrica()}
+          </>
+        )}
 
         {/* ===== 2. flat at home, steep away ===== */}
         <hr className="rule rule--faint" />
@@ -552,17 +568,17 @@ export default function Where() {
         <section className="sgrid" aria-labelledby="wh-places">
           <div className="sgrid__head">
             <Eyebrow>{num()} · Each place on its own</Eyebrow>
-            <h2 id="wh-places" className="section-head__title">Open any&nbsp;place.</h2>
+            <h2 id="wh-places" className="section-head__title">The places, one by&nbsp;one.</h2>
           </div>
           <ul className="sp-cards wh-cards">
             {placeCards.map((c) => (
-              <li key={c.name} className="sp-card">
-                <Link to={`/where/${slugify(c.name)}`}>
+              <li key={c.name} className="sp-card" id={`place-${slugify(c.name)}`}>
+                <div className="sp-card__in">
                   <p className="sp-card__k">{c.kind}</p>
                   <p className="sp-card__v wh-cards__name">{c.name}</p>
                   <p className="sp-card__l">{n0(c.n)} outings · {n0(c.km)} km · {n0(c.elev)} m up</p>
-                  <p className="sp-card__go">Open {c.name} &rarr;</p>
-                </Link>
+                  {c.first ? <p className="sp-card__go">First out here in {fmtMon(c.first)}</p> : null}
+                </div>
               </li>
             ))}
           </ul>

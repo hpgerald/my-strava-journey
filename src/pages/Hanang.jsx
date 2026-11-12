@@ -4,6 +4,7 @@ import Plate from '../components/Plate.jsx'
 import HanangDay from '../charts/HanangDay.jsx'
 import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
+import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { buildHN, routesOf, tripsOf } from '../lib/mountains.js'
 import { MODE_NAME } from '../lib/footReport.js'
@@ -14,6 +15,17 @@ const k1 = (v) => (v || 0).toFixed(1)
 const hm = (min) => { const h = Math.floor(min / 60), m = Math.round(min % 60); return h ? `${h} h ${m} min` : `${m} min` }
 const fmtDay = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 const clock = (start, min) => { const t = parseInt(start.slice(11, 13), 10) * 60 + parseInt(start.slice(14, 16), 10) + min; const h = Math.floor(t / 60) % 24, m = Math.round(t % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}` }
+
+// minutes from the start to a clock time on the same day (or past midnight)
+const minAt = (start, hhmm) => { const s0 = parseInt(start.slice(11, 13), 10) * 60 + parseInt(start.slice(14, 16), 10); const [h, m] = hhmm.split(':').map(Number); return h * 60 + m - s0 }
+// the ground follows the sun: pale at dawn, warm through the afternoon, deepest at dusk
+const hanangGround = (start, v) => {
+  const h = ((parseInt(start.slice(11, 13), 10) * 60 + parseInt(start.slice(14, 16), 10) + v) / 60) % 24
+  const sun = h < 6 || h >= 19.5 ? 0.15 : h < 12 ? 0.2 + 0.4 * ((h - 6) / 6) : h < 17 ? 0.6 + 0.2 * ((h - 12) / 5) : 0.8 + 0.2 * ((h - 17) / 2.5)
+  const t = sun * 0.42
+  const mix = (a, b) => Math.round(a + (b - a) * t)
+  return `rgb(${mix(242, 233)}, ${mix(240, 201)}, ${mix(235, 152)})`
+}
 
 // Hanang: the long day. One hike told by the clock, from before sunrise to
 // after midnight, and the two races that brought me back.
@@ -47,6 +59,17 @@ export default function Hanang() {
   return (
     <Mountain
       id="hanang"
+      relief={<Relief lines={[HN.pts.map((p) => ({ x: p.t / HN.pts[HN.pts.length - 1].t, alt: p.alt }))]} />}
+      gauge={{
+        min: 0, max: HN.pts[HN.pts.length - 1].t, unit: 'on the clock',
+        stops: [
+          { v: 0, label: 'The start' }, { v: HN.top.t, label: 'The top' },
+          { v: minAt(HN.start, '21:00'), label: 'Still coming down' }, { v: minAt(HN.start, '24:00'), label: 'Midnight' },
+          { v: HN.pts[HN.pts.length - 1].t, label: 'Back down' },
+        ],
+        fmt: (v) => clock(HN.start, v),
+        ground: (v) => hanangGround(HN.start, v),
+      }}
       hero="hanang-hero"
       standfirst={<>A mountain does not care about the clock. On Mount Hanang in Manyara I set out before six in the morning, reached the top in the late afternoon and was back down after two the next morning.</>}
       facts={[
@@ -56,7 +79,7 @@ export default function Hanang() {
         { label: 'of it counted as moving', value: k1(HN.moving / 60), unit: 'h' },
       ]}
     >
-      <Band>
+      <Band at={[0, HN.top.t]}>
         <Scene
           label={fmtDay(HN.date)}
           title="The day, hour by hour."
@@ -79,14 +102,14 @@ export default function Hanang() {
         </Scene>
       </Band>
 
-      <Band>
+      <Band at={[HN.top.t, minAt(HN.start, '19:00')]}>
         <Plates>
           <Plate slot="hanang-dawn" caption={`The start · ${HN.start.slice(11, 16)}`} />
           <Plate slot="hanang-top" caption={`The top · ${n0(HN.top.alt)} m on my watch`} />
         </Plates>
       </Band>
 
-      <Band night>
+      <Band night at={[minAt(HN.start, '19:00'), HN.pts[HN.pts.length - 1].t]}>
         <Scene label="After dark" title="Most of the way down came at night.">
           <p>The way down took almost as long as the way up. At nine in the evening I was still at {n0(Math.round(HN.at9 / 10) * 10)} m, and at midnight I was at {n0(Math.round(HN.atMid / 10) * 10)} m.</p>
         </Scene>

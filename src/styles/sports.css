@@ -142,7 +142,7 @@
 
 /* ---- the sport cards at the close ---- */
 .sp-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); }
-.sp-card a { display: block; height: 100%; padding: var(--sp-3) 0 0; border-top: 3px solid var(--ink); color: inherit; text-decoration: none; }
+.sp-card a, .sp-card__in { display: block; height: 100%; padding: var(--sp-3) 0 0; border-top: 3px solid var(--ink); color: inherit; text-decoration: none; }
 .sp-card--Run a { border-top-color: var(--m-Run); }
 .sp-card--TrailRun a { border-top-color: var(--m-TrailRun); }
 .sp-card--Hike a { border-top-color: var(--m-Hike); }
@@ -151,6 +151,7 @@
 .sp-card__u { font-family: var(--font-body, inherit); font-weight: 600; font-size: var(--fs-sm); color: var(--fg-muted); }
 .sp-card__l { margin: 4px 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
 .sp-card__go { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); font-weight: 700; color: var(--accent-ink); }
+.sp-card__in .sp-card__go { font-weight: 500; color: var(--fg-muted); }
 .sp-card a:hover .sp-card__go, .sp-card a:focus-visible .sp-card__go { text-decoration: underline; }
 .sp-other { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); color: var(--fg-muted); }
 

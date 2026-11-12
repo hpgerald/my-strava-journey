@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom'
+import Plate from '../components/Plate.jsx'
+import { DataBody } from './Data.jsx'
+import { useSectionJump } from '../lib/sections.js'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { useKeyed } from '../context/DataContext.jsx'
 
@@ -33,14 +36,18 @@ function Contact({ label, href, children, external }) {
 }
 
 export default function About() {
+  useSectionJump()
   const meta = useKeyed('meta', 'key', 'value')
 
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
       title="About"
-      subtitle="What this is and how to read it"
+      subtitle="Who I am, what counts and how it is made"
     >
+      <section style={{ paddingTop: 'var(--sp-6)' }}>
+        <Plate slot="portrait" ratio="21 / 9" caption="Gerald Tesha" />
+      </section>
       <section style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
@@ -67,7 +74,7 @@ export default function About() {
               trail running and hiking. Everything else still counts as an outing, and in my hours and kudos, but not in
               distance or climb. Countries and regions come from where each activity started, so they can be a little off
               near a border. There is more on the{' '}
-              <Link to="/data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
+              <Link to="/about?s=about-data" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
                 data page
               </Link>
               . This is a personal record. It is not coaching, medical or training advice.
@@ -131,6 +138,12 @@ export default function About() {
             </dl>
           </aside>
         </div>
+      </section>
+      <section className="about-data" aria-labelledby="about-data" style={{ paddingTop: 'var(--sp-8)' }}>
+        <p className="eyebrow">The data</p>
+        <h2 id="about-data" className="section-head__title">The tables behind the&nbsp;site.</h2>
+        <p className="text-muted">My own activity data, so I list it here and do not offer it as a download.</p>
+        <DataBody />
       </section>
     </DetailFrame>
   )

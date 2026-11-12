@@ -11,10 +11,8 @@ import Home from './pages/Home.jsx'
 // code when it is first opened, so the first visit downloads and runs less.
 const YearInSport = lazy(() => import('./pages/YearInSport.jsx'))
 const Sports = lazy(() => import('./pages/Sports.jsx'))
-const SportDetail = lazy(() => import('./pages/SportDetail.jsx'))
 const Records = lazy(() => import('./pages/Records.jsx'))
 const Where = lazy(() => import('./pages/Where.jsx'))
-const PlaceDetail = lazy(() => import('./pages/PlaceDetail.jsx'))
 const Timeline = lazy(() => import('./pages/Timeline.jsx'))
 const Goals = lazy(() => import('./pages/Goals.jsx'))
 const WhatItMeans = lazy(() => import('./pages/WhatItMeans.jsx'))
@@ -46,10 +44,10 @@ export default function App() {
 
         {/* Section detail pages (Phase 5) */}
         <Route path="/sports" element={<Sports />} />
-        <Route path="/sports/:sportId" element={<SportDetail />} />
+        <Route path="/sports/:sportId" element={<Navigate to="/sports?s=sp-each" replace />} />
         <Route path="/records" element={<Records />} />
         <Route path="/where" element={<Where />} />
-        <Route path="/where/:placeId" element={<PlaceDetail />} />
+        <Route path="/where/:placeId" element={<Navigate to="/where?s=wh-places" replace />} />
         <Route path="/rhythm" element={<Navigate to="/" replace />} />
         <Route path="/gear" element={<Navigate to="/" replace />} />
 

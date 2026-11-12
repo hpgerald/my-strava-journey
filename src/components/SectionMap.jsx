@@ -21,7 +21,7 @@ export default function SectionMap() {
       // a page told in parts (the story) is mapped by its parts, each with its
       // year: the map becomes a spine of years
       const parts = [...main.querySelectorAll('section.spart[data-spine][aria-labelledby]')].filter((s) => !s.closest('.book'))
-      const secs = parts.length >= 3 ? parts : [...main.querySelectorAll('section.sgrid[aria-labelledby]')].filter((s) => !s.closest('.book'))
+      const secs = parts.length >= 3 ? [] : [...main.querySelectorAll('section.sgrid[aria-labelledby]')].filter((s) => !s.closest('.book'))
       const next = secs.map((s) => {
         const h = document.getElementById(s.getAttribute('aria-labelledby'))
         return { id: s.getAttribute('aria-labelledby'), label: h ? h.textContent.replace(/\s+/g, ' ').trim() : '', spine: s.getAttribute('data-spine') || '' }

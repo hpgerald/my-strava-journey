@@ -5,6 +5,7 @@ import Plate from '../components/Plate.jsx'
 import BondwaClimbs from '../charts/BondwaClimbs.jsx'
 import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
+import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { buildUluguru, routesOf } from '../lib/mountains.js'
 
@@ -53,6 +54,7 @@ export default function Uluguru() {
   return (
     <Mountain
       id="uluguru"
+      relief={<Relief lines={trips.map((t) => { const d = t.profile[t.profile.length - 1].d || 1; return t.profile.map((p) => ({ x: p.d / d, alt: p.alt })) })} />}
       hero="uluguru-hero"
       standfirst={<>Bondwa Peak stands above Morogoro, in the Uluguru Mountains, and I keep going back to it. I have been up {times} times, and the most I have climbed in one outing was on its slopes.</>}
       facts={[

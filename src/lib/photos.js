@@ -3,6 +3,8 @@
 // photo: put the file in public/photos/ and set `file` and `alt` here.
 // Mountains print in colour, ordinary days in black and white (set bw: true).
 export const PHOTOS = {
+  // the colophon
+  portrait: { file: null, alt: '', want: 'A portrait of you, outdoors, the way you would like readers to meet you' },
   // Kilimanjaro
   'kili-hero': { file: null, alt: '', want: 'Kilimanjaro seen from below, or you on the trail with the mountain behind' },
   'kili-forest': { file: null, alt: '', want: 'The forest path between Marangu Gate and Mandara Hut' },

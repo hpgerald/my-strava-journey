@@ -3,6 +3,7 @@ import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
 import { useBook } from './BookContext.js'
 import SectionMap from './SectionMap.jsx'
+import Spine from './Spine.jsx'
 import { watchPairs } from '../lib/alignPairs.js'
 
 // Shared page frame: skip link, sticky nav, main landmark, footer.
@@ -64,6 +65,7 @@ export default function Layout({ children }) {
         Skip to content
       </a>
       <Nav />
+      <Spine />
       <SectionMap />
       <main id="main" tabIndex={-1} ref={mainRef}>
         {children}

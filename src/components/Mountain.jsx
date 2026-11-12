@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import Container from './Container.jsx'
 import Plate from './Plate.jsx'
+import Gauge from './Gauge.jsx'
 import { PHOTOS } from '../lib/photos.js'
 import { numOf } from '../lib/chapters.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
@@ -17,7 +18,7 @@ import { SceneH } from './SceneContext.js'
 // night band where the story goes dark, and a door to the next mountain.
 export { MOUNTAINS }
 
-export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, children }) {
+export default function Mountain({ id, standfirst, facts = [], hero, heroCaption, relief, gauge, children }) {
   const book = useBook()
   const i = MOUNTAINS.findIndex((m) => m.id === id)
   const me = MOUNTAINS[i]
@@ -60,6 +61,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
     <Layout>
       <article className={`mtn mtn--${id}`}>
         <header className="mtn-open" aria-labelledby="mtn-title">
+          {relief ? <div className="mtn-open__relief">{relief}</div> : null}
           <Container className="mtn-open__in">
             <p className="mtn-open__k">Chapter {Number(numOf(me.to))} · The mountains</p>
             <h1 id="mtn-title" className="mtn-open__t">{me.name}</h1>
@@ -74,6 +76,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
             ) : null}
           </Container>
         </header>
+        {gauge ? <Gauge {...gauge} /> : null}
         {hero ? <Band><Plate slot={hero} ratio="16 / 9" caption={heroCaption} /></Band> : null}
         {children}
         <nav className="mtn-next" aria-label="More of the mountains">
@@ -93,7 +96,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
 }
 
 // one band of the chapter, full width; `night` turns the ground dark
-export function Band({ night, children }) {
+export function Band({ night, at, children }) {
   const book = useBook()
   // on paper there is no dark ground, and a band that holds only photographs
   // still to come is left out
@@ -102,7 +105,7 @@ export function Band({ night, children }) {
     if (!kids.length) return null
     return <div className="mtn-band bk-mtn__band"><Container>{kids}</Container></div>
   }
-  return <section className={`mtn-band${night ? ' mtn-band--night' : ''}`}><Container>{children}</Container></section>
+  return <section className={`mtn-band${night ? ' mtn-band--night' : ''}`} data-at={at == null ? undefined : JSON.stringify(at)}><Container>{children}</Container></section>
 }
 
 // a photograph slot with no file yet, or a pair of them

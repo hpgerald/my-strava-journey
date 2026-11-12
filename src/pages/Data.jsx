@@ -1,4 +1,4 @@
-import DetailFrame from '../components/DetailFrame.jsx'
+import { Navigate } from 'react-router-dom'
 import { useData, useTables } from '../context/DataContext.jsx'
 import { CSV_FILES } from '../data/registry.js'
 
@@ -68,7 +68,7 @@ const GROUPS = [
   },
 ]
 
-export default function Data() {
+export function DataBody() {
   const { data } = useData()
   useTables(CSV_FILES)
   const rowCount = (name) => (data && data[name] ? data[name].length : '–')
@@ -78,12 +78,7 @@ export default function Data() {
     : 0) || 1116
 
   return (
-    <DetailFrame
-      crumbs={[{ label: 'Home', to: '/' }, { label: 'Data' }]}
-      title="The data"
-      subtitle="The tables behind the site"
-      lede="My own activity data, so I list it here and do not offer it as a download."
-    >
+    <>
       {GROUPS.map((g) => (
         <section key={g.title} style={{ paddingTop: 'var(--sp-6)' }}>
           <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>
@@ -125,6 +120,11 @@ export default function Data() {
           </p>
         </div>
       </section>
-    </DetailFrame>
+    </>
   )
+}
+
+// the tables now live on the colophon (About); this address lands there
+export default function Data() {
+  return <Navigate to="/about?s=about-data" replace />
 }

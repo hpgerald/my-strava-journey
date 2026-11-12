@@ -15,7 +15,7 @@ import { CloseDots, SimHist, MonthBeads } from '../charts/GoalCharts.jsx'
 import { KiliSplit, KiliKm } from '../charts/KiliHalf.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { useSectionPaging } from '../lib/sections.js'
+import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { buildGoalsReport, TARGETS } from '../lib/goalsReport.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -87,6 +87,7 @@ export default function Goals() {
   const kParts = useTable('kili_half_parts')
   const kKms = useTable('kili_half_km')
   const kCourse = useTable('kili_half_course')
+  useSectionJump()
   const { prev, next } = useSectionPaging('/goals')
   const G = useMemo(() => (activities.length ? buildGoalsReport(activities, kili, profile, rasKilomoni, kParts, kKms, kCourse) : null), [activities, kili, profile, rasKilomoni, kParts, kKms, kCourse])
 

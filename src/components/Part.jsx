@@ -4,9 +4,9 @@ import Container from './Container.jsx'
 // part opens with its number, its years, its name and one line, then holds the
 // years and the findings that belong to it. `spine` is the short year the page
 // map shows for the part.
-export default function Part({ n, name, years, spine, line, night, children }) {
+export default function Part({ n, name, years, spine, from, to, line, night, children }) {
   return (
-    <section className={`spart${night ? ' spart--night' : ''}`} id={`part-${n}`} aria-labelledby={`part-${n}-t`} data-spine={spine}>
+    <section className={`spart${night ? ' spart--night' : ''}`} id={`part-${n}`} aria-labelledby={`part-${n}-t`} data-spine={spine} data-from={from} data-to={to}>
       <Container>
         <header className="spart__head" data-fx="">
           <p className="spart__k">Part {n} · {years}</p>

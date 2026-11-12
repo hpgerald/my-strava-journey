@@ -39,7 +39,7 @@ const tOf = (iso) => Date.parse(iso + 'T12:00:00Z')
 const an = (w) => (/^[aeiou]/i.test(w) ? `an ${w}` : `a ${w}`)
 
 // one record card on the four-column grid
-function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone }) {
+function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone, stood, to }) {
   const [ref, inView] = useInView()
   const v = useCountUp(value, inView, { decimals, dur: 1100 })
   return (
@@ -51,6 +51,8 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone })
       </p>
       <p className="yrec__l">{label}</p>
       {sub ? <p className="yrec__s">{sub}</p> : null}
+      {stood ? <p className="yrec__st">{stood}</p> : null}
+      {to ? <a className="yrec__go" href={`#${to}`} onClick={(e) => { e.preventDefault(); const el = document.getElementById(to); const sec = el && el.closest('section'); if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>How it fell <span aria-hidden="true">↓</span></a> : null}
     </li>
   )
 }
@@ -173,6 +175,11 @@ export default function Records() {
 
   // the record book: in My Book it closes the chapter as cards, on the site it
   // opens the page as a ledger, one line per record
+  // how long a record has stood: from its day to the last day in the log
+  const stoodSince = (iso) => {
+    const d = Math.round((tOf(R.lastISO) - tOf(iso)) / 864e5)
+    return d < 1 ? 'set on the last day in the log' : d < 60 ? `has stood ${d} days` : d < 730 ? `has stood ${Math.round(d / 30.44)} months` : `has stood ${(d / 365.25).toFixed(1)} years`
+  }
   const hall = () => (
         <section className={`sgrid${book ? '' : ' yis-top'}`} aria-labelledby="rc-edges">
           <div className="sgrid__head">
@@ -180,12 +187,12 @@ export default function Records() {
             <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
           </div>
           <ul className={`yrecs${book ? '' : ' yrecs--ledger'}`}>
-            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" />
-            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" />
-            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" />
-            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" />
-            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} />
-            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} />
+            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" stood={book ? null : stoodSince(dNow.date)} to={book ? null : 'rc-title'} />
+            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" stood={book ? null : stoodSince(cNow.date)} to={book ? null : 'rc-climb'} />
+            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" stood={book ? null : stoodSince(bigDayClimb.date)} to={book ? null : 'rc-climb'} />
+            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" stood={book ? null : stoodSince(wk.start)} to={book ? null : 'rc-months'} />
+            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} stood={book ? null : stoodSince(`${moKm.month}-28`)} to={book ? null : 'rc-months'} />
+            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} to={book ? null : 'rc-streaks'} />
           </ul>
         </section>
   )
@@ -379,7 +386,9 @@ export default function Records() {
               `${cap(word(recentClimbMonths))} of my six biggest climbing months come from the last two years. The hills used to be a 2023 story, and now they are a regular part of my year.`,
             ]}
           source="Activity Log · distance and climb on foot by week and by month"
-        />
+        >
+          {moEl.month === '2023-03' && !book ? <p className="mtn-link"><Link to="/kilimanjaro">That month was Kilimanjaro. Read the chapter →</Link></p> : null}
+        </StorySection>
 
         {/* ===== the mountains have their own chapters: doors on the site, a line in the book ===== */}
         {book ? (

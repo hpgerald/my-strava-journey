@@ -9,7 +9,7 @@ import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { DayClocks, TwoPaths, DayPile, WeekStrips, NextGrid, IsoKm } from '../charts/MeaningCharts.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { useSectionPaging } from '../lib/sections.js'
+import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { buildMeaningReport, SMALL_KM, LONG_KM, LONG_RUN_KM } from '../lib/meaningReport.js'
 
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
@@ -38,6 +38,7 @@ function Card({ kicker, value = 0, unit, label, sub, decimals = 0, tone }) {
 
 export default function WhatItMeans() {
   const activities = useTable('activities')
+  useSectionJump()
   const { prev, next } = useSectionPaging('/what-it-means')
   const M = useMemo(() => (activities.length ? buildMeaningReport(activities) : null), [activities])
 

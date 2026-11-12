@@ -41,7 +41,7 @@ export default function Footer() {
             <p className="sfoot__k">More</p>
             <ul className="sfoot__list">
               <li><Link to="/about">About</Link></li>
-              <li><Link to="/data">The data</Link></li>
+              <li><Link to="/about?s=about-data">The data</Link></li>
               <li><a href="https://www.strava.com/athletes/gtesha" target="_blank" rel="noopener noreferrer">Strava ↗</a></li>
             </ul>
           </div>

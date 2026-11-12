@@ -92,7 +92,7 @@ export default function Nav() {
           <p className="smenu__k">More</p>
           <ul className="smenu__more">
             <li><Link to="/about" onClick={() => setOpen(false)}>About ↗</Link></li>
-            <li><Link to="/data" onClick={() => setOpen(false)}>The data ↗</Link></li>
+            <li><Link to="/about?s=about-data" onClick={() => setOpen(false)}>The data ↗</Link></li>
             <li><a href="https://www.strava.com/athletes/gtesha" target="_blank" rel="noopener noreferrer">Strava ↗</a></li>
           </ul>
           <p className="smenu__k">Say hi</p>

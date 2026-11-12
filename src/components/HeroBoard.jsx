@@ -33,7 +33,10 @@ function HeroNums({ nums, go }) {
 }
 const seal = 'SIKU KWA SIKU · DAY BY DAY · SIKU KWA SIKU · DAY BY DAY · '
 
-export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums }) {
+// beats: three short lines told over the board as the cold open scrolls, one
+//   for the layoff, one for the comeback, one for the streak; beat: which one
+//   is on (0 for none). Each beat lights its own stretch of the bars.
+export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums, beats = [], beat = 0 }) {
   const [ref, inView] = useInView({ threshold: 0.05, rootMargin: '0px' })
   // fit the title to the column: measure it once at a known size, then scale,
   // again whenever the column changes width or the fonts arrive
@@ -69,9 +72,11 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
   const years = months.map((m, i) => ({ y: m.k.slice(0, 4), i })).filter((m, i, a) => !i || m.y !== a[i - 1].y)
   const chars = [...'Showing up']
   const sIdx = at(streakFrom)
+  // the stretch of the story a month belongs to
+  const stretch = (k) => (k >= streakFrom ? 'is-s3' : comebackKey && k >= comebackKey ? 'is-s2' : gap && k >= gap.fromKey ? 'is-s1' : 'is-s0')
 
   return (
-    <div ref={ref} className={`hx${inView ? ' is-in' : ''}`}>
+    <div ref={ref} className={`hx${inView ? ' is-in' : ''}${beat ? ` is-beat is-beat${beat}` : ''}`}>
       <div className="hx__tw" ref={tw}>
         <p className="hx__t">
           {chars.map((ch, i) => (ch === ' '
@@ -96,7 +101,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
           </div>
           <div className="hx__bars" style={{ '--n': N }}>
             {months.map((m, i) => (
-              <i key={m.k} className={m.k >= streakFrom ? 'is-now' : m.n ? '' : 'is-empty'}
+              <i key={m.k} className={`${m.k >= streakFrom ? 'is-now' : m.n ? '' : 'is-empty'} ${stretch(m.k)}`}
                 style={{ '--h': `${Math.max(m.n ? 3 : 0.8, (m.n / top) * 100).toFixed(1)}%`, '--j': i }} />
             ))}
           </div>
@@ -123,7 +128,14 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         </div>
       ) : <div className="hx__chart" />}
 
-      <HeroNums nums={nums} go={inView} />
+      <div className="hx__foot">
+        <HeroNums nums={nums} go={inView} />
+        {beats.length ? (
+          <ol className="hx__beats" aria-hidden="true">
+            {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt">{b.t}</span></li>)}
+          </ol>
+        ) : null}
+      </div>
     </div>
   )
 }

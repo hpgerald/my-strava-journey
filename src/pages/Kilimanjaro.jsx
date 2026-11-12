@@ -5,6 +5,7 @@ import Plate from '../components/Plate.jsx'
 import KiliClimb from '../charts/KiliClimb.jsx'
 import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
+import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { buildKX, routesOf, tripsOf, KX_TOP, KX_RIM, UHURU } from '../lib/mountains.js'
 
@@ -15,6 +16,27 @@ const KX_DAY = ['Day 1', 'Day 2', 'Day 3', 'Summit night']
 
 // Kilimanjaro: the roof. The chapter climbs with the route, from Marangu Gate
 // to the huts and into the summit night, where the ground goes dark.
+// the whole climb as one line for the relief: the stages end to end, each as
+// wide as the ground it covered
+function kiliLine(KX) {
+  const st = KX.s.slice(0, 5)
+  const total = st.reduce((a, x) => a + (x.dist || x.km || 0), 0) || 1
+  let at = 0
+  const out = []
+  st.forEach((x, i) => {
+    const w = x.dist || x.km || 0
+    ;(KX.profile[x.stage] || []).forEach((p) => out.push({ x: (at + p.f * w) / total, alt: p.alt }))
+    at += w
+  })
+  return out
+}
+// the ground cools as the page climbs: paper at the gate, a cold grey near the top
+const kiliGround = (v) => {
+  const t = Math.min(1, Math.max(0, (v - 1880) / (5895 - 1880))) * 0.085
+  const mix = (a, b) => Math.round(a + (b - a) * t)
+  return `rgb(${mix(242, 36)}, ${mix(240, 49)}, ${mix(235, 58)})`
+}
+
 export default function Kilimanjaro() {
   const kxStages = useTable('kili_expedition')
   const kxProfile = useTable('kili_expedition_profile')
@@ -63,6 +85,13 @@ export default function Kilimanjaro() {
   return (
     <Mountain
       id="kilimanjaro"
+      relief={<Relief lines={[kiliLine(KX)]} />}
+      gauge={{
+        min: 1600, max: 6000, unit: 'metres',
+        stops: [{ v: s[0].start, label: 'Marangu Gate' }, { v: s[0].end, label: 'Mandara Hut' }, { v: s[1].end, label: 'Horombo Hut' }, { v: s[2].end, label: 'Kibo Hut' }, { v: s[3].high, label: 'The watch stopped' }, { v: KX_TOP, label: 'Uhuru Peak' }],
+        fmt: (v) => n0(Math.round(v / 10) * 10),
+        ground: kiliGround,
+      }}
       hero="kili-hero"
       standfirst={<>The mountain is climbed one hut at a time. In March 2023 I went up the Marangu route and reached Uhuru Peak, {n0(KX_TOP)} m, on my first try.</>}
       facts={[
@@ -72,7 +101,7 @@ export default function Kilimanjaro() {
         { label: 'huts on the way up', value: '3' },
       ]}
     >
-      <Band>
+      <Band at={[s[0].start, s[0].end]}>
         <Scene
           label="The way up"
           title="Three days to Kibo Hut."
@@ -91,14 +120,14 @@ export default function Kilimanjaro() {
         </Scene>
       </Band>
 
-      <Band>
+      <Band at={[s[0].end, s[1].end]}>
         <Plates>
           <Plate slot="kili-forest" caption="Marangu Gate to Mandara Hut · 6 March 2023" />
           <Plate slot="kili-huts" caption={`Horombo Hut · ${n0(s[1].end)} m`} />
         </Plates>
       </Band>
 
-      <Band>
+      <Band at={[s[1].end, s[2].end]}>
         <Scene
           label="One hut at a time"
           title={`About ${n0(KX.dayClimb)} m a day.`}
@@ -117,9 +146,9 @@ export default function Kilimanjaro() {
         </Scene>
       </Band>
 
-      <Band><Plate slot="kili-saddle" ratio="21 / 9" caption={`The saddle, on the way to Kibo Hut · ${n0(s[2].end)} m`} /></Band>
+      <Band at={s[2].end}><Plate slot="kili-saddle" ratio="21 / 9" caption={`The saddle, on the way to Kibo Hut · ${n0(s[2].end)} m`} /></Band>
 
-      <Band night>
+      <Band night at={[s[2].end, KX_TOP]}>
         <Scene label="The summit night" title="The part my watch did not finish.">
           <p>Before midnight on the third day I set out from Kibo Hut for the top.</p>
           <p>The power saver stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. The top is missing from the record. I carry it in my memory.</p>
@@ -130,7 +159,7 @@ export default function Kilimanjaro() {
       </Band>
 
       {half.length ? (
-        <Band>
+        <Band at={s[0].start}>
           <Scene
             label="The road at its foot"
             title={faster ? 'Back every year, a little faster.' : 'Back every year.'}

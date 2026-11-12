@@ -88,3 +88,156 @@ html.motion .spart-gap[data-fx] .spart-gap__t { opacity: calc(0.12 + var(--fx-in
 @media (prefers-reduced-motion: reduce) {
   .spart__head[data-fx] .spart__n, .spart-gap[data-fx] .spart-gap__t { transform: none !important; opacity: 1 !important; }
 }
+
+/* ---- the cold open: the board holds while three beats pass over it ---- */
+html.motion .shero-scene__run--beats { height: 260vh; }
+.hx__foot { display: grid; flex: none; }
+.hx__foot > * { grid-area: 1 / 1; }
+.hx__beats { list-style: none; margin: clamp(0.9rem, 2.4vh, 1.4rem) 0 0; padding: 0.75rem 0 0; border-top: 1.5px solid var(--ink); pointer-events: none; }
+.hx__beats li { grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); gap: var(--grid-gap); align-items: baseline; opacity: 0; translate: 0 0.6rem; transition: opacity 0.5s var(--ease-out), translate 0.6s var(--ease-out); }
+.hx__beats { display: grid; }
+.hx__beats li.is-on { opacity: 1; translate: 0 0; }
+.hx__bk { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.hx__bt { font-family: var(--font-read); font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance; }
+.hx.is-beat3 .hx__bk { color: var(--accent-ink); }
+.hx .hx__nums { transition: opacity 0.45s var(--ease-out); }
+.hx.is-beat .hx__nums { opacity: 0; }
+/* each beat lights its stretch of the bars and its note, and lets the rest sink back */
+.hx__bars i { transition: opacity 0.5s var(--ease-out), filter 0.5s var(--ease-out); }
+.hx.is-beat .hx__bars i { opacity: 0.16 !important; }
+.hx.is-beat1 .hx__bars i.is-s1 { opacity: 1 !important; background: var(--ink); }
+.hx.is-beat1 .hx__bars i.is-s1.is-empty { background: color-mix(in srgb, var(--ink) 55%, transparent); }
+.hx.is-beat2 .hx__bars i.is-s2 { opacity: 1 !important; background: var(--ink); }
+.hx.is-beat3 .hx__bars i.is-s3 { opacity: 1 !important; }
+.hx .hx__note { transition: opacity 0.5s var(--ease-out); }
+.hx.is-beat .hx__note, .hx.is-beat .hx__brk { opacity: 0.18 !important; }
+.hx.is-beat1 .hx__note--gap, .hx.is-beat2 .hx__note--back, .hx.is-beat3 .hx__note--now, .hx.is-beat3 .hx__brk { opacity: 1 !important; }
+/* the silence itself becomes a block you can see */
+.hx.is-beat1 .hx__bars i.is-s1.is-empty { height: 100% !important; background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 22%, transparent) 0 1px, transparent 1px 6px) !important; }
+@media (max-width: 47.999rem) { .hx__beats li { grid-template-columns: minmax(0, 1fr); gap: 0.3rem; } }
+@media (prefers-reduced-motion: reduce) { .hx__beats, .hx.is-beat .hx__nums { display: none; } .hx.is-beat .hx__nums { opacity: 1; } }
+
+/* ---- the spine: the record itself, across the top of every page ---- */
+.sread { display: none !important; }
+.spine { position: fixed; top: 0; left: 0; right: 0; z-index: 1001; height: 5px; pointer-events: none; }
+.spine__in { position: relative; height: 100%; padding-inline: 0; transition: height 0.4s var(--ease-out), background 0.3s, padding 0.4s var(--ease-out); }
+.spine__track { position: absolute; inset: 0; }
+.spine__bars { position: absolute; inset: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: end; gap: 0; }
+.spine__bars i { display: block; height: 100%; background: var(--ink); }
+.spine__bars i.is-empty { background: transparent; }
+.spine__bars i.is-now { background: var(--accent); }
+.spine__bars.is-base { opacity: 0.16; }
+.spine__bars.is-read { clip-path: inset(0 calc((1 - var(--read, 0)) * 100%) 0 0); transition: clip-path 0.25s linear; }
+.spine__gap { position: absolute; top: 0; bottom: 0; border-inline: 1px dashed color-mix(in srgb, var(--ink) 30%, transparent); }
+.spine__mtn { position: absolute; top: 0; bottom: 0; width: 0; }
+.spine__again { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--ink); opacity: 0.55; }
+.spine__peak { position: absolute; top: 0; left: -1px; width: 2px; height: 100%; background: var(--ink); }
+.spine__peak span, .spine__parts { display: none; }
+html.menu-open .spine { opacity: 0; }
+@media (hover: hover) and (min-width: 48rem) {
+  .spine { height: 7px; pointer-events: auto; }
+  .spine__in { height: 7px; }
+  /* it opens into a small chart: bars as tall as each month, the parts and the mountains to click */
+  .spine:hover .spine__in, .spine:focus-within .spine__in { height: 4.6rem; background: color-mix(in srgb, var(--paper) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 0.5rem var(--gutter) 1.6rem; box-shadow: 0 1px 0 var(--rule-faint); }
+  .spine:hover .spine__track, .spine:focus-within .spine__track { inset: 0.5rem var(--gutter) 1.6rem; }
+  .spine__bars i { transition: height 0.4s var(--ease-out); }
+  .spine:hover .spine__bars.is-base, .spine:focus-within .spine__bars.is-base { opacity: 0.22; }
+  .spine:hover .spine__bars i, .spine:focus-within .spine__bars i { height: var(--hh, 100%); }
+  .spine__parts { display: block; list-style: none; margin: 0; padding: 0; position: absolute; inset: auto var(--gutter) 0; height: 1.6rem; opacity: 0; transition: opacity 0.3s; }
+  .spine:hover .spine__parts, .spine:focus-within .spine__parts { opacity: 1; }
+  .spine__parts li { position: absolute; top: 0; height: 100%; border-left: 1px solid var(--rule-faint); }
+  .spine__parts a { display: flex; gap: 0.5ch; align-items: baseline; height: 100%; padding: 0.35rem 0.5rem 0; color: var(--fg-muted); text-decoration: none; font-size: 0.7rem; white-space: nowrap; overflow: hidden; }
+  .spine__parts a b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .spine__parts a:hover, .spine__parts a:focus-visible { color: var(--accent-ink); outline: none; background: var(--fill-track); }
+  .spine__peak span { display: block; position: absolute; top: -0.1rem; left: 6px; font-size: 0.66rem; font-weight: 600; color: var(--ink); white-space: nowrap; opacity: 0; transition: opacity 0.2s; }
+  .spine:hover .spine__peak:hover span, .spine__peak:focus-visible span { opacity: 1; }
+  .spine:hover .spine__peak, .spine:focus-within .spine__peak { width: 3px; background: var(--ink); }
+  .spine__peak:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { .spine__in, .spine__bars i, .spine__bars.is-read { transition: none !important; } }
+
+/* ---- the year cards of a part: three numbers and every day of the year ---- */
+.ycard__nums { display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; margin-top: var(--sp-2); font-size: var(--fs-xs); color: var(--fg-muted); }
+.ycard__nums b { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-md); color: var(--ink); font-variant-numeric: tabular-nums; margin-right: 0.15em; }
+.ycard__strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); height: 1.6rem; margin-top: var(--sp-3); gap: 0; }
+.ycard__strip i { display: block; background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.ycard__strip i.is-on { background: var(--ink); }
+.ycard__strip i.is-s { background: var(--accent); }
+.ycard--quiet .ycard__strip i.is-on { background: var(--grey-55); }
+
+/* ---- moments inside a part: the timeline, where it happened ---- */
+.smom { margin-top: var(--r4, 2.618rem); border-top: 1px solid var(--ink); padding-top: var(--sp-3); }
+.smom__k, .slesson__k, .shand__k { margin: 0 0 var(--sp-3); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.smom__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 0 var(--grid-gap); }
+.smom__list li { display: grid; grid-template-columns: 6.6rem minmax(0, 1fr); column-gap: var(--sp-3); padding: 0.55rem 0; border-bottom: 1px solid var(--rule-faint); align-items: baseline; }
+.smom__list time { grid-row: 1 / span 2; font-size: 0.78rem; font-variant-numeric: tabular-nums; color: var(--fg-muted); }
+.smom__list b { font-weight: 600; font-size: 0.95rem; }
+.smom__list span { grid-column: 2; font-size: 0.8rem; color: var(--fg-muted); }
+.smom__list li.is-now b { color: var(--accent-ink); }
+
+/* ---- the lesson learned in a part ---- */
+.slesson { margin: var(--r4, 2.618rem) 0 0; display: grid; grid-template-columns: minmax(0, 1fr); border-top: 3px solid var(--ink); padding-top: var(--sp-4); }
+.slesson__t { font-family: var(--font-read); font-weight: 400; font-size: clamp(1.618rem, 1.2rem + 1.8vw, 3.33rem); line-height: 1.1; letter-spacing: -0.015em; color: var(--ink); text-decoration: none; }
+a.slesson__t:hover { color: var(--accent-ink); }
+a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (min-width: 48rem) { .slesson { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: var(--grid-gap); align-items: baseline; } .slesson__k { margin: 0; } }
+
+/* ---- the hand-off to the next part ---- */
+.shand { margin-top: var(--r4, 2.618rem); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--sp-2) var(--sp-4); padding: var(--sp-5) 0; border-block: 1px solid var(--ink); color: var(--ink); text-decoration: none; }
+.shand__k { grid-column: 1 / -1; margin: 0; }
+.shand__t { font-family: var(--font-display); font-weight: 600; font-size: clamp(2.058rem, 1.4rem + 2.6vw, 4.236rem); line-height: 0.95; letter-spacing: -0.04em; transition: translate 0.5s var(--ease-out), color 0.3s; }
+.shand__a { font-size: 2rem; line-height: 1; transition: translate 0.5s var(--ease-out); }
+.shand:hover .shand__t { color: var(--accent-ink); translate: 0.6rem 0; }
+.shand:hover .shand__a { translate: 0 0.4rem; }
+.shand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .shand__t, .shand__a { transition: none; } }
+
+/* ---- the story reads in the reading face; the Record keeps the working face ---- */
+.spart .sgrid__statement:where(:not(.book *)), .hero__statement:where(:not(.book *)), .smom ~ .sgrid__statement { font-family: var(--font-read); letter-spacing: 0; }
+.spart .sgrid__statement:where(:not(.book *)) { font-size: clamp(1.18rem, 1.05rem + 0.55vw, 1.5rem); line-height: 1.55; }
+
+/* in the book: the moments in two columns, the lesson as a ruled line */
+.book .smom__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.book .slesson__t { font-size: var(--t3); }
+.book .smom, .book .slesson { break-inside: avoid; }
+
+/* ---- the ledger rows: how long each record has stood, and where it is told ---- */
+.yrec__st { margin: 0; font-size: 0.8rem; color: var(--fg-muted); }
+.yrec__go { justify-self: start; font-size: 0.78rem; font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.yrec__go:hover { color: var(--accent-ink); }
+.yrec__go:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.yrecs--ledger .yrec { grid-template-areas: "k s" "v v" "l l" "st go"; }
+.yrecs--ledger .yrec__st { grid-area: st; }
+.yrecs--ledger .yrec__go { grid-area: go; justify-self: end; }
+@media (min-width: 64rem) {
+  .yrecs--ledger .yrec { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.618fr); grid-template-areas: "k v l" "s v st" ". v go"; }
+  .yrecs--ledger .yrec__go { justify-self: start; }
+}
+
+/* ---- the map stage on Where: the map holds while the years pass ---- */
+.mstage { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); }
+.mstage__yr { display: flex; align-items: baseline; gap: var(--sp-3); margin: 0 0 var(--sp-3); }
+.mstage__yr b { font-family: var(--font-display); font-stretch: 68%; font-weight: 600; font-size: clamp(2.618rem, 1.6rem + 3vw, 4.236rem); line-height: 1; letter-spacing: -0.03em; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.mstage__yr span { font-size: 0.85rem; color: var(--fg-muted); }
+.mstage__steps { list-style: none; margin: 0; padding: 0; }
+.mstage__steps li { padding: var(--sp-4) 0; border-top: 1px solid var(--rule-faint); transition: color 0.4s var(--ease-out); }
+.mstage__k { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lg); font-variant-numeric: tabular-nums; }
+.mstage__t { margin: var(--sp-2) 0 0; font-family: var(--font-read); font-size: clamp(1.128rem, 1rem + 0.4vw, 1.375rem); line-height: 1.45; }
+.mstage__s { margin: var(--sp-2) 0 0; font-size: 0.85rem; color: var(--fg-muted); }
+@media (min-width: 64rem) {
+  .sgrid:not(.book .sgrid) > .mstage { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .mstage__map { grid-column: 2; grid-row: 1; position: sticky; top: calc(var(--nav-h) + 1rem); align-self: start; }
+  .mstage__steps { grid-column: 1; grid-row: 1; padding-block: 18vh 30vh; }
+  .mstage__steps li { min-height: 46vh; display: flex; flex-direction: column; justify-content: center; color: var(--fg-muted); }
+  .mstage__steps li .mstage__t { color: var(--fg-muted); }
+  .mstage__steps li.is-on, .mstage__steps li.is-on .mstage__t { color: var(--ink); }
+  .mstage__steps li.is-on .mstage__k { color: var(--accent-ink); }
+}
+.book .mstage__steps li { opacity: 1; min-height: 0; }
+@media (prefers-reduced-motion: reduce) { .mstage__steps li { transition: none; } }
+
+/* ---- a movement opens on one large chart: the first finding after it sets its
+   two charts one above the other, each across the full width ---- */
+@media (min-width: 64rem) {
+  .spart--mv + hr.rule + .sgrid:not(.book .sgrid) > .sgrid__pair, .spart--mv + .sgrid:not(.book .sgrid) > .sgrid__pair { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chart" "cnote" "mx" "mnote"; row-gap: var(--sp-4); }
+}

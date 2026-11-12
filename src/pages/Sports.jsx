@@ -20,7 +20,7 @@ import FitScatter from '../charts/FitScatter.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import TwoLines from '../charts/TwoLines.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { useSectionPaging } from '../lib/sections.js'
+import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
 import { buildFootReport, SPORTS, SPORT_NAME, MODES, MODE_NAME, MODE_SHORT, TREAD_MIN } from '../lib/footReport.js'
 
@@ -58,6 +58,7 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone })
 export default function Sports() {
   const book = useBook()
   const activities = useTable('activities')
+  useSectionJump()
   const { prev, next } = useSectionPaging('/sports')
   const r = useMemo(() => (activities.length ? buildFootReport(activities) : null), [activities])
 
@@ -856,17 +857,16 @@ export default function Sports() {
         <section className="sgrid" aria-labelledby="sp-each">
           <div className="sgrid__head">
             <Eyebrow>{num()} · Each sport on its own</Eyebrow>
-            <h2 id="sp-each" className="section-head__title">Open any&nbsp;sport.</h2>
+            <h2 id="sp-each" className="section-head__title">The four, side by&nbsp;side.</h2>
           </div>
           <ul className="sp-cards">
             {SPORTS.map((s) => (
-              <li key={s} className={`sp-card sp-card--${s}`}>
-                <Link to={`/sports/${slugify(s)}`}>
+              <li key={s} className={`sp-card sp-card--${s}`} id={`sport-${slugify(s)}`}>
+                <div className="sp-card__in">
                   <p className="sp-card__k">{SPORT_NAME[s]}</p>
                   <p className="sp-card__v">{n0(S[s].n)}<span className="sp-card__u"> {ofSport(s)}</span></p>
                   <p className="sp-card__l">{n0(S[s].km)} km and {n0(S[s].elev)} m of climb</p>
-                  <p className="sp-card__go">Open {ofSport(s)} &rarr;</p>
-                </Link>
+                </div>
               </li>
             ))}
           </ul>

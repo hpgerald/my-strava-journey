@@ -4,6 +4,7 @@ import Plate from '../components/Plate.jsx'
 import RidgeProfile from '../charts/RidgeProfile.jsx'
 import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
+import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { buildNgong, routesOf } from '../lib/mountains.js'
 
@@ -47,6 +48,7 @@ export default function Ngong() {
   return (
     <Mountain
       id="ngong"
+      relief={<Relief lines={[N.pts.map((p) => ({ x: p.d / N.end.d, alt: p.alt }))]} />}
       hero="ngong-hero"
       standfirst={<>This one is across the border. In {fmtMonth(T.date)} I went along the ridge of the Ngong Hills in Kenya{N.abroadTop ? <>, and the {n0(T.climb)} m I climbed there is the most I have climbed in one outing outside Tanzania</> : null}.</>}
       facts={[

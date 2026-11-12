@@ -1,4 +1,22 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTable } from '../context/DataContext.jsx'
+
+// a link such as /what-it-means?s=wm-days lands on that section once it is drawn
+export function useSectionJump() {
+  const { search } = useLocation()
+  useEffect(() => {
+    const id = new URLSearchParams(search).get('s')
+    if (!id) return undefined
+    let tries = 0
+    const t = setInterval(() => {
+      const el = document.getElementById(id)
+      const sec = el && (el.closest('section') || el)
+      if (sec || ++tries > 40) { clearInterval(t); if (sec) sec.scrollIntoView({ block: 'start' }) }
+    }, 150)
+    return () => clearInterval(t)
+  }, [search])
+}
 
 // Prev/next paging between top-level sections, in nav_index order.
 export function useSectionPaging(route) {
