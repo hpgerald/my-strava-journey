@@ -370,7 +370,7 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 .hx__yrs { flex: none; display: flex; border-top: 1.5px solid var(--ink); }
 .hx__yrs span { flex: none; border-left: 1px solid var(--rule-faint); padding: 0.45rem 0 0 0.4rem; overflow: hidden; white-space: nowrap; }
 .hx__yrs span:first-child { border-left: 0; padding-left: 0; }
-.hx__yrs em { font-style: normal; font-family: var(--font-sans); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.hx__yrs em { font-style: normal; font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
 .hx__ys { display: none; }
 
 .hx__note { position: absolute; margin: 0; font-family: var(--font-sans); font-size: 0.74rem; font-weight: 500; line-height: 1.3; color: var(--fg-muted); white-space: nowrap; z-index: 1; }
@@ -402,13 +402,14 @@ html.is-scrolling .shart__spin, html.is-scrolling .shart__sealdot, html.is-scrol
 @media (max-width: 40rem) {
   .hx__plot { padding-top: 2.6rem; }
   .hx__bars { gap: 1px; }
-  .hx__note { font-size: 0.66rem; }
+  .hx__note { font-size: 0.75rem; }
   .hx__note b { font-size: 1.02rem; }
   .hx__note--back span { display: none; }
   .hx__brk { top: 2.2rem; }
   .hx__yl { display: none; }
   .hx__ys { display: inline; }
   .hx__yrs span { padding-left: 0.2rem; }
+  .hx__yrs em { letter-spacing: 0; }
   .hx__nums { grid-template-columns: 1fr 1fr; }
   .hx__nums div:nth-child(3) { border-left: 0; padding-left: 0; }
   .hx__nums div:nth-child(n+3) { margin-top: 0.6rem; border-top: 1px solid var(--rule-faint); }
@@ -442,3 +443,8 @@ html.motion.pre-on .hx__nums div { animation-delay: calc(3.2s + var(--k, 0) * 0.
 html.motion .hx__t { --p: var(--fx-pin, 0); transform: translate3d(0, calc(var(--p) * -3vh), 0); opacity: calc(1 - var(--p) * 0.5); will-change: transform, opacity; }
 html.is-scrolling .hx__ch, html.is-scrolling .hx__dot, html.is-scrolling .hx__bars i, html.is-scrolling .hx__bars i::after, html.is-scrolling .hx__spin, html.is-scrolling .hx__sealdot { animation-play-state: paused !important; }
 .route-wait { min-height: 100vh; background: var(--paper); }
+
+/* on the narrowest phones the layoff note wraps instead of running off the left edge */
+@media (max-width: 25rem) {
+  .hx__note--gap { white-space: normal; max-width: 4.8rem; }
+}

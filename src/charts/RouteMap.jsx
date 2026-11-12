@@ -8,6 +8,10 @@ import { useSceneH, fitH } from '../components/SceneContext.js'
 //   marks [{ at [lat, lng], label, sub?, kind 'start' | 'top' | 'hut' | 'open', side? 'l' | 'r', dy?,
 //     quiet? (on a narrow map the mark stays and its words step out) }],
 //   aria, ratio (height / width, default 0.72)
+// A line may carry `alt`, a function from the share of the way done (0 to 1) to
+// the altitude my watch recorded there, and `by` 'dist' (default) or 'index' for
+// how that share is counted. Those lines get a band of ground under them, shaded
+// from low to high by the altitude, so the climb shows on the map itself.
 const R = 6371
 
 export default function RouteMap({ lines = [], marks = [], aria, ratio = 0.72 }) {
@@ -39,12 +43,33 @@ export default function RouteMap({ lines = [], marks = [], aria, ratio = 0.72 })
   // a round scale bar: 1, 2 or 5 km, about a fifth of the width
   const barKm = (W * 0.2) / s
   const bar = [0.5, 1, 2, 5, 10].reduce((b, v) => (Math.abs(v - barKm) < Math.abs(b - barKm) ? v : b), 1)
+  // the ground under the lines that carry an altitude
+  const shaded = lines.filter((l) => typeof l.alt === 'function' && l.pts.length > 1)
+  const ground = shaded.map((l) => {
+    const km = [0]
+    for (let i = 1; i < l.pts.length; i++) { const a = toKm(l.pts[i - 1]), b = toKm(l.pts[i]); km.push(km[i - 1] + Math.hypot(b[0] - a[0], b[1] - a[1])) }
+    const tot = km[km.length - 1] || 1
+    return l.pts.map((p, i) => ({ p, m: l.alt(l.by === 'index' ? i / (l.pts.length - 1) : km[i] / tot) }))
+  })
+  const alts = ground.flat().map((g) => g.m).filter((v) => Number.isFinite(v))
+  const aLo = alts.length ? Math.min(...alts) : 0, aHi = alts.length ? Math.max(...alts) : 1
+  // low ground is pale sand, high ground a deep earth brown
+  const tint = (m) => { const t = Math.max(0, Math.min(1, (m - aLo) / Math.max(1, aHi - aLo))); const mix = (a, b) => Math.round(a + (b - a) * t); return `rgb(${mix(236, 150)}, ${mix(228, 118)}, ${mix(210, 84)})` }
+  const bandW = narrow ? 14 : 20
   const order = { faint: 0, back: 1, main: 2 }
   const sorted = [...lines].sort((a, b) => (order[a.tone] || 0) - (order[b.tone] || 0))
 
   return (
     <div ref={ref} className="rmap">
       <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block', overflow: 'visible' }}>
+        {ground.length ? (
+          <g className="rmap__ground" aria-hidden="true">
+            {ground.map((g, gi) => g.slice(1).map((q, i) => {
+              const [x1, y1] = xy(g[i].p), [x2, y2] = xy(q.p)
+              return <line key={`${gi}-${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={tint((g[i].m + q.m) / 2)} strokeWidth={bandW} strokeLinecap="round" />
+            }))}
+          </g>
+        ) : null}
         {sorted.map((l) => (
           <path key={l.key} d={d(l.pts)} className={`rmap__line rmap__line--${l.tone || 'main'}${l.dashed ? ' is-dashed' : ''}`} fill="none" />
         ))}
@@ -73,6 +98,14 @@ export default function RouteMap({ lines = [], marks = [], aria, ratio = 0.72 })
           <text x="0" y="18" textAnchor="middle">N</text>
         </g>
       </svg>
+      {ground.length ? (
+        <p className="rmap__key" aria-hidden="true">
+          <span>{(Math.round(aLo / 10) * 10).toLocaleString('en-US')} m</span>
+          <i style={{ background: `linear-gradient(90deg, ${tint(aLo)}, ${tint(aHi)})` }} />
+          <span>{(Math.round(aHi / 10) * 10).toLocaleString('en-US')} m</span>
+          <em>ground height on my watch</em>
+        </p>
+      ) : null}
     </div>
   )
 }

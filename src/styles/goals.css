@@ -182,7 +182,7 @@ html.motion .ksplit.is-in .ksplit__pt:where(:not(.book *)) { opacity: 1; }
 .kkm__run { fill: var(--accent); }
 .kkm__tot { font-family: var(--font-mono); font-size: 13px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; }
 .kkm__tot.is-now { fill: var(--accent-ink); }
-.kkm__gk { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--fg-muted); }
+.kkm__gk { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--fg-muted); }
 .kkm__gb { fill: var(--grey-45); }
 .kkm__gb.is-run { fill: var(--accent); }
 .kkm__gv { font-family: var(--font-mono); font-size: 11px; font-weight: 600; fill: var(--ink); }

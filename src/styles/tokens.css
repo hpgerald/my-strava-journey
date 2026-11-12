@@ -66,7 +66,7 @@
      Inter for everything that is read. --font-read is kept as a name for the
      reading lines and points at Inter. */
   --font-read: var(--font-sans);
-  --fs-2xs: clamp(0.656rem, 0.628rem + 0.12vw, 0.740rem);
+  --fs-2xs: clamp(0.75rem, 0.72rem + 0.08vw, 0.78rem);
   --fs-xs:  clamp(0.740rem, 0.709rem + 0.14vw, 0.835rem);
   --fs-sm:  clamp(0.835rem, 0.799rem + 0.16vw, 0.942rem);
   --fs-base: clamp(1rem, 0.957rem + 0.19vw, 1.128rem);

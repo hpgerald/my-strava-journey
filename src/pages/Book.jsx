@@ -45,7 +45,7 @@ const word = (n) => WORD[n] || String(n)
 const ch = (route) => { const c = CHAPTERS.find((x) => x.route === route); return [c.n, c.title] }
 const PARTS = [
   { n: 'I', name: 'Part one', title: 'The story', line: 'Seven years in the order they happened, from the quiet first months to the year with no zero day.', chapters: [ch('/')] },
-  { n: 'II', name: 'Part two', title: 'The mountains', line: 'Four mountains, each with the line my watch drew on it.', chapters: MOUNTAINS.map((m) => ch(m.to)) },
+  { n: 'II', name: 'Part two', title: 'The mountains', line: 'Four mountains, told from my memory and from the line my watch drew on each.', chapters: MOUNTAINS.map((m) => ch(m.to)) },
   { n: 'III', name: 'Part three', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [ch('/what-it-means')] },
   { n: 'IV', name: 'Part four', title: 'The Record', line: 'Each year on its own, my sports, my records, the places I went, the timeline and my goals.', chapters: ['/numbers', '/sports', '/records', '/where', '/timeline', '/goals'].map(ch) },
   { n: 'V', name: 'Part five', title: 'The proof', line: 'Twelve things I believe about my habit, each one tested against the log.', chapters: [ch('/on-trial')] },
@@ -248,6 +248,11 @@ function Prologue({ F }) {
         Then I stopped for {n0(F.silence.len)} days, from {fmtMonth(F.silence.from)} to {fmtMonth(F.silence.to)}.
       </p>
       <p>
+        I had heard about Strava and wanted to give it a try, and the push to move came from Jocko Willink and his words, discipline equals freedom.
+        The silence came when I changed jobs and moved from Arusha to Kilimanjaro, in the time of COVID-19. A medical check-up brought me back:
+        it told me to move about 30 minutes a day.
+      </p>
+      <p>
         When I started again, I did not stop. Since {fmtMonth(F.habitISO)} I have been out on {n0(F.habitActive)} of {n0(F.habitDays)} days, and my longest layoff has been {word(F.maxAfter)} days.
         As I finish this edition, I am on a {n0(F.streak)}-day streak.
       </p>
@@ -323,7 +328,8 @@ function Epilogue({ F }) {
       </p>
       <p>
         <span lang="sw">Mvumilivu hula mbivu</span>, the patient one eats the ripe fruit. The biggest lesson in this book is a plain one: the days
-        matter more than the distance. When the days kept coming, the distance came back by itself.
+        matter more than the distance. When the distance came back, the days were already there to build on.
+        {F.lastISO < '2027-01-01' ? ' My first target for this streak is 31 December 2026, without a zero day.' : ''}
       </p>
       <p>I will be out tomorrow.</p>
       <p className="bk-sign">Gerald Tesha</p>

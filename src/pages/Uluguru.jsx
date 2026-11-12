@@ -7,7 +7,7 @@ import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
 import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { buildUluguru, routesOf } from '../lib/mountains.js'
+import { buildUluguru, routesOf, altAlong } from '../lib/mountains.js'
 
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
@@ -41,7 +41,11 @@ export default function Uluguru() {
   // Bondwa Peak on the map: the highest point of the featured trip is the southern end of its line
   const bestLine = routes[best.trip]
   const peak = bestLine.reduce((b, p) => (p[0] < b[0] ? p : b), bestLine[0])
-  const lines = trips.map((t) => ({ key: t.trip, pts: routes[t.trip], tone: t.trip === best.trip ? 'main' : t.trip === first.trip ? 'faint' : 'back' }))
+  const lines = trips.map((t) => {
+    const tone = t.trip === best.trip ? 'main' : t.trip === first.trip ? 'faint' : 'back'
+    const end = t.profile[t.profile.length - 1].d || 1
+    return { key: t.trip, pts: routes[t.trip], tone, alt: tone === 'faint' ? undefined : altAlong(t.profile.map((p) => ({ x: p.d / end, alt: p.alt }))) || undefined }
+  })
   const marks = [
     { at: routes[first.trip][0], label: 'Morogoro', sub: `${n0(first.startAlt)} m`, kind: 'start' },
     { at: bestLine[0], label: 'The trailhead', sub: `${n0(best.startAlt)} m`, kind: 'hut' },

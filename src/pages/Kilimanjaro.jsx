@@ -7,7 +7,7 @@ import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
 import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { buildKX, routesOf, tripsOf, KX_TOP, KX_RIM, UHURU } from '../lib/mountains.js'
+import { buildKX, routesOf, tripsOf, KX_TOP, KX_RIM, UHURU, altAlong } from '../lib/mountains.js'
 
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
 const k1 = (v) => (v || 0).toFixed(1)
@@ -67,7 +67,7 @@ export default function Kilimanjaro() {
   const s = KX.s
   const last = routes['stage-4'][routes['stage-4'].length - 1]
   const lines = [
-    ...['stage-1', 'stage-2', 'stage-3', 'stage-4'].map((k) => ({ key: k, pts: routes[k], tone: 'main' })),
+    ...['stage-1', 'stage-2', 'stage-3', 'stage-4'].map((k, i) => ({ key: k, pts: routes[k], tone: 'main', alt: altAlong(kxProfile.filter((r) => +r.stage === i + 1).map((r) => ({ x: +r.frac, alt: +r.alt_m }))) || undefined })),
     { key: 'missed', pts: [last, UHURU], tone: 'faint', dashed: true },
   ]
   const marks = [

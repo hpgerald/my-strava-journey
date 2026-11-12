@@ -73,7 +73,7 @@
 
 /* ---- the maths of a year ---- */
 .isok__iso path { fill: none; stroke: var(--grey-35); stroke-width: 1.5; stroke-dasharray: 5 4; }
-.isok__il { font-family: var(--font-mono); font-size: 10px; fill: var(--fg-muted); letter-spacing: var(--tr-wide); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.isok__il { font-family: var(--font-mono); font-size: 12px; fill: var(--fg-muted); letter-spacing: var(--tr-wide); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
 .isok__pt circle { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
 .isok__pt.is-now circle { fill: var(--accent); }
 .isok__pl { font-size: var(--fs-2xs); font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }

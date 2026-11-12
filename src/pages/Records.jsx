@@ -222,7 +222,7 @@ export default function Records() {
               { num: dP.length, unit: '', label: 'times the record broke', tone: 'move' },
               { book: true, num: dNow.km, dec: 1, unit: ' km', label: 'the record now', tone: 'move' },
               { num: R.distStanding.days, unit: ' days', label: 'it has stood', tone: 'rest' },
-              { num: R.distStanding.outingsSince, unit: '', label: 'outings since, none longer', tone: 'rest' },
+              { book: true, num: R.distStanding.outingsSince, unit: '', label: 'outings since, none longer', tone: 'rest' },
             ]}
           />
           <div className="rst__head">
@@ -255,7 +255,7 @@ export default function Records() {
           odds={{
             title: 'Long outings on foot',
             items: [
-              { num: R.halfUp.length, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
+              { book: true, num: R.halfUp.length, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
               { num: R.over30.length, unit: '', label: 'outings past 30 km', tone: 'move' },
               { book: true, num: treadOver30.length, unit: '', label: 'of those on a treadmill', tone: 'rest' },
               { book: true, num: longestWalk ? longestWalk.km : 0, dec: 1, unit: ' km', label: 'the longest walk', tone: 'move' },
@@ -357,7 +357,7 @@ export default function Records() {
               { book: true, num: wk.km, unit: ' km', label: `in the week of ${fmtDay(wk.start)}`, tone: 'move' },
               { book: true, num: moKm.km, unit: ' km', label: `in ${fmtMonth(moKm.month)}`, tone: 'move' },
               { num: moEl.elev, unit: ' m', label: `climbed in ${fmtMonth(moEl.month)}`, tone: 'move' },
-              { value: moEl.elev / EVEREST, label: 'of an Everest in that month', tone: 'rest' },
+              { book: true, value: moEl.elev / EVEREST, label: 'of an Everest in that month', tone: 'rest' },
             ],
           }}
           left={{
@@ -436,7 +436,7 @@ export default function Records() {
           odds={{
             title: 'The running totals',
             items: [
-              { num: totalKm, unit: ' km', label: 'on foot in all', tone: 'move' },
+              { book: true, num: totalKm, unit: ' km', label: 'on foot in all', tone: 'move' },
               { num: totalEl / EVEREST, dec: 1, unit: '', label: 'Everests climbed', tone: 'move' },
               { book: true, num: ev[0].days, unit: ' days', label: 'for the first Everest', tone: 'rest' },
               { book: true, num: evLast.days, unit: ' days', label: `for the ${ORD[evLast.k] || ordS(evLast.k)}`, tone: 'move' },
@@ -542,7 +542,7 @@ export default function Records() {
               { book: true, num: S.any.len, unit: ' days', label: S.any.current === S.any.len ? 'with an outing, still going' : 'with an outing, the best', tone: 'move' },
               { num: S.week.len, unit: ' weeks', label: 'with at least one outing', tone: 'move' },
               { book: true, num: S.run.len, unit: ' days', label: 'running in a row', tone: 'move' },
-              { num: S.longGap.len, unit: ' days', label: 'the longest layoff', tone: 'rest' },
+              { book: true, num: S.longGap.len, unit: ' days', label: 'the longest layoff', tone: 'rest' },
             ],
           }}
           left={{
@@ -589,7 +589,7 @@ export default function Records() {
               odds={{
                 title: 'Climbs by region of Tanzania',
                 items: [
-                  { num: regTop[0][1], unit: '', label: `of the top ${top20N} climbs in ${regTop[0][0]}`, tone: 'move' },
+                  { book: true, num: regTop[0][1], unit: '', label: `of the top ${top20N} climbs in ${regTop[0][0]}`, tone: 'move' },
                   { book: true, num: regs[0].elev, unit: ' m', label: `the biggest, in ${regs[0].region}`, tone: 'move' },
                   { book: true, num: regs[1].elev, unit: ' m', label: `the biggest in ${regs[1].region}`, tone: 'rest' },
                   { book: true, num: regs[2].elev, unit: ' m', label: `the biggest in ${regs[2].region}`, tone: 'rest' },
@@ -619,7 +619,7 @@ export default function Records() {
               'Where my twenty biggest climbs started, counted by region.',
             ]}
               story={[
-              `${homeInTop ? 'Very few of my big climbs started at home.' : 'None of my twenty biggest climbs started in my home regions, Dodoma and Dar es Salaam.'} Every one of them needed a trip, to ${regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`,
+              `${homeInTop ? 'Very few of my big climbs started in Dodoma or Dar es Salaam, where I go out most.' : 'None of my twenty biggest climbs started in Dodoma or Dar es Salaam, where I go out most.'} ${homeInTop ? 'Nearly every one' : 'Every one'} of them needed a trip, to ${regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`,
               regsNow.length ? `${regsNow.map((f) => f.region).join(' and ')} ${regsNow.length > 1 ? 'are' : 'is'} on the list because of trips in ${lastYear}. Each new region I visit can add a line to this chart.` : '',
             ]}
               source="Activity Log and Strava GPS start points · Tanzania regions"

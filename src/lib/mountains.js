@@ -132,3 +132,15 @@ export function buildNgong(tripRows, profileRows, activities, geo) {
     before: Math.max(0, ...activities.filter((a) => FOOT.has(a.sport_type) && (geo[a.activity_key] || {}).country === 'Kenya' && a.date.slice(0, 10) < trip.date).map((a) => +a.elevation_gain_m || 0)),
   }
 }
+
+// altitude as a function of the share of the way done, from profile points
+// [{ x (0 to 1), alt }]: the watch's own heights, read between the points
+export function altAlong(points) {
+  const P = points.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.alt)).sort((a, b) => a.x - b.x)
+  if (!P.length) return null
+  return (x) => {
+    if (x <= P[0].x) return P[0].alt
+    for (let i = 1; i < P.length; i++) if (x <= P[i].x) { const a = P[i - 1], b = P[i], t = (x - a.x) / Math.max(1e-9, b.x - a.x); return a.alt + (b.alt - a.alt) * t }
+    return P[P.length - 1].alt
+  }
+}

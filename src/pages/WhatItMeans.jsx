@@ -119,7 +119,7 @@ export default function WhatItMeans() {
             title="What it cost"
             items={[
               { num: hours, unit: ' hours', label: 'on the move since the first upload', tone: 'move' },
-              { num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
+              { book: true, num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
               { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, zero days included`, tone: 'move' },
               { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}`, tone: 'move' },
             ]}
@@ -204,7 +204,7 @@ export default function WhatItMeans() {
           odds={{
             title: `Streak savers since ${habitYear}`,
             items: [
-              { num: M.smallDays, unit: ' days', label: `under ${SMALL_KM} km on foot`, tone: 'move' },
+              { book: true, num: M.smallDays, unit: ' days', label: `under ${SMALL_KM} km on foot`, tone: 'move' },
               { book: true, value: smallShare, label: 'of all my days out', tone: 'move' },
               { value: M.smallNextActive, label: 'out again the next day', tone: 'move' },
               { value: M.restNextActive, label: 'out again after a zero day', tone: 'rest' },
@@ -307,7 +307,7 @@ export default function WhatItMeans() {
           odds={{
             title: `Days of ${LONG_KM} km or more since ${habitYear}`,
             items: [
-              { num: M.longDays, unit: ' days', label: `of ${LONG_KM} km or more on foot`, tone: 'move' },
+              { book: true, num: M.longDays, unit: ' days', label: `of ${LONG_KM} km or more on foot`, tone: 'move' },
               { value: M.longNextActive / M.longDays, label: 'followed by another day out', tone: 'move' },
               { book: true, num: after.km, dec: 1, unit: ' km', label: `the next day, against ${k1(M.avgDayKm)} km on a typical day`, tone: 'move' },
               { book: true, value: lrShare('rest'), label: `full rest after a ${LONG_RUN_KM} km run`, tone: 'rest' },
@@ -363,7 +363,7 @@ export default function WhatItMeans() {
             items: [
               { num: 1000 / 365, dec: 1, unit: ' km', label: 'a day makes 1,000 km a year', tone: 'rest' },
               { book: true, num: longYear.kmPerActive, dec: 1, unit: ' km', label: `per day out in ${longYear.year}, the longest`, tone: 'move' },
-              { value: cur.share, label: `of days out in ${cur.year}${cur.partial ? ' so far' : ''}`, tone: 'move' },
+              { book: true, value: cur.share, label: `of days out in ${cur.year}${cur.partial ? ' so far' : ''}`, tone: 'move' },
               { book: true, num: lowYear.km, unit: ' km', label: `in ${lowYear.year}, low on both`, tone: 'rest' },
             ],
           }}

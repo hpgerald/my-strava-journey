@@ -210,7 +210,7 @@ export default function Goals() {
               { num: cur.walk.total, unit: ' km', label: `walked, ${Math.round(cur.walk.share * 100)}% of the target`, tone: cur.walk.closed != null ? 'move' : 'rest' },
               { num: cur.run.total, unit: ' km', label: `run, ${Math.round(cur.run.share * 100)}% of the target`, tone: cur.run.closed != null ? 'move' : 'rest' },
               { num: cur.elev.total, unit: ' m', label: `climbed on foot, ${Math.round(cur.elev.share * 100)}% of the target`, tone: cur.elev.closed != null ? 'move' : 'rest' },
-              { num: G.daysLeft, unit: ' days', label: `left in ${cur.year}`, tone: 'rest' },
+              { book: true, num: G.daysLeft, unit: ' days', label: `left in ${cur.year}`, tone: 'rest' },
             ]}
           />
           <GoalRace
@@ -293,7 +293,7 @@ export default function Goals() {
               odds={{
                 title: `The climb, ${cur.year}`,
                 items: [
-                  { num: toGo, unit: ' m', label: `still to climb in ${n0(G.daysLeft)} days`, tone: 'rest' },
+                  { book: true, num: toGo, unit: ' m', label: `still to climb in ${n0(G.daysLeft)} days`, tone: 'rest' },
                   { num: S.needPerDay, unit: ' m', label: 'a day needed from here', tone: 'rest' },
                   { num: S.perDay, unit: ' m', label: `a day so far in ${cur.year}`, tone: 'move' },
                   { book: true, value: S.hit, label: `of ${n0(S.finals.length)} replays close the ring`, tone: 'move' },
@@ -350,8 +350,8 @@ export default function Goals() {
                 title: `${cap(word(race.length))} editions of one race`,
                 items: [
                   { num: first.moving - last.moving, unit: ' min', dec: 1, label: `quicker in ${last.year} than in ${first.year}`, tone: 'move' },
-                  ...(split ? [{ num: downGain, unit: ' min', dec: 1, label: 'of it gained on the way down', tone: 'move' }, { num: upGain, unit: ' min', dec: 1, label: 'gained on the way up', tone: 'rest' }] : []),
-                  ...(last.runKm != null ? [{ num: last.runKm, unit: ' km', dec: 1, label: `run in ${last.year}, the rest walked`, tone: 'move' }] : []),
+                  ...(split ? [{ num: downGain, unit: ' min', dec: 1, label: 'of it gained on the way down', tone: 'move' }, { book: true, num: upGain, unit: ' min', dec: 1, label: 'gained on the way up', tone: 'rest' }] : []),
+                  ...(last.runKm != null ? [{ book: true, num: last.runKm, unit: ' km', dec: 1, label: `run in ${last.year}, the rest walked`, tone: 'move' }] : []),
 
                 ],
               }}
@@ -422,7 +422,7 @@ export default function Goals() {
                 title: 'Ras Kilomoni',
                 items: [
                   { book: true, num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
-                  { num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
+                  { book: true, num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
                   { num: rkKm, unit: ' km', label: `there and back, ${k1(rkKm / rk.length)} km a trip`, tone: 'move' },
                   { book: true, num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
                 ],

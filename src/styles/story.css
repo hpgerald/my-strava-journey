@@ -297,3 +297,9 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   /* the feature layout keeps its words beside its lead number */
   .sgrid--feature:not(.book .sgrid) > .sgrid__lead > .sgrid__statement { grid-column: 1; }
 }
+
+/* the share button beside a part or mountain kicker */
+.share { display: inline-flex; align-items: center; gap: 0.4rem; margin-left: 1rem; padding: 0 0 2px; font: inherit; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: inherit; background: none; border: 0; border-bottom: 1px solid var(--accent); cursor: pointer; vertical-align: baseline; }
+.share:hover { color: var(--accent-ink); }
+.share:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.share__ico { width: 0.6rem; height: 0.6rem; border-top: 1.5px solid currentColor; border-right: 1.5px solid currentColor; transform: translateY(1px) rotate(0deg); }

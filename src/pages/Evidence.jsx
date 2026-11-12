@@ -149,19 +149,63 @@ function Case({ c }) {
   )
 }
 
-// on the site a case is one line of the verdict board: its number, the claim,
-// the key result and the verdict. The line opens the file under it.
-function Docket({ c, open, onToggle }) {
-  const id = `ev-c${c.n}`
+// the tests behind each case, by their names in the correction table
+const CASE_TESTS = {
+  1: ['Habit memory, likelihood ratio', 'Runs test'], 2: ['Streak momentum', 'Rust after breaks'], 4: ['Weekday, clustered'], 5: ['Season, clustered'],
+  6: ['5 km on the treadmill', '10 km on the treadmill', '15 km on the treadmill', '21.1 km on the treadmill'],
+  7: ['Treadmill pace trend', 'Treadmill 2026 against 2025'], 8: ['Climb and walking pace'], 9: ['Climb and running pace'],
+  10: ['Running and walking', 'Running and walking, week to week'], 11: ['Out the day after a long day', 'Distance the day after a long day'],
+  12: ['Kudos, trail run against walk'],
+}
+// how far a corrected p-value sits past 1, on a log scale capped at 10^-20
+const CAP = 20
+const posOf = (p) => Math.min(CAP, -Math.log10(Math.max(p, 1e-300))) / CAP
+const LINE = posOf(0.05)
+// a result past the line that speaks against the claim
+const AGAINST = new Set(['Running and walking, week to week'])
+const at = (v) => `calc(0.4rem + ${v} * (100% - 0.8rem))`
+
+// the small chart of a card: each test is a dot, the line is p = 0.05
+function Strip({ tests }) {
   return (
-    <li className={`ev-dk ev-dk--${c.verdict}${open ? ' is-open' : ''}`} id={id}>
-      <h3 className="ev-dk__h">
-        <button type="button" className="ev-dk__btn" aria-expanded={open} aria-controls={`${id}-file`} onClick={onToggle}>
-          <span className="ev-dk__n">{String(c.n).padStart(2, '0')}</span>
-          <span className="ev-dk__t">{c.short}</span>
-          <span className="ev-dk__key">{c.key}</span>
-          <span className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</span>
-          <span className="ev-dk__ico" aria-hidden="true" />
+    <div className="ev-strip" role="img" aria-label={tests.map(([name, , pa]) => `${name}: corrected p ${fp(pa)}${pa < 0.05 ? (AGAINST.has(name) ? ', past the line, against the claim' : ', past the line') : ', short of the line'}`).join('; ')}>
+      <span className="ev-strip__line" style={{ left: at(LINE) }} />
+      {tests.map(([name, , pa]) => (
+        <span key={name} className={`ev-strip__dot${pa < 0.05 ? (AGAINST.has(name) ? ' is-against' : ' is-past') : ''}`} style={{ left: at(posOf(pa)) }} title={`${name} · ${fp(pa)}`} />
+      ))}
+    </div>
+  )
+}
+// case 3 has no p-value: its small chart is the four eras, active days per week
+function Eras({ segments }) {
+  const t = (d) => Date.parse(d + 'T00:00:00Z')
+  const t0 = t(segments[0][0]), t1 = t(segments[segments.length - 1][1]), span = t1 - t0
+  return (
+    <div className="ev-eras" role="img" aria-label={`Four eras by active days per week: ${segments.map(([a, b, v]) => `${a.slice(0, 7)} to ${b.slice(0, 7)}, ${f(v, 1)}`).join('; ')}.`}>
+      {segments.map(([a, b, v]) => (
+        <span key={a} className="ev-eras__b" style={{ width: `${((t(b) - t(a)) / span) * 100}%`, height: `${(v / 7) * 100}%` }} />
+      ))}
+    </div>
+  )
+}
+
+// on the site a case is a card on the verdict board: its number, the verdict,
+// the claim, the key result and a small chart. The card opens its file.
+function Card({ c, holm, eras, open, onToggle }) {
+  const id = `ev-c${c.n}`
+  const tests = (CASE_TESTS[c.n] || []).map((name) => holm.find((r) => r[0] === name)).filter(Boolean)
+  return (
+    <li className={`ev-card ev-card--${c.verdict}${open ? ' is-open' : ''}`} id={id}>
+      <h3 className="ev-card__h">
+        <button type="button" className="ev-card__btn" aria-expanded={open} aria-controls={`${id}-file`} onClick={onToggle}>
+          <span className="ev-card__top">
+            <span className="ev-card__n">{String(c.n).padStart(2, '0')}</span>
+            <span className={`ev-v ev-v--${c.verdict}`}>{VLABEL[c.verdict]}</span>
+          </span>
+          <span className="ev-card__t">{c.short}</span>
+          <span className="ev-card__key">{c.key}</span>
+          {tests.length ? <Strip tests={tests} /> : eras ? <Eras segments={eras} /> : null}
+          <span className="ev-card__go">{open ? 'Close the case' : 'Open the case'}<span className="ev-card__ico" aria-hidden="true" /></span>
         </button>
       </h3>
       {open ? <div className="sgrid ev-dk__file" id={`${id}-file`}><CaseFile c={c} H="h4" /></div> : null}
@@ -890,13 +934,14 @@ export default function Evidence() {
               ))}
             </div>
             <div className="ev-dkbar">
-              <p className="ev-dkbar__t">{only ? `${shown.length} of ${cases.length} cases shown.` : 'Open a case to read its file.'}</p>
+              <p className="ev-dkbar__t">{only ? `${shown.length} of ${cases.length} cases shown.` : 'Open a card to read its case.'}</p>
               <button type="button" className="ev-dkbar__b" onClick={() => setOpenSet(allOpen ? new Set() : new Set(shown.map((c) => c.n)))}>
                 {allOpen ? 'Close all' : 'Open all'}
               </button>
             </div>
-            <ol className="ev-dks">
-              {shown.map((c) => <Docket key={c.n} c={c} open={openSet.has(c.n)} onToggle={() => toggle(c.n)} />)}
+            <p className="ev-cards__key">On each card a dot is one test, placed by its corrected p-value. Past the dashed line at 0.05, chance alone is a poor explanation, and the further right, the stronger the evidence. An ink dot is evidence against the claim.</p>
+            <ol className="ev-cards">
+              {shown.map((c) => <Card key={c.n} c={c} holm={E.holm} eras={c.n === 3 ? E.c3.segments : null} open={openSet.has(c.n)} onToggle={() => toggle(c.n)} />)}
             </ol>
           </section>
         </>

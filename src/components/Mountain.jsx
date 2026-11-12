@@ -11,6 +11,7 @@ import { PHOTOS } from '../lib/photos.js'
 import { numOf } from '../lib/chapters.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
 import { SceneH } from './SceneContext.js'
+import ShareLink from './ShareLink.jsx'
 
 // The three mountain chapters share one frame and each has its own ground,
 // type and pace (styles/mountains.css). A chapter opens on a full screen in its
@@ -63,7 +64,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
         <header className="mtn-open" aria-labelledby="mtn-title">
           {relief ? <div className="mtn-open__relief">{relief}</div> : null}
           <Container className="mtn-open__in">
-            <p className="mtn-open__k">Chapter {Number(numOf(me.to))} · The mountains</p>
+            <p className="mtn-open__k">Chapter {Number(numOf(me.to))} · The mountains<ShareLink slug={id} title={`${me.name} · Showing Up`} className="share--k" /></p>
             <h1 id="mtn-title" className="mtn-open__t">{me.name}</h1>
             <p className="mtn-open__l">{me.line}</p>
             <p className="mtn-open__s">{standfirst}</p>

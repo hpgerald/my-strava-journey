@@ -137,7 +137,7 @@ export default function Timeline() {
             title="The record in time"
             items={[
               { num: span, unit: ' days', label: 'from the first outing to the latest', tone: 'move' },
-              { num: C.n, unit: '', label: 'outings in that time', tone: 'move' },
+              { book: true, num: C.n, unit: '', label: 'outings in that time', tone: 'move' },
               { num: S.len, unit: ' days', label: `the silence, ${fmtMon(S.start)} to ${fmtMon(S.end)}`, tone: 'rest' },
               { num: C.maxAfter, unit: ' days', label: 'the longest layoff since', tone: 'move' },
             ]}
@@ -228,7 +228,7 @@ export default function Timeline() {
           odds={{
             title: 'Firsts on foot',
             items: [
-              { num: F.length, unit: '', label: 'firsts on foot', tone: 'move' },
+              { book: true, num: F.length, unit: '', label: 'firsts on foot', tone: 'move' },
               { num: F.filter((f) => f.mode === 'tread').length, unit: '', label: 'of them on the treadmill', tone: 'rest' },
               { book: true, num: Math.max(...firstsBy.map((y) => y.n)), unit: '', label: `in ${firstsBy.reduce((b, y) => (y.n > b.n ? y : b), firstsBy[0]).year}, the most in a year`, tone: 'move' },
               { book: true, num: (Date.parse(lastFirst.date) - Date.parse(F[0].date)) / (365.25 * 86400000), dec: 1, unit: ' years', label: 'from the first to the latest', tone: 'move' },

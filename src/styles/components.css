@@ -551,7 +551,7 @@ a.stat:focus-visible { background: var(--ink); color: var(--paper); }
 }
 text.chart-tick {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   fill: var(--fg-faint);
   letter-spacing: 0.02em;
 }
@@ -2255,7 +2255,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 /* ---- Sports: DistanceHistogram -------------------------------------- */
 .dhist { position: relative; }
 .dhist__peak { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-2xs); fill: var(--accent-ink); }
-.dhist__axis { font-family: var(--font-mono); font-size: 11px; fill: var(--fg-faint); }
+.dhist__axis { font-family: var(--font-mono); font-size: 12px; fill: var(--fg-faint); }
 
 /* ---- Sports: WeekendDirt -------------------------------------------- */
 .wknd { position: relative; }
@@ -2479,7 +2479,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 .tm__readout-n { font-weight: 700; color: var(--ink); }
 .tm__name { font-family: var(--font-display); font-weight: 580; font-size: 12px; fill: var(--ink); }
 .tm__name--on { fill: var(--paper); }
-.tm__n { font-size: 10px; fill: var(--fg-muted); }
+.tm__n { font-size: 12px; fill: var(--fg-muted); }
 .tm__n--on { fill: var(--paper); }
 .tm__legend { margin-top: var(--sp-3); }
 
@@ -2487,7 +2487,7 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 .io { position: relative; }
 .io__band { font-family: var(--font-display); font-weight: 580; font-size: 12px; letter-spacing: 0.12em; fill: var(--accent-ink); opacity: 0.85; }
 .io__band--mute { fill: var(--fg-muted); }
-.io__call { font-family: var(--font-mono); font-size: 11px; font-weight: 700; fill: var(--accent-ink); }
+.io__call { font-family: var(--font-mono); font-size: 12px; font-weight: 700; fill: var(--accent-ink); }
 
 /* ---- What It Means: Verdict (typographic hero stat) ----------------- */
 .verdict { position: relative; }
@@ -2595,3 +2595,6 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
   .footer { margin-top: var(--sp-7); }
 }
 .ds-row > :first-child { overflow-wrap: anywhere; }
+
+/* a lone number takes the width of two, so its row does not look half empty */
+.odds__row > .odds__cell:only-child { grid-column: 1 / span 2; }

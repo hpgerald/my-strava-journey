@@ -211,8 +211,8 @@ export default function Sports() {
           odds={{
             title: 'Each sport’s biggest share',
             items: [
-              { value: share('km', 'Run'), label: 'of the distance was run', tone: 'move' },
-              { value: share('hours', 'Walk'), label: 'of the hours were walked', tone: 'rest' },
+              { book: true, value: share('km', 'Run'), label: 'of the distance was run', tone: 'move' },
+              { book: true, value: share('hours', 'Walk'), label: 'of the hours were walked', tone: 'rest' },
               { book: true, value: share('elev', 'TrailRun'), label: 'of the climb came on trail runs', tone: 'move' },
               { book: true, value: share('elev', 'Hike'), label: `of the climb came on ${word(S.Hike.n)} hikes`, tone: 'rest' },
             ],
@@ -331,7 +331,7 @@ export default function Sports() {
           odds={{
             title: 'Running indoors',
             items: [
-              { num: M.tread.n, unit: '', label: 'treadmill runs', tone: 'move' },
+              { book: true, num: M.tread.n, unit: '', label: 'treadmill runs', tone: 'move' },
               { book: true, value: indoorShare(peakIndoor), label: `of running km indoors in ${peakIndoor.year}`, tone: 'move' },
               { book: true, value: indoorShare(latest), label: `indoors in ${LY}${so}`, tone: 'rest' },
               { value: r.roundFive, label: 'of treadmill runs stopped on a whole 5 km', tone: 'move' },
@@ -390,7 +390,7 @@ export default function Sports() {
             items: [
               { num: M.tread.pace.med, dec: 1, unit: ' min', label: 'a treadmill km', tone: 'move' },
               { book: true, num: M.road.pace.med, dec: 1, unit: ' min', label: 'an outdoor run km', tone: 'move' },
-              { num: M.walk.pace.med, dec: 1, unit: ' min', label: 'a walking km', tone: 'rest' },
+              { book: true, num: M.walk.pace.med, dec: 1, unit: ' min', label: 'a walking km', tone: 'rest' },
               { book: true, num: M.hike.pace.med, dec: 1, unit: ' min', label: 'a hiking km', tone: 'rest' },
             ],
           }}
@@ -448,8 +448,8 @@ export default function Sports() {
               odds={{
                 title: `The walk, ${w0.year} against ${w1.year}`,
                 items: [
-                  { num: w0.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w0.year}`, tone: 'rest' },
-                  { num: w1.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w1.year}${w1.year === LY ? so : ''}`, tone: 'move' },
+                  { book: true, num: w0.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w0.year}`, tone: 'rest' },
+                  { book: true, num: w1.walkMed, dec: 1, unit: ' km', label: `the median walk of ${w1.year}${w1.year === LY ? so : ''}`, tone: 'move' },
                   { book: true, value: w0.walkShort, label: `of ${w0.year} walks under 3 km`, tone: 'rest' },
                   { book: true, value: w1.walkShort, label: `of ${w1.year} walks under 3 km`, tone: 'move' },
                 ],
@@ -508,7 +508,7 @@ export default function Sports() {
           odds={{
             title: 'Half marathon or longer',
             items: [
-              { num: longAll, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
+              { book: true, num: longAll, unit: '', label: 'outings of 21.1 km or more', tone: 'move' },
               { value: longTread / Math.max(1, longAll), label: 'of them on a treadmill', tone: 'rest' },
               { book: true, num: latest.longN, unit: '', label: `in ${LY}${so}`, tone: 'move' },
               { book: true, num: lastLongOut, unit: '', label: `of those ${latest.longN} outside`, tone: 'move' },
@@ -565,9 +565,9 @@ export default function Sports() {
           odds={{
             title: 'Metres climbed for each kilometre',
             items: [
-              { num: M.hike.mPerKm, unit: ' m', label: 'per km on a hike', tone: 'move' },
+              { book: true, num: M.hike.mPerKm, unit: ' m', label: 'per km on a hike', tone: 'move' },
               { book: true, num: M.trail.mPerKm, unit: ' m', label: 'per km on a trail run', tone: 'move' },
-              { num: M.walk.mPerKm, unit: ' m', label: 'per km on a walk', tone: 'rest' },
+              { book: true, num: M.walk.mPerKm, unit: ' m', label: 'per km on a walk', tone: 'rest' },
               { book: true, num: big.elev, unit: ' m', label: 'my biggest single climb', tone: 'move' },
             ],
           }}
@@ -619,7 +619,7 @@ export default function Sports() {
             title: 'Hours and days',
             items: [
               { value: M.tread.night, label: 'of treadmill runs after 8pm or before 5am', tone: 'move' },
-              { value: walkEve, label: 'of walks between 4 and 7pm', tone: 'rest' },
+              { book: true, value: walkEve, label: 'of walks between 4 and 7pm', tone: 'rest' },
               { book: true, value: M.trail.weekend, label: 'of trail runs at the weekend', tone: 'move' },
               { book: true, value: M.tread.weekend, label: 'of treadmill runs at the weekend', tone: 'rest' },
             ],
@@ -678,7 +678,7 @@ export default function Sports() {
             title: 'Days with both',
             items: [
               { num: D.total, unit: ' days', label: 'with a run and a walk', tone: 'move' },
-              { value: D.runFirst / Math.max(1, D.total), label: 'of them with the run first', tone: 'move' },
+              { book: true, value: D.runFirst / Math.max(1, D.total), label: 'of them with the run first', tone: 'move' },
               { num: D.medGap / 60, dec: 1, unit: ' h', label: 'between them, the median', tone: 'rest' },
               { book: true, num: dblPeak[1], unit: ' days', label: `in ${dblPeak[0]}, the most`, tone: 'move' },
             ],
@@ -732,10 +732,10 @@ export default function Sports() {
           odds={{
             title: 'Effort per hour, kudos and records per outing',
             items: [
-              { num: M[rated[0]].effortPerHour, unit: '', label: `effort per hour, ${MODE_NAME[rated[0]].toLowerCase()}`, tone: 'move' },
+              { book: true, num: M[rated[0]].effortPerHour, unit: '', label: `effort per hour, ${MODE_NAME[rated[0]].toLowerCase()}`, tone: 'move' },
               { book: true, num: M.walk.effortPerHour, unit: '', label: 'effort per hour, walk', tone: 'rest' },
               { book: true, num: M[kudosTop].kudosPer, unit: '', label: `kudos per ${MODE_NAME[kudosTop].toLowerCase()}`, tone: 'move' },
-              { num: M.road.prsPer, dec: 1, unit: '', label: 'PRs per outdoor run', tone: 'move' },
+              { book: true, num: M.road.prsPer, dec: 1, unit: '', label: 'PRs per outdoor run', tone: 'move' },
             ],
           }}
           left={{
@@ -784,10 +784,10 @@ export default function Sports() {
             {' '}And over whole weeks, running did not crowd out walking: a big running week could come with almost any amount of walking.
           </>}
           odds={{
-            title: 'Four numbers from the fits',
+            title: 'What the fits found',
             items: [
               { book: true, num: F.r, dec: 2, unit: '', label: 'treadmill distance against pace', tone: 'move' },
-              { num: secPerKm, unit: ' s', label: 'quicker per km for each extra km', tone: 'move' },
+              { book: true, num: secPerKm, unit: ' s', label: 'quicker per km for each extra km', tone: 'move' },
               { num: gain, unit: ' s', label: 'per km quicker at 21 km than at 5 km', tone: 'move' },
               { book: true, num: WF.r, dec: 2, unit: '', label: 'weekly running km against walking km', tone: 'rest' },
             ],

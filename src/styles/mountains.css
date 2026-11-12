@@ -131,6 +131,10 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 
 /* ---- the route map ---- */
 .rmap__line { stroke-linejoin: round; stroke-linecap: round; }
+.rmap__ground { opacity: 0.85; }
+.rmap__key { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.rmap__key i { display: block; width: 4rem; height: 0.5rem; }
+.rmap__key em { font-style: normal; margin-left: 0.25rem; }
 .rmap__line--main { stroke: var(--accent); stroke-width: 3; }
 .rmap__line--back { stroke: var(--ink); stroke-width: 1.5; }
 .rmap__line--faint { stroke: var(--grey-45); stroke-width: 1.5; }
@@ -140,9 +144,9 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 .rmap__mark--open .rmap__dot { fill: var(--paper); stroke: var(--accent); stroke-width: 2.5; }
 .rmap__tri { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
 .rmap__lbl { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
-.rmap__sub { font-family: var(--font-sans); font-size: 11.5px; fill: var(--fg-muted); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.rmap__sub { font-family: var(--font-sans); font-size: 12px; fill: var(--fg-muted); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
 .rmap__scale line { stroke: var(--ink); stroke-width: 1.25; }
-.rmap__scale text, .rmap__north text { font-family: var(--font-sans); font-size: 11.5px; fill: var(--fg-muted); }
+.rmap__scale text, .rmap__north text { font-family: var(--font-sans); font-size: 12px; fill: var(--fg-muted); }
 .rmap__north path { fill: var(--ink); }
 
 /* ---- every trip to Bondwa Peak ---- */

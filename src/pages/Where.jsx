@@ -151,7 +151,7 @@ export default function Where() {
               { num: nCountries, unit: '', label: 'countries with an outing', tone: 'move' },
               { book: true, num: tzC.n, unit: '', label: 'outings in Tanzania', tone: 'move' },
               { book: true, num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
-              { num: P.indoor, unit: '', label: 'outings with no GPS start', tone: 'rest' },
+              { book: true, num: P.indoor, unit: '', label: 'outings with no GPS start', tone: 'rest' },
             ]}
           />
           <div className="wh-africa">
@@ -239,7 +239,7 @@ export default function Where() {
           ]} />
           <BookStory>{[
             `The map above is shaded by outings, so the darker a region, the more often I went out there. ${home.region}, Dar es Salaam and Kilimanjaro stand out, and most of the country is still pale or empty.`,
-            `${dar.region} and Kilimanjaro have almost the same number of outings, ${n0(dar.n)} and ${n0(kili.n)}. The difference is the ground. Kilimanjaro climbed ${n0(kili.elev)} m and Dar es Salaam ${n0(dar.elev)} m, so Kilimanjaro gave about ${Math.round(kili.elev / Math.max(1, dar.elev))} times as much. One is home and one is where I go for the hills.`,
+            `${dar.region} and Kilimanjaro have almost the same number of outings, ${n0(dar.n)} and ${n0(kili.n)}. The difference is the ground. Kilimanjaro climbed ${n0(kili.elev)} m and Dar es Salaam ${n0(dar.elev)} m, so Kilimanjaro gave about ${Math.round(kili.elev / Math.max(1, dar.elev))} times as much. One is flat and busy, and the other is where I go for the hills.`,
           ]}</BookStory>
         </section>
   )
@@ -269,7 +269,7 @@ export default function Where() {
         <hr className="rule rule--faint" />
         <StorySection
           id="wh-steep"
-          eyebrow={`${num()} · Flat at home, hilly away`}
+          eyebrow={`${num()} · Flat ground and hills`}
           title={`The climbing is in ${word(steep.length)} regions.`}
           statement={<>
             To climb, I have to travel. In Dar es Salaam I climb about {k1(reg('Dar es Salaam').mpk)} m for every kilometre. In
@@ -280,7 +280,7 @@ export default function Where() {
           odds={{
             title: 'Metres climbed for each kilometre',
             items: [
-              ...steep.map((r) => ({ num: r.mpk, unit: ' m', label: `per km in ${r.region}`, tone: 'move' })),
+              ...steep.map((r) => ({ book: true, num: r.mpk, unit: ' m', label: `per km in ${r.region}`, tone: 'move' })),
               { book: true, num: home.mpk, dec: 1, unit: ' m', label: `per km in ${home.region}`, tone: 'rest' },
               { book: true, num: reg('Dar es Salaam').mpk, dec: 1, unit: ' m', label: 'per km in Dar es Salaam', tone: 'rest' },
             ].slice(0, 4),
@@ -322,7 +322,7 @@ export default function Where() {
           </>}
           odds={{
             title: 'The lead, year by year',
-            items: leaders.slice(-4).map((l, i, arr) => ({ value: l.n / l.of, label: `${l.region} in ${l.year}${l.year === lastYear ? so : ''}`, tone: i === arr.length - 1 ? 'move' : 'rest', book: i < arr.length - 2 })),
+            items: leaders.slice(-4).map((l, i, arr) => ({ value: l.n / l.of, label: `${l.region} in ${l.year}${l.year === lastYear ? so : ''}`, tone: i === arr.length - 1 ? 'move' : 'rest', book: i < arr.length - 1 })),
           }}
           left={{
             title: 'Outings in Tanzania by region, year by year',
@@ -370,7 +370,7 @@ export default function Where() {
           odds={{
             title: 'New regions',
             items: [
-              { num: disc.length, unit: '', label: 'regions of 31 with an outing', tone: 'move' },
+              { book: true, num: disc.length, unit: '', label: 'regions of 31 with an outing', tone: 'move' },
               { book: true, num: Math.max(...newBy.map((y) => y.n)), unit: '', label: `new in ${newBy.reduce((b, y) => (y.n > b.n ? y : b), newBy[0]).year}, the most`, tone: 'move' },
               { book: true, num: newLast.n, unit: '', label: `new in ${lastYear}${so}`, tone: 'move' },
               { book: true, num: 30 - disc.length, unit: '', label: 'regions still blank', tone: 'rest' },
@@ -424,7 +424,7 @@ export default function Where() {
               { num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
               { book: true, num: awayNamed.length, unit: '', label: 'other countries', tone: 'move' },
               { num: P.abroad.reduce((s, c) => s + c.km, 0), unit: ' km', label: 'on foot abroad', tone: 'move' },
-              { num: P.abroad.reduce((s, c) => s + c.days, 0), unit: ' days', label: 'out abroad', tone: 'rest' },
+              { book: true, num: P.abroad.reduce((s, c) => s + c.days, 0), unit: ' days', label: 'out abroad', tone: 'rest' },
             ],
           }}
           left={{

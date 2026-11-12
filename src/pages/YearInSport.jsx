@@ -344,7 +344,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               { book: true, num: s.monthsActivities[busy], unit: '', label: `outings in ${MONTH_F[busy]}`, tone: 'move' },
               { book: true, num: s.monthsActivities[quiet], unit: '', label: `in ${MONTH_F[quiet]}, the quietest`, tone: 'rest' },
               { num: perMonth, unit: '', label: 'outings in an average month', tone: 'move' },
-              { num: s.footKm / Math.max(1, moIdx.length), unit: ' km', label: 'on foot in an average month', tone: 'move' },
+              { book: true, num: s.footKm / Math.max(1, moIdx.length), unit: ' km', label: 'on foot in an average month', tone: 'move' },
             ],
           }}
           left={{ title: 'Outings, month by month', node: <YearMonths months={monthsData} /> }}
@@ -380,8 +380,8 @@ export default function YearInSport({ year: bookYear } = {}) {
               odds={{
                 title: 'Share of all outings',
                 items: [
-                  { value: mix.walk / s.n, label: 'walks', tone: 'move' },
-                  { value: mix.run / s.n, label: 'runs', tone: 'move' },
+                  { book: true, value: mix.walk / s.n, label: 'walks', tone: 'move' },
+                  { book: true, value: mix.run / s.n, label: 'runs', tone: 'move' },
                   { book: true, value: mix.trail / s.n, label: 'trail runs and hikes', tone: 'move' },
                   { book: true, value: mix.other / s.n, label: 'other activities', tone: 'rest' },
                 ],
@@ -422,7 +422,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                 items: [
                   { value: morning, label: 'before 10am', tone: 'move' },
                   { book: true, value: midday, label: 'between 10am and 4pm', tone: 'rest' },
-                  { value: evening, label: 'between 4 and 9pm', tone: 'move' },
+                  { book: true, value: evening, label: 'between 4 and 9pm', tone: 'move' },
                   { book: true, value: late, label: 'after 9pm', tone: 'rest' },
                 ],
               }}
@@ -468,7 +468,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             items: [
               { num: s.activeDays, unit: ' days', label: `with an outing, of ${fmtInt(r.span)}`, tone: 'move' },
               { num: s.streakLen, unit: ' days', label: s.streakGoing ? 'in a row, still going' : 'the longest run in a row', tone: 'move' },
-              { num: r.longGap.len, unit: ' days', label: r.longGap.len >= 7 ? 'the longest layoff' : 'the longest break', tone: 'rest' },
+              { book: true, num: r.longGap.len, unit: ' days', label: r.longGap.len >= 7 ? 'the longest layoff' : 'the longest break', tone: 'rest' },
               r.restDays === 0
                 ? { book: true, value: multiDays / Math.max(1, s.activeDays), label: 'of days were doubles', tone: 'move' }
                 : { book: true, value: r.gaps.total ? r.gaps.next / gapsTot : 0, label: 'of outings followed the very next day', tone: 'move' },
@@ -535,7 +535,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                 items: [
                   { num: s.medianFoot, dec: 1, unit: ' km', label: 'the middle outing', tone: 'move' },
                   { book: true, num: meanFoot, dec: 1, unit: ' km', label: 'the average outing', tone: 'rest' },
-                  { num: longestFoot, dec: 1, unit: ' km', label: 'the longest', tone: 'move' },
+                  { book: true, num: longestFoot, dec: 1, unit: ' km', label: 'the longest', tone: 'move' },
                   { book: true, value: r.top10 || 0, label: 'of the distance on the busiest tenth of days', tone: 'move' },
                 ],
               }}
@@ -569,7 +569,7 @@ export default function YearInSport({ year: bookYear } = {}) {
                 {' '}My biggest week was {n0(Math.max(...r.weekly.series.map((w) => w.km)))} km on foot.
               </>}
               odds={{
-                title: 'The year in four numbers',
+                title: 'The year in numbers',
                 items: [
                   { value: r.p11, label: 'went out again the day after a day out', tone: 'move' },
                   r.restDays === 0

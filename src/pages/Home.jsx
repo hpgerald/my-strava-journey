@@ -573,7 +573,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             ]} />
             <BookStory>{[
               `Since I came back I have taken ${n0(habitBreaks.length)} breaks of one day or more. ${n0(breaksOne)} of them were a single day, and only ${n0(breaksFive)} lasted five days or more. The longest was ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`,
-              'The left side of the chart is the part I watch. Each extra day of rest makes the next one easier to take, and after five zero days I am more likely to stay in than to go out. So a short walk on a tired day is worth more than it looks.',
+              'The left side of the chart is the part I watch. Each extra day of rest makes the next one easier to take, and after five zero days I am more likely to stay in than to go out. So on a tired day I take a short walk.',
               `The right side is the reward. The longer the chain, the closer the next day comes to certain. In ${nowYear} I have not had a single zero day, so this year the whole story sits on the right.`,
             ]}</BookStory>
           </section>
@@ -620,7 +620,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               <BookStory>{[
                 `My usual day on foot is about ${medDayKm.toFixed(1)} km. Half of my days out are shorter than that and half are longer. The very long days carry a lot for how few they are: ${n0(bigDays.length)} days of 20 km or more gave ${pcs(sumKm(bigDays) / dayKmTot)}% of all my kilometres.`,
                 `${n0(dayKm.filter((v) => v >= 30).length)} of my days on foot reached 30 km or more, and the year with the most of them was ${km30Top}.`,
-                `At the other end are ${n0(smallDays.length)} days under 5 km. Together they gave only ${pcs(sumKm(smallDays) / dayKmTot)}% of the distance, so on a chart of kilometres they almost disappear. On a chart of days they count the same as a marathon. Each one kept the chain going, and the chain is what made the long days possible.`,
+                `At the other end are ${n0(smallDays.length)} days under 5 km. Together they gave only ${pcs(sumKm(smallDays) / dayKmTot)}% of the distance, so on a chart of kilometres they almost disappear. On a chart of days they count the same as a marathon. Each one kept the chain going.`,
               ]}</BookStory>
             </section>
           </Container>
@@ -704,8 +704,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               'Each region of Tanzania has two bars: the first is its share of my outings there, the second its share of my climbing. The number at the end is the gap. A region with more climbing than outings is where the hills are.',
             ]}
             story={[
-              `My two homes, ${regSorted[0] ? regSorted[0].region : ''} and ${regSorted[1] ? regSorted[1].region : ''}, hold ${pcs(((toNum(regSorted[0]?.activities) || 0) + (toNum(regSorted[1]?.activities) || 0)) / regTotA)}% of my outings in Tanzania and only ${pcs(((toNum(regSorted[0]?.elevation_m) || 0) + (toNum(regSorted[1]?.elevation_m) || 0)) / regTotE)}% of the climbing. That is what flat ground looks like in a log.`,
-              `${climbTop2.map((r) => r.region).join(' and ')} are the other way round. I go there less, but most of my metres up were done there. Every big climb in this record came on a trip away from home.`,
+              `${regSorted[0] ? regSorted[0].region : ''} and ${regSorted[1] ? regSorted[1].region : ''}, where I go out most, hold ${pcs(((toNum(regSorted[0]?.activities) || 0) + (toNum(regSorted[1]?.activities) || 0)) / regTotA)}% of my outings in Tanzania and only ${pcs(((toNum(regSorted[0]?.elevation_m) || 0) + (toNum(regSorted[1]?.elevation_m) || 0)) / regTotE)}% of the climbing. That is what flat ground looks like in a log.`,
+              `${climbTop2.map((r) => r.region).join(' and ')} are the other way round. I go there less, but most of my metres up were done there. Every big climb in this record came on a trip.`,
               awayRows.length ? `Outside Tanzania I have gone out in ${andList(awayRows.map((r) => r.country))}. ${awayRows[0].country} comes first, with ${n0(toNum(awayRows[0].activities))} outings over a few visits.` : '',
             ]}
             source="Strava GPS start points · countries and Tanzania regions, distance and climb on foot"
@@ -1023,7 +1023,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           <BookStory>{[
             `Seven years sounds long, but most of this record comes from the last five. Before the long layoff I went out on ${n0(preDays)} days in total. In ${nowYear} alone I have gone out on ${n0(nowDays)}. The habit really started in the middle of 2021, when I came back, and it has stayed since.`,
             'In the sky above, every dot is one outing, placed by its date and by the hour it started, and bigger for a longer distance. The empty band is the long layoff. After it, the dots never thin out again, and the two thick bands of mornings and evenings run all the way to today.',
-            'Each part below opens with its years as cards, one line each. Read them in order and the same thing repeats: the days add up one at a time, and every year after the pause is much fuller than the two before it.',
+            'Each part below opens with its years as cards, one line each. Read them in order and the same thing repeats: every year after the pause is much fuller than the two before it.',
           ]}</BookStory>
         </section>
       </Container>

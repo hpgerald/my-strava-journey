@@ -14,6 +14,7 @@
 //   public/sitemap.xml     with this refresh's date
 //   public/og.png      the 1200 x 630 share image, drawn with the latest numbers
 //                      (needs Playwright; skipped with a note when it is missing)
+//   public/share/      a share card and page for each part and mountain (build_share.mjs)
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -251,5 +252,7 @@ async function drawOg() {
   await b.close()
 }
 await drawOg()
+// a share card and page for each part of the story and each mountain
+await import('./build_share.mjs')
 
 console.log(`SEO refreshed for ${refreshed}: ${n0(F.n)} outings, ${n0(F.km)} km, ${n0(F.streak)}-day streak, ${Object.keys(routes).length} chapter descriptions`)

@@ -6,7 +6,7 @@ import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
 import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { buildNgong, routesOf } from '../lib/mountains.js'
+import { buildNgong, routesOf, altAlong } from '../lib/mountains.js'
 
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
@@ -35,7 +35,7 @@ export default function Ngong() {
   // the far end on the map: the point of the line furthest from the start
   const far = (p) => (p[0] - line[0][0]) ** 2 + (p[1] - line[0][1]) ** 2
   const top = line.reduce((b, p) => (far(p) > far(b) ? p : b), line[0])
-  const lines = [{ key: T.trip, pts: line, tone: 'main' }]
+  const lines = [{ key: T.trip, pts: line, tone: 'main', alt: altAlong(N.pts.map((p) => ({ x: p.d / N.end.d, alt: p.alt }))) || undefined }]
   const marks = [
     { at: line[0], label: 'The start', sub: `${n0(start.alt)} m`, kind: 'start', side: 'l' },
     { at: top, label: 'The far end', sub: `${n0(turn.alt)} m on my watch`, kind: 'top' },

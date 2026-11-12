@@ -6,7 +6,7 @@ import HBars from '../charts/HBars.jsx'
 import RouteMap from '../charts/RouteMap.jsx'
 import Relief from '../charts/Relief.jsx'
 import { useTable } from '../context/DataContext.jsx'
-import { buildHN, routesOf, tripsOf } from '../lib/mountains.js'
+import { buildHN, routesOf, tripsOf, altAlong } from '../lib/mountains.js'
 import { MODE_NAME } from '../lib/footReport.js'
 
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -48,7 +48,7 @@ export default function Hanang() {
   const races = trips.filter((t) => t.trip !== 'hike-2023')
   const lines = [
     ...races.map((t, i) => ({ key: t.trip, pts: routes[t.trip], tone: i ? 'back' : 'faint' })),
-    { key: 'hike-2023', pts: hike, tone: 'main' },
+    { key: 'hike-2023', pts: hike, tone: 'main', by: 'index', alt: altAlong(HN.pts.map((p) => ({ x: p.t / HN.pts[HN.pts.length - 1].t, alt: p.alt }))) || undefined },
   ]
   const marks = [
     { at: hike[0], label: 'The start', sub: `${n0(HN.pts[0].alt)} m`, kind: 'start', side: 'l' },
