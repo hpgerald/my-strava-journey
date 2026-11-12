@@ -141,8 +141,8 @@ export default function Where() {
             <h2 id="wh-title" className="section-head__title">{pc(tzC.n / P.located)}% began in&nbsp;Tanzania.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            I do not travel much, and when I do, the trips are short. Most of my trips across the border came in 2024, the year I
-            travelled the most.
+            I do not travel much, and my trips are short. Most of my trips across the border came in 2024, when a remote job and a few
+            consultancies took me away.
             {P.othersN ? ` ${cap(word(P.othersN))} outings abroad I count as others.` : ''}
           </Reveal>
           <OddsRow
@@ -190,9 +190,9 @@ export default function Where() {
             <h2 id="wh-tz" className="section-head__title">Three places carry most of&nbsp;it.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            {home.region} is where the habit took hold. I started going out there a few weeks after I came back, and it is where I
-            have spent the most days out. In 2026 Dar es Salaam took the lead. Kilimanjaro and
-            Morogoro are where I go for the hills, and the other regions came mostly from trips.
+            {home.region} is where the habit took hold. I started going out there a few weeks after I came back, and it still holds more of my days
+            out than anywhere else. In 2026 Dar es Salaam took the lead. Kilimanjaro and Morogoro are for the hills, and most other regions
+            came from trips.
           </Reveal>
           <OddsRow
             title="Inside Tanzania"
@@ -272,10 +272,10 @@ export default function Where() {
           eyebrow={`${num()} · Flat ground and hills`}
           title={`The climbing is in ${word(steep.length)} regions.`}
           statement={<>
-            To climb, I have to travel. In Dar es Salaam I climb about {k1(reg('Dar es Salaam').mpk)} m for every kilometre. In
-            Morogoro it is {n0(reg('Morogoro').mpk)}, so one kilometre there climbs as much as{' '}
+            To climb, I have to travel. Dar es Salaam gives me about {k1(reg('Dar es Salaam').mpk)} m of climbing for every kilometre.
+            Morogoro gives {n0(reg('Morogoro').mpk)}, so one kilometre there climbs as much as{' '}
             {Math.round(reg('Morogoro').mpk / Math.max(0.1, reg('Dar es Salaam').mpk))} in Dar es Salaam. Most of my trail runs and hikes,{' '}
-            {steep.reduce((s, r) => s + r.trail, 0)} of them, started in the hilly regions I travel to.
+            {steep.reduce((s, r) => s + r.trail, 0)} of them, started in those hilly regions.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -363,7 +363,7 @@ export default function Where() {
           eyebrow={`${num()} · New places`}
           title={`${disc.length} regions in ${lastYear - Number(disc[0].date.slice(0, 4))} years.`}
           statement={<>
-            Every new region came with a trip, and they came in bunches, in the years I travelled.
+            Every new region came with a trip, so they arrived in bunches, in the years I travelled.
             {(() => { const last = disc[disc.length - 1]; return last ? ` The latest is ${last.region}, my ${ORDW[disc.length] || `${disc.length}th`}.` : '' })()}
             {' '}{31 - disc.length > 0 ? `${cap(word(31 - disc.length))} of the 31 are still waiting.` : ''}
           </>}
@@ -413,7 +413,7 @@ export default function Where() {
           eyebrow={`${num()} · Across the border`}
           title={`${n0(P.abroadN)} outings outside Tanzania.`}
           statement={<>
-            The habit travels with me. Even on a trip of a few days, I still go out.
+            The habit travels with me. Even on a trip of a few days, I find time to go out.
             {malawi ? ` In Malawi I went out ${malawi.n} times in two months.` : ''}
             {kenya ? ` Kenya was the first, in ${fmtMonth(kenya.first)}, and I have been back a few times since.` : ''}
             {P.othersN ? ` The other ${word(P.othersN)} I count as others.` : ''}
@@ -464,8 +464,8 @@ export default function Where() {
           eyebrow={`${num()} · Indoors`}
           title="Fewer outings without GPS."
           statement={<>
-            As I moved outside, the maps filled in. My indoor outings, most of them treadmill runs, have no start point, and in my
-            first year almost everything was indoors. Each year since, they have been a smaller part.
+            As I moved outside, the maps filled in. In my first year nearly every outing was on the treadmill, with no start point to
+            place on a map. Each year since, those indoor outings have been a smaller part.
           </>}
           odds={{
             title: 'Outings with no GPS start',

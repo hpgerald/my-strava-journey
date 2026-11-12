@@ -204,8 +204,8 @@ export default function Sports() {
           eyebrow={`${num()} · Who does what`}
           title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
           statement={<>
-            Each sport does its own job. Runs and walks share my time almost equally, and a run takes me further, about{' '}
-            {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km. The hills belong to the few trail runs and hikes: one hike in
+            Runs and walks share my time almost equally, and they do different work. A run takes me further, about{' '}
+            {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km for a walk. The hills belong to the few trail runs and hikes: one hike in
             Morogoro climbed as much as all my running climbs in a whole year.
           </>}
           odds={{
@@ -264,9 +264,9 @@ export default function Sports() {
           eyebrow={`${num()} · The mix, year by year`}
           title={walkLead ? `In ${walkLead.year}, walks went further.` : 'Runs went further every year.'}
           statement={<>
-            Walking took over slowly, little by little, year after year. In {runPeak.year} I walked only {n0(runPeak.km.Walk)} km
-            against more than 2,000 km of running. This year my walking passed my running two days into January, and it never fell
-            behind again. Trail running came in from the end of 2021, when I started going to the hills.
+            Walking took over slowly, year after year. In {runPeak.year} I walked only {n0(runPeak.km.Walk)} km against more than
+            2,000 km of running. This year my walking passed my running two days into January and never fell behind again. Trail running
+            arrived at the end of 2021, when I started going to the hills.
           </>}
           odds={{
             title: `${LY}${so}, against the running peak`,
@@ -324,9 +324,9 @@ export default function Sports() {
           eyebrow={`${num()} · The treadmill`}
           title={`${pc(treadShare)}% of running was indoors.`}
           statement={<>
-            More of my running is outside every year. My treadmill years peaked with a full marathon in one room, 42.7 km. Since
-            then the share outside has grown, and in 2026, for the first time, more than half of my running was on the roads and
-            trails. The treadmill still shows in my habits: I tend to stop when the screen shows a round number.
+            More of my running is outside every year. The treadmill years peaked with a full marathon in one room, 42.7 km, and in 2026,
+            for the first time, more than half of my running was on roads and trails. The treadmill still shows in my habits: I tend to
+            stop when the screen shows a round number.
           </>}
           odds={{
             title: 'Running indoors',
@@ -381,9 +381,9 @@ export default function Sports() {
           eyebrow={`${num()} · Pace`}
           title="Each sport has its pace."
           statement={<>
-            The treadmill makes me look faster than I am. On it my usual kilometre takes under six minutes. When I ran the
-            Kilimanjaro Half in 2026, each kilometre took me about ten minutes of moving time, closer to my walking pace than to my
-            treadmill pace. Pace here is the minutes I take for one kilometre.
+            The treadmill makes me look faster than I am. On it my usual kilometre takes under six minutes. On the road at the
+            Kilimanjaro Half in 2026, each kilometre took about ten minutes of moving time, nearer my walking pace than my treadmill pace.
+            Pace here is the minutes I take for one kilometre.
           </>}
           odds={{
             title: 'Median minutes per kilometre',
@@ -558,9 +558,9 @@ export default function Sports() {
           title="Hikes climb the most."
           leftNote={<>I drew the slopes steeper than they really are.</>}
           statement={<>
-            Climbing is slow work for me, and it happens on foot. My {n0(M.tread.n)} treadmill runs together climbed nothing at all,
-            and one hike in Morogoro climbed almost 2,000 m in 16 km. Between those two are my walks, which with{' '}
-            {pc(share('km', 'Walk'))}% of my distance did {pc(share('elev', 'Walk'))}% of my climbing.
+            Climbing is slow work, and it happens outside. My {n0(M.tread.n)} treadmill runs together climbed nothing at all, while one
+            hike in Morogoro climbed almost 2,000 m in 16 km. Walks sit between the two: {pc(share('km', 'Walk'))}% of my distance and{' '}
+            {pc(share('elev', 'Walk'))}% of my climbing.
           </>}
           odds={{
             title: 'Metres climbed for each kilometre',
@@ -611,9 +611,9 @@ export default function Sports() {
           eyebrow={`${num()} · When`}
           title="Treadmill runs at night."
           statement={<>
-            Each sport has found its own place in my day. The treadmill is busiest at {fmtH(peakHour('tread'))} and again late in the
-            evening. Walks come around {fmtH(peakHour('walk'))}, after the working day. Outdoor runs start early, around{' '}
-            {fmtH(peakHour('road'))}, or in the late afternoon. Trail runs and hikes need a free day, so they wait for the weekend.
+            Each sport has found its own hour. The treadmill is busiest at {fmtH(peakHour('tread'))} and again late in the evening.
+            Walks come around {fmtH(peakHour('walk'))}, after the office. Outdoor runs start early, around {fmtH(peakHour('road'))}, or late
+            in the afternoon. Trail runs and hikes need a free day, so they wait for the weekend.
           </>}
           odds={{
             title: 'Hours and days',
@@ -781,7 +781,7 @@ export default function Sports() {
           statement={<>
             Two small findings surprised me. On the treadmill, my longer runs were quicker per kilometre.
             {at5 && at21 ? ` My usual 5 km went at ${pace(at5.pace)} a km and my usual 21 km at ${pace(at21.pace)}.` : ''}
-            {' '}And over whole weeks, running did not crowd out walking: a big running week could come with almost any amount of walking.
+            {' '}And over whole weeks, running and walking pulled against each other only a little: a big running week usually meant a bit less walking.
           </>}
           odds={{
             title: 'What the fits found',

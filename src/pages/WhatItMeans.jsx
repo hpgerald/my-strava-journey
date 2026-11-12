@@ -112,8 +112,8 @@ export default function WhatItMeans() {
             <h2 id="wm-title" className="section-head__title">It costs&nbsp;time.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            It costs about the time of a long lunch each day. Most of it is walking and easy running, nothing heavy. A medical
-            check-up once told me to move 30 minutes a day, and I now give it more than twice that.
+            The habit costs me about a long lunch break a day, and nothing about it is heavy: mostly walking, some easy running.
+            The check-up asked for thirty minutes. I give it more than twice that.
           </Reveal>
           <OddsRow
             title="What it cost"
@@ -146,9 +146,9 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Count the days`}
           title="Keep the days."
           statement={<>
-            If I could keep only one thing, I would keep the days. In {low.year} I covered less than half the distance of{' '}
-            {peak.year}, and the long days almost disappeared, but I still went out on {n0(low.days)} days. When the distance came
-            back in {cur.year}, the days were already there to build on.
+            If I could keep only one thing, I would keep the days. In {low.year} my distance fell to less than half of {peak.year}&rsquo;s
+            and the long days nearly vanished, yet I still went out on {n0(low.days)} days. When the kilometres came back in {cur.year},
+            there was a habit waiting for them.
           </>}
           odds={{
             title: `${peak.year} against ${low.year}`,
@@ -197,9 +197,9 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Do the small version`}
           title="Streak savers count."
           statement={<>
-            <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Many of my days were small ones,
-            less than {SMALL_KM} km on foot. They add almost nothing to my distance, but I logged them all the same. After one of
-            these streak savers I went out again the next day far more often than after a zero day. On a bad day, I try to do a small version.
+            <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Plenty of my days were tiny, under {SMALL_KM} km on foot, and they add
+            almost nothing to the total. I logged them anyway. After one of these streak savers I went out again the next day far more
+            often than after a zero day, so on a bad day I do the small version.
           </>}
           odds={{
             title: `Streak savers since ${habitYear}`,
@@ -249,9 +249,8 @@ export default function WhatItMeans() {
               eyebrow={`${num()} · The down weeks`}
               title='Keep a floor.'
               statement={<>
-                My peak weeks have not changed much over the years. What changed is the down weeks. From 2022 to 2025 some weeks
-                slipped very low. In {cur.year} none has, and the middle half of my weeks are between{' '}
-                {n0(wNow.q25)} and {n0(wNow.q75)} km.
+                My best weeks look much the same as they did years ago. The change is at the bottom. Between 2022 and 2025 some weeks
+                fell very low. In {cur.year} none has, and half of my weeks sit between {n0(wNow.q25)} and {n0(wNow.q75)} km.
               </>}
               odds={{
                 title: 'Weekly volume',
@@ -301,8 +300,8 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Long days together`}
           title="Long days come in bunches."
           statement={<>
-            My long days do not come alone. The day after one, I usually go out again, and further than normal. The three days
-            before are bigger than usual too. So for me the long days come in the middle of a busy time. After a long run, a full rest the next day is rare.
+            A long day rarely comes alone. The days before it are busier than usual, and the day after I am usually out again, often
+            further than normal. For me a long day sits in the middle of a busy stretch, and a full rest straight after it is rare.
           </>}
           odds={{
             title: `Days of ${LONG_KM} km or more since ${habitYear}`,
@@ -353,10 +352,10 @@ export default function WhatItMeans() {
           eyebrow={`${num()} · Days and distance`}
           title="How a year adds up."
           statement={<>
-            A year&rsquo;s total is just two things: how often I go out, and how far I go each time. 1,000 km a year is a short
-            outing every day, or about {k1(twoThirds)} km on two days in three. I have done it both ways. {longYear.year} was a year
-            of long days on about half the days. {cur.year} is a year of going every day, with fewer kilometres each day out. {lowYear.year} was low
-            on both, and it became my lowest year since the habit started.
+            A year&rsquo;s total comes down to two things: how often I go out and how far I go each time. A thousand kilometres is a
+            short outing every day, or about {k1(twoThirds)} km on two days in three, and I have done it both ways. {longYear.year} was long
+            days on about half the days. {cur.year} is every day, with fewer kilometres each time. {lowYear.year} was low on both, and it
+            is my lowest year since the habit began.
           </>}
           odds={{
             title: 'The two levers',
@@ -405,8 +404,8 @@ export default function WhatItMeans() {
             <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Seven years of logging come down to a few things I can keep doing: about an hour a day, a small version on the bad
-            days, no week left too thin, and long days in the middle of busy weeks.
+            Seven years of logging leave me with a few habits I can keep: about an hour a day, the small version on a bad day, no
+            week allowed to go thin, and the long days placed inside busy weeks.
             {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<span lang="sw">Kesho tena</span>, tomorrow again.
           </Reveal>
         </section>

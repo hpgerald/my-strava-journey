@@ -13,7 +13,8 @@ import YearMonths from '../charts/YearMonths.jsx'
 import YearProgress from '../charts/YearProgress.jsx'
 import YearCalendar from '../charts/YearCalendar.jsx'
 import YearRank from '../charts/YearRank.jsx'
-import YearMoment from '../charts/YearMoment.jsx'
+import YearMoment, { momentText } from '../charts/YearMoment.jsx'
+import { YearRing, KmWaffle, WeekRidge, RankBoard, BestDay } from '../charts/YearSet.jsx'
 import YearDistances from '../charts/YearDistances.jsx'
 import YearVsPrev, { vsPrevTitle } from '../charts/YearVsPrev.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
@@ -280,6 +281,122 @@ export default function YearInSport({ year: bookYear } = {}) {
   const domOf = (xs) => { const c = { runs: 0, walks: 0, 'other activities': 0, 'trail runs and hikes': 0 }; for (const a of xs) c[a.sport_type === 'Run' ? 'runs' : a.sport_type === 'Walk' ? 'walks' : a.sport_type === 'TrailRun' || a.sport_type === 'Hike' ? 'trail runs and hikes' : 'other activities'] += 1; const k = Object.keys(c).sort((x, z) => c[z] - c[x])[0]; return [k, xs.length ? c[k] / xs.length : 0] }
   const sportWord = (sp) => ({ Run: 'run', Walk: 'walk', 'Trail Run': 'trail run', TrailRun: 'trail run', Hike: 'hike' }[sp] || 'outing')
 
+  // ---- the site: the year in five pictures ----
+  const span = Math.round((Date.parse(r.endISO) - Date.parse(r.startISO)) / 864e5) + 1
+  const kmTop = moIdx.reduce((b, i) => (s.monthsKm[i] > s.monthsKm[b] ? i : b), moIdx[0])
+  const NOUN = { Walk: ['walking', 'walks'], Run: ['running', 'runs'], TrailRun: ['trail running', 'trail runs'], Hike: ['hiking', 'hikes'] }
+  const byDist = [...r.flip].sort((p, q) => q.dist - p.dist)
+  const leadK = byDist[0] ? byDist[0].key : null
+  const climbK = r.flip.length ? r.flip.reduce((b, d) => (d.elev > b.elev ? d : b), r.flip[0]).key : null
+  const shareOfDist = (k) => (r.flip.find((d) => d.key === k)?.dist || 0) / footKmAll
+  const shareOfElev = (k) => (r.flip.find((d) => d.key === k)?.elev || 0) / footElAll
+  const wkSorted = wkKms.slice().sort((p, q) => p - q), wkMed = wkSorted[Math.floor(wkSorted.length / 2)] || 0
+  const bestAct = footActs.length ? footActs.reduce((b, a) => (kmOf(a) > kmOf(b) ? a : b), footActs[0]) : null
+  const bestRegion = bestAct ? (geoByKey[bestAct.activity_key] || {}).region : null
+  const SPORT_ONE = { Walk: 'walk', Run: 'run', TrailRun: 'trail run', Hike: 'hike' }
+  const MEASURES = [
+    { label: 'Outings', f: (x) => x.n, fmt: (v) => n0(v), noun: 'outings' },
+    { label: 'Km on foot', f: (x) => x.footKm, fmt: (v) => `${n0(v)} km`, noun: 'distance on foot' },
+    { label: 'Metres climbed', f: (x) => x.elev, fmt: (v) => `${n0(v)} m`, noun: 'climbing' },
+    { label: 'Hours moving', f: (x) => x.hours, fmt: (v) => `${n0(v)} h`, noun: 'hours on the move' },
+    { label: 'Days out', f: (x) => x.activeDays, fmt: (v) => n0(v), noun: 'days out' },
+    { label: 'Longest outing', f: (x) => (x.biggestFoot ? x.biggestFoot.val : 0), fmt: (v) => `${v.toFixed(1)} km`, noun: 'the longest outing' },
+  ]
+  const rankRows = MEASURES.map((mz) => ({ label: mz.label, fmt: mz.fmt, values: allStats.map((x) => ({ y: x.year, v: mz.f(x) })) }))
+  const firsts = MEASURES.filter((mz) => 1 + allStats.filter((x) => mz.f(x) > mz.f(s)).length === 1)
+  const Sec = ({ n, id, k, title, text, cap, wide, children }) => (
+    <>
+      <hr className="rule rule--faint" />
+      <section className="sgrid yset" aria-labelledby={idp(id)}>
+        <div className={`yset__grid${wide ? ' yset__grid--wide' : ''}`}>
+          <div>
+            <p className="yset__k">{n} · {k}</p>
+            <h2 id={idp(id)} className="yset__t">{title}</h2>
+            {text.filter(Boolean).map((t, i) => <p key={i} className="yset__p">{t}</p>)}
+          </div>
+          <figure className="yset__fig">
+            {children}
+            {cap ? <figcaption className="yset__cap">{cap}</figcaption> : null}
+          </figure>
+        </div>
+      </section>
+    </>
+  )
+  const siteSections = (
+    <>
+      <Sec n={num()} id="ys-ring" k="Every day of the year"
+        title={r.restDays === 0 ? 'No zero day.' : pctDays >= 0.8 ? 'Almost every day.' : pctDays >= 0.4 ? 'Most days, not all.' : 'A quiet year.'}
+        text={[
+          r.restDays === 0 ? `Not one day has gone by without an outing${so}.`
+            : pctDays >= 0.8 ? `Most days had something in them: ${n0(s.activeDays)} of the ${n0(span)}${so}.`
+              : pctDays >= 0.4 ? `About ${pc(pctDays)}% of the days had an outing, ${n0(s.activeDays)} of ${n0(span)}${so}.`
+                : `Only ${n0(s.activeDays)} of the year's ${n0(span)} days had an outing, and the empty days show.`,
+          s.streakLen >= 7 ? `The longest run without a zero day lasted ${n0(s.streakLen)} days${s.streakGoing ? ', and it has not ended' : ''}.` : `The longest run of days in a row was ${word(s.streakLen)}.`,
+          s.monthsKm[kmTop] > 0 ? `${MONTH_F[kmTop]} carried the most distance, ${n0(s.monthsKm[kmTop])} km on foot.` : '',
+        ]}
+        cap="Each spoke is a day, longer for more kilometres on foot. The dark arc outside is the longest run of days in a row.">
+        <YearRing year={Y} acts={yearActs} startISO={r.startISO} endISO={r.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }}
+          aria={`Every day of ${Y} as a ring: ${n0(s.activeDays)} days with an outing out of ${n0(span)}, the longest run ${n0(s.streakLen)} days.`} />
+      </Sec>
+
+      {leadK && s.footKm >= 20 ? (
+        <Sec n={num()} id="ys-waf" k="Where the kilometres came from"
+          title={`${cap(NOUN[leadK][0])} carried the year.`}
+          text={[
+            `${pc(shareOfDist(leadK))}% of the ${n0(s.footKm)} km on foot came from ${NOUN[leadK][1]}.`,
+            climbK && s.elev >= 100 ? (climbK === leadK ? `${cap(NOUN[climbK][1])} gave most of the climbing too, ${pc(shareOfElev(climbK))}% of ${n0(s.elev)} m.` : `The climbing came from somewhere else: ${NOUN[climbK][1]} gave ${pc(shareOfElev(climbK))}% of the ${n0(s.elev)} m.`) : '',
+            runsAll.length ? (runsTread === runsAll.length ? `Every run was on the treadmill.` : runsTread === 0 ? 'None of the runs was on the treadmill.' : `${cap(word(runsTread))} of the ${word(runsAll.length)} runs were on the treadmill.`) : '',
+          ]}>
+          <KmWaffle acts={yearActs} aria={`Kilometres on foot in ${Y} by sport: ${byDist.map((d) => `${d.label} ${n0(d.dist)} km`).join(', ')}.`} />
+        </Sec>
+      ) : null}
+
+      {r.weekly.series.length >= 8 ? (
+        <Sec n={num()} id="ys-ridge" k="Week by week" wide
+          title={under10wk === 0 ? 'No thin week.' : r.weekly.cv < 0.45 ? 'Steady weeks.' : 'Big weeks and thin ones.'}
+          text={[
+            wkMed > 0 ? `The biggest week was ${(bestWk.km / wkMed).toFixed(1)} times a middle one.` : '',
+            under10wk ? `${cap(word(under10wk))} ${under10wk === 1 ? 'week' : 'weeks'} dropped under 10 km.` : 'No week dropped under 10 km.',
+            wk50 ? `${cap(word(wk50))} ${wk50 === 1 ? 'week' : 'weeks'} passed 50 km.` : '',
+          ]}
+          cap="Each point is one week, Sunday to Saturday. The small marks under the ridge are the weeks under 10 km.">
+          <WeekRidge series={r.weekly.series} aria={`Kilometres on foot each week of ${Y}: the biggest week ${n0(bestWk.km)} km, a middle week ${n0(wkMed)} km, ${under10wk} weeks under 10 km.`} />
+        </Sec>
+      ) : null}
+
+      {allStats.length > 1 ? (
+        <Sec n={num()} id="ys-rank" k="Against the other years" wide
+          title={firsts.length ? `My best year for ${firsts[0].noun}.` : `${cap(ORD[rankKm - 1])} of ${years.length} for distance.`}
+          text={[
+            `For distance on foot it ranks ${ORD[rankKm - 1]} of ${word(years.length)} years, and for climbing ${ORD[rankEl - 1]}${isPartial ? ', with weeks still to go' : ''}.`,
+            bestKmYear && bestKmYear.year !== Y ? `My best year for distance is still ${bestKmYear.year}, and this one reached ${pc(s.footKm / bestKmYear.footKm)}% of it.` : '',
+          ]}
+          cap="The grey dots are the other years, the orange dot is this one.">
+          <RankBoard rows={rankRows} year={Y} partial={isPartial} aria={`${Y} against the other years: ${rankRows.map((rw) => `${rw.label} ${rw.fmt(rw.values.find((v) => v.y === Y).v)}`).join(', ')}.`} />
+        </Sec>
+      ) : null}
+
+      {bestAct ? (
+        <Sec n={num()} id="ys-best" k="The biggest day" wide
+          title={`${cap(SPORT_ONE[bestAct.sport_type] || 'outing')} of the year.`}
+          text={[
+            s.medianFoot > 0 ? `An ordinary outing ${Y === latest ? 'this' : 'that'} year was ${s.medianFoot.toFixed(1)} km, so this day was ${(kmOf(bestAct) / s.medianFoot).toFixed(1)} times one.` : '',
+            s.highestClimb && s.highestClimb.date === s.biggestFoot?.date && Number(bestAct.elevation_gain_m) >= 100 ? 'It was also the day with the most climbing.' : '',
+          ]}
+          cap="The small dots are every other outing on foot of the year, placed by distance.">
+          <div className="ybest__big"><b>{kmOf(bestAct).toFixed(1)}</b><span>km on foot</span></div>
+          <ul className="ybest__facts">
+            <li><b>{fmtDay(bestAct.date.slice(0, 10))}</b>{SPORT_ONE[bestAct.sport_type]}</li>
+            <li><b>{hm(Number(bestAct.moving_time_min) || 0)}</b>moving</li>
+            {Number(bestAct.elevation_gain_m) >= 20 ? <li><b>{n0(bestAct.elevation_gain_m)} m</b>climbed</li> : null}
+            {bestRegion ? <li><b>{bestRegion}</b>region</li> : null}
+          </ul>
+          <BestDay acts={yearActs} aria={`The biggest outing on foot of ${Y}, ${kmOf(bestAct).toFixed(1)} km, against every other outing of the year.`} />
+        </Sec>
+      ) : null}
+    </>
+  )
+
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]}
@@ -304,7 +421,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             <Eyebrow>{Y}{isPartial ? ' · still running' : ''}</Eyebrow>
             <h2 id={idp('yis-title')} className="section-head__title">{theme}.</h2>
           </div>
-          {YEAR_REPORT[Y] && <Reveal as="p" className="sgrid__statement">{YEAR_REPORT[Y](s)}</Reveal>}
+          {book ? (YEAR_REPORT[Y] && <Reveal as="p" className="sgrid__statement">{YEAR_REPORT[Y](s)}</Reveal>) : <Reveal as="p" className="sgrid__statement">{momentText(Y, s)}</Reveal>}
           <OddsRow
             title={`${Y} in four numbers${ps ? `, against ${prevYear}` : ''}`}
             items={[
@@ -314,7 +431,7 @@ export default function YearInSport({ year: bookYear } = {}) {
               { num: s.hours, unit: ' h', label: `moving${ps ? `, ${chgTxt(chg(s.hours, ps.hours))}` : ''}`, tone: 'move' },
             ]}
           />
-          <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} fullStreak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} fullGap={r ? r.longGap : null} />
+          {book ? <OutingSky activities={yearActs} year={Y} recordFirstISO={recordFirst.slice(0, 10)} recordLastISO={recordLast.slice(0, 10)} fullStreak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }} fullGap={r ? r.longGap : null} /> : null}
           <BookLesson of={<OutingSky />} />
           <BookStory>{[
             `Each dot above is one outing of ${Y}, placed by its day across the year and by the hour it started, and a bigger dot is a longer distance. The marks pick out the longest silence of the year, the longest run of days and the three biggest days.`,
@@ -322,6 +439,9 @@ export default function YearInSport({ year: bookYear } = {}) {
           ]}</BookStory>
         </section>
 
+        {!book && siteSections}
+
+        {book && (<>
         {/* ===== 1. month by month ===== */}
         <hr className="rule rule--faint" />
         <StorySection
@@ -649,6 +769,8 @@ export default function YearInSport({ year: bookYear } = {}) {
           </>
         )}
 
+        </>)}
+
         {/* ===== 8. where it happened ===== */}
         {r.located >= 15 && (
           <>
@@ -691,6 +813,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           </>
         )}
 
+        {book && (<>
         {/* ===== 9. against the other years ===== */}
         <hr className="rule rule--faint" />
         <StorySection
@@ -740,6 +863,8 @@ export default function YearInSport({ year: bookYear } = {}) {
           <YearMoment year={Y} stats={s} />
           <BookLesson of={<YearMoment />} />
         </section>
+
+        </>)}
 
         {!book && <Reveal as="section" className="yis-cta">
           <div className="yis-cta__row">

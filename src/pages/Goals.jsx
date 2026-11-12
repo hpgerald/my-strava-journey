@@ -197,7 +197,7 @@ export default function Goals() {
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Simple targets work best for me. Every year I aim for the same three: {unitOf(W, W.target)} walking,{' '}
+            Each year I aim for the same three targets, simple enough to check in my head on any morning: {unitOf(W, W.target)} walking,{' '}
             {unitOf(R, R.target)} running and {unitOf(E, E.target)} of climbing on foot.{' '}
             {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
             {closedYears('walk').length && closedYears('run').length && doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed).slice(5) === doy(closedYears('run')[0].year, closedYears('run')[0].run.closed).slice(5)
@@ -466,8 +466,7 @@ export default function Goals() {
           eyebrow={`${num()} · A goal I never set`}
           title={`Every month since ${fmtMonth(`${G.streakFrom.key}-01`)}.`}
           statement={<>
-            I never set this one as a target. It came on its own, from going out week after week. Even in the quiet months of
-            the year, I went out at least once.
+            I never set this one as a target. It came on its own, from going out week after week, even in the quiet months.
           </>}
           odds={{
             title: 'Every calendar month',

@@ -210,11 +210,10 @@ export default function Records() {
             <h2 id="rc-title" className="section-head__title">Against my own&nbsp;longest.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Records come quickly at the start, and then they slow down. In the early years the distance record moved again and again:
-            10 km on my second day, a half marathon a few months later, 30 km in{' '}
+            Records come fast when everything is new. In the first years the distance record kept moving: 10 km on my second day, a half marathon a few months later, 30 km in{' '}
             {firstOver(30) ? fmtMonth(firstOver(30).date) : '2021'}. Then came the {dNow.km >= 42.195 ? 'marathon' : `${k1(dNow.km)} km`} on
-            the {lower(dNow.mode).replace(' run', '')}, and nothing has beaten it since.{dNow.date.slice(0, 7) === '2022-05' ? ` It was raining outside that day, and I wanted to break
-            the marathon barrier, so I ran it indoors with a few pauses. By the end I had lost all feeling in my fingernails. They were fine afterwards.` : ''}
+            the {lower(dNow.mode).replace(' run', '')}, and nothing has beaten it since.{dNow.date.slice(0, 7) === '2022-05' ? ` It was raining outside that day and I wanted to break
+            the marathon barrier, so I stayed indoors and took a few pauses. By the end I could not feel my fingernails. They were fine afterwards.` : ''}
           </Reveal>
           <OddsRow
             title="The longest outing on foot"
@@ -248,8 +247,8 @@ export default function Records() {
           eyebrow={`${num()} · The longest outings`}
           title='The longest days.'
           statement={<>
-            My long days moved outside. All my runs past 30 km on the treadmill came between {fmtMonth(treadOver30[0]?.date)} and{' '}
-            {fmtMonth(treadOver30[treadOver30.length - 1]?.date)}. Since then every long day has been outside, and the longest of them
+            The long days left the treadmill. Every run past 30 km on it came between {fmtMonth(treadOver30[0]?.date)} and{' '}
+            {fmtMonth(treadOver30[treadOver30.length - 1]?.date)}, and since then the long days have all been outside. The longest of them
             is 34.8 km on the trails of Kilimanjaro, with more than 800 m of climbing.
           </>}
           odds={{
@@ -298,8 +297,8 @@ export default function Records() {
           title='From walks to hikes.'
           leftNote={<>The bottom of the scale is stretched so the small climbs show.</>}
           statement={<>
-            My climbing records needed bigger and bigger mountains. The first {word(walkLed)} were all walks, and the biggest of them
-            was only {n0(cP[walkLed - 1].elev)} m. After that the hikes took over, up to almost 2,000 m in one day in Morogoro.
+            My climbing records needed a bigger mountain each time. The first {word(walkLed)} were all walks, the biggest only{' '}
+            {n0(cP[walkLed - 1].elev)} m. Then the hikes took over, and the record climbed with them to almost 2,000 m in one day in Morogoro.
           </>}
           odds={{
             title: 'The biggest climb on foot',
@@ -347,9 +346,8 @@ export default function Records() {
           eyebrow={`${num()} · The biggest weeks and months`}
           title={`${fmtMonth(moEl.month)} climbed the most.`}
           statement={<>
-            Distance and climbing came in different seasons of my life. In August 2021 I covered more than 550 km and climbed almost
-            nothing, because most of it was on the treadmill. In March 2023 I climbed more than 5,000 m from less than 300 km on foot,
-            most of it in Kilimanjaro.
+            Distance and climbing peaked in different seasons of my life. August 2021 gave me more than 550 km and almost no height,
+            nearly all of it on the treadmill. March 2023 gave me more than 5,000 m of climbing from under 300 km, most of it on Kilimanjaro.
           </>}
           odds={{
             title: 'The biggest stretches',
@@ -429,9 +427,8 @@ export default function Records() {
           eyebrow={`${num()} · Milestones`}
           title="The kilometres came faster."
           statement={<>
-            <span lang="sw">Pole pole ndio mwendo</span>, slowly is the way. The kilometres come faster now than they used to. The first
-            1,000 km took me two years, with the long gap inside them. The last {n0(lastKm.mark - prevKm.mark)} km took about a year,
-            and each Everest of climbing now comes much quicker than the first.
+            <span lang="sw">Pole pole ndio mwendo</span>, slowly is the way. The first 1,000 km took me two years, with the long gap inside them.
+            The last {n0(lastKm.mark - prevKm.mark)} km took about a year, and each Everest of climbing now comes much sooner than the first did.
           </>}
           odds={{
             title: 'The running totals',
@@ -532,9 +529,8 @@ export default function Records() {
           eyebrow={`${num()} · Streaks`}
           title={S.any.current === S.any.len ? `Every day since ${fmtMonth(S.any.startISO)}.` : `A ${n0(S.any.len)}-day streak.`}
           statement={<>
-            I do not take the streaks for granted.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, more than ${word(Math.floor(S.week.len / 52))} years now.` : ''}
-            {' '}The other side of my record is the long gap, from {fmtMonth(S.longGap.from)} to {fmtMonth(S.longGap.to)}, when I did
-            not go out at all.
+            I do not take the streaks for granted, because the same record holds the long gap, from {fmtMonth(S.longGap.from)} to{' '}
+            {fmtMonth(S.longGap.to)}, when I did not go out at all.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, more than ${word(Math.floor(S.week.len / 52))} years now.` : ''}
           </>}
           odds={{
             title: 'In a row',
@@ -583,8 +579,9 @@ export default function Records() {
               eyebrow={`${num()} · Where the records were set`}
               title={`${regTop[0][0]} has my big climbs.`}
               statement={<>
-                Every big climb in my log meant a trip, to {regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}. Where I
-                go out most the ground is fairly flat. The hike in Manyara went up more than 1,700 m, my record at the time.
+                Every big climb in my log needed a trip, to {regTop.map(([k]) => k).join(', ').replace(/, ([^,]*)$/, ' or $1')}, because
+                the ground where I go out most is fairly flat. The hike on Hanang, in Manyara, went up more than 1,700 m and held the record
+                for almost two years.
               </>}
               odds={{
                 title: 'Climbs by region of Tanzania',
@@ -636,8 +633,8 @@ export default function Records() {
           eyebrow={`${num()} · Records and chance`}
           title={dP.length > R.expected ? 'More records than chance.' : 'Fewer records than chance.'}
           statement={<>
-            My records were not only luck. If my outings had come in a random order, the distance record would have broken far
-            fewer times than it did. Slowly, I was going further. The marathon has now stood for more than{' '}
+            My records were not luck alone. If my outings had come in a random order, the distance record would have broken far fewer
+            times than it did. I was going further, slowly. The marathon has now stood for more than{' '}
             {word(Math.floor(R.distStanding.days / 365.25))} years.
           </>}
           odds={{

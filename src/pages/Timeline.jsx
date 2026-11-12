@@ -221,9 +221,9 @@ export default function Timeline() {
           eyebrow={`${num()} · Firsts`}
           title='From the treadmill to the hills.'
           statement={<>
-            New firsts are harder to find now, and that is fine. My distance firsts, the 10 km, the half marathon, 30 km and the
-            marathon, all came on the treadmill. The later ones needed a trail, a hill or a long walk outside. Each one asks for a
-            longer day or a steeper hill, so they come slowly.
+            New firsts are harder to find now. My distance firsts, the 10 km, the half marathon, 30 km and the marathon, all came on the
+            treadmill. The later ones needed a trail, a hill or a long walk outside, and each one asks for a longer day or a steeper hill
+            than the last.
           </>}
           odds={{
             title: 'Firsts on foot',

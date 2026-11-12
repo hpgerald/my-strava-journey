@@ -31,7 +31,26 @@ function JumpBars({ items }) {
   )
 }
 
+// the human opening of a year, without its picture, for the top of the page
+export function momentText(year, stats) {
+  return momentParts(year, stats).body
+}
+
 export default function YearMoment({ year, stats }) {
+  const { kicker, title, body, figure } = momentParts(year, stats)
+  return (
+    <div className="ymom">
+      <Reveal className="ymom__head">
+        <p className="eyebrow ymom__kicker">{kicker}</p>
+        <h3 className="ymom__title display">{title}</h3>
+        <p className="ymom__body measure">{body}</p>
+      </Reveal>
+      <Reveal className="ymom__fig" delay={120}>{figure}</Reveal>
+    </div>
+  )
+}
+
+function momentParts(year, stats) {
   const s = stats
   const chip = (label, value, decimals = 0) => (
     <div className="ymom__chip">
@@ -110,14 +129,5 @@ export default function YearMoment({ year, stats }) {
     figure = <div className="ymom__chips">{chip('day streak', s.streakLen)}{chip('hours moving', Math.round(s.hours))}</div>
   }
 
-  return (
-    <div className="ymom">
-      <Reveal className="ymom__head">
-        <p className="eyebrow ymom__kicker">{kicker}</p>
-        <h3 className="ymom__title display">{title}</h3>
-        <p className="ymom__body measure">{body}</p>
-      </Reveal>
-      <Reveal className="ymom__fig" delay={120}>{figure}</Reveal>
-    </div>
-  )
+  return { kicker, title, body, figure }
 }

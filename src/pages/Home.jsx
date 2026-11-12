@@ -543,8 +543,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             </div>
 
             <Reveal as="p" className="sgrid__statement">
-              The hardest day to go out is the day after a break. The longer a chain of days runs, the easier the next day gets,
-              and the longer a break runs, the harder it is to end. On a tired day, a short walk is enough to keep the chain.
+              The day after a break is the hardest one to go out, and my own log shows why. Every extra zero day makes the next one
+              easier to take, and every day in a row makes the next one easier to keep. So on a tired evening I still go, even if it is
+              only a short walk.
             </Reveal>
 
             <OddsRow
@@ -585,12 +586,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             <section className="sgrid" aria-labelledby="work-title">
               <div className="sgrid__head">
                 <Eyebrow>Big days and small days</Eyebrow>
-                <h2 id="work-title" className="section-head__title">The long days carry a&nbsp;lot.</h2>
+                <h2 id="work-title" className="section-head__title">Ordinary days did the&nbsp;work.</h2>
               </div>
 
               <Reveal as="p" className="sgrid__statement">
-                Most of my distance came from plain days of 10 km or more. Even my marathon, the longest day I have, is less than half
-                of one percent of the total, so no single day decides much. The short days in between kept me going out.
+                My marathon is the longest day I have ever had, and it is less than half of one percent of everything I have covered.
+                The kilometres came from somewhere less exciting: ordinary days of ten kilometres or more, one after another, for years.
+                The short days did a different job. They kept me in the habit until the next long one.
               </Reveal>
 
               <OddsRow
@@ -632,11 +634,11 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           <StorySection
             id="years-title"
             eyebrow="How my days are shaped"
-            title="Same time, fewer outings."
+            title="One outing instead of&nbsp;two."
             statement={<>
-              My time each day has stayed the same. I just use it differently now. A day out has always been about{' '}
-              {Math.round(perDayLo)} to {Math.round(perDayHi)} minutes. In the early years I split it, a run in the morning and a walk
-              in the evening. Now it is usually one longer outing.
+              I give the habit about as much time each day as I did when I came back, somewhere between {Math.round(perDayLo)} and{' '}
+              {Math.round(perDayHi)} minutes. What changed is how I spend it. In the early years I often ran in the morning and walked in
+              the evening, two short pieces of one day. Now it is usually one longer outing, and when it is done, the day&rsquo;s work is done.
             </>}
             odds={{
               title: 'How the days were split',
@@ -681,8 +683,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             eyebrow="Where I go"
             title="The climbing is in two&nbsp;regions."
             statement={<>
-              If I want to climb, I have to travel. Where I go out most, the ground is flat. One hike in Morogoro climbed almost 2,000 m,
-              and in {busiestRegion && busiestRegion.region}, where I go out most, it would take me about sixty outings to climb that much.
+              Where I go out most, the ground is flat, so the climbing waits for trips. One hike in Morogoro climbed almost 2,000 m.
+              In {busiestRegion && busiestRegion.region}, the same height would take me about sixty outings.
             </>}
             odds={{
               title: 'Where the outings happen',
@@ -719,10 +721,10 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           eyebrow="Walking and running"
           title={walkLeadYear ? 'Walks took over.' : 'Walking leads.'}
           statement={<>
-            I chose walking. Running for me is mostly indoors, a hard session when time is short. Walking takes me outside, where I
-            can enjoy nature, and it builds perseverance. In 2021 my usual walk was under {Math.ceil(walkMedOf(2021))} km,
-            and this year it is about {Math.round(walkMedOf(gridYears[gridYears.length - 1]))} km. Since {walkLeadYear || 'then'} I have
-            walked more often than I have run, every year.
+            Walking was a choice. Running, for me, mostly happens indoors, a hard session on the treadmill when time is short.
+            Walking takes me outside, where I can enjoy what is around me, and it builds perseverance over the long hours. My usual walk
+            in 2021 was under {Math.ceil(walkMedOf(2021))} km. Now it is about {Math.round(walkMedOf(gridYears[gridYears.length - 1]))} km,
+            and since {walkLeadYear || 'then'} walks have outnumbered runs every year.
           </>}
           odds={{
             title: 'Share of all outings',
@@ -760,11 +762,12 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           id="hours-title"
           cases={[4]}
           eyebrow="Time of day"
-          title="Mornings and evenings."
+          title="Before work and after&nbsp;it."
           statement={<>
-            The habit fits around an office job, so it does not wait for the weekend. Most outings start early in the morning or in the
-            evening, with {fmtHour(peakHour)} the busiest hour, and every day of the week gets about the same share. When I am chasing
-            a target it can be very early or very late: one walk started just before two in the morning, and one run almost at midnight.
+            An office job sets my hours, so the habit lives at the edges of the day: early in the morning, or in the evening once
+            work lets go, with {fmtHour(peakHour)} the busiest hour. Weekends get no special treatment, and every day of the week carries
+            about the same share. When a target is close, the hours stretch: one walk began just before two in the morning, and one run
+            close to midnight.
           </>}
           odds={{
             title: 'When outings start',
@@ -811,10 +814,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               eyebrow="Through the year"
               title="Two quieter months."
               statement={<>
-                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my weakest months{' '}
-                {dipYears === fullYears.length ? 'every year' : 'most years'}, and the quietest of all was September 2024, with
-                only eight days out. In {gridYears[gridYears.length - 1]} I went
-                out on every day of both.
+                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my thin months{' '}
+                {dipYears === fullYears.length ? 'every year' : 'most years'}, and September 2024 was the lowest point of all, with only eight
+                days out. In {gridYears[gridYears.length - 1]} I went out on every single day of both.
               </>}
               odds={{
                 title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
@@ -866,8 +868,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               eyebrow="Indoors and out"
               title="Less treadmill every year."
               statement={<>
-                The treadmill is where I learned to run. Of the {fmtInt(runKm)} km I have run, {fmtInt(runKmIn)} km were on it, and my
-                only full marathon too. Only recently has more of my running moved outside.
+                The treadmill is where I learned to run, and for years it was where I ran: {fmtInt(runKmIn)} of my {fmtInt(runKm)} km
+                of running, the marathon included. It was my answer when time was short. Only lately has more of my running moved outside.
               </>}
               odds={{
                 title: 'Share of sessions indoors',
@@ -916,9 +918,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           eyebrow="Distance and climb"
           title="Where the height comes from."
           statement={<>
-            Running gives me the kilometres, and walking and the hills give me the height. I climb about{' '}
-            {mPerKm('Run').toFixed(1)} m for every kilometre I run. At that rate I would need to run more than{' '}
-            {fmtInt(Math.floor(bigHike.m / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to match my biggest hike, {bigHike.m >= 1900 && bigHike.m < 2000 ? 'almost 2,000' : fmtInt(bigHike.m)} m{bigHike.region ? ` in ${bigHike.region}` : ''}.
+            Running gives me distance and almost no height, about {mPerKm('Run').toFixed(1)} m for every kilometre. At that rate I would
+            have to run more than {fmtInt(Math.floor(bigHike.m / Math.max(0.1, mPerKm('Run')) / 100) * 100)} km to climb what one hike
+            {bigHike.region ? ` in ${bigHike.region}` : ''} climbed in a day. The height comes from walking and the hills.
           </>}
           odds={{
             title: 'Share of distance and climb on foot',
@@ -1015,9 +1017,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
 
           <Reveal as="p" className="hero__statement">
-            Going often has done more for me than going far. In {gridYears[0]}, my first year, I went out {firstYearN} times.
-            {nowMonthsMin >= firstYearN ? ' Now I do that in a month.' : ' Now I come close to that in a single month.'} Most days are a
-            walk or an easy run of about an hour, and those ordinary days are where nearly all of this comes from.
+            In {gridYears[0]}, my first year, I went out {firstYearN} times.{nowMonthsMin >= firstYearN ? ' Now even my quietest month has more than that.' : ' Now most months have about that many, or more.'}
+            Very little of it would make a photo: a walk after work, an easy run before it, an hour or so at a time.
+            This record is built from those hours, done again the next day.
           </Reveal>
 
           <BookStory>{[
