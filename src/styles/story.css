@@ -322,3 +322,14 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__n { font-size: clamp(1.9rem, 1.1rem + 1.4vw, 2.618rem); }
   .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__pair { margin-top: var(--r3); padding-top: var(--r3); }
 }
+@media (min-width: 64rem) {
+  /* the numbers fill the height of the statement beside them: their title level
+     with its first line, the numbers level with its last */
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .odds,
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__lead > .odds { align-self: stretch; display: flex; flex-direction: column; justify-content: flex-start; gap: var(--r2); }
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__title { margin-bottom: 0; padding-top: 0.35rem; }
+}
+@media (min-width: 64rem) {
+  /* a number standing alone beside a statement carries more weight */
+  .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__row:has(> .odds__cell:only-child) .odds__n { font-size: clamp(2.618rem, 1.6rem + 2.2vw, 4.236rem); }
+}

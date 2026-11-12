@@ -132,9 +132,12 @@ export function Scene({ label, title, children, foot, figTitle, fig, note, read,
     const t = text.current, f = figure.current
     if (!t || !f || typeof ResizeObserver === 'undefined') return undefined
     const measure = () => {
-      const beside = f.getBoundingClientRect().left > t.getBoundingClientRect().left + 10
+      const head = t.querySelector('.mtn-scene__head') || t
+      const beside = f.getBoundingClientRect().left > head.getBoundingClientRect().left + 10
       if (!beside) { setWant(0); return }
-      const kids = [...t.children]
+      // on a wide screen the ledger runs under both columns, so only the words
+      // above it set the height the figure should reach
+      const kids = [...t.children].filter((k) => !k.classList.contains('mtn-scene__foot') || k.getBoundingClientRect().width < f.getBoundingClientRect().width)
       const gap = parseFloat(getComputedStyle(t).rowGap) || 0
       const words = kids.reduce((s, k) => s + k.getBoundingClientRect().height, 0) + gap * Math.max(0, kids.length - 1)
       const around = [...f.children].filter((k) => !k.hasAttribute('data-scene-chart')).reduce((s, k) => { const c = getComputedStyle(k); return s + k.getBoundingClientRect().height + parseFloat(c.marginTop) + parseFloat(c.marginBottom) }, 0)

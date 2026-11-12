@@ -242,3 +242,15 @@ html.motion .relief__area { opacity: 0; animation: reliefRise 1.6s var(--ease-ou
 /* a photograph still to come holds a modest place, not a full screen */
 .plate--empty .plate__hold { max-height: 16rem; aspect-ratio: auto; min-height: 9rem; height: min(16rem, 30vw); }
 @media (max-width: 40rem) { .plate--empty .plate__hold { aspect-ratio: auto; height: 11rem; } }
+
+/* wide screens: the words and the figure share the first row and end level; the
+   ledger or bars under the words run across both columns as a strip of their own */
+@media (min-width: 64rem) {
+  .mtn-scene:not(.mtn-scene--text):not(.book *) { grid-template-rows: auto auto; row-gap: var(--sp-5); }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) > .mtn-scene__text { display: contents; }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) > .mtn-scene__text > .mtn-scene__head { grid-column: 1; grid-row: 1; align-self: start; }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) > .mtn-scene__fig { grid-column: 2; grid-row: 1; }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) > .mtn-scene__text > .mtn-scene__foot { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) .mtn-scene__foot > .mtn-ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); column-gap: var(--grid-gap); }
+  .mtn-scene:not(.mtn-scene--text):not(.book *) .mtn-scene__foot > .mtn-ledger div { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; padding: 0.7rem 0; border-bottom: 0; }
+}

@@ -422,9 +422,9 @@ export default function Goals() {
                 title: 'Ras Kilomoni',
                 items: [
                   { book: true, num: rk.length, unit: '', label: 'trips, the target met exactly', tone: 'move' },
-                  { book: true, num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
+                  { num: rkDays, unit: ' days', label: `${fmtShort(rk[0].date)} to ${fmtShort(rkLast.date)}`, tone: 'move' },
                   { num: rkKm, unit: ' km', label: `there and back, ${k1(rkKm / rk.length)} km a trip`, tone: 'move' },
-                  { book: true, num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
+                  { num: rkOuting, unit: '', label: `outings in all by trip ${rkLast.roman}`, tone: 'rest' },
                 ],
               }}
               left={{

@@ -330,3 +330,24 @@
 .ybest__me { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
 .ybest__axis { stroke: var(--rule-faint); }
 .ybest__t { font-family: var(--font-sans); font-size: 12px; fill: var(--fg-muted); }
+.ymon2__el { fill: var(--accent); }
+.ymon2__v { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: var(--ink); }
+.ymon2__m { font-family: var(--font-sans); font-size: 12px; fill: var(--fg-muted); }
+.ymon2__axis { stroke: var(--ink); }
+
+/* a year section: the words fill the height of the picture beside them, the
+   key numbers sit at the foot of the words, level with the foot of the picture */
+@media (min-width: 64rem) {
+  .yset__grid:not(.yset__grid--wide) { align-items: stretch; }
+  .yset__grid:not(.yset__grid--wide) > .yset__words { display: flex; flex-direction: column; }
+  .yset__grid:not(.yset__grid--wide) > .yset__fig { align-self: center; }
+}
+.yset__facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: var(--sp-3) var(--grid-gap); margin: var(--sp-5) 0 0; padding: var(--sp-4) 0 0; border-top: 1px solid var(--rule-faint); }
+.yset__grid:not(.yset__grid--wide) > .yset__words > .yset__facts { margin-top: auto; }
+.yset__grid--wide > .yset__words > .yset__facts { grid-template-columns: repeat(auto-fit, minmax(9rem, 12rem)); }
+.yset__facts div { min-width: 0; }
+.yset__facts dt { order: 2; font-size: 0.8125rem; line-height: 1.35; color: var(--fg-muted); }
+.yset__facts dd { margin: 0 0 0.25rem; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2.058rem); letter-spacing: -0.03em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.yset__facts div { display: flex; flex-direction: column; }
+.yset__facts .is-hot dd { color: var(--accent-strong); }
+.yset__words > .yset__p:last-of-type { margin-bottom: var(--sp-4); }

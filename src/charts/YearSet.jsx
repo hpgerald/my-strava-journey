@@ -216,3 +216,45 @@ export function BestDay({ acts, aria }) {
     </div>
   )
 }
+
+// ---------------------------------------------------------------- the months
+// each month of the year as a column of its kilometres on foot, cut by sport,
+// with the climbing of the month as a small orange tick above it
+export function MonthStack({ year, acts, aria }) {
+  const [ref, width] = useWidth(640)
+  const W = Math.max(280, width), narrow = W < 520
+  const H = narrow ? 230 : 280
+  const m = { l: 6, r: 6, t: 52, b: 26 }
+  const months = Array.from({ length: 12 }, () => ({ km: {}, tot: 0, elev: 0 }))
+  for (const a of acts) {
+    if (!FOOT.includes(a.sport_type) || Number(a.year) !== year) continue
+    const i = parseInt((a.date || '').slice(5, 7), 10) - 1
+    if (i < 0) continue
+    months[i].km[a.sport_type] = (months[i].km[a.sport_type] || 0) + km(a)
+    months[i].tot += km(a)
+    months[i].elev += Number(a.elevation_gain_m) || 0
+  }
+  const maxKm = Math.max(10, ...months.map((o) => o.tot)), maxEl = Math.max(1, ...months.map((o) => o.elev))
+  const bw = (W - m.l - m.r) / 12, inner = bw * 0.62
+  const y = (v) => H - m.b - (v / maxKm) * (H - m.t - m.b)
+  const best = months.reduce((b, o, i) => (o.tot > months[b].tot ? i : b), 0)
+  return (
+    <div ref={ref} className="ymon2">
+      <svg width={W} height={H} role="img" aria-label={aria} style={{ display: 'block' }}>
+        {months.map((o, i) => {
+          const x = m.l + i * bw + (bw - inner) / 2
+          let acc = 0
+          return (
+            <g key={i}>
+              {FOOT.filter((k) => o.km[k]).map((k) => { const h = (o.km[k] / maxKm) * (H - m.t - m.b); const yy = H - m.b - acc - h; acc += h; return <rect key={k} x={x} y={yy} width={inner} height={Math.max(0, h - 0.5)} fill={SPORT_FILL[k]} /> })}
+              {o.elev > 0 ? <rect x={x + inner * 0.3} y={y(o.tot) - 4 - (3 + 21 * (o.elev / maxEl))} width={inner * 0.4} height={3 + 21 * (o.elev / maxEl)} className="ymon2__el" /> : null}
+              {i === best && o.tot > 0 ? <text x={x + inner / 2} y={y(o.tot) - 10 - (o.elev > 0 ? 3 + 21 * (o.elev / maxEl) : 0)} textAnchor="middle" className="ymon2__v">{n0(o.tot)} km</text> : null}
+              <text x={x + inner / 2} y={H - 8} textAnchor="middle" className="ymon2__m">{narrow ? MON[i][0] : MON[i]}</text>
+            </g>
+          )
+        })}
+        <line x1={m.l} x2={W - m.r} y1={H - m.b} y2={H - m.b} className="ymon2__axis" />
+      </svg>
+    </div>
+  )
+}
