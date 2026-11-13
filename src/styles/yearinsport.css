@@ -353,3 +353,10 @@
 .yset__facts div { display: flex; flex-direction: column; }
 .yset__facts .is-hot dd { color: var(--accent-strong); }
 .yset__words > .yset__p:last-of-type { margin-bottom: var(--sp-4); }
+
+/* the biggest day: the number and its facts share one row on wide screens */
+@media (min-width: 64rem) {
+  .yset__grid--wide .yset__fig:has(> .ybest__big) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: calc(var(--grid-gap) * 1.618); align-items: end; }
+  .yset__grid--wide .yset__fig:has(> .ybest__big) > :not(.ybest__big):not(.ybest__facts) { grid-column: 1 / -1; }
+  .yset__fig > .ybest__big, .yset__fig > .ybest__facts { margin-bottom: var(--sp-4); }
+}

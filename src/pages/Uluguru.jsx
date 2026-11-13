@@ -77,7 +77,7 @@ export default function Uluguru() {
           figTitle="Every trip to Bondwa Peak, altitude against distance"
           fig={<BondwaClimbs trips={trips} feature={best.trip}
             aria={`Altitude along each trip to Bondwa Peak: ${trips.map((t) => `${fmtMonth(t.date)}, from ${n0(t.startAlt)} m to ${n0(t.hi)} m over ${k1(t.km)} km`).join('; ')}.`} />}
-          note={`Each line is one trip, marked with its year. Orange is ${fmtMonth(best.date)}.`}
+          note={`Orange is ${fmtMonth(best.date)}, my biggest climb. The other trips carry their year.`}
           foot={<Ledger rows={trips.map((t) => ({
             k: fmtMonth(t.date),
             v: `${n0(t.climb)} m up · ${k1(t.km)} km`,

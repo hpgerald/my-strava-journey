@@ -111,8 +111,10 @@ export function buildChronicle(activities, geoRows = [], gearRows = [], extra = 
   const streaks = runs(days).filter((r) => r.len >= 20).map((r) => ({ start: isoOf(r.start), end: isoOf(r.end), len: r.len, current: r.end === lastDay }))
   const breaks = []
   for (let i = 1; i < days.length; i++) { const g = days[i] - days[i - 1] - 1; if (g >= 7) breaks.push({ start: isoOf(days[i - 1] + 1), end: isoOf(days[i] - 1), len: g }) }
-  for (const s of streaks) if (s.len >= 45) events.push({ lane: 'streak', date: s.start, title: `${s.current ? 'The' : 'A'} ${s.len}-day streak begins`, sub: s.current ? 'still going' : `ends ${s.end}`, key: 'road', streak: s })
-  for (const b of breaks) if (b.len >= 60) events.push({ lane: 'streak', date: b.start, title: `A ${b.len}-day layoff`, sub: `until ${b.end}`, key: 'quiet', silence: true })
+  const MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const say = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MO[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
+  for (const s of streaks) if (s.len >= 45) events.push({ lane: 'streak', date: s.start, title: `${s.len} days in a row`, sub: s.current ? 'and still going' : `to ${say(s.end)}`, key: 'road', streak: s })
+  for (const b of breaks) if (b.len >= 60) events.push({ lane: 'streak', date: b.start, title: `${b.len} days with nothing`, sub: `back out on ${say(isoOf(dayIdx(b.end) + 1))}`, key: 'quiet', silence: true })
 
   // the longest break inside each year, and the longest since the habit began
   const yearGaps = {}

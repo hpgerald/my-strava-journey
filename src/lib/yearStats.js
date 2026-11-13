@@ -204,18 +204,18 @@ const top = (all, s, k) => all.every((o) => o.year === s.year || (o[k] || 0) < (
 const W = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
 const w = (n) => W[n] || String(n)
 export const YEAR_CHARACTERS = {
-  2019: { label: 'A small beginning', line: (s) => `Mostly the treadmill. ${pc0(s.runShare)}% of my outings were runs, many of them on weekends.` },
-  2020: { label: 'The layoff', line: (s) => `Most outings were early, before 10 in the morning. Then I stopped logging for almost a year.` },
-  2021: { label: 'Coming back', line: (s) => `I started again. On ${pc0(s.multiShare)}% of my days out, I doubled up.` },
-  2022: { label: 'The busiest', line: (s) => `Many short outings, about ${num0(s.avgOutingMin)} minutes each.` },
-  2023: { label: 'The hills', line: (s) => `More hills. I climbed ${num0(s.mPerKm)} m for every km and ran ${num0(s.trailKm)} km on trails.` },
-  2024: { label: 'Travelling', line: (s) => `I went out in ${w(s.countriesNamed)} countries. Half my outings were done in under ${num0(s.medMovingMin)} minutes.` },
+  2019: { label: 'A small beginning', line: (s) => `Every habit starts small. Most of my outings were runs, ${pc0(s.runShare)}% of them, and most of those on the treadmill.` },
+  2020: { label: 'The layoff', line: () => 'A habit can stop very easily. In July I stopped, and it stayed that way for almost a year.' },
+  2021: { label: 'Coming back', line: (s) => `Once I was back, I often went out twice a day: on ${pc0(s.multiShare)}% of my days out.` },
+  2022: { label: 'The busiest', line: (s) => `My busiest year was built from short outings, about ${num0(s.avgOutingMin)} minutes each.` },
+  2023: { label: 'The hills', line: (s) => `The hills changed the year. I ran ${num0(s.trailKm)} km on trails.` },
+  2024: { label: 'Travelling', line: (s) => `The habit came with me to ${w(s.countriesNamed)} countries, even when a day only had room for a short outing.` },
   2025: { label: 'Walking', line: (s, all) => {
     const lw = s.longestWalk
     const lwTop = lw && all.every((o) => o.year === s.year || !o.longestWalk || o.longestWalk.km < lw.km)
-    return `Walks were ${pc0(s.walkShare)}% of my outings${lw && lwTop ? `, and I did my longest walk, ${num0(lw.km)} km` : ''}.`
+    return `Walking became my main thing, ${pc0(s.walkShare)}% of my outings${lw && lwTop ? `, with my longest walk, ${num0(lw.km)} km` : ''}.`
   } },
-  2026: { label: 'Every day', line: (s) => `Usually one outing a day, a longer one, about ${num0(s.avgOutingMin)} minutes.` },
+  2026: { label: 'Every day', line: (s) => `One outing a day, and a longer one, about ${num0(s.avgOutingMin)} minutes.` },
 }
 
 // A longer read of each year for the Year in Sport report hero, in my own voice.
@@ -229,7 +229,7 @@ export const YEAR_REPORT = {
   2023: (s) => `Fewer outings can still mean more. I went out a bit less than in 2022, but I went to the hills more. In March alone I climbed more than 5,000 m, most of it in Kilimanjaro, and over the year I ran ${num0(s.trailKm)} km on trails.`,
   2024: (s) => `Even in a low year, the days can hold. It was my travel year, with outings in ${w(s.countriesNamed)} countries, and my lowest distance since the habit started. Still, I went out on ${s.activeDays} days.`,
   2025: (s) => `Walking became my main thing. It was ${Math.round(s.walkShare * 100)}% of my outings, and in February I walked 30 km in one go, my longest walk. For the third year in a row I logged about three hundred activities.`,
-  2026: () => `Going every day has made it simpler. I have not missed a day this year, and in August my fiftieth trip to Ras Kilomoni was also my 2,000th outing. The year is not over yet. I am thankful the body has carried me this far.`,
+  2026: () => `Going every day has made it simpler. I have not missed a day this year, and in August my fiftieth trip to Ras Kilomoni was also my 2,000th outing. I am thankful the body has carried me this far.`,
 }
 
 export function buildYearSummaries(acts, geo) {

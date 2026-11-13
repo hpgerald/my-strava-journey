@@ -341,18 +341,17 @@ export default function YearInSport({ year: bookYear } = {}) {
       <Sec n={num()} id="ys-ring" k="Every day of the year"
         title={r.restDays === 0 ? 'No zero day.' : pctDays >= 0.8 ? 'Almost every day.' : pctDays >= 0.4 ? 'Most days, not all.' : 'A quiet year.'}
         text={[
-          r.restDays === 0 ? 'Every day of the year has an outing in it. The ring has no gaps, only longer and shorter spokes.'
-            : pctDays >= 0.8 ? `The ring is nearly full, and its longest gap is only ${word(r.longGap.len)} ${r.longGap.len === 1 ? 'day' : 'days'}.`
-              : pctDays >= 0.4 ? (s.streakLen >= 21 ? 'The ring has gaps, and some stretches still ran unbroken for weeks.' : 'The ring has gaps all through the year.')
-                : 'The ring is mostly empty. The outings come in small clusters with long silences between them.',
-          s.monthsKm[kmTop] > 0 ? `${MONTH_F[kmTop]} has the longest spokes of the year.` : '',
+          r.restDays === 0 ? 'A day out does not have to be a big day. Some days are short, and they still count.'
+            : pctDays >= 0.8 ? `A missed day did not break the year. My longest gap was ${word(r.longGap.len)} ${r.longGap.len === 1 ? 'day' : 'days'}, and then I was out again.`
+              : pctDays >= 0.4 ? (s.streakLen >= 21 ? 'The year came in good stretches, some of them weeks long, with gaps between.' : 'I went out often, but the gaps kept coming back.')
+                : 'The habit had not caught yet. The outings came in small bunches with long quiet spells between them.',
         ]}
         facts={[
           { l: `days out, of ${n0(span)}${so}`, v: n0(s.activeDays) },
           { l: s.streakGoing ? 'days in a row, still going' : 'days in a row, the longest run', v: n0(s.streakLen), hot: true },
           { l: 'zero days', v: n0(r.restDays) },
         ]}
-        cap="Each spoke is a day, longer for more kilometres on foot. The dark arc outside is the longest run of days in a row.">
+        cap="Longer spokes are bigger days. The dark arc is my longest run of days in a row.">
         <YearRing year={Y} acts={yearActs} startISO={r.startISO} endISO={r.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }}
           aria={`Every day of ${Y} as a ring: ${n0(s.activeDays)} days with an outing out of ${n0(span)}, the longest run ${n0(s.streakLen)} days.`} />
       </Sec>
@@ -361,17 +360,17 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-months" k="Month by month"
           title={`${MONTH_F[kmTop]} was the big one.`}
           text={[
-            kmFirst > kmSecond * 1.15 && !isPartial ? 'The year was front-loaded: the first half carried more of the distance than the second.'
-              : kmSecond > kmFirst * 1.15 ? 'The year built as it went: the second half carried more of the distance than the first.'
-                : 'The distance was spread fairly evenly across the months.',
-            s.monthsElev[bestMonthEl] >= 300 ? `The climbing had its own peak, in ${MONTH_F[bestMonthEl]}, the tallest orange mark.` : '',
+            kmFirst > kmSecond * 1.15 && !isPartial ? 'I started the year strong and eased off after the middle.'
+              : kmSecond > kmFirst * 1.15 ? 'The year got stronger as it went on.'
+                : 'No single month carried the year. The kilometres came in steadily, month after month.',
+            s.monthsElev[bestMonthEl] >= 300 && bestMonthEl !== kmTop ? `The hills came in ${MONTH_F[bestMonthEl]}, when I climbed the most.` : s.monthsElev[bestMonthEl] >= 300 ? 'It was also the month I climbed the most.' : '',
           ]}
           facts={[
             { l: `km on foot in ${MONTH_F[kmTop]}`, v: n0(s.monthsKm[kmTop]), hot: true },
             { l: 'months past 100 km', v: `${monthsOver100} of ${moIdx.length}` },
             s.monthsElev[bestMonthEl] >= 300 ? { l: `m climbed in ${MONTH_F[bestMonthEl]}`, v: n0(s.monthsElev[bestMonthEl]) } : null,
           ]}
-          cap="Each column is a month of kilometres on foot, cut by sport. The small orange mark on top grows with that month's climbing.">
+          cap="The orange mark on top of each month is its climbing.">
           <MonthStack year={Y} acts={yearActs} aria={`Kilometres on foot each month of ${Y}: ${moIdx.map((i) => `${MONTH_F[i]} ${n0(s.monthsKm[i])} km`).join(', ')}.`} />
         </Sec>
       ) : null}
@@ -380,8 +379,8 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-waf" k="Where the kilometres came from"
           title={`${cap(NOUN[leadK][0])} carried the year.`}
           text={[
-            climbK && s.elev >= 100 && climbK !== leadK ? `The climbing came from somewhere else: ${NOUN[climbK][1]} did most of it.` : climbK && s.elev >= 100 ? `${cap(NOUN[climbK][1])} did most of the climbing too.` : '',
-            runsAll.length ? (runsTread === runsAll.length ? 'Every run of the year was on the treadmill.' : runsTread === 0 ? 'Not one run was on the treadmill.' : runsTread / runsAll.length >= 0.5 ? 'Most of the runs were still on the treadmill.' : 'Most of the runs had moved outside.') : '',
+            climbK && s.elev >= 100 && climbK !== leadK ? `For height I needed the hills, and ${NOUN[climbK][1]} gave me most of it.` : climbK && s.elev >= 100 ? `${cap(NOUN[climbK][1])} gave me most of the height too.` : '',
+            runsAll.length ? (runsTread === runsAll.length ? 'Every run of the year was on the treadmill.' : runsTread === 0 ? 'I did not run on the treadmill once.' : runsTread / runsAll.length >= 0.5 ? 'Most of my running was still on the treadmill.' : 'Most of my running had moved outside.') : '',
           ]}
           facts={[
             { l: `of the distance from ${NOUN[leadK][1]}`, v: `${pc(shareOfDist(leadK))}%`, hot: true },
@@ -396,7 +395,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-ridge" k="Week by week" wide
           title={under10wk === 0 ? 'No thin week.' : r.weekly.cv < 0.45 ? 'Steady weeks.' : 'Big weeks and thin ones.'}
           text={[
-            under10wk === 0 ? 'The ridge never touches the ground. Even the quiet weeks kept a floor.' : r.weekly.cv < 0.45 ? 'The ridge rolls without deep valleys.' : 'The ridge has sharp peaks and deep valleys, the sign of a year that came in bursts.',
+            under10wk === 0 ? 'Even my quiet weeks kept a floor.' : r.weekly.cv < 0.45 ? 'Week after week the distance held, without deep drops.' : 'The year came in bursts: big weeks, then thin ones.',
           ]}
           facts={[
             { l: 'the biggest week', v: `${n0(bestWk.km)} km`, hot: true },
@@ -404,7 +403,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             { l: 'weeks under 10 km', v: n0(under10wk) },
             { l: 'weeks past 50 km', v: n0(wk50) },
           ]}
-          cap="Each point is one week, Sunday to Saturday. The small marks under the ridge are the weeks under 10 km.">
+          cap="Weeks run Sunday to Saturday. A mark under the line is a week under 10 km.">
           <WeekRidge series={r.weekly.series} aria={`Kilometres on foot each week of ${Y}: the biggest week ${n0(bestWk.km)} km, a middle week ${n0(wkMed)} km, ${under10wk} weeks under 10 km.`} />
         </Sec>
       ) : null}
@@ -413,15 +412,15 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-hours" k="The hours of the day"
           title={pmShare >= amShare ? 'After the working day.' : 'Before the working day.'}
           text={[
-            pmShare >= amShare ? 'Most outings began once work let go, in the late afternoon and evening.' : 'Most outings began early, before the working day.',
-            dayRatio < 1.35 ? `The week had no favourite day: ${busiestDay}, the busiest, was only a little ahead of ${quietestDay}, the quietest.` : `${busiestDay} was clearly my day, and ${quietestDay} the quietest.`,
+            pmShare >= amShare ? 'I went out once work was done, in the late afternoon or evening.' : 'I went out early, before work.',
+            dayRatio < 1.35 ? `Every day of the week got its turn, with ${busiestDay} only a little ahead.` : `${busiestDay} was my surest day of the week.`,
           ]}
           facts={[
             { l: 'the busiest hour', v: fmtH(peakHour), hot: true },
             { l: 'began before 10am', v: `${pc(amShare)}%` },
             { l: 'began between 4 and 9pm', v: `${pc(pmShare)}%` },
           ]}
-          cap="A clock of 24 hours with midnight at the top. Each spoke is an hour, longer for more outings that began in it.">
+          cap="Midnight is at the top. A longer spoke is a busier hour.">
           <RadialHours counts={s.hours24} unit="activities" max={420} />
         </Sec>
       ) : null}
@@ -430,15 +429,15 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-usual" k="The usual outing"
           title={twoHumps ? `Two favourite distances: ${pkSorted[0]} and ${pkSorted[1]} km.` : `One favourite distance: ${s.peakBins[0]} km.`}
           text={[
-            twoHumps ? 'Most outings gather around a short distance and a longer one, with fewer in between.' : 'Most outings gather around one distance, with fewer and fewer as the days get longer.',
-            meanFoot > s.medianFoot * 1.1 ? 'A few long days pull the average above the middle outing.' : 'The average sits close to the middle outing: few days stray far.',
+            twoHumps ? 'Most outings were one or the other, and few fell in between.' : 'Most outings were about that long, and the longer days were few.',
+            meanFoot > s.medianFoot * 1.1 ? 'A few long days pulled my average up.' : '',
           ]}
           facts={[
             { l: 'the middle outing', v: `${s.medianFoot.toFixed(1)} km`, hot: true },
             { l: 'the average outing', v: `${meanFoot.toFixed(1)} km` },
             { l: 'outings of 10 km or more', v: `${pc(tenUp)}%` },
           ]}
-          cap="Every outing on foot, grouped by its distance to the nearest kilometre. The orange columns are the distances I came back to most.">
+          cap="The orange columns are the distances I came back to most.">
           <YearDistances bins={s.footBins} peaks={s.peakBins} />
         </Sec>
       ) : null}
@@ -447,10 +446,10 @@ export default function YearInSport({ year: bookYear } = {}) {
         <Sec n={num()} id="ys-best" k="The biggest day" wide
           title={`${cap(SPORT_ONE[bestAct.sport_type] || 'outing')} of the year.`}
           text={[
-            s.medianFoot > 0 ? `This one day was ${(kmOf(bestAct) / s.medianFoot).toFixed(1)} times an ordinary outing of the year.` : '',
+            s.medianFoot > 0 ? `Big days are rare. This one was ${(kmOf(bestAct) / s.medianFoot).toFixed(1)} times my ordinary outing of the year.` : '',
             s.highestClimb && s.highestClimb.date === s.biggestFoot?.date && Number(bestAct.elevation_gain_m) >= 100 ? 'It was also the day with the most climbing.' : '',
           ]}
-          cap="The small dots are every other outing on foot of the year, placed by distance.">
+          cap="The small dots are all my other outings of the year.">
           <div className="ybest__big"><b>{kmOf(bestAct).toFixed(1)}</b><span>km on foot</span></div>
           <ul className="ybest__facts">
             <li><b>{fmtDay(bestAct.date.slice(0, 10))}</b>{SPORT_ONE[bestAct.sport_type]}</li>
@@ -465,7 +464,7 @@ export default function YearInSport({ year: bookYear } = {}) {
       {s.n >= 10 ? (
         <Sec n={num()} id="ys-shelf" k="The year's shelf" wide
           title="What the year adds up to."
-          text={['The year measured against things I know: the height of Everest and the road from Dar es Salaam to Dodoma.']}>
+          text={['The year in things I can picture: Everest, and the road from Dar es Salaam to Dodoma.']}>
           <ul className="yrecs yrecs--shelf">
             {s.longestTime && s.longestTime.val > 0 ? <RecordCard kicker="Longest on foot" text={hm(s.longestTime.val)} label="of moving time in one outing" sub={fmtMonth(s.longestTime.date)} /> : null}
             {s.highestClimb && s.highestClimb.val > 0 ? <RecordCard kicker="Most climbed" value={Math.round(s.highestClimb.val)} unit="m" label="of climb in one outing" sub={fmtMonth(s.highestClimb.date)} /> : null}
@@ -484,9 +483,9 @@ export default function YearInSport({ year: bookYear } = {}) {
           title={firsts.length ? `My best year for ${firsts[0].noun}.` : `${cap(ORD[rankKm - 1])} of ${years.length} for distance.`}
           text={[
             bestKmYear && bestKmYear.year !== Y ? `My best year for distance is still ${bestKmYear.year}, and this one reached ${pc(s.footKm / bestKmYear.footKm)}% of it.` : 'No other year has covered more distance on foot.',
-            isPartial ? 'The year is still running, so it can still move up these rows.' : '',
+
           ]}
-          cap="The grey dots are the other years, the orange dot is this one.">
+          cap="The orange dot is this year.">
           <RankBoard rows={rankRows} year={Y} partial={false} aria={`${Y} against the other years: ${rankRows.map((rw) => `${rw.label} ${rw.fmt(rw.values.find((v) => v.y === Y).v)}`).join(', ')}.`} />
         </Sec>
       ) : null}

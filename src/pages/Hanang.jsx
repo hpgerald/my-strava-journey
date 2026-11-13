@@ -129,7 +129,6 @@ export default function Hanang() {
               aria={`The longest outings on foot by time from start to finish: ${HN.longest.map((r) => `${fmtDay(r.date)}, ${hm(r.out)}`).join('; ')}.`}
               rows={HN.longest.map((r) => ({ key: r.mode, label: fmtDay(r.date), sub: `${MODE_NAME[r.mode].toLowerCase()} · ${k1(r.km)} km · ${n0(r.elev)} m up${r.region ? ` · ${r.region}` : ''}`, value: r.out, display: `${(r.out / 60).toFixed(1)} h` }))}
             />}
-            note="The five longest, each counted from the start to the finish."
             read="My five longest outings on foot, counted from the start to the finish, stops included. The line under each date gives the kind of outing, the distance, the climb and the region."
           >
             <p>{HN.first

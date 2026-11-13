@@ -518,22 +518,21 @@ export default function Where() {
           title="How widely they spread."
           leftNote={<>Years with fewer than 50 outings in Tanzania are left out.</>}
           statement={<>
-            My outings are more spread across Tanzania than they used to be. To measure it I used the effective number of regions:
-            if a year counts as four, it is as if my outings were shared equally between four regions. In my narrowest year,{' '}
+            My outings are more spread across Tanzania than they used to be. In my narrowest year,{' '}
             {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings. Later years spread out as I travelled and
             as my busiest region moved.
           </>}
           odds={{
             title: 'How the outings spread',
             items: [
-              { num: P.lifeEffective, dec: 1, unit: '', label: 'effective regions, all years', tone: 'move' },
+              { num: P.lifeEffective, dec: 1, unit: '', label: 'as spread out as this many equal regions', tone: 'move' },
               { book: true, num: effBest.effective, dec: 1, unit: '', label: `in ${effBest.year}, the widest`, tone: 'move' },
               { book: true, num: effLow.effective, dec: 1, unit: '', label: `in ${effLow.year}, the narrowest`, tone: 'rest' },
               { value: top3Share, label: 'of outings in the busiest three', tone: 'rest' },
             ],
           }}
           left={{
-            title: 'Effective number of regions, year by year',
+            title: 'How spread out each year was, in equal regions',
             node: (
               <ColBars
                 items={eff.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.effective, display: k1(y.effective), tone: y === effBest ? 'big' : 'mid' }))}

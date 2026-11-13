@@ -43,7 +43,7 @@ export default function Ngong() {
   ]
   const next = N.abroadNext
   const mapAria = `The GPS line of ${fmtDay(T.date)} on the Ngong Hills in Kenya: from the start at ${n0(start.alt)} m along the ridge to the far end at ${n0(turn.alt)} m, back the same way, and on to the finish at ${n0(end.alt)} m.`
-  const mapNote = 'The line goes out along the ridge and comes back on itself, then carries on past the start to the finish.'
+  const mapNote = 'I went out along the ridge, came back the same way and kept going down to Ngong town.'
 
   return (
     <Mountain

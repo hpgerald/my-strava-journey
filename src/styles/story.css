@@ -243,8 +243,8 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
 @media (min-width: 64rem) {
   .sgrid:not(.book .sgrid) > .mstage { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
   .mstage__map { grid-column: 2; grid-row: 1; position: sticky; top: calc(var(--nav-h) + 1rem); align-self: start; }
-  .mstage__steps { grid-column: 1; grid-row: 1; padding-block: 18vh 30vh; }
-  .mstage__steps li { min-height: 46vh; display: flex; flex-direction: column; justify-content: center; color: var(--fg-muted); }
+  .mstage__steps { grid-column: 1; grid-row: 1; padding-block: 6vh 22vh; }
+  .mstage__steps li { min-height: 28vh; display: flex; flex-direction: column; justify-content: center; color: var(--fg-muted); }
   .mstage__steps li .mstage__t { color: var(--fg-muted); }
   .mstage__steps li.is-on, .mstage__steps li.is-on .mstage__t { color: var(--ink); }
   .mstage__steps li.is-on .mstage__k { color: var(--accent-ink); }
@@ -280,7 +280,7 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   .spart__head { grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(1.618rem, 1rem + 2vw, 4.236rem); }
   .spart__n { grid-column: 1; }
   .spart__t, .spart__l, .spart__s { grid-column: 2; }
-  .spart-doors--one { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .spart-doors--one { grid-template-columns: minmax(0, 1fr); }
   .spart-doors--one > li { grid-column: 1; }
 
   /* the lesson of a part: its label above it */
@@ -335,7 +335,45 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) > .sgrid__lead > .odds { align-self: stretch; display: flex; flex-direction: column; justify-content: flex-start; gap: var(--r2); }
   .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__title { margin-bottom: 0; padding-top: 0.35rem; }
 }
+/* a finding with no numbers beside it puts its title in the short column and
+   its words in the long one: the words keep a reading measure and the section
+   loses a row */
+@media (min-width: 64rem) {
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head { display: contents; }
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head > .eyebrow { grid-column: 1 / -1; grid-row: 1; }
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__head > :not(.eyebrow) { grid-column: 1; grid-row: 2; }
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__lead > .sgrid__statement, .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > .sgrid__statement { grid-column: 2; grid-row: 2; margin-top: 0; }
+  .sgrid:has(> .sgrid__statement, > .sgrid__lead > .sgrid__statement):not(.book .sgrid):not(.ev-board):not(.yset):not(:has(> .odds, > .sgrid__lead > .odds)) > :not(.sgrid__head):not(.sgrid__lead):not(.sgrid__statement) { grid-column: 1 / -1; }
+}
 @media (min-width: 64rem) {
   /* a number standing alone beside a statement carries more weight */
   .sgrid:not(.book .sgrid):not(.ev-board):not(.yset) .odds__row:has(> .odds__cell:only-child) .odds__n { font-size: clamp(2.618rem, 1.6rem + 2.2vw, 4.236rem); }
+}
+
+/* ---------------------------------------------------------------------------
+   Compact wide screens */
+@media (min-width: 64rem) {
+  /* the chapter list in two columns, so the eight chapters take four rows */
+  .slist:where(:not(.book *)) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: calc(var(--grid-gap) * 1.618); }
+  .slist__link:where(:not(.book *)) { padding-block: clamp(0.9rem, 0.5rem + 0.8vw, 1.3rem); }
+  .slist__t:where(:not(.book *)) { font-size: clamp(1.9rem, 1rem + 1.9vw, 3.2rem); }
+
+  /* the record ledger in two columns: the label above, the number and its line beside each other */
+  .yrecs--ledger:where(:not(.book *)) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: calc(var(--grid-gap) * 1.618); }
+  .yrecs--ledger:where(:not(.book *)) .yrec { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); grid-template-areas: "k s" "v l" "v st" "v go"; column-gap: var(--grid-gap); row-gap: 0.2rem; padding: var(--sp-4) 0; align-items: start; }
+  .yrecs--ledger:where(:not(.book *)) .yrec__k, .yrecs--ledger:where(:not(.book *)) .yrec__s { align-self: baseline; margin-bottom: var(--sp-2); }
+  .yrecs--ledger:where(:not(.book *)) .yrec__s { text-align: left; }
+  .yrecs--ledger:where(:not(.book *)) .yrec__v { font-size: clamp(2.618rem, 1.6rem + 2.2vw, 4.236rem); }
+  .yrecs--ledger:where(:not(.book *)) .yrec__l { font-size: var(--fs-base, 1rem); padding-top: 0.35rem; }
+  .yrecs--ledger:where(:not(.book *)) .yrec__st { grid-area: st; }
+  .yrecs--ledger:where(:not(.book *)) .yrec__go { grid-area: go; justify-self: start; }
+}
+/* the chapter openers: the name and the number, in less height */
+.sopen__in:where(:not(.book *)) { min-height: clamp(11rem, 17vw, 16rem); padding-block: clamp(1.25rem, 2vw, 2rem) clamp(1.25rem, 2vw, 2rem); }
+.sopen--sub .sopen__in:where(:not(.book *)) { min-height: clamp(10rem, 15vw, 14rem); }
+.sopen__num:where(:not(.book *)) { font-size: clamp(6rem, 15vw, 15rem); }
+@media (max-width: 47.999rem) {
+  /* on a phone the name can wrap under the number, so the opener keeps its height */
+  .sopen__in:where(:not(.book *)) { min-height: 17rem; }
 }

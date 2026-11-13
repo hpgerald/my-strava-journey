@@ -135,7 +135,7 @@ export default function Kilimanjaro() {
           figTitle="The climb, stage by stage"
           fig={<KiliClimb stages={s} profile={KX.profile} peaks={{ rim: KX_RIM, top: KX_TOP }}
             aria={`Altitude of the Kilimanjaro expedition: Marangu Gate ${n0(s[0].start)} m, Mandara Hut ${n0(s[0].end)} m, Horombo Hut ${n0(s[1].end)} m, Kibo Hut ${n0(s[2].end)} m. On the summit night the watch recorded up to ${n0(s[3].high)} m and stopped; Gilman's Point ${n0(KX_RIM)} m and Uhuru Peak ${n0(KX_TOP)} m follow as a dashed line.`} />}
-          note="Each stage is as wide as the ground it covered. The dashed line in the grey band is the part of the summit night the watch missed."
+          note="A wider stage covered more ground. The grey band is the summit night my watch missed."
           read="The whole way up, one stage after another, each as wide as the ground it covered. The orange line is what my watch recorded. On the summit night it stopped near the crater rim, so the dashed line in the grey band is the part of the night it missed: Gilman’s Point, Uhuru Peak and the way back to Kibo Hut. The grey line is the walk down to Horombo that same afternoon."
           lesson
           foot={<HBars

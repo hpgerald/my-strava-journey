@@ -8,7 +8,6 @@ import { useBook } from './BookContext.js'
 // new ones named. Without room to hold the map (a phone, the book) the map
 // shows the whole record and the years read as a list under it.
 // props: regions [{ region, first, n }], metrics, nudge, pins
-const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const list = (a) => (a.length < 2 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`)
 
 export default function MapStage({ regions, metrics, nudge, pins }) {
@@ -48,10 +47,10 @@ export default function MapStage({ regions, metrics, nudge, pins }) {
               <p className="mstage__k">{y}</p>
               <p className="mstage__t">
                 {nw.length
-                  ? <>{nw.length === 1 ? 'One new region' : `${nw.length} new regions`}: {list(nw.map((r) => r.region))}.</>
-                  : 'No new region.'}
+                  ? <>First time out in {list(nw.map((r) => r.region))}.</>
+                  : 'No new region this year.'}
               </p>
-              <p className="mstage__s">{nw.length ? `The first came in ${MON[parseInt(nw[0].first.slice(5, 7), 10) - 1]}. ` : ''}{upto} of 31 regions {y === all[all.length - 1] ? 'so far' : `by the end of ${y}`}.</p>
+              <p className="mstage__s">{upto} of 31 regions {y === all[all.length - 1] ? 'so far' : 'by the end of the year'}.</p>
             </li>
           )
         })}

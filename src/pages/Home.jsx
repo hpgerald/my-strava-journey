@@ -636,9 +636,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             eyebrow="How my days are shaped"
             title="One outing instead of&nbsp;two."
             statement={<>
-              I give the habit about as much time each day as I did when I came back, somewhere between {Math.round(perDayLo)} and{' '}
-              {Math.round(perDayHi)} minutes. What changed is how I spend it. In the early years I often ran in the morning and walked in
-              the evening, two short pieces of one day. Now it is usually one longer outing, and when it is done, the day&rsquo;s work is done.
+              One long outing does the job of two short ones. When I came back I often ran in the morning and walked in the evening.
+              Now I go out once and stay out longer, and when I come home the day&rsquo;s work is done. The time I give the habit each
+              day has hardly changed since 2021, about an hour and a half.
             </>}
             odds={{
               title: 'How the days were split',
@@ -1017,7 +1017,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
           <HeartbeatYears activities={activityLog} km={km} elevation={elevation} streak={curStreak} quiet={!book} />
 
           <Reveal as="p" className="hero__statement">
-            In {gridYears[0]}, my first year, I went out {firstYearN} times.{nowMonthsMin >= firstYearN ? ' Now even my quietest month has more than that.' : ' Now most months have about that many, or more.'}
+            In {gridYears[0]}, my first year, I went out {firstYearN} times.{nowMonthsMin >= firstYearN ? ' Now even my quietest month has more than that.' : ' Now most months have about that many, or more.'}{' '}
             Very little of it would make a photo: a walk after work, an easy run before it, an hour or so at a time.
             This record is built from those hours, done again the next day.
           </Reveal>
@@ -1049,7 +1049,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="2" name="The comeback" years="mid 2021 to 2022" spine="2021" from={heroGap ? heroGap.back : undefined} to="2022-12"
-        line={`From ${n0(nOf(2020))} outings in a year to ${n0(nOf(2021))}, then ${n0(nOf(2022))}.`}
+        line={`This time it stayed. ${n0(nOf(2020))} outings in 2020, ${n0(nOf(2021))} the year after.`}
         story={[`A medical check-up told me to move about 30 minutes a day, so I started again. Since then my longest layoff has been ${NUMWORD[habitMaxBreak] || habitMaxBreak} days.`]}>
         {plates([2021, 2022])}
         {secStreak}
