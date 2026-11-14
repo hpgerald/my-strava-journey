@@ -205,15 +205,15 @@ const W = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight
 const w = (n) => W[n] || String(n)
 export const YEAR_CHARACTERS = {
   2019: { label: 'A small beginning', line: (s) => `Every habit starts small. Most of my outings were runs, ${pc0(s.runShare)}% of them, and most of those on the treadmill.` },
-  2020: { label: 'The layoff', line: () => 'A habit can stop very easily. In July I stopped, and it stayed that way for almost a year.' },
-  2021: { label: 'Coming back', line: (s) => `Once I was back, I often went out twice a day: on ${pc0(s.multiShare)}% of my days out.` },
-  2022: { label: 'The busiest', line: (s) => `My busiest year was built from short outings, about ${num0(s.avgOutingMin)} minutes each.` },
-  2023: { label: 'The hills', line: (s) => `The hills changed the year. I ran ${num0(s.trailKm)} km on trails.` },
+  2020: { label: 'The layoff', line: () => 'A habit can stop very easily. In July I went out in Kenya, and after that nothing for almost a year.' },
+  2021: { label: 'Coming back', line: (s) => `Thirty minutes a day was the advice. I often gave it two outings: on ${pc0(s.multiShare)}% of my days out.` },
+  2022: { label: 'The busiest', line: (s) => `My busiest year, built from short outings of about ${num0(s.avgOutingMin)} minutes, with a marathon on the treadmill on a rainy day in May.` },
+  2023: { label: 'The hills', line: (s) => `I began the year knowing nothing about climbing, and ended it with ${num0(s.trailKm)} km on trails.` },
   2024: { label: 'Travelling', line: (s) => `The habit came with me to ${w(s.countriesNamed)} countries, even when a day only had room for a short outing.` },
   2025: { label: 'Walking', line: (s, all) => {
     const lw = s.longestWalk
     const lwTop = lw && all.every((o) => o.year === s.year || !o.longestWalk || o.longestWalk.km < lw.km)
-    return `Walking became my main thing, ${pc0(s.walkShare)}% of my outings${lw && lwTop ? `, with my longest walk, ${num0(lw.km)} km` : ''}.`
+    return `I chose walking, outside and for the long hours: ${pc0(s.walkShare)}% of my outings${lw && lwTop ? `, and my longest walk, ${num0(lw.km)} km` : ''}.`
   } },
   2026: { label: 'Every day', line: (s) => `One outing a day, and a longer one, about ${num0(s.avgOutingMin)} minutes.` },
 }
@@ -223,7 +223,7 @@ export const YEAR_CHARACTERS = {
 // settled, past years and were checked against the activity log.
 export const YEAR_REPORT = {
   2019: (s) => `Every habit starts small. By the end of my first year I had ${s.n} activities, most of them runs on a treadmill, and my longest streak was ${s.streakLen} days.`,
-  2020: () => `A habit can stop very easily. In July I went out in Kenya, my first outing outside Tanzania, and the next day once more, in Arusha. Then I stopped, and it stayed like that for almost a year.`,
+  2020: () => `A habit can stop very easily. In July I went out in Kenya, my first outing outside Tanzania, and the next day once more, in Arusha. Then I changed jobs and moved from Arusha to Kilimanjaro, in the time of COVID-19, and I did not go out again for almost a year.`,
   2021: (s) => `Kawia ufike, it is better to arrive late than not to arrive. I came back in June with a 10 km run, after a 353-day layoff. Within weeks I was going out almost every day, and on ${Math.round(s.multiShare * 100)}% of my days out I doubled up. Everything after grew from this year.`,
   2022: (s) => `When the habit is strong, the big days come. This was my busiest year, and I ran a full marathon on the treadmill, the longest outing in my log. It was also the first year I walked more often than I ran, ${s.walkN} walks to ${s.runN} runs.`,
   2023: (s) => `Fewer outings can still mean more. I went out a bit less than in 2022, but I went to the hills more. In March alone I climbed more than 5,000 m, most of it in Kilimanjaro, and over the year I ran ${num0(s.trailKm)} km on trails.`,

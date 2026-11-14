@@ -404,7 +404,7 @@ export default function WhatItMeans() {
             <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Seven years of logging leave me with a few habits I can keep: about an hour a day, the small version on a bad day, no
+            Jocko Willink says discipline equals freedom. Seven years of logging turned that into a few habits I can keep: about an hour a day, the small version on a bad day, no
             week allowed to go thin, and the long days placed inside busy weeks.
             {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<span lang="sw">Kesho tena</span>, tomorrow again.
           </Reveal>

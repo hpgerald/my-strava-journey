@@ -80,12 +80,12 @@ function momentParts(year, stats) {
     const jun = s.monthsActivities[5] || 0
     const jul = s.monthsActivities[6] || 0
     const aug = s.monthsActivities[7] || 0
-    body = `A medical check-up told me to move about 30 minutes a day. For the first half of the year there is almost nothing. Then a few outings a month became dozens, and before the year ended I was on a ${s.streakLen}-day streak.`
+    body = `A medical check-up told me to move about 30 minutes a day, and this time I listened. I came back in June with a 10 km run, and before the year ended I was on a ${s.streakLen}-day streak.`
     figure = <JumpBars items={[{ label: 'Jun', v: jun }, { label: 'Jul', v: jul, hot: true }, { label: 'Aug', v: aug }]} />
   } else if (year === 2022) {
     kicker = 'The busiest'
     title = 'My busiest year.'
-    body = `More activities than any other year. It was also the first year I walked more often than I ran, and the year of my first marathon, on the treadmill.`
+    body = `The habit was strong enough now for a big day. In May it was raining outside, so I stayed in and ran my first marathon on the treadmill. It was also the first year I walked more often than I ran.`
     figure = (
       <div className="ymom__versus">
         <div className="ymom__vrow"><span className="ymom__vlbl">Walk</span><span className="ymom__vbar" style={{ width: `${Math.min(100, (s.walkN / Math.max(s.walkN, s.runN)) * 100)}%`, background: 'var(--accent)' }} /><span className="mono">{s.walkN}</span></div>
@@ -106,7 +106,7 @@ function momentParts(year, stats) {
   } else if (year === 2024) {
     kicker = 'Travelling'
     title = 'The map at its widest.'
-    body = `A remote job and a few consultancies took me across borders. Most outings were still in Tanzania, and the rest were spread over the countries below.`
+    body = `A remote job and a few consultancies took me across borders, and the shoes always came along. Wherever the work was, I found time to go out.`
     figure = (
       <Reveal className="ymom__stamps">
         {s.countries.map((c, i) => (
@@ -119,7 +119,7 @@ function momentParts(year, stats) {
   } else if (year === 2025) {
     kicker = 'The highest point'
     title = 'My biggest climb.'
-    body = `One ${s.highestClimb ? s.highestClimb.sport.toLowerCase() : 'outing'} that year climbed more than any other single outing I have done, on Bondwa Peak in the rain. In the last days of the year I started the streak that is still going.`
+    body = `On Bondwa Peak, in rain so heavy that everything was slippery, I climbed more than on any other outing I have done. Then, in the last days of the year, I decided to stop missing days.`
     figure = <div className="ymom__chips">{chip('metres in a day', Math.round(s.highestClimb ? s.highestClimb.val : 0))}{chip('metres in the year', Math.round(s.elev))}</div>
   } else {
     // 2026 and any later year: the unbroken streak

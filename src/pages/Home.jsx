@@ -966,9 +966,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   // ---- the story: a cold open, then six parts in the order they happened ----
   // the cold open: three beats over the board, from the layoff to the streak
   const heroBeats = heroGap ? [
-    { k: 'The layoff', t: `Then I stopped. For ${n0(heroGap.days)} days there is nothing in the log.` },
-    { k: 'The comeback', t: `When I came back, about ${n0(preMonthAvg)} outings a month became about ${n0(postMonthAvg)}.` },
-    { k: 'The streak', t: `Since ${heroStreakLabel} I have not missed a day: ${n0(toNum(curStreak))} days in a row.` },
+    { k: 'The layoff', t: `Then life moved: a new job, a new town and COVID-19. For ${n0(heroGap.days)} days I did not go out once.` },
+    { k: 'The comeback', t: `A check-up sent me back out, and this time I stayed: from about ${n0(preMonthAvg)} outings a month to about ${n0(postMonthAvg)}.` },
+    { k: 'The streak', t: `Then I decided to stop missing days. Since ${heroStreakLabel}: ${n0(toNum(curStreak))} days in a row.` },
   ] : []
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
   // the moments of the timeline, to be set inside the parts they belong to

@@ -343,7 +343,8 @@ export default function Goals() {
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
               statement={split && downGain > upGain ? <>
-                Most of what I gained came on the way back down. Going up to the turnaround I kept much the same speed after my
+                This is the race in Moshi, my hometown, and I go back every year. Most of what I gained came on the way back down.
+                Going up to the turnaround I kept much the same speed after my
                 first year. Coming down I got quicker {downEachYear ? 'every year' : 'over the years'}{last.runKm > 4 ? <>, and in {last.year} I ran two long stretches of the descent</> : null}.
               </> : <>The same road, {word(race.length)} times, a little quicker each time.</>}
               odds={{

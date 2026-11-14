@@ -611,7 +611,7 @@ export default function Sports() {
           eyebrow={`${num()} · When`}
           title="Treadmill runs at night."
           statement={<>
-            Each sport has found its own hour. The treadmill is busiest at {fmtH(peakHour('tread'))} and again late in the evening.
+            The treadmill is for the days short on time, so it takes the hours nothing else wants: it is busiest at {fmtH(peakHour('tread'))} and again late in the evening.
             Walks come around {fmtH(peakHour('walk'))}, after the office. Outdoor runs start early, around {fmtH(peakHour('road'))}, or late
             in the afternoon. Trail runs and hikes need a free day, so they wait for the weekend.
           </>}
