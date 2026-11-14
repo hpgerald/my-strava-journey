@@ -317,8 +317,8 @@ export default function Where() {
           eyebrow={`${num()} · The busiest region, year by year`}
           title={`${runOf.region} led for ${word(Number(runOf.to) - Number(runOf.from) + 1)} ${Number(runOf.to) === Number(runOf.from) ? 'year' : 'years'}.`}
           statement={<>
-            My busiest region moves from year to year.{' '}
-            {(() => { const runs = []; for (const l of leaders) { const last = runs[runs.length - 1]; if (last && last.region === l.region) last.to = l.year; else runs.push({ region: l.region, from: l.year, to: l.year }) } return runs.map((x, i) => `${x.from === x.to ? `In ${x.from}` : `From ${x.from} to ${x.to}`} ${i === 0 ? 'I went out most in' : 'it was'} ${x.region}`).join('. ') + '.' })()}
+            My busiest region moves with my work and my trips:{' '}
+            {(() => { const runs = []; for (const l of leaders) { const last = runs[runs.length - 1]; if (last && last.region === l.region) last.to = l.year; else runs.push({ region: l.region, from: l.year, to: l.year }) } const xs = runs.map((x) => `${x.region} ${x.from === x.to ? `in ${x.from}` : `from ${x.from} to ${x.to}`}`); return (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}` : xs[0] || '') + '.' })()}
           </>}
           odds={{
             title: 'The lead, year by year',
@@ -518,7 +518,7 @@ export default function Where() {
           id="wh-maths"
           eyebrow={`${num()} · How spread out`}
           title="How widely they spread."
-          leftNote={<>Years with fewer than 50 outings in Tanzania are left out.</>}
+          leftNote={<>A year that scores four is as spread out as four regions with equal shares. Years with fewer than 50 outings in Tanzania are left out.</>}
           statement={<>
             My outings are more spread across Tanzania than they used to be. In my narrowest year,{' '}
             {effLow.leader.region} had {pc(effLow.leader.n / effLow.tzN)}% of my outings. Later years spread out as I travelled and
@@ -527,14 +527,14 @@ export default function Where() {
           odds={{
             title: 'How the outings spread',
             items: [
-              { num: P.lifeEffective, dec: 1, unit: '', label: 'as spread out as this many equal regions', tone: 'move' },
+              { book: true, num: P.lifeEffective, dec: 1, unit: '', label: 'as spread out as this many equal regions', tone: 'move' },
               { book: true, num: effBest.effective, dec: 1, unit: '', label: `in ${effBest.year}, the widest`, tone: 'move' },
               { book: true, num: effLow.effective, dec: 1, unit: '', label: `in ${effLow.year}, the narrowest`, tone: 'rest' },
               { value: top3Share, label: 'of outings in the busiest three', tone: 'rest' },
             ],
           }}
           left={{
-            title: 'How spread out each year was, in equal regions',
+            title: 'How spread out each year was',
             node: (
               <ColBars
                 items={eff.map((y) => ({ label: String(y.year), short: `'${String(y.year).slice(2)}`, value: y.effective, display: k1(y.effective), tone: y === effBest ? 'big' : 'mid' }))}

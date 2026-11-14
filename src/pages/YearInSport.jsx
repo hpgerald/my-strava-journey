@@ -13,6 +13,7 @@ import YearMonths from '../charts/YearMonths.jsx'
 import YearProgress from '../charts/YearProgress.jsx'
 import YearCalendar from '../charts/YearCalendar.jsx'
 import YearRank from '../charts/YearRank.jsx'
+import { YEAR_NOTES } from '../lib/yearNotes.js'
 import YearMoment, { momentText } from '../charts/YearMoment.jsx'
 import { YearRing, KmWaffle, WeekRidge, RankBoard, BestDay, MonthStack } from '../charts/YearSet.jsx'
 import YearDistances from '../charts/YearDistances.jsx'
@@ -304,7 +305,11 @@ export default function YearInSport({ year: bookYear } = {}) {
   ]
   const rankRows = MEASURES.map((mz) => ({ label: mz.label, fmt: mz.fmt, values: allStats.map((x) => ({ y: x.year, v: mz.f(x) })) }))
   const firsts = MEASURES.filter((mz) => 1 + allStats.filter((x) => mz.f(x) > mz.f(s)).length === 1)
-  const Sec = ({ n, id, k, title, text, facts, cap, wide, children }) => (
+  const NOTE = YEAR_NOTES[Y] || {}
+  const Sec = ({ n, id, k, title: title0, text: text0, facts, cap, wide, children }) => {
+    const o = NOTE[id.replace(/^ys-/, '')] || {}
+    const title = o.t || title0, text = o.p || text0
+    return (
     <>
       <hr className="rule rule--faint" />
       <section className="sgrid yset" aria-labelledby={idp(id)}>
@@ -326,7 +331,8 @@ export default function YearInSport({ year: bookYear } = {}) {
         </div>
       </section>
     </>
-  )
+    )
+  }
   // the hours and the usual outing
   const amShare = morning, pmShare = evening
   const busiestDay = WEEK[s.weekday7.indexOf(Math.max(...s.weekday7))]
@@ -882,9 +888,9 @@ export default function YearInSport({ year: bookYear } = {}) {
             <StorySection
               id={idp('yis-where')}
               eyebrow={`${num()} · Where it happened`}
-              title={(r.countries.find((c) => c.country === 'Tanzania')?.activities || 0) / Math.max(1, r.located) > 0.8 ? 'Mostly at home.' : 'Across the border.'}
+              title={(NOTE.where && NOTE.where.t) || ((r.countries.find((c) => c.country === 'Tanzania')?.activities || 0) / Math.max(1, r.located) > 0.8 ? 'Mostly at home.' : 'Across the border.')}
               statement={<>
-                {(() => { const away = r.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country); return away.length ? `Besides Tanzania, I went out in ${away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away[0]}${othersN ? `, plus ${word(othersN)} ${othersN === 1 ? 'outing' : 'outings'} I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.' })()}
+                {NOTE.where && NOTE.where.p ? NOTE.where.p : (() => { const away = r.countries.filter((c) => c.country !== 'Tanzania' && isNamedCountry(c.country)).map((c) => c.country); return away.length ? `Besides Tanzania, I went out in ${away.length > 1 ? `${away.slice(0, -1).join(', ')} and ${away[away.length - 1]}` : away[0]}${othersN ? `, plus ${word(othersN)} ${othersN === 1 ? 'outing' : 'outings'} I count as others` : ''}.` : othersN ? `All but ${word(othersN)} were in Tanzania.` : 'All of them were in Tanzania.' })()}
                 {r.regRows ? (() => { const c = r.regRows.filter((x) => !/other/.test(x.label)).reduce((b, x) => (x.b > b.b ? x : b), r.regRows[0]); return ` The climbing was mostly in ${c.label}.` })() : ''}
               </>}
               odds={{

@@ -80,12 +80,12 @@ function momentParts(year, stats) {
     const jun = s.monthsActivities[5] || 0
     const jul = s.monthsActivities[6] || 0
     const aug = s.monthsActivities[7] || 0
-    body = `A medical check-up told me to move about 30 minutes a day, and this time I listened. I came back in June with a 10 km run, and before the year ended I was on a ${s.streakLen}-day streak.`
+    body = `After the check-up I came back in June with a 10 km run, and this time I stayed. Before the year ended I was on a ${s.streakLen}-day streak.`
     figure = <JumpBars items={[{ label: 'Jun', v: jun }, { label: 'Jul', v: jul, hot: true }, { label: 'Aug', v: aug }]} />
   } else if (year === 2022) {
     kicker = 'The busiest'
     title = 'My busiest year.'
-    body = `The habit was strong enough now for a big day. In May it was raining outside, so I stayed in and ran my first marathon on a loop indoors. It was also the first year I walked more often than I ran.`
+    body = `The habit was strong enough now for a big day, and in May came my first marathon. It was also the first year I walked more often than I ran.`
     figure = (
       <div className="ymom__versus">
         <div className="ymom__vrow"><span className="ymom__vlbl">Walk</span><span className="ymom__vbar" style={{ width: `${Math.min(100, (s.walkN / Math.max(s.walkN, s.runN)) * 100)}%`, background: 'var(--accent)' }} /><span className="mono">{s.walkN}</span></div>

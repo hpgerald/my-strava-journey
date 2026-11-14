@@ -248,8 +248,7 @@ export default function Records() {
           statement={<>
             The long days left the treadmill. Every run past 30 km on it came between {fmtMonth(treadOver30[0]?.date)} and{' '}
             {fmtMonth(treadOver30[treadOver30.length - 1]?.date)}, and since then the long days have all been outside. The longest of them
-            is 34.8 km on the trails of Kilimanjaro, with more than 800 m of climbing: a Sabbath challenge up to Mweka Gate,
-            through the coffee farms on the slopes. My watch was set to miles that day, so I only learned the distance in kilometres when I got back.
+            is 34.8 km on the trails of Kilimanjaro, up to Mweka Gate, with more than 800 m of climbing.
           </>}
           odds={{
             title: 'Long outings on foot',

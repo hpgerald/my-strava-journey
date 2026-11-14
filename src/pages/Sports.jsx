@@ -205,7 +205,7 @@ export default function Sports() {
           eyebrow={`${num()} · Who does what`}
           title={walkHoursMore ? 'Walks took more hours.' : 'Runs took the most hours.'}
           statement={<>
-            Runs and walks share my time almost equally, and they do different work. A run takes me further, about{' '}
+            A run and a walk do different jobs for me, though they share my hours almost equally. A run takes me further, about{' '}
             {k1(S.Run.medKm)} km against {k1(S.Walk.medKm)} km for a walk. The hills belong to the few trail runs and hikes: one hike in
             Morogoro climbed as much as all my running climbs in a whole year.
           </>}
