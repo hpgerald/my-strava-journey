@@ -206,7 +206,7 @@ const w = (n) => W[n] || String(n)
 export const YEAR_CHARACTERS = {
   2019: { label: 'A small beginning', line: (s) => `Every habit starts small. Most of my outings were runs, ${pc0(s.runShare)}% of them, and most of those on the treadmill.` },
   2020: { label: 'The layoff', line: () => 'A habit can stop very easily. In July I went out in Kenya, and after that nothing for almost a year.' },
-  2021: { label: 'Coming back', line: (s) => `Thirty minutes a day was the advice. I often gave it two outings: on ${pc0(s.multiShare)}% of my days out.` },
+  2021: { label: 'Coming back', line: (s) => `Thirty minutes a day was the advice. I chose two outings, because two is one and one is none: on ${pc0(s.multiShare)}% of my days out I went out twice.` },
   2022: { label: 'The busiest', line: (s) => `My busiest year, built from short outings of about ${num0(s.avgOutingMin)} minutes, with my first marathon in May.` },
   2023: { label: 'The hills', line: (s) => `I began the year knowing nothing about climbing, and ended it with ${num0(s.trailKm)} km on trails.` },
   2024: { label: 'Travelling', line: (s) => `The habit came with me to ${w(s.countriesNamed)} countries, even when a day only had room for a short outing.` },

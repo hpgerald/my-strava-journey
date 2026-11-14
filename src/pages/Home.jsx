@@ -1214,6 +1214,19 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       <Part n="6" name="What it taught me" years="Looking back" spine="Now"
         line="Seven years of logging, read back as a few plain lessons.">
         <Container>
+          <section className="voice" aria-labelledby="voice-title">
+            <div className="voice__head">
+              <Eyebrow>In my own words</Eyebrow>
+              <h2 id="voice-title" className="section-head__title">Why I call myself an&nbsp;athlete.</h2>
+            </div>
+            <div className="voice__body">
+              <p>I am not a professional, and I still call myself an athlete. I used to go by one line: it will make you better in every part of life, so just go train. For me the word means a change in how I live, and a little more endurance and fitness each year.</p>
+              <p>When people ask why I go out every day, I tell them it is the least I can do for myself, and it goes straight into my health. It is a priority. I also like to explore, and the habit keeps giving me reasons to.</p>
+              <p>I have no race-day ritual. I do enough work in the days before, and then we play like we train. Race day is a celebration, the Kilimanjaro Half most of all. That race now draws people from every part of the country. Running and walking are catching on in Tanzania, and for many people they have become a way to get outside, clear the head and spend time together.</p>
+              <p>I do not train with one club. I keep a few friends in each place I spend time, in Dodoma, in Kilimanjaro and in Dar es Salaam, and we go out together when we can.</p>
+              <p>What comes next is trails, trails and more trails. I want to cover as many as I can and enjoy nature as it is, most of all in the rainy season.</p>
+            </div>
+          </section>
           {book ? <p className="spart-ref">What It Means, chapter {Number(numOf('/what-it-means'))}</p> : <p className="mtn-link"><Link to="/what-it-means">Read the lessons →</Link></p>}
         </Container>
       </Part>

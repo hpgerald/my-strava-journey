@@ -377,3 +377,15 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   /* on a phone the name can wrap under the number, so the opener keeps its height */
   .sopen__in:where(:not(.book *)) { min-height: 17rem; }
 }
+
+/* ---- in my own words: a short first-person piece, its title beside the text ---- */
+.voice { margin-top: var(--r4, 2.618rem); padding-top: var(--r3, 1.618rem); border-top: 1px solid var(--rule-faint); }
+.voice__head .section-head__title { margin-top: 0; }
+.voice__body { margin-top: var(--r3, 1.618rem); }
+.voice__body p { margin: 0; max-width: 46rem; font-family: var(--font-read); font-size: clamp(1.128rem, 1rem + 0.5vw, 1.375rem); line-height: 1.55; text-wrap: pretty; }
+.voice__body p + p { margin-top: var(--r2, 1rem); }
+@media (min-width: 64rem) {
+  .voice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); column-gap: calc(var(--grid-gap) * 1.618); align-items: start; }
+  .voice__body { margin-top: 0; padding-top: 2.4rem; }
+  .voice__head:where(:not(.book *)) { position: sticky; top: calc(var(--nav-h, 4rem) + 1rem); }
+}
