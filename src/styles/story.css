@@ -33,7 +33,7 @@
 
 /* the layoff: one dark band, one sentence */
 .spart-gap { margin-top: var(--sec-pad, 6.854rem); background: var(--night, #121212); color: var(--on-night, #f2f0eb); padding-block: clamp(4.236rem, 3rem + 6vw, 11.09rem); }
-.spart-gap__t { margin: 0; max-width: none; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.618rem, 1.1rem + 2.4vw, 4.236rem); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
+.spart-gap__t { margin: 0; max-width: none; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.618rem, 1.1rem + 2.4vw, 4.236rem); line-height: 1.15; letter-spacing: -0.015em; text-wrap: pretty; }
 
 /* the three mountains as doors */
 .spart-doors { list-style: none; margin: var(--sp-6) 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3) var(--grid-gap); }
@@ -114,7 +114,7 @@ html.motion .shero-scene__run--beats { height: 260vh; }
 .hx__beats { display: grid; }
 .hx__beats li.is-on { opacity: 1; translate: 0 0; }
 .hx__bk { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
-.hx__bt { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: balance; }
+.hx__bt { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: pretty; }
 .hx.is-beat3 .hx__bk { color: var(--accent-ink); }
 .hx .hx__nums { transition: opacity 0.45s var(--ease-out); }
 .hx.is-beat .hx__nums { opacity: 0; }
