@@ -132,7 +132,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         <HeroNums nums={nums} go={inView} />
         {beats.length ? (
           <ol className="hx__beats" aria-hidden="true">
-            {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt">{b.t}</span></li>)}
+            {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt"><span className="hx__btx">{b.t}</span></span></li>)}
           </ol>
         ) : null}
       </div>

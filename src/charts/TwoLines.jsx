@@ -7,7 +7,7 @@ import { usePairH, fitH } from './pairHeight.js'
 // second line takes the lead marked. Used for walks against runs.
 // props: years [n], a {label, values}, b {label, values} (b is the accent line),
 //   cross (index of the first year b leads, or -1), aria
-export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yCap = 'outings a year' }) {
+export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yCap = 'outings a year', xLabels, xCap = 'year' }) {
   const pairH = usePairH()
   const [ref, width] = useWidth(640)
   const [root, inView] = useInView()
@@ -42,7 +42,7 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yC
             </g>
           ))}
           {years.map((yr, i) => (
-            <text key={yr} x={x(i)} y={H - m.b + 16} textAnchor="middle" className="tl__gl">{narrow ? `'${String(yr).slice(2)}` : yr}</text>
+            (xLabels && narrow && years.length > 8 && i % 2) ? null : <text key={yr} x={x(i)} y={H - m.b + 16} textAnchor="middle" className="tl__gl">{xLabels ? xLabels[i] : narrow ? `'${String(yr).slice(2)}` : yr}</text>
           ))}
           {cross >= 0 && (
             <g className="tl__cross">
@@ -57,7 +57,7 @@ export default function TwoLines({ years, a, b, cross = -1, crossLabel, aria, yC
           <text x={x(li) + 8} y={ya} className="tl__end tl__end--a">{a.label}</text>
           <text x={x(li) + 8} y={yb} className="tl__end tl__end--b">{b.label}</text>
           <text x={m.l - 8} y={m.t - 14} textAnchor="start" className="tl__axis">{yCap} &uarr;</text>
-          <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="tl__axis">year &rarr;</text>
+          <text x={(m.l + W - m.r) / 2} y={H - 6} textAnchor="middle" className="tl__axis">{xCap} &rarr;</text>
         </svg>
       </div>
     </div>

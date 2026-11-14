@@ -206,7 +206,7 @@ export function BestDay({ acts, aria }) {
   const dots = foot.filter((a) => a !== best).map((a) => { const k = Math.round(x(km(a)) / 6); const n = bins.get(k) || 0; bins.set(k, n + 1); return { cx: k * 6, cy: H - 10 - Math.min(n, 7) * 6 } })
   return (
     <div ref={ref} className="ybest">
-      <svg width={W} height={H + 22} role="img" aria-label={aria} style={{ display: 'block' }}>
+      <svg width="100%" height={H + 22} viewBox={`0 0 ${W} ${H + 22}`} role="img" aria-label={aria} style={{ display: 'block' }}>
         {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={2.2} className="ybest__dot" />)}
         <circle cx={x(max)} cy={H - 10} r={7} className="ybest__me" />
         <line x1={8} x2={W - 16} y1={H} y2={H} className="ybest__axis" />

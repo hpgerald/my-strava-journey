@@ -3,7 +3,7 @@ import Eyebrow from '../components/Eyebrow.jsx'
 import Container from '../components/Container.jsx'
 import IndexHub from '../components/IndexHub.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
-import GeoBubbles from '../charts/GeoBubbles.jsx'
+import TzShare from '../charts/TzShare.jsx'
 import SportTreemap from '../charts/SportTreemap.jsx'
 import IndoorOutdoor from '../charts/IndoorOutdoor.jsx'
 import FootFlip from '../charts/FootFlip.jsx'
@@ -16,7 +16,6 @@ import StorySection from '../components/StorySection.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import DaySplit from '../charts/DaySplit.jsx'
 import MonthGrid from '../charts/MonthGrid.jsx'
-import PairBars from '../charts/PairBars.jsx'
 import TwoLines from '../charts/TwoLines.jsx'
 import HeartbeatYears from '../charts/HeartbeatYears.jsx'
 import { computeHabitMomentum } from '../lib/habitMomentum.js'
@@ -368,17 +367,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const andList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`)
   const regTotA = tzRegions.reduce((t, r) => t + (toNum(r.activities) || 0), 0) || 1
   const regTotE = tzRegions.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) || 1
+  const tzMapRows = tzRegions.map((r) => ({ region: r.region, n: toNum(r.activities) || 0, elev: toNum(r.elevation_m) || 0 }))
   const regSorted = [...tzRegions].sort((a, b) => (toNum(b.activities) || 0) - (toNum(a.activities) || 0))
-  const regShown = regSorted.slice(0, 4)
-  const regRest = regSorted.slice(4)
-  const regionRows = [
-    ...regShown.map((r) => ({ label: r.region, a: (toNum(r.activities) || 0) / regTotA, b: (toNum(r.elevation_m) || 0) / regTotE })),
-    ...(regRest.length ? [{
-      label: `${regRest.length} other regions`, short: `${regRest.length} others`,
-      a: regRest.reduce((t, r) => t + (toNum(r.activities) || 0), 0) / regTotA,
-      b: regRest.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) / regTotE,
-    }] : []),
-  ]
   const climbTop2 = [...tzRegions].sort((a, b) => (toNum(b.elevation_m) || 0) - (toNum(a.elevation_m) || 0)).slice(0, 2)
   const climbTop2A = climbTop2.reduce((t, r) => t + (toNum(r.activities) || 0), 0) / regTotA
   const climbTop2E = climbTop2.reduce((t, r) => t + (toNum(r.elevation_m) || 0), 0) / regTotE
@@ -696,15 +686,11 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
                 { value: climbTop2E, label: "of Tanzania's climbing is there", tone: 'move' },
               ],
             }}
-            left={{ title: 'Home against away', node: <GeoBubbles rows={countries} /> }}
-            right={{
-              title: 'Inside Tanzania: share of outings and of climb',
-              node: <PairBars rows={regionRows} aLabel="share of outings" bLabel="share of climb" aShort="outings" bShort="climb"
-                aria={`Tanzania regions, share of outings and share of climb: ${regionRows.map((r) => `${r.label} ${pc(r.a)}% and ${pc(r.b)}%`).join('; ')}.`} />,
-            }}
+            left={{ title: 'Where I go out', node: <TzShare rows={tzMapRows} measure="n" aria="Map of Tanzania's regions, shaded by each region's share of my outings there." /> }}
+            right={{ title: 'Where I climb', node: <TzShare rows={tzMapRows} measure="elev" aria="Map of Tanzania's regions, shaded by each region's share of my climbing there." /> }}
             read={[
-              'The big disc is Tanzania, and the number in it is the share of my outings with a GPS start that began there. The other African countries are listed beside it with the year I first went out there. Anything outside Africa is counted together as others.',
-              'Each region of Tanzania has two bars: the first is its share of my outings there, the second its share of my climbing. The number at the end is the gap. A region with more climbing than outings is where the hills are.',
+              'Each region of Tanzania is shaded by its share of my outings there: the darker the region, the more often I went out in it. Pale grey regions have none.',
+              'The same map shaded by the share of my climbing. A region that is dark here and light on the first map is where the hills are.',
             ]}
             story={[
               `${regSorted[0] ? regSorted[0].region : ''} and ${regSorted[1] ? regSorted[1].region : ''}, where I go out most, hold ${pcs(((toNum(regSorted[0]?.activities) || 0) + (toNum(regSorted[1]?.activities) || 0)) / regTotA)}% of my outings in Tanzania and only ${pcs(((toNum(regSorted[0]?.elevation_m) || 0) + (toNum(regSorted[1]?.elevation_m) || 0)) / regTotE)}% of the climbing. That is what flat ground looks like in a log.`,
@@ -1062,9 +1048,9 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   // ---- the story: a cold open, then six parts in the order they happened ----
   // the cold open: three beats over the board, from the layoff to the streak
   const heroBeats = heroGap ? [
-    { k: 'The layoff', t: `Then life moved: a new job, a new town and COVID-19. For ${n0(heroGap.days)} days I did not go out once.` },
-    { k: 'The comeback', t: `A check-up sent me back out, and this time I stayed: from about ${n0(preMonthAvg)} outings a month to about ${n0(postMonthAvg)}.` },
-    { k: 'The streak', t: `Then I decided to stop missing days. Since ${heroStreakLabel}: ${n0(toNum(curStreak))} days in a row.` },
+    { k: 'The layoff', t: `A new job, a move, COVID-19: ${n0(heroGap.days)} days off.` },
+    { k: 'The comeback', t: `A check-up sent me back: ${n0(preMonthAvg)} a month became ${n0(postMonthAvg)}.` },
+    { k: 'The streak', t: `Then I stopped missing days: ${n0(toNum(curStreak))} in a row.` },
   ] : []
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
   // the moments of the timeline, to be set inside the parts they belong to

@@ -114,7 +114,10 @@ html.motion .shero-scene__run--beats { height: 260vh; }
 .hx__beats { display: grid; }
 .hx__beats li.is-on { opacity: 1; translate: 0 0; }
 .hx__bk { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
-.hx__bt { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); text-wrap: pretty; }
+/* one line each: the type shrinks with its column instead of wrapping */
+.hx__bt { container-type: inline-size; min-width: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); }
+.hx__btx { display: block; white-space: nowrap; }
+@supports (font-size: 1cqi) { .hx__btx { font-size: min(clamp(1.272rem, 0.9rem + 1.3vw, 2.618rem), 4.3cqi); } }
 .hx.is-beat3 .hx__bk { color: var(--accent-ink); }
 .hx .hx__nums { transition: opacity 0.45s var(--ease-out); }
 .hx.is-beat .hx__nums { opacity: 0; }
