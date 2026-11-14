@@ -85,7 +85,7 @@ function momentParts(year, stats) {
   } else if (year === 2022) {
     kicker = 'The busiest'
     title = 'My busiest year.'
-    body = `The habit was strong enough now for a big day. In May it was raining outside, so I stayed in and ran my first marathon on the treadmill. It was also the first year I walked more often than I ran.`
+    body = `The habit was strong enough now for a big day. In May it was raining outside, so I stayed in and ran my first marathon on a loop indoors. It was also the first year I walked more often than I ran.`
     figure = (
       <div className="ymom__versus">
         <div className="ymom__vrow"><span className="ymom__vlbl">Walk</span><span className="ymom__vbar" style={{ width: `${Math.min(100, (s.walkN / Math.max(s.walkN, s.runN)) * 100)}%`, background: 'var(--accent)' }} /><span className="mono">{s.walkN}</span></div>

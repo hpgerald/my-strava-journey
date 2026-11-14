@@ -1,11 +1,12 @@
 import { toNum } from './format.js'
 
 // Everything the Goals page says, from the activity log and the two race and
-// challenge tables. The same three targets are held against every year: 1,000 km
-// walked, 1,000 km run (road, treadmill and trail) and 24,000 m climbed on foot.
+// challenge tables. The same three targets are held against every year: 1,200 km
+// walked and 1,200 km run (road, indoors and trail), about 100 km a month each, and
+// 24,000 m climbed on foot, about 2,000 m a month.
 export const TARGETS = [
-  { key: 'walk', label: 'Walking', unit: 'km', target: 1000, ring: 'gwalk' },
-  { key: 'run', label: 'Running', unit: 'km', target: 1000, ring: 'grun' },
+  { key: 'walk', label: 'Walking', unit: 'km', target: 1200, ring: 'gwalk' },
+  { key: 'run', label: 'Running', unit: 'km', target: 1200, ring: 'grun' },
   { key: 'elev', label: 'Climbing', unit: 'm', target: 24000, ring: 'gelev' },
 ]
 const FOOT = new Set(['Run', 'Walk', 'TrailRun', 'Hike'])

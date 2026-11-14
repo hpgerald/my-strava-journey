@@ -339,6 +339,7 @@ function buildCases(E) {
         `PELT and binary segmentation work in different ways. ${same === c.gapDays.length ? 'They agree on every break within two weeks' : `They agree on the first ${word(same)} breaks to the week`}: the comeback in the middle of ${M.comeback.slice(0, 4)}, and the first burst settling into a steady rhythm early in ${c.pelt[1].slice(0, 4)}. CUSUM puts the end of the low weeks in the week of ${fmtDay(c.cusumLow)}, ${(() => { const k = Math.round(daysBetween(c.cusumLow, M.comeback) / 7); return k === 0 ? 'the same week as' : `${word(k)} week${k > 1 ? 's' : ''} before` })()} the comeback.`,
         odd.length ? `On the last break they land ${word(Math.round(odd[0][0] / 7))} weeks apart, in the weeks of ${fmtDay(c.pelt[odd[0][1]])} and ${fmtDay(c.binseg[odd[0][1]])}. My current streak of ${n0(c.streak)} days began on ${fmtDay(c.streakFrom)}${c.streakFrom > c.pelt[odd[0][1]] && c.streakFrom < c.binseg[odd[0][1]] ? ', between the two' : ''}. That is why this case is supported: the eras are clear, and the exact week of the last change is not pinned down.` : `The last break is the change that became my current streak of ${n0(c.streak)} days, which began on ${fmtDay(c.streakFrom)}.`,
         last[2] >= burst[2] - 0.3 && lenW(last) > lenW(burst) ? `The last era runs at ${f(last[2], 1)} active days a week, the level of the first burst, and it has already lasted longer.` : '',
+        'The first burst settled when the group of friends I trained with every day in Dodoma could no longer find the same hours, and we went out together less often.',
       ],
       limits: 'The penalty decides how many breaks a changepoint method reports. The agreement between methods that search in different ways is what makes these breaks stand out.',
     })
@@ -389,7 +390,7 @@ function buildCases(E) {
       })(),
       plain: [
         V.c4 === 'proven' ? 'The weekday pattern survives the strictest version of the test.' : 'The simple test finds the pattern, and the stricter test is weaker.',
-        `${DAY[c.best]} is the day I skip least, and ${DAY[c.worst]} is the day I skip most. ${c.outP >= 0.05 ? 'The total number of outings does not differ much by weekday, so the difference is about which days get skipped.' : 'The number of outings also differs by weekday.'}`,
+        `${DAY[c.best]} is the day I skip least, and ${DAY[c.worst]} is the day I skip most. ${c.outP >= 0.05 ? 'The total number of outings does not differ much by weekday, so the difference is about which days get skipped.' : 'The number of outings also differs by weekday.'}${DAY[c.best] === 'Saturday' ? ' Saturday is my Sabbath, the day the jobs and the busy week give way and I go outside.' : ''}`,
       ],
       limits: `Seven weekdays and one comparison chosen after looking at the data: the ${DAY[c.best]} and ${DAY[c.worst]} gap is the largest of 21 possible pairs, so its interval describes this gap and should not be read as a test planned in advance.`,
     })
@@ -435,6 +436,7 @@ function buildCases(E) {
         V.c5 === 'not' ? 'The yearly wave does not pass the strict test.' : 'The wave is there, and it is strong enough to pass a strict test that respects the weekly clustering.',
         c.lowInEachYear ? `In each of the ${word(ny)} years, ${low.map((m) => MONTH[m - 1]).join(' or ')} is one of the three quietest months.` : '',
         c.kwP >= 0.05 ? `The month-by-month tests that assume very little do not confirm it, because each month has only ${word(ny)} values, one per year. That is why I call this supported and stop short of proven.` : 'The month-by-month tests that assume very little confirm it.',
+        'In my own experience these months are a breather: after many busy months the body asks for a pause, and then I pick it up again for the festive season.',
       ],
       limits: `One sine wave is a simple shape. A second wave (two peaks a year) ${c.semiP >= 0.05 ? 'did not improve the fit' : 'improved the fit'} (${pEq(c.semiP)}). ${cap(word(ny))} years is a short record for a yearly pattern.`,
     })
@@ -512,7 +514,7 @@ function buildCases(E) {
       })(),
       plain: [
         V.c7 === 'proven' ? 'Both halves of the claim hold with room to spare.' : 'The trend holds, and the turn is weaker.',
-        `The slowdown was steady, about ${Math.round(c.slope * 60)} seconds per kilometre each year, and the ${c.cur} turn is just as clear. Treadmill pace is the belt speed I chose, so this measures the effort I chose to give, year by year.`,
+        `The slowdown was steady, about ${Math.round(c.slope * 60)} seconds per kilometre each year, and the ${c.cur} turn is just as clear. My indoor running has no belt to set the speed: on a loop or in place, the pace is the effort I chose to give, year by year.${Number(c.cur) === 2026 ? ' In 2026 I set goals after two hard years and pushed, without music.' : ''}`,
       ],
       limits: `Pace and distance travel together, so I also fitted a model that holds distance fixed. It gives almost the same trend, ${sg(c.slopeHeld)} min/km a year.${partial ? ` The ${c.cur} year is not finished.` : ''}`,
     })
@@ -723,7 +725,7 @@ function buildCases(E) {
       ],
       plain: [
         `Once the sport is known, the size of the outing barely moves the kudos. A trail run earns about ${n0(tr[1])}% more than a walk of the same length and climb, and a run about ${n0(ru[1])}% more.`,
-        `The model explains ${pc(c.r2, 1)} of the spread in kudos, so a single outing stays hard to predict, while the pattern across hundreds of outings is clear.`,
+        `The model explains ${pc(c.r2, 1)} of the spread in kudos, so a single outing stays hard to predict, while the pattern across hundreds of outings is clear. Many of the people who cheer started as strangers on Strava and became friends, kudos for kudos.`,
       ],
       limits: `Outings before 2022 are left out: their median kudos were ${list(c.medBefore.map((v) => n0(v)))} a year from ${y0} to 2021, against ${n0(c.medFrom[0])} to ${n0(c.medFrom[1])} from 2022 on, so they follow a different pattern.`,
     })

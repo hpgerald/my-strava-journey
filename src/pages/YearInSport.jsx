@@ -336,6 +336,14 @@ export default function YearInSport({ year: bookYear } = {}) {
   const dayRatio = Math.max(...s.weekday7) / Math.max(1, Math.min(...s.weekday7))
   const bestMonthEl = moIdx.reduce((b, i) => (s.monthsElev[i] > s.monthsElev[b] ? i : b), moIdx[0])
   const monthsOver100 = moIdx.filter((i) => s.monthsKm[i] >= 100).length
+  // what I remember of each year's biggest day (from my own answers)
+  const BEST_STORY = {
+    '2019-12-09': 'My first half marathon, four months in. Indoors there was no terrain or weather to fight, so I pushed further to make the session count.',
+    '2022-05-01': 'It was raining outside and I wanted to break the marathon barrier, so I ran a loop indoors and took a few pauses.',
+    '2024-01-13': 'A Sabbath challenge up to Mweka Gate on Kilimanjaro, through the coffee farms. My watch was set to miles, so I only learned the distance in kilometres when I got back.',
+    '2025-02-19': 'We were getting ready for the Kilimanjaro Half, so with friends I tried the Mweka Gate route and came back down through Kibosho. It was the third outing of that preparation.',
+    '2026-04-19': 'A friend and I set out to try 30 km as a weekend long run, out to Mbweni and Ras Kilomoni and back. Morning showers kept us cool, and it was one of my best days out.',
+  }
   const siteSections = (
     <>
       <Sec n={num()} id="ys-ring" k="Every day of the year"
@@ -447,6 +455,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           title={`${cap(SPORT_ONE[bestAct.sport_type] || 'outing')} of the year.`}
           text={[
             s.medianFoot > 0 ? `Big days are rare. This one was ${(kmOf(bestAct) / s.medianFoot).toFixed(1)} times my ordinary outing of the year.` : '',
+            BEST_STORY[bestAct.date.slice(0, 10)] || '',
             s.highestClimb && s.highestClimb.date === s.biggestFoot?.date && Number(bestAct.elevation_gain_m) >= 100 ? 'It was also the day with the most climbing.' : '',
           ]}
           cap="The small dots are all my other outings of the year.">

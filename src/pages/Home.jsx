@@ -544,8 +544,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
             <Reveal as="p" className="sgrid__statement">
               The day after a break is the hardest one to go out, and my own log shows why. Every extra zero day makes the next one
-              easier to take, and every day in a row makes the next one easier to keep. So on a tired evening I still go, even if it is
-              only a short walk.
+              easier to take, and every day in a row makes the next one easier to keep. Once I have the rhythm, a missed day feels like a
+              debt I have to repay. So on a tired evening I still go: after a few kilometres I feel better, with more energy and a fresh mind.
             </Reveal>
 
             <OddsRow
@@ -636,9 +636,10 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
             eyebrow="How my days are shaped"
             title="One outing instead of&nbsp;two."
             statement={<>
-              One long outing does the job of two short ones. When I came back I often ran in the morning and walked in the evening.
-              Now I go out once and stay out longer, and when I come home the day&rsquo;s work is done. The time I give the habit each
-              day has hardly changed since 2021, about an hour and a half.
+              When I came back I was in a hurry. After years of ignoring my health I made it my first priority, and the results came
+              quickly, in how I felt and in my work, so I often ran in the morning and walked in the evening. Now one longer outing does
+              the job of both, and when I come home the day&rsquo;s work is done. The time I give the habit each day has hardly changed
+              since 2021, about an hour and a half.
             </>}
             odds={{
               title: 'How the days were split',
@@ -760,13 +761,12 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <hr className="rule rule--faint" />
         <StorySection
           id="hours-title"
-          cases={[4]}
           eyebrow="Time of day"
           title="Before work and after&nbsp;it."
           statement={<>
             An office job sets my hours, so the habit lives at the edges of the day: early in the morning, or in the evening once
-            work lets go, with {fmtHour(peakHour)} the busiest hour. Weekends get no special treatment, and every day of the week carries
-            about the same share. When a target is close, the hours stretch: one walk began just before two in the morning, and one run
+            work lets go, with {fmtHour(peakHour)} the busiest hour. Through the week my outings are spread almost evenly, and Saturday,
+            the busiest day, has its own reason, told below. When a target is close, the hours stretch: one walk began just before two in the morning, and one run
             close to midnight.
           </>}
           odds={{
@@ -805,6 +805,100 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         />
         </>
   )
+  // ---- the Sabbath: every Saturday since the comeback against the other days ----
+  const sab = (() => {
+    if (sortedDays.length < 30) return null
+    let bi = 1, bg = -1
+    for (let i = 1; i < sortedDays.length; i++) { const g = Math.round((Date.parse(sortedDays[i]) - Date.parse(sortedDays[i - 1])) / 86400000) - 1; if (g > bg) { bg = g; bi = i } }
+    const back = sortedDays[bi].slice(0, 10), last = sortedDays[sortedDays.length - 1].slice(0, 10)
+    const day = new Map()
+    const outs = []
+    for (const a of activityLog) {
+      const d = (a.date || '').slice(0, 10)
+      if (!d || d < back) continue
+      const foot = FOOT_HOME.has(a.sport_type)
+      const el = foot ? toNum(a.elevation_gain_m) || 0 : 0
+      const o = day.get(d) || { min: 0, el: 0 }
+      o.min += toNum(a.moving_time_min) || 0; o.el += el; day.set(d, o)
+      if (foot) outs.push({ d, el, sport: a.sport_type, sat: new Date(d + 'T00:00:00Z').getUTCDay() === 6 })
+    }
+    const years = [], perYear = {}, elDow = new Array(7).fill(0)
+    let satN = 0, satOn = 0, satMin = 0, othN = 0, othMin = 0
+    for (let t = Date.parse(back + 'T00:00:00Z'); t <= Date.parse(last + 'T00:00:00Z'); t += 86400000) {
+      const iso = new Date(t).toISOString().slice(0, 10), dow = new Date(t).getUTCDay(), y = Number(iso.slice(0, 4))
+      const o = day.get(iso) || { min: 0, el: 0 }
+      if (!perYear[y]) { perYear[y] = { sN: 0, sMin: 0, oN: 0, oMin: 0 }; years.push(y) }
+      elDow[dow] += o.el
+      if (dow === 6) { satN++; satMin += o.min; if (day.has(iso)) satOn++; perYear[y].sN++; perYear[y].sMin += o.min } else { othN++; othMin += o.min; perYear[y].oN++; perYear[y].oMin += o.min }
+    }
+    const elAll = elDow.reduce((u, v) => u + v, 0) || 1
+    const hills = outs.filter((o) => o.sport === 'TrailRun' || o.sport === 'Hike')
+    const top20 = outs.slice().sort((p, q) => q.el - p.el).slice(0, 20).filter((o) => o.sat).length
+    return {
+      fromYear: Number(back.slice(0, 4)), years, perYear, elDow,
+      elShare: elDow[6] / elAll, satN, satOn, satAct: satOn / Math.max(1, satN),
+      satMin: satMin / Math.max(1, satN), othMin: othMin / Math.max(1, othN), top20,
+      hillShare: hills.length ? hills.filter((o) => o.sat).length / hills.length : 0,
+    }
+  })()
+  const secSabbath = sab && (
+        <>
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="sabbath-title"
+          cases={[4]}
+          eyebrow="The Sabbath"
+          title="Saturday is for the outdoors."
+          statement={<>
+            Rest from work does not have to mean sitting still. I am a Seventh-day Adventist, and on the Sabbath the jobs and the busy
+            week give way: part of my day is going outside to enjoy creation. One day in seven has given me {pc(sab.elShare)}% of all my
+            climbing since {sab.fromYear}. The Adventist health message asks us to look after the body we were given, so if you keep a day
+            of rest, try spending part of it outside on your feet.
+          </>}
+          odds={{
+            title: `Saturdays since ${sab.fromYear}`,
+            items: [
+              { value: sab.satAct, label: `of Saturdays with an outing, ${n0(sab.satOn)} of ${n0(sab.satN)}`, tone: 'move' },
+              { num: sab.satMin, unit: ' min', label: `on the move on a Saturday, against ${n0(sab.othMin)} on other days`, tone: 'move' },
+              { book: true, num: sab.top20, unit: '', label: 'of my 20 biggest climbs came on a Saturday', tone: 'move' },
+              { book: true, value: sab.hillShare, label: 'of my trail runs and hikes were on a Saturday', tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'Minutes on the move a day, zero days included',
+            node: (
+              <TwoLines
+                years={sab.years}
+                a={{ label: 'Other', values: sab.years.map((y) => Math.round(sab.perYear[y].oMin / Math.max(1, sab.perYear[y].oN))) }}
+                b={{ label: 'Sat', values: sab.years.map((y) => Math.round(sab.perYear[y].sMin / Math.max(1, sab.perYear[y].sN))) }}
+                yCap="minutes a day"
+                aria={`Average minutes on the move per day, Saturdays against the other days of the week: ${sab.years.map((y) => `${y} ${Math.round(sab.perYear[y].sMin / Math.max(1, sab.perYear[y].sN))} against ${Math.round(sab.perYear[y].oMin / Math.max(1, sab.perYear[y].oN))}`).join(', ')}.`}
+              />
+            ),
+          }}
+          right={{
+            title: `Metres climbed on each day of the week, since ${sab.fromYear}`,
+            node: (
+              <ColBars
+                items={WEEK.map((d, i) => ({ label: d.slice(0, 3), short: d.slice(0, 1), value: sab.elDow[i], display: `${(sab.elDow[i] / 1000).toFixed(1)}k`, tone: i === 6 ? 'big' : 'mid' }))}
+                max={Math.max(...sab.elDow) * 1.12} ticks={[0, 10000, 20000, 30000].filter((t) => t <= Math.max(...sab.elDow) * 1.12)} tickFmt={(v) => (v ? `${v / 1000}k` : '0')}
+                xCap="day of the week &rarr;" yCap="metres climbed &uarr;"
+                aria={`Metres climbed on foot on each day of the week since ${sab.fromYear}: ${WEEK.map((d, i) => `${d} ${n0(sab.elDow[i])} m`).join(', ')}.`}
+              />
+            ),
+          }}
+          read={[
+              'Two lines, one for Saturdays and one for the other six days. Each point is the average time I spent moving on such a day in that year, with the days I stayed in counted as zero.',
+              'All the climbing I have done on foot since the comeback, added up by the day of the week it happened on. Saturday is the orange bar.',
+            ]}
+          story={[
+              `Saturdays are where the hills live. ${n0(sab.top20)} of my 20 biggest climbs came on a Saturday, and so did ${pc(sab.hillShare)}% of my trail runs and hikes. The 34.8 km up to Mweka Gate on Kilimanjaro and my biggest climb, on Bondwa Peak, were both Sabbath outings.`,
+              'None of this was planned as training. It came from going outside on the Sabbath, week after week, and the log only shows what that adds up to.',
+            ]}
+          source="Activity Log · every day since the comeback, zero days included; climbing on foot"
+        />
+        </>
+  )
   const secSeason = fullYears.length > 1 && (
           <>
             <hr className="rule rule--faint" />
@@ -814,9 +908,11 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
               eyebrow="Through the year"
               title="Two quieter months."
               statement={<>
-                {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my thin months{' '}
-                {dipYears === fullYears.length ? 'every year' : 'most years'}, and September 2024 was the lowest point of all, with only eight
-                days out. In {gridYears[gridYears.length - 1]} I went out on every single day of both.
+                After months of doing a lot, the body asks for a breather. {MONTH_NAME[dipIdx[0]]} and {MONTH_NAME[dipIdx[1]]} have been my
+                thin months {dipYears === fullYears.length ? 'every year' : 'most years'}, a natural pause before I pick it up again for the
+                festive season. September 2024 was the lowest point of all, with only eight days out: I was juggling a remote job, a retreat,
+                a camping trip to Mikumi and getting ready for a consultancy in Malawi. In {gridYears[gridYears.length - 1]} I went out on every
+                single day of both months.
               </>}
               odds={{
                 title: `Share of days active, ${fullYears[0]} to ${fullYears[fullYears.length - 1]}`,
@@ -1033,7 +1129,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
       <Part n="1" name="Before the habit" years="2019 to mid 2021" spine="2019" from={heroMonths.length ? heroMonths[0].k : undefined} to={heroGap ? heroGap.from : undefined}
         line={`It did not look like a habit yet: ${n0(nOf(2019))} outings in my first year, ${n0(nOf(2020))} in my second.`}
-        story={['I heard about Strava and decided to give it a try. The push to move came from Jocko Willink and his words, discipline equals freedom. I listened to many of his episodes, and to the story of David Goggins too.']}>
+        story={['I heard about Strava and decided to give it a try, so I bought a Samsung Gear S3 Frontier watch to record what I did. My first runs were indoors, testing the watch and learning the app. The push to move came from Jocko Willink and his words, discipline equals freedom. I listened to many of his episodes, and to the story of David Goggins too.']}>
         {plates([2019, 2020])}
         <Moments events={events} from={heroMonths.length ? heroMonths[0].k : ''} to={heroGap ? heroGap.from : ''} />
         {heroGap ? (
@@ -1063,7 +1159,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
       <Part n="3" name="The mountains" years="2023" spine="2023" from="2023-01" to="2023-12"
         line="This was the year the habit left the flat ground: Kilimanjaro in March, Hanang in April, and Bondwa Peak, where I trained for Kilimanjaro."
-        story={['In the same March I took a challenge from the Activate Uganda team: 25 km a day for four days in a row, on the treadmill, on dates I chose.']}>
+        story={['In the same March I took a challenge from the Activate Uganda team: 25 km a day for four days in a row, indoors, on dates I chose. Running indoors day after day is tiring and dull, and the hardest part was not putting the sessions off until late at night.']}>
         {plates([2023])}
         <Container>
           {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 3).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (
@@ -1091,7 +1187,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
       <Part n="5" name="No zero days" years="2025 to 2026" spine="2025" from="2025-01" to={heroMonths.length ? heroMonths[heroMonths.length - 1].k : undefined}
         line="The streak that is still going started in the last days of 2025."
-        story={['I started it on purpose. My first target is to reach 31 December 2026 without a zero day.']}>
+        story={['I started it on purpose. My first target is to reach 31 December 2026 without a zero day. After that the targets go up in odd numbers: three years, then five.']}>
         {plates([2025, 2026])}
         <Container>
           {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 5).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (
@@ -1105,6 +1201,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
         <Container>
           {secMove}
           {secHours}
+          {secSabbath}
           {secSeason}
           {secFlip}
         </Container>

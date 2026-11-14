@@ -62,7 +62,8 @@ export default function About() {
               A habit, counted over time
             </h2>
             <p>
-              I am not a professional athlete. This is just my own record of showing up. The streak keeps counting until
+              I am not a professional athlete. This is just my own record of showing up. I started this site after my 2,000th
+              outing, in August 2026: I wanted to tell the story once I reached that milestone. The streak keeps counting until
               the day it breaks, and this year&rsquo;s totals are for a year that is not finished.
             </p>
 
@@ -95,6 +96,7 @@ export default function About() {
               </Fact>
               <Fact label="Refresh">Weekly</Fact>
               <Fact label="Units">{meta.units || 'metric'}</Fact>
+              <Fact label="Recorded with">A smartwatch: a Samsung Gear S3 Frontier at first, now a COROS PACE Pro</Fact>
               <Fact label="Data source">My Strava log, pulled weekly through an MCP server</Fact>
               <Fact label="Last refreshed">{day(meta.last_refreshed)}</Fact>
             </dl>

@@ -154,7 +154,7 @@ export default function Kilimanjaro() {
         <Scene label="The summit night" title="The part my watch did not finish.">
           <p>At Kibo Hut my head ached like never before, and I thought I would not wake up in time to join the summit team at midnight. I did some deep breathing, fell asleep, and woke around ten at night to go.</p>
           <p>The early sunrise caught us near Gilman’s Point. I have never seen anything like it in my life. The top was clear and there was no crowd. We reached Uhuru Peak around half past ten in the morning, and after about 30 minutes a storm was coming, so we started down.</p>
-          <p>My watch saw none of it. The cold and the power saver stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. One day I will go back and record the whole way.</p>
+          <p>My watch saw none of it. The cold and the power saver of the Samsung watch I had then stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. One day I will go back and record the whole way.</p>
         </Scene>
         <BigNumber value={n0(KX_TOP)} unit="m">Uhuru Peak. The last {n0(KX_TOP - s[3].high)} m are not in the log.</BigNumber>
         <Plate slot="kili-summit" ratio="16 / 9" caption={`Uhuru Peak · ${n0(KX_TOP)} m · 9 March 2023`} />

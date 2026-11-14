@@ -366,6 +366,7 @@ export default function Where() {
             Every new region came with a trip, so they arrived in bunches, in the years I travelled.
             {(() => { const last = disc[disc.length - 1]; return last ? ` The latest is ${last.region}, my ${ORDW[disc.length] || `${disc.length}th`}.` : '' })()}
             {' '}{31 - disc.length > 0 ? `${cap(word(31 - disc.length))} of the 31 are still waiting.` : ''}
+            {['Rukwa', 'Njombe', 'Singida'].every((g) => disc.some((d) => d.region === g)) ? ' The newest came from trips I chose: a 15 km race at the Kalambo Falls tourism festival in Rukwa, the trails of Kitulo National Park in Njombe, a place on my list for many years that I will go back to, and a visit to a friend in Singida, looking for hills near Dodoma that I can reach often, the way I reach Morogoro.' : ''}
           </>}
           odds={{
             title: 'New regions',
@@ -414,8 +415,9 @@ export default function Where() {
           title={`${n0(P.abroadN)} outings outside Tanzania.`}
           statement={<>
             The habit travels with me. Even on a trip of a few days, I find time to go out.
-            {malawi ? ` In Malawi I went out ${malawi.n} times in two months.` : ''}
-            {kenya ? ` Kenya was the first, in ${fmtMonth(kenya.first)}, and I have been back a few times since.` : ''}
+            {malawi ? ` In Malawi I went out ${malawi.n} times in two months: walking to work and back, a morning walk alone in the forest at the Lilongwe Wildlife Centre, and a day walking the course with friends during a tournament at Lilongwe Golf Club.` : ''}
+            {' '}In South Africa a consultancy left time for a tour of Pilanesberg National Park and a morning walk to Waterfall City in Sandton.
+            {kenya ? ` Kenya was the first, in ${fmtMonth(kenya.first)}, and in December 2022 I went back with a group to Naivasha and the Masai Mara.` : ''}
             {P.othersN ? ` The other ${word(P.othersN)} I count as others.` : ''}
           </>}
           odds={{

@@ -123,6 +123,7 @@ export default function Uluguru() {
           </>}
         >
           <p>Morogoro has given me {n0(U.n)} outings on foot, {n0(U.km)} km and {n0(U.climb)} m of climbing. {cap(WORD[U.inTop20] || String(U.inTop20))} of my twenty biggest climbs are here.</p>
+          <p>Not every trip goes to the top. In August 2023 I ran the Selous Trail Marathon here, on the route that goes halfway to Bondwa Peak, with a warm-up before it and a cool-down after: four outings and more than 2,000 m of climbing in one day, my biggest day of climb.</p>
         </Scene>
         <Plate slot="uluguru-people" ratio="21 / 9" caption="On the way to Bondwa Peak" />
       </Band>

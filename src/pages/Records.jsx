@@ -187,10 +187,10 @@ export default function Records() {
             <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
           </div>
           <ul className={`yrecs${book ? '' : ' yrecs--ledger'}`}>
-            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" stood={book ? null : stoodSince(dNow.date)} to={book ? null : 'rc-title'} />
+            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={dNow.date.slice(0, 10) === '2022-05-01' ? 'a marathon indoors, on a loop' : an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" stood={book ? null : stoodSince(dNow.date)} to={book ? null : 'rc-title'} />
             <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" stood={book ? null : stoodSince(cNow.date)} to={book ? null : 'rc-climb'} />
-            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={`from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" stood={book ? null : stoodSince(bigDayClimb.date)} to={book ? null : 'rc-climb'} />
-            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={`from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" stood={book ? null : stoodSince(wk.start)} to={book ? null : 'rc-months'} />
+            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={bigDayClimb.date.slice(0, 10) === '2023-08-19' ? `the Selous Trail Marathon in Morogoro, ${k1(bigDayClimb.km)} km` : `from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" stood={book ? null : stoodSince(bigDayClimb.date)} to={book ? null : 'rc-climb'} />
+            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={wk.start.slice(0, 10) === '2026-03-01' ? 'the countdown to the Kilimanjaro Half' : `from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" stood={book ? null : stoodSince(wk.start)} to={book ? null : 'rc-months'} />
             <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} stood={book ? null : stoodSince(`${moKm.month}-28`)} to={book ? null : 'rc-months'} />
             <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} to={book ? null : 'rc-streaks'} />
           </ul>
@@ -211,8 +211,7 @@ export default function Records() {
           </div>
           <Reveal as="p" className="sgrid__statement">
             Records come fast when everything is new. In the first years the distance record kept moving: 10 km on my second day, a half marathon a few months later, 30 km in{' '}
-            {firstOver(30) ? fmtMonth(firstOver(30).date) : '2021'}. Then came the {dNow.km >= 42.195 ? 'marathon' : `${k1(dNow.km)} km`} on
-            the {lower(dNow.mode).replace(' run', '')}, and nothing has beaten it since.{dNow.date.slice(0, 7) === '2022-05' ? ` It was raining outside that day and I wanted to break
+            {firstOver(30) ? fmtMonth(firstOver(30).date) : '2021'}. Then came the {dNow.km >= 42.195 ? 'marathon' : `${k1(dNow.km)} km`}{dNow.date.slice(0, 7) === '2022-05' ? ', run indoors on a loop' : <> on the {lower(dNow.mode).replace(' run', '')}</>}, and nothing has beaten it since.{dNow.date.slice(0, 7) === '2022-05' ? ` It was raining outside that day and I wanted to break
             the marathon barrier, so I stayed indoors and took a few pauses. By the end I could not feel my fingernails. They were fine afterwards.` : ''}
           </Reveal>
           <OddsRow
@@ -249,7 +248,8 @@ export default function Records() {
           statement={<>
             The long days left the treadmill. Every run past 30 km on it came between {fmtMonth(treadOver30[0]?.date)} and{' '}
             {fmtMonth(treadOver30[treadOver30.length - 1]?.date)}, and since then the long days have all been outside. The longest of them
-            is 34.8 km on the trails of Kilimanjaro, with more than 800 m of climbing.
+            is 34.8 km on the trails of Kilimanjaro, with more than 800 m of climbing: a Sabbath challenge up to Mweka Gate,
+            through the coffee farms on the slopes. My watch was set to miles that day, so I only learned the distance in kilometres when I got back.
           </>}
           odds={{
             title: 'Long outings on foot',
@@ -347,7 +347,8 @@ export default function Records() {
           title={`${fmtMonth(moEl.month)} climbed the most.`}
           statement={<>
             Distance and climbing peaked in different seasons of my life. August 2021 gave me more than 550 km and almost no height,
-            nearly all of it on the treadmill. March 2023 gave me more than 5,000 m of climbing from under 300 km, most of it on Kilimanjaro.
+            nearly all of it indoors: I was still chasing quick results after the comeback, with sessions morning and evening and a
+            big Strava challenge that month, the Athletic Brewing 70.3. March 2023 gave me more than 5,000 m of climbing from under 300 km, most of it on Kilimanjaro.
           </>}
           odds={{
             title: 'The biggest stretches',

@@ -199,7 +199,7 @@ export default function WhatItMeans() {
           statement={<>
             <span lang="sw">Haba na haba hujaza kibaba</span>, little by little fills the measure. Plenty of my days were tiny, under {SMALL_KM} km on foot, and they add
             almost nothing to the total. I logged them anyway. After one of these streak savers I went out again the next day far more
-            often than after a zero day, so on a bad day I do the small version.
+            often than after a zero day. I call them busy days, and on a busy day the rule is simple: find a way to do something, even the small version.
           </>}
           odds={{
             title: `Streak savers since ${habitYear}`,
@@ -404,7 +404,7 @@ export default function WhatItMeans() {
             <h2 id="wm-close" className="section-head__title">If you are starting&nbsp;out.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Jocko Willink says discipline equals freedom. Seven years of logging turned that into a few habits I can keep: about an hour a day, the small version on a bad day, no
+            Jocko Willink says discipline equals freedom. Seven years of logging turned that into a few habits I can keep: about an hour a day, the small version on a busy day, no
             week allowed to go thin, and the long days placed inside busy weeks.
             {daysLeft > 0 ? ` There are ${n0(daysLeft)} days of ${cur.year} left.` : ''}{' '}<span lang="sw">Kesho tena</span>, tomorrow again.
           </Reveal>

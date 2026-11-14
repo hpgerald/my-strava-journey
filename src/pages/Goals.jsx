@@ -12,7 +12,7 @@ import GhostRace from '../charts/GhostRace.jsx'
 import GoalRings from '../charts/GoalRings.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import { CloseDots, SimHist, MonthBeads } from '../charts/GoalCharts.jsx'
-import { KiliSplit, KiliKm } from '../charts/KiliHalf.jsx'
+import { KiliSplit, KiliKm, RaceCountdown } from '../charts/KiliHalf.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging, useSectionJump } from '../lib/sections.js'
@@ -125,7 +125,7 @@ export default function Goals() {
 
   // ---- the hero headline ----
   const firstBoth = cur.walk.closed != null && cur.run.closed != null && !bothBefore
-  const heroTitle = firstBoth ? 'Both 1,000 km rings closed.' : `${cap(word(curClosed.length))} of three rings closed.`
+  const heroTitle = firstBoth ? `Both ${n0(W.target)} km rings closed.` : `${cap(word(curClosed.length))} of three rings closed${so}.`
 
   // ---- the maths ----
   const S = G.sims.elev
@@ -151,6 +151,33 @@ export default function Goals() {
   const upGain = split ? first.up - last.up : 0
   const downGain = split ? first.down - last.down : 0
   const downEachYear = split && race.every((r, i) => !i || r.down < race[i - 1].down)
+
+  // ---- the countdown before the last edition: k days out, k km in one outing (never under 5) ----
+  const countdown = (() => {
+    if (!last || !last.date) return null
+    const raceISO = String(last.date).slice(0, 10)
+    const t0 = Date.parse(raceISO + 'T00:00:00Z')
+    const KIND = (a) => (a.sport_type === 'Walk' ? 'walk' : a.sport_type === 'TrailRun' ? 'trail' : a.sport_type === 'Hike' ? 'hike' : a.trainer === 'Yes' ? 'tread' : 'road')
+    const byDay = new Map()
+    for (const a of activities) {
+      if (!['Run', 'Walk', 'TrailRun', 'Hike'].includes(a.sport_type)) continue
+      const d = (a.date || '').slice(0, 10)
+      const km = Number(a.distance_km) || 0
+      if (!byDay.has(d)) byDay.set(d, [])
+      byDay.get(d).push({ km, kind: KIND(a) })
+    }
+    const days = []
+    for (let k = 21; k >= 1; k--) {
+      const iso = new Date(t0 - k * 86400000).toISOString().slice(0, 10)
+      const xs = (byDay.get(iso) || []).slice().sort((p, q) => q.km - p.km)
+      const tot = xs.reduce((s, x) => s + x.km, 0)
+      days.push({ iso, k, target: Math.max(5, k), longest: xs.length ? xs[0].km : 0, kind: xs.length ? xs[0].kind : 'walk', rest: xs.length ? tot - xs[0].km : 0, tot })
+    }
+    const hits = days.filter((d) => d.longest >= d.target - 0.5).length
+    if (hits < 18) return null
+    const raceKm = (byDay.get(raceISO) || []).reduce((b, x) => Math.max(b, x.km), 0)
+    return { days, hits, raceISO, raceKm, total: days.reduce((s, d) => s + d.tot, 0), first: days[0].iso }
+  })()
 
   // ---- Ras Kilomoni ----
   const rk = G.rk
@@ -197,8 +224,9 @@ export default function Goals() {
             <h2 id="gl-title" className="section-head__title">{heroTitle}</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            Each year I aim for the same three targets, simple enough to check in my head on any morning: {unitOf(W, W.target)} walking,{' '}
-            {unitOf(R, R.target)} running and {unitOf(E, E.target)} of climbing on foot.{' '}
+            Each year I aim for the same three targets: {unitOf(W, W.target)} walking, {unitOf(R, R.target)} running and{' '}
+            {unitOf(E, E.target)} of climbing on foot. That is about {n0(W.target / 12)} km a month of each, and {n0(E.target / 12)} m of
+            climbing a month, which sends me to the mountains, the trails and the hikes every month to keep fit.{' '}
             {closedYears('elev').length ? `Climbing I have reached ${times(closedYears('elev').length)}.` : 'Climbing is the one I have never reached. Most of my outings are on flat ground and the hills are far, so it is the hardest of the three for me.'}
             {closedYears('walk').length && closedYears('run').length && doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed).slice(5) === doy(closedYears('run')[0].year, closedYears('run')[0].run.closed).slice(5)
               ? ` My first running ring closed on ${fmtDayL(doy(closedYears('run')[0].year, closedYears('run')[0].run.closed))}, and ${word(closedYears('walk')[0].year - closedYears('run')[0].year)} years later, to the day, my first walking ring closed.`
@@ -249,7 +277,7 @@ export default function Goals() {
               { num: closedYears('run').length, unit: '', label: `running, best ${unitOf(R, bestOf('run').run.total)} in ${bestOf('run').year}`, tone: 'move' },
               { num: closedYears('walk').length, unit: '', label: `walking, best ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`, tone: 'move' },
               { num: closedYears('elev').length, unit: '', label: `climbing, best ${unitOf(E, bestOf('elev').elev.total)} in ${bestOf('elev').year}`, tone: 'rest' },
-              { book: true, num: habit.filter((y) => y.walk.closed != null && y.run.closed != null).length, unit: '', label: 'years with both 1,000 km rings closed', tone: 'move' },
+              { book: true, num: habit.filter((y) => y.walk.closed != null && y.run.closed != null).length, unit: '', label: `years with both ${n0(W.target)} km rings closed`, tone: 'move' },
             ],
           }}
           left={{
@@ -270,7 +298,7 @@ export default function Goals() {
               'One row for each year, with the calendar running across. A coloured ring sits on the day a target was crossed. Targets that were not met that year are listed at the end of the row with the share I reached.',
             ]}
           story={[
-              `Walking was my hardest 1,000 km for a long time, even though I walk more often than I run. For ${word(walkYearsLow)} years the walking ring stayed open, because my walks were short and the kilometres did not add up. It closed only when the walks got longer.`,
+              `Walking is my hardest ${n0(W.target)} km, even though I walk more often than I run. For ${word(walkYearsLow)} years the walking ring stayed open, because my walks were short and the kilometres did not add up.${closedYears('walk').length ? ' It closed only when the walks got longer.' : ` In ${cur.year} the walks got longer, and the ring came within ${n0(W.target - cur.walk.total)} km${cur.partial ? ' with weeks to go' : ''}.`}`,
               `Running closed in ${list(closedYears('run').filter((y) => y !== cur).map((y) => y.year))}, and then it stayed open for ${word(habit.filter((y) => y !== cur && y.run.closed == null).length)} years. When more of my running moved outside, the running ring came back${cur.run.closed != null ? ` and closed again in ${cur.year}` : ''}.`,
             ]}
           source="Activity Log · yearly totals on foot against the three fixed targets"
@@ -285,7 +313,8 @@ export default function Goals() {
               eyebrow={`${num()} · Will it close?`}
               title='Close, but not yet.'
               statement={<>
-                If I keep to my average, I will finish {S.perDay >= S.needPerDay ? 'just over' : 'just short'}. I played out the
+                {cur.walk.closed == null && cur.partial && W.target - cur.walk.total < 150 ? `Walking needs only ${n0(W.target - cur.walk.total)} km more, so the climb is the ring in doubt. ` : ''}If I keep
+                to my average, I will finish {S.perDay >= S.needPerDay ? 'just over' : 'just short'}. I played out the
                 rest of the year many times, using my own days of {cur.year} picked at random, to see how often it gets there.
                 Since 1 {MONTH[m0]} I have climbed only {n0(recentRate)} m a day. Lately I have chosen walking, for the enjoyment and
                 to build perseverance, and the climbing has slowed with it.
@@ -343,7 +372,10 @@ export default function Goals() {
               eyebrow={`${num()} · The Kilimanjaro Half, ${word(race.length)} times`}
               title={faster ? 'A little faster each time.' : 'The Kilimanjaro Half.'}
               statement={split && downGain > upGain ? <>
-                This is the race in Moshi, my hometown, and I go back every year. Most of what I gained came on the way back down.
+                This is the race in Moshi, my hometown, and I go back every year.{countdown ? <> In {last.year} it moved from February to {parseInt(countdown.raceISO.slice(8, 10), 10)} {MONTH[parseInt(countdown.raceISO.slice(5, 7), 10) - 1]},
+                to make room for the fasting before Eid, and I turned the three weeks before it into a countdown: {countdown.days[0].target} km
+                on the first day, one less each day after, and never under 5 km in the last days. A walking challenge with a friend in Addis
+                Ababa added more on top, and the first week became my biggest week ever.</> : null} Most of what I gained came on the way back down.
                 Going up to the turnaround I kept much the same speed after my
                 first year. Coming down I got quicker {downEachYear ? 'every year' : 'over the years'}{last.runKm > 4 ? <>, and in {last.year} I ran two long stretches of the descent</> : null}.
               </> : <>The same road, {word(race.length)} times, a little quicker each time.</>}
@@ -399,6 +431,21 @@ export default function Goals() {
                   <BookRead items={[[`Every kilometre, ${word(race.length)} times`, `One row for each edition and one cell for each kilometre, set under the piece of road it covers. The darker the cell, the quicker I was. The orange line at the foot of a cell is the part of that kilometre I ran. The bars at the bottom are the minutes ${last.year} gained on ${first.year} on each kilometre, orange where I ran in ${last.year}.`, <KiliKm />]]} />
                 </>
               ) : null}
+              {countdown ? (
+                <>
+                  <figure className="sgrid__fig kh-fig kcd-fig">
+                    <figcaption className="sgrid__figtitle">The countdown to race day, {last.year}</figcaption>
+                    <div className="sgrid__chart">
+                      <RaceCountdown
+                        days={countdown.days} race={{ km: countdown.raceKm }}
+                        aria={`The 21 days before the ${last.year} Kilimanjaro Half. On the day k days out I set out to cover k km in one outing, never under 5 km. I met it on ${countdown.hits} of 21 days: ${countdown.days.map((d) => `T-${d.k} ${k1(d.longest)} km`).join(', ')}. In all, ${n0(countdown.total)} km on foot in three weeks.`}
+                      />
+                    </div>
+                    <p className="sgrid__note">Each column is a day before the race. I met the countdown on {countdown.hits} of 21 days and covered {n0(countdown.total)} km on foot in those three weeks{quick === last ? ', then ran my quickest edition' : ''}.</p>
+                  </figure>
+                  <BookRead items={[[`The countdown to race day, ${last.year}`, 'Each column is one of the 21 days before the race, with race day at the end. The coloured part is the longest outing of the day, in the colour of how I moved; the grey part above it is the rest of that day on foot. The black steps are the countdown: the kilometres I set out to cover that day.', <RaceCountdown />]]} />
+                </>
+              ) : null}
             </StorySection>
           </>
         )}
@@ -417,7 +464,7 @@ export default function Goals() {
                 the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs. For the first
                 three months I kept a steady count. Then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} came with {rkTop.n} trips, and after
                 that the target was within reach. The route runs from the beach to the headland, through baobab trees and then on hard
-                gravel. It misses the morning traffic and the heat of Dar es Salaam, and the gravel made it a good test of endurance.
+                gravel. It misses the morning traffic and the heat of Dar es Salaam, and the gravel made it a good test of endurance.{rkOuting === 2000 ? ` I knew trip ${rkLast.roman} would also be my 2,000th outing. Fifty times on that ground is no small thing, and it was a beautiful, happy day.` : ''}
               </>}
               odds={{
                 title: 'Ras Kilomoni',
@@ -517,9 +564,11 @@ export default function Goals() {
           </div>
           <ul className="yrecs">
             <GoalCard kicker="Running ring" value={closedYears('run').length} unit="times" label={`closed, best ${unitOf(R, bestOf('run').run.total)}`} sub={list(closedYears('run').map((y) => y.year))} tone="hot" />
-            <GoalCard kicker="Walking ring" value={closedYears('walk').length} unit={closedYears('walk').length === 1 ? 'time' : 'times'} label={`closed, ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`} sub={closedYears('walk').length ? `on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}` : ''} tone="hot" />
+            {closedYears('walk').length
+              ? <GoalCard kicker="Walking ring" value={closedYears('walk').length} unit={closedYears('walk').length === 1 ? 'time' : 'times'} label={`closed, ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`} sub={`on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}`} tone="hot" />
+              : <GoalCard kicker="Walking ring" value={Math.round(cur.walk.share * 100)} unit="%" label={`of ${unitOf(W, W.target)} in ${cur.year}${so}${bestOf('walk') === cur ? ', my best walking year' : ''}`} sub={`${n0(W.target - cur.walk.total)} km to go`} />}
             <GoalCard kicker="Climbing ring" value={Math.round(cur.elev.share * 100)} unit="%" label={`of ${unitOf(E, E.target)} in ${cur.year}${so}`} sub={S ? `${Math.round(S.hit * 100)}% chance it closes` : ''} />
-            {G.marathon && <GoalCard id="marathon" kicker="The marathon" text={clock(G.marathon.min)} label={`${k1(G.marathon.dist)} km${G.marathon.min < 180 ? ' in under three hours' : ''}${G.marathon.trainer ? ', on the treadmill' : ''}`} sub={fmtMonth(G.marathon.date)} tone="hot" />}
+            {G.marathon && <GoalCard id="marathon" kicker="The marathon" text={clock(G.marathon.min)} label={`${k1(G.marathon.dist)} km${G.marathon.min < 180 ? ' in under three hours' : ''}${G.marathon.trainer ? ', indoors on a loop' : ''}`} sub={fmtMonth(G.marathon.date)} tone="hot" />}
             {G.stage && <GoalCard id="stage-race" kicker="The four-day challenge" value={G.stage.km} decimals={1} unit="km" label={`in ${word(G.stage.days.length)} days back to back, ${k1(G.stage.km / G.stage.days.length)} km a day`} sub={`${fmtShort(G.stage.days[0].date)} to ${fmtDay(G.stage.days[G.stage.days.length - 1].date)}`} />}
             {race.length > 0 && <GoalCard kicker="Kilimanjaro Half" text={hmin(quick.moving)} label={`the quickest of ${word(race.length)}, ${n0(first.moving - last.moving)} min under ${first.year}`} sub={`${quick.year} edition`} />}
             {rk.length > 0 && <GoalCard kicker="Ras Kilomoni" value={rk.length} unit="trips" label={`${n0(rkKm)} km, target met exactly`} sub={`${fmtShort(rk[0].date)} to ${fmtDay(rkLast.date)}`} />}

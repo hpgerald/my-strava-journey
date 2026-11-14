@@ -181,3 +181,70 @@ export function KiliKm({ race, line, turnKm, aria }) {
     </div>
   )
 }
+
+// The countdown to race day: on the day k days before the race I set out to
+// cover k km in one outing, never less than 5 km. Each column is one day: its
+// longest outing in the colour of the way I moved, the rest of the day's
+// kilometres on foot stacked above it in grey, and the countdown drawn as a
+// stepped line across the top. Race day stands at the end.
+// props: days [{ iso, k, target, longest, kind, rest }], race { km }, aria
+const CD_FILL = { tread: 'var(--m-tread)', road: 'var(--m-road)', walk: 'var(--m-walk)', trail: 'var(--m-trail)', hike: 'var(--m-hike)' }
+const CD_NAME = { tread: 'Run indoors', road: 'Run outside', walk: 'Walk', trail: 'Trail run', hike: 'Hike' }
+export function RaceCountdown({ days, race, aria }) {
+  const [ref, width] = useWidth(1100)
+  const [root, inView] = useInView({ threshold: 0.2 })
+  if (!days || days.length < 5) return <div ref={ref} />
+  const W = Math.max(320, width)
+  const narrow = W < 640
+  const H = narrow ? 260 : 320
+  const m = { l: narrow ? 34 : 44, r: 6, t: 34, b: 46 }
+  const cols = days.length + 1
+  const slot = (W - m.l - m.r) / cols
+  const bw = Math.max(6, slot * (narrow ? 0.7 : 0.62))
+  const max = Math.max(...days.map((d) => d.longest + d.rest), race ? race.km : 0, ...days.map((d) => d.target))
+  const top = Math.ceil(max / 10) * 10
+  const Y = (v) => H - m.b - (v / top) * (H - m.b - m.t)
+  const X = (i) => m.l + slot * i + slot / 2
+  const ticks = []
+  for (let t = 0; t <= top; t += 10) ticks.push(t)
+  // the countdown as a stepped line over the columns
+  const step = days.map((d, i) => `${i ? 'L' : 'M'}${(X(i) - slot / 2).toFixed(1)} ${Y(d.target).toFixed(1)} L${(X(i) + slot / 2).toFixed(1)} ${Y(d.target).toFixed(1)}`).join(' ')
+  const kinds = [...new Set(days.map((d) => d.kind))]
+  const every = narrow ? 5 : 2
+  return (
+    <div ref={ref} className="kcd">
+      <p className="kkm__key kcd__key" aria-hidden="true">
+        {kinds.map((k) => <span key={k}><i className="kcd__sw" style={{ background: CD_FILL[k] }} />{CD_NAME[k]}</span>)}
+        <span><i className="kcd__sw kcd__sw--rest" />the rest of the day</span>
+        <span><i className="kcd__ln" />the countdown</span>
+      </p>
+      <div ref={root} className={`kcd__plot${inView ? ' is-in' : ''}`}>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block' }}>
+          {ticks.map((t) => (
+            <g key={t}>
+              <line x1={m.l} x2={W - m.r} y1={Y(t)} y2={Y(t)} stroke={t ? 'var(--rule-faint)' : 'var(--ink)'} strokeWidth="1" />
+              <text x={m.l - 6} y={Y(t) + 4} textAnchor="end" className="chart-tick">{t}</text>
+            </g>
+          ))}
+          <text x={m.l - 6} y={m.t - 16} textAnchor="end" className="chart-tick">km</text>
+          {days.map((d, i) => (
+            <g key={d.iso} className="kcd__day" style={{ '--d': `${i * 0.04}s` }}>
+              <rect x={X(i) - bw / 2} y={Y(d.longest)} width={bw} height={Math.max(0, Y(0) - Y(d.longest))} fill={CD_FILL[d.kind]} />
+              {d.rest > 0.3 ? <rect x={X(i) - bw / 2} y={Y(d.longest + d.rest)} width={bw} height={Math.max(0, Y(d.longest) - Y(d.longest + d.rest))} className="kcd__rest" /> : null}
+              {(narrow ? d.k % 5 === 0 : i % every === 0 || i === days.length - 1) ? <text x={X(i)} y={H - m.b + 18} textAnchor="middle" className="chart-tick">{`T-${d.k}`}</text> : null}
+            </g>
+          ))}
+          <path d={step} className="kcd__step" />
+          <text x={X(0) - slot / 2 + 2} y={Y(days[0].target) - 8} className="kcd__lab">{`${days[0].target} km on day one`}</text>
+          {race ? (
+            <g>
+              <rect x={X(days.length) - bw / 2} y={Y(race.km)} width={bw} height={Y(0) - Y(race.km)} className="kcd__race" />
+              <text x={X(days.length)} y={H - m.b + 18} textAnchor="end" className="chart-tick">race</text>
+            </g>
+          ) : null}
+          <text x={(W + m.l) / 2} y={H - 6} textAnchor="middle" className="chart-tick">days to the race &rarr;</text>
+        </svg>
+      </div>
+    </div>
+  )
+}

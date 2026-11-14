@@ -173,9 +173,10 @@ export default function Sports() {
             <h2 id="sp-title" className="section-head__title">Runs cover the&nbsp;ground.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">
-            The treadmill is almost its own sport for me. It is flat, quick and always the same. My very first outing on foot was
-            a treadmill run of 5.1 km, and since then {n0(Math.max(0, r.exactFive - 1))} more of my treadmill runs have ended within
-            100 m of 5 km. So on this page I keep it apart, and in the chart below it sits alone on the left.
+            What my log calls the treadmill is running indoors, wherever I am: at first a loop inside, and the marathon was one, later
+            running in place, sometimes barefoot on a carpet. No machine is needed. It is not the most effective way, but I sweat and the
+            body stays active. It is flat, quick and always the same, so on this page I keep it apart, and in the chart below it sits
+            alone on the left.
           </Reveal>
           <OddsRow
             title="The four sports on foot"
@@ -381,9 +382,10 @@ export default function Sports() {
           eyebrow={`${num()} · Pace`}
           title="Each sport has its pace."
           statement={<>
-            The treadmill makes me look faster than I am. On it my usual kilometre takes under six minutes. On the road at the
-            Kilimanjaro Half in 2026, each kilometre took about ten minutes of moving time, nearer my walking pace than my treadmill pace.
-            Pace here is the minutes I take for one kilometre.
+            The treadmill makes me look faster than I am. On it my usual kilometre takes under six minutes; on the road at the
+            Kilimanjaro Half in 2026 each one took about ten. Running indoors is tiring and dull, and I do it without music, a lesson from
+            David Goggins: when life hits you, there is no background music. After two hard years, a move to remote work in 2024 and a job
+            lost when USAID funding was cut in 2025, I set goals for 2026 and pushed, and my indoor kilometre got more than a minute quicker.
           </>}
           odds={{
             title: 'Median minutes per kilometre',
@@ -541,7 +543,7 @@ export default function Sports() {
           story={[
               `My long days came in two waves. The first was 2021 and 2022, with ${n0(yr(2021) ? yr(2021).longN : 0)} and ${n0(yr(2022) ? yr(2022).longN : 0)}, almost all on the treadmill. Then they became rare, only ${n0(yr(2024) ? yr(2024).longN : 0)} in 2024. The second wave is now, and this time most of them are outside.`,
               latest.long.walk ? `Walks now count among my long days too. ${cap(word(latest.long.walk))} of my walks in ${LY}${so} reached 21.1 km or more.` : '',
-              'The longest of each kind tells the same story. Only the treadmill marathon is from the first wave. The longest trail run, outdoor run and walk all came later, once the long days had moved outside.',
+              'The longest of each kind tells the same story. Only the indoor marathon is from the first wave. The longest trail run, outdoor run and walk all came later, once the long days had moved outside.',
             ]}
           source="Activity Log · outings of 21.1 km or more by way of moving"
         />
@@ -726,7 +728,9 @@ export default function Sports() {
           title={`${cap(ofModeName(rated[0]))} work hardest.`}
           statement={<>
             What people cheer and what my heart feels are different things. The people who follow me cheer the trail runs most, and
-            my most cheered outing is the Kilimanjaro Half of 2023, with 125 kudos. Per hour, my heart works hardest on the treadmill
+            my most cheered outing is the Kilimanjaro Half of 2023, with 125 kudos. By then I had made many friends on Strava, strangers
+            at first, by giving kudos almost every day, and some follow me for the Jocko Willink lines I put in my descriptions. That race
+            was a big day outside, and they all saw it. Per hour, my heart works hardest on the treadmill
             and least on a walk. Relative effort is Strava&rsquo;s score for how hard my heart worked.
           </>}
           odds={{

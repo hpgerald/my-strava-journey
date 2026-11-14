@@ -195,3 +195,13 @@ html.motion .kkm__cell:where(:not(.book *)), html.motion .kkm__gain:where(:not(.
 html.motion .kkm.is-in .kkm__cell:where(:not(.book *)), html.motion .kkm.is-in .kkm__gain:where(:not(.book *)) { opacity: 1; }
 .kh-fig { grid-column: 1 / -1; }
 @media (max-width: 40rem) { .kkm__key { justify-content: flex-start; } }
+/* ---- the countdown to race day ---- */
+.kcd__key { justify-content: flex-start; }
+.kcd__sw { display: inline-block; width: 12px; height: 12px; border-radius: 1px; }
+.kcd__sw--rest, .kcd__rest { background: var(--grey-25); fill: var(--grey-25); }
+.kcd__ln { display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--ink); }
+.kcd__step { fill: none; stroke: var(--ink); stroke-width: 2; }
+.kcd__race { fill: var(--accent-strong); }
+.kcd__lab { font-family: var(--font-mono); font-size: 12px; font-weight: 600; fill: var(--ink); }
+html.motion .kcd__day:where(:not(.book *)) { opacity: 0; transition: opacity 0.5s var(--ease-out); transition-delay: var(--d, 0s); }
+html.motion .kcd__plot.is-in .kcd__day:where(:not(.book *)) { opacity: 1; }

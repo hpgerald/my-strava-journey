@@ -131,7 +131,8 @@ export default function Timeline() {
               return ` The first 500 outings took me ${firstYrs > 2.5 && firstYrs < 3 ? 'almost three years' : `${Math.round(firstYrs)} years`}. The last 500 took ${['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'][lastMo] || lastMo} months.`
             })()}
             {' '}My 2,000th outing was also my fiftieth trip to Ras Kilomoni, the target I set for this year. I was happy
-            when the two landed on the same day.
+            when the two landed on the same day, and I had waited patiently for Strava's badge for it. That milestone is why this site
+            exists: I wanted to tell the story once I reached it.
           </Reveal>
           <OddsRow
             title="The record in time"
@@ -221,9 +222,10 @@ export default function Timeline() {
           eyebrow={`${num()} · Firsts`}
           title='From the treadmill to the hills.'
           statement={<>
-            New firsts are harder to find now. My distance firsts, the 10 km, the half marathon, 30 km and the marathon, all came on the
-            treadmill. The later ones needed a trail, a hill or a long walk outside, and each one asks for a longer day or a steeper hill
-            than the last.
+            New firsts are harder to find now. My distance firsts, the 10 km, the half marathon, 30 km and the marathon, all came
+            indoors, where there is no terrain or weather to fight, so I pushed further to make each session count. The later ones needed
+            a trail, a hill or a long walk outside. My first trail run was a trail race around Lake Duluti in Arusha, through the forest,
+            when a group of friends I trained with every day decided to go out and explore.
           </>}
           odds={{
             title: 'Firsts on foot',
