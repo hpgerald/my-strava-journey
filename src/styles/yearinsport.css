@@ -451,3 +451,13 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .yis-pair figure { margin: 0; min-width: 0; }
 .yis-photo { margin: var(--sp-5) 0 0; }
 .yis-photo img { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: cover; }
+
+/* ---- every day and every hour: the ring of days beside the clock ---- */
+.ydh .yset__t { margin-bottom: var(--sp-2); }
+.ydh__cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4) var(--grid-gap); }
+@media (min-width: 48rem) { .ydh__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ydh__h { margin: var(--sp-4) 0 0; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.ydh__h + .yset__p { margin-top: var(--sp-2); }
+.ydh__facts { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+.ydh__figs { margin-top: var(--sp-5); align-items: start; }
+.ydh__figs figure > .rh, .ydh__figs figure > div { margin-inline: auto; }

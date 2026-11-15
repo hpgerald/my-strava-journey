@@ -1,4 +1,3 @@
-import RadialHours from '../charts/RadialHours.jsx'
 import TwoLines from '../charts/TwoLines.jsx'
 import RasKilomoni from '../charts/RasKilomoni.jsx'
 import BondwaClimbs from '../charts/BondwaClimbs.jsx'
@@ -154,12 +153,7 @@ const BUILD = {
   },
 
   // ================================================================ 2020
-  2020: ({ Y, acts, all, s, allStats }) => {
-    const am = s.hours24.slice(0, 10).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
-    const pm = s.hours24.slice(16, 21).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
-    const peak = s.hours24.indexOf(Math.max(...s.hours24))
-    const fmtH = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
-    const onlyAm = allStats.filter((x) => x.n >= 20).every((x) => x.year === Y || x.hours24.slice(0, 10).reduce((t, v) => t + v, 0) / x.n < am)
+  2020: ({ Y, acts, all }) => {
     const foot = all.filter(isFoot)
     const steps = []
     let best = 0
@@ -177,13 +171,6 @@ const BUILD = {
     const jun = acts.filter((a) => d10(a).slice(5, 7) === '06')
     const wkMax = Math.max(...wk.map((w) => w.v))
     return [
-      {
-        id: 'mornings', k: 'Before work', t: onlyAm ? 'The only year the mornings led.' : 'The mornings led.',
-        p: [`That year I went out early, before the working day: ${pc(am)}% of my outings began before 10 in the morning, against ${pc(pm)}% in the evening.`, 'One run in June began at 2:46 in the morning.'],
-        facts: [{ l: 'began before 10am', v: `${pc(am)}%`, hot: true }, { l: 'the busiest hour', v: fmtH(peak) }],
-        cap: 'Midnight is at the top. A longer spoke is a busier hour.',
-        node: <RadialHours counts={s.hours24} unit="activities" max={420} />,
-      },
       top && top.hot ? {
         id: 'past21', k: 'Past 21 km', t: `${k1(top.km)} km, one step past the half.`,
         p: [`In March I ran ${k1(top.km)} km indoors, further than the half marathon of December.${beaten ? ` It stayed my longest run until ${MONF[parseInt(d10(beaten).slice(5, 7), 10) - 1]} ${d10(beaten).slice(0, 4)}, after the comeback.` : ''}`],

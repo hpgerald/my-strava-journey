@@ -11,6 +11,7 @@ import YearRank from '../charts/YearRank.jsx'
 import { YEAR_NOTES, YEAR_PHOTOS } from '../lib/yearNotes.js'
 import { YearRing, RankBoard } from '../charts/YearSet.jsx'
 import { YearMoments } from '../charts/YearKit.jsx'
+import RadialHours from '../charts/RadialHours.jsx'
 import TzShare from '../charts/TzShare.jsx'
 import YearVsPrev, { vsPrevTitle } from '../charts/YearVsPrev.jsx'
 import { Reveal } from '../components/Reveal.jsx'
@@ -265,23 +266,65 @@ export default function YearInSport({ year: bookYear } = {}) {
         ))}
 
         {/* ===== the closing: every day, where, and against the other years ===== */}
-        <Sec n={num()} id="ys-ring" k="Every day of the year"
-          title={r.restDays === 0 ? 'No zero day.' : pctDays >= 0.8 ? 'Almost every day.' : pctDays >= 0.4 ? 'Most days, not all.' : 'A quiet year.'}
-          text={[
-            r.restDays === 0 ? 'A day out does not have to be a big day. Some days are short, and they still count.'
-              : pctDays >= 0.8 ? `A missed day did not break the year. My longest gap was ${word(r.longGap.len)} ${r.longGap.len === 1 ? 'day' : 'days'}, and then I was out again.`
-                : pctDays >= 0.4 ? (s.streakLen >= 21 ? 'The year came in good stretches, some of them weeks long, with gaps between.' : 'I went out often, but the gaps kept coming back.')
-                  : 'The habit had not caught yet. The outings came in small bunches with long quiet spells between them.',
-          ]}
-          facts={[
-            { l: `days out, of ${n0(span)}${so}`, v: n0(s.activeDays) },
-            { l: s.streakGoing ? 'days in a row, still going' : 'days in a row, the longest run', v: n0(s.streakLen), hot: true },
-            { l: 'zero days', v: n0(r.restDays) },
-          ]}
-          cap="Longer spokes are bigger days. The dark arc is my longest run of days in a row.">
-          <YearRing year={Y} acts={yearActs} startISO={r.startISO} endISO={r.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }}
-            aria={`Every day of ${Y} as a ring: ${n0(s.activeDays)} days with an outing out of ${n0(span)}, the longest run ${n0(s.streakLen)} days.`} />
-        </Sec>
+        {(() => {
+          // every day and every hour: the ring of days beside the 24-hour clock
+          const o = NOTE.ring || {}, oh = NOTE.hours || {}
+          const am = s.hours24.slice(0, 10).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
+          const pm = s.hours24.slice(16, 21).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
+          const peak = s.hours24.indexOf(Math.max(...s.hours24))
+          const fmtH = (h) => (h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? `${h}am` : `${h - 12}pm`)
+          const title = o.t || (r.restDays === 0 ? 'No zero day.' : pctDays >= 0.8 ? 'Almost every day.' : pctDays >= 0.4 ? 'Most days, not all.' : 'A quiet year.')
+          const dayText = [
+            ...(o.p || [r.restDays === 0 ? 'Every day of the year has an outing. Some are short, and they still count.' : pctDays >= 0.4 ? 'The year came in stretches of days out, with gaps between.' : 'The outings came in small bunches with long quiet spells between them.']),
+            r.restDays > 0 && r.longGap.len >= 2 ? (() => {
+              const g = r.longGap, MF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+              const mo = (iso) => `${MF[parseInt(iso.slice(5, 7), 10) - 1]}${iso.slice(0, 4) !== String(Y) ? ` ${iso.slice(0, 4)}` : ''}`
+              const span = g.from && g.to && g.len >= 14 ? `, from ${mo(String(g.from).slice(0, 10))} to ${mo(String(g.to).slice(0, 10))}` : ''
+              return `My longest gap was ${n0(g.len)} days${span}.`
+            })() : '',
+          ].filter(Boolean)
+          const hourText = [
+            ...(oh.p || []),
+            `${pc(pm >= am ? pm : am)}% of my outings began ${pm >= am ? 'between 4 and 9 in the evening' : 'before 10 in the morning'}, and ${pc(pm >= am ? am : pm)}% ${pm >= am ? 'before 10 in the morning' : 'between 4 and 9 in the evening'}.`,
+          ]
+          return (
+            <>
+              <hr className="rule rule--faint" />
+              <section className="sgrid yset ydh" aria-labelledby={idp('ys-dayhour')}>
+                <p className="yset__k">{num()} · Every day and every hour</p>
+                <h2 id={idp('ys-dayhour')} className="yset__t">{title}</h2>
+                <div className="ydh__cols">
+                  <div>
+                    <p className="ydh__h">The days</p>
+                    {dayText.map((t, i) => <p key={i} className="yset__p">{t}</p>)}
+                  </div>
+                  <div>
+                    <p className="ydh__h">The hours</p>
+                    {hourText.map((t, i) => <p key={i} className="yset__p">{t}</p>)}
+                  </div>
+                </div>
+                <dl className="yset__facts ydh__facts">
+                  <div className="is-hot"><dt>{s.streakGoing ? 'days in a row, still going' : 'days in a row, the longest run'}</dt><dd>{n0(s.streakLen)}</dd></div>
+                  <div><dt>zero days</dt><dd>{n0(r.restDays)}</dd></div>
+                  <div><dt>the busiest hour</dt><dd>{fmtH(peak)}</dd></div>
+                </dl>
+                <div className="yis-pair ydh__figs">
+                  <figure>
+                    <figcaption>Every day of the year</figcaption>
+                    <YearRing year={Y} acts={yearActs} startISO={r.startISO} endISO={r.endISO} streak={{ len: s.streakLen, startISO: s.streakStartISO, endISO: s.streakEndISO }}
+                      aria={`Every day of ${Y} as a ring: ${n0(s.activeDays)} days with an outing out of ${n0(span)}, the longest run ${n0(s.streakLen)} days.`} />
+                    <p className="yset__cap">A longer spoke is a bigger day. The dark arc is my longest run of days in a row.</p>
+                  </figure>
+                  <figure>
+                    <figcaption>The hour each outing began</figcaption>
+                    <RadialHours counts={s.hours24} unit="activities" max={520} />
+                    <p className="yset__cap">Midnight is at the top and noon at the bottom. A longer spoke is a busier hour.</p>
+                  </figure>
+                </div>
+              </section>
+            </>
+          )
+        })()}
 
         {r.located >= 15 && tzRows.length >= 2 ? (
           <Sec n={num()} id="ys-where" k="Where it happened" wide

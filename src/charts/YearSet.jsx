@@ -67,7 +67,7 @@ export function YearRing({ year, acts, startISO, endISO, streak, aria }) {
   const days = [...byDay.keys()].filter(inYear).length
   return (
     <div ref={ref} className="yring">
-      <svg width={S} height={S} viewBox={`0 0 ${S} ${S}`} role="img" aria-label={aria} style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}>
+      <svg width={S} height={S} viewBox={`0 0 ${S} ${S}`} role="img" aria-label={aria} style={{ display: 'block', margin: '0 auto', overflow: 'visible', maxWidth: '100%', height: 'auto' }}>
         <circle cx={cx} cy={cy} r={R0} className="yring__base" />
         {MON.map((m, k) => {
           const i = Math.round((Date.UTC(year, k, 1) - t0) / DAY)
