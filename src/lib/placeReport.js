@@ -47,6 +47,15 @@ export function buildPlaceReport(activities, geoRows) {
   // anything outside Africa is one "Others" row, never named or counted as a country
   const abroadFolded = [...named, ...(others.length ? [{ country: OTHER_LABEL, ...agg(located.filter((r) => others.some((o) => o.country === r.country))), isOther: true }] : [])]
   const namedCountries = countries.filter((c) => NAMED_COUNTRIES.has(c.country))
+  // the same list kept to four rows, for a ledger beside Tanzania: the three
+  // busiest named countries, then the rest together in one row
+  const abroadShort = (() => {
+    if (abroadFolded.length <= 4) return abroadFolded
+    const head = named.slice(0, 3), tail = abroad.filter((c) => !head.includes(c))
+    const tailNamed = tail.filter((c) => NAMED_COUNTRIES.has(c.country)).map((c) => c.country)
+    const label = tailNamed.length ? `${tailNamed.join(', ')}${tail.length > tailNamed.length ? ' and others' : ''}` : OTHER_LABEL
+    return [...head, { country: label, ...agg(located.filter((r) => tail.some((o) => o.country === r.country))), isOther: true }]
+  })()
   const othersN = others.reduce((s, c) => s + c.n, 0)
   const abroadFirstFoot = Object.fromEntries(abroad.map((c) => [c.country, (located.find((r) => r.country === c.country && r.foot) || {}).date || null]))
 
@@ -93,7 +102,7 @@ export function buildPlaceReport(activities, geoRows) {
 
   return {
     n: rows.length, located: located.length, indoor: indoor.length, lastISO, years,
-    countries, namedCountries, othersN, abroad, abroadFolded, abroadFirstFoot, abroadN: abroad.reduce((s, c) => s + c.n, 0),
+    countries, namedCountries, othersN, abroad, abroadFolded, abroadShort, abroadFirstFoot, abroadN: abroad.reduce((s, c) => s + c.n, 0),
     regions, tzTot, discovered, byYear, topRegions, lifeEffective, indoorBy,
     firstISO: rows.length ? rows[0].date : '', dayIdx,
   }

@@ -90,7 +90,7 @@ export function buildUluguru(tripRows, profileRows, activities, geo) {
     share: mor.reduce((s, a) => s + a.climb, 0) / (allClimb || 1),
     inTop20: top20.filter((a) => a.region === 'Morogoro').length,
     bestIsRecord: top20.length && best && top20[0].key === best.key,
-    climbs: [...mor].sort((a, b) => b.climb - a.climb).slice(0, 6),
+    climbs: [...mor].sort((a, b) => b.climb - a.climb).slice(0, 5),
   }
 }
 

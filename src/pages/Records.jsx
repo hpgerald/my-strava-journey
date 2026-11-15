@@ -138,7 +138,8 @@ export default function Records() {
   ]
 
   // ---- where ----
-  const regs = R.regions.slice(0, 6)
+  const regs = R.regions.slice(0, 5)
+  const regsRest = R.regions.length - regs.length
   const regTop = Object.entries(R.top20Regions).sort((a, b) => b[1] - a[1])
   const top20N = Object.values(R.top20Regions).reduce((s, v) => s + v, 0)
 
@@ -150,7 +151,6 @@ export default function Records() {
     { key: 'tread', label: 'Runs', sub: `${n0(SR.Run.n)} outings`, actual: SR.Run.broken, expected: SR.Run.expected },
     { key: 'walk', label: 'Walks', sub: `${n0(SR.Walk.n)} outings`, actual: SR.Walk.broken, expected: SR.Walk.expected },
     { key: 'trail', label: 'Trail runs', sub: `${SR.TrailRun.n} outings`, actual: SR.TrailRun.broken, expected: SR.TrailRun.expected },
-    { key: 'hike', label: 'Hikes', sub: `${SR.Hike.n} outings`, actual: SR.Hike.broken, expected: SR.Hike.expected },
   ]
   const pEarly = 1 - R.distStanding.outingsSince / R.n
   const stoodMax = Math.max(...R.distStood.map((s) => s.days))
@@ -260,10 +260,10 @@ export default function Records() {
             ],
           }}
           left={{
-            title: 'The ten longest outings',
+            title: 'The five longest outings',
             node: (
               <HBars
-                aria={`The ten longest outings: ${R.longest.map((f) => `${k1(f.km)} km, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
+                aria={`The five longest outings: ${R.longest.map((f) => `${k1(f.km)} km, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
                 rows={R.longest.map((f) => ({ key: f.mode, label: fmtDay(f.date), sub: `${lower(f.mode)}${f.elev > 0 ? ` · ${n0(f.elev)} m up` : ''}`, value: f.km, display: `${k1(f.km)} km` }))}
               />
             ),
@@ -278,11 +278,11 @@ export default function Records() {
             ),
           }}
           read={[
-              'My ten longest single outings, longest at the top, with the date, the kind of outing and the climb where there was any.',
+              'My five longest single outings, longest at the top, with the date, the kind of outing and the climb where there was any.',
               'My biggest days on foot, adding up every outing of the day. The line under each date gives the number of outings and the time moving.',
             ]}
           story={[
-              `${cap(word(longTread.length))} of my ten longest outings were on the treadmill, all from ${fmtMonth(longTread.map((f) => f.date).sort()[0])} to ${fmtMonth(longTread.map((f) => f.date).sort().slice(-1)[0])}, the months when I was building distance indoors. The others are newer, and they came outside: ${longOut.map((f) => `${an(lower(f.mode))} in ${fmtMonth(f.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`,
+              `${cap(word(longTread.length))} of my five longest outings were on the treadmill, all from ${fmtMonth(longTread.map((f) => f.date).sort()[0])} to ${fmtMonth(longTread.map((f) => f.date).sort().slice(-1)[0])}, the months when I was building distance indoors. The others are newer, and they came outside: ${longOut.map((f) => `${an(lower(f.mode))} in ${fmtMonth(f.date)}`).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`,
               day2 ? `My biggest days are not always one outing. The second biggest, ${fmtDay(day2.date)}, was ${word(day2.n)} outings that added up to ${k1(day2.km)} km. Only one day has ever gone past 42 km, and that is the marathon.` : '',
             ]}
           source="Activity Log · distance of single outings and of whole days on foot"
@@ -319,21 +319,21 @@ export default function Records() {
             ),
           }}
           right={{
-            title: 'The eight biggest climbs',
+            title: 'The five biggest climbs',
             node: (
               <HBars
-                aria={`The biggest single climbs: ${R.climbs.slice(0, 8).map((f) => `${n0(f.elev)} metres, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
-                rows={R.climbs.slice(0, 8).map((f) => ({ key: f.mode, label: fmtDay(f.date), sub: `${f.sport === 'Hike' ? 'hike' : lower(f.mode)}${f.region ? ` · ${f.region}` : ''}`, value: f.elev, display: `${n0(f.elev)} m` }))}
+                aria={`The biggest single climbs: ${R.climbs.slice(0, 5).map((f) => `${n0(f.elev)} metres, ${lower(f.mode)}, ${fmtDay(f.date)}`).join('; ')}.`}
+                rows={R.climbs.slice(0, 5).map((f) => ({ key: f.mode, label: fmtDay(f.date), sub: `${f.sport === 'Hike' ? 'hike' : lower(f.mode)}${f.region ? ` · ${f.region}` : ''}`, value: f.elev, display: `${n0(f.elev)} m` }))}
               />
             ),
           }}
           read={[
               'Every outing that climbed, placed by its date and its metres up, with the record as a staircase. The scale squeezes the top so the small climbs can still be seen.',
-              'My eight biggest single climbs, biggest at the top, with the date, the kind of outing and the region.',
+              'My five biggest single climbs, biggest at the top, with the date, the kind of outing and the region.',
             ]}
           story={[
               cP[walkLed] ? `For a long time the climbing record belonged to walks, and it grew a little at a time. The first hike changed that in one day: in ${fmtMonth(cP[walkLed].date)} it ${cP[walkLed].elev > 2 * cP[walkLed - 1].elev ? 'more than doubled the record' : 'lifted the record'}, to ${n0(cP[walkLed].elev)} m.` : '',
-              `${cap(word(R.climbs.slice(0, 8).filter((c) => c.region === 'Morogoro').length))} of my eight biggest climbs started in Morogoro. The hills there are where I went to climb, again and again.`,
+              `${cap(word(R.climbs.slice(0, 5).filter((c) => c.region === 'Morogoro').length))} of my five biggest climbs started in Morogoro. The hills there are where I went to climb, again and again.`,
             ]}
           source="Activity Log · elevation gain of single outings on foot; start region from Strava GPS"
         />
@@ -382,7 +382,7 @@ export default function Records() {
             ]}
           story={[
               `My biggest week is a recent one, and it took only ${word(wk.n)} outings. The weeks just behind it are from 2021 and 2022, and they needed ${n0(Math.min(...wkOld.map((w) => w.n)))} to ${n0(Math.max(...wkOld.map((w) => w.n)))} outings each. The distance is the same, now in fewer and longer pieces.`,
-              `${cap(word(recentClimbMonths))} of my six biggest climbing months come from the last two years. The hills used to be a 2023 story, and now they are a regular part of my year.`,
+              `${cap(word(recentClimbMonths))} of my five biggest climbing months come from the last two years. The hills used to be a 2023 story, and now they are a regular part of my year.`,
             ]}
           source="Activity Log · distance and climb on foot by week and by month"
         >
@@ -542,7 +542,7 @@ export default function Records() {
             ],
           }}
           left={{
-            title: 'The eight longest runs of days',
+            title: 'The five longest runs of days',
             node: (
               <HBars
                 aria={`The longest runs of consecutive days with an outing: ${S.top.map((s) => `${s.len} days from ${fmtDay(s.startISO)}`).join('; ')}.`}
@@ -560,7 +560,7 @@ export default function Records() {
             ),
           }}
           read={[
-              'My eight longest streaks, longest at the top, with the month each began and the day it ended.',
+              'My five longest streaks, longest at the top, with the month each began and the day it ended.',
               'The best run of days for each kind of streak: any outing, any outing on foot, a run every day, and a walk every day.',
             ]}
           story={[
@@ -593,7 +593,7 @@ export default function Records() {
                 ],
               }}
               left={{
-                title: 'The biggest climb in each region',
+                title: 'The biggest climb, region by region',
                 node: (
                   <HBars
                     aria={`Biggest single climb by region: ${regs.map((f) => `${f.region} ${n0(f.elev)} metres`).join(', ')}.`}
@@ -612,7 +612,7 @@ export default function Records() {
                 ),
               }}
               read={[
-              'The biggest single climb in each region of Tanzania, with the kind of outing and the month.',
+              `The biggest single climb in my five hilliest regions of Tanzania, with the kind of outing and the month.${regsRest ? ` ${cap(word(regsRest))} more regions have smaller ones.` : ''}`,
               'Where my twenty biggest climbs started, counted by region.',
             ]}
               story={[
@@ -666,7 +666,7 @@ export default function Records() {
             ),
           }}
           read={[
-              'Each row is a kind of record. The bar is how many times it actually broke, and the ring is how many times it would break, on average, if the same outings had come in a random order. A bar past its ring broke more often than chance.',
+              'Each row is a kind of record; hikes are left out, as there are too few of them. The bar is how many times it actually broke, and the ring is how many times it would break, on average, if the same outings had come in a random order. A bar past its ring broke more often than chance.',
               'Each bar is one distance record, in order, and its height is the days it stood before the next one beat it. The last bar, still standing, is the marathon.',
             ]}
           story={[

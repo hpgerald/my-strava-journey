@@ -145,7 +145,7 @@ export function buildFootReport(activities) {
   doubles.medGap = median(doubles.gaps)
 
   // ---- climbs ----
-  const climbs = foot.filter((f) => f.elev > 0).sort((a, b) => b.elev - a.elev).slice(0, 8)
+  const climbs = foot.filter((f) => f.elev > 0).sort((a, b) => b.elev - a.elev).slice(0, 5)
 
   // ---- the maths: treadmill pace against distance, and weekly run against walk ----
   const tp = tread.filter((f) => f.pace != null && f.pace >= TREAD_MIN && f.pace < 12 && f.km >= 1)

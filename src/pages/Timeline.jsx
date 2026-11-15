@@ -237,15 +237,16 @@ export default function Timeline() {
             ],
           }}
           left={{
-            title: 'How long each first took',
+            title: F.length > 5 ? 'How long the later firsts took' : 'How long each first took',
             node: (
               <><ul className="fmap__legend tl-legend" aria-label="Colour key">
                 {['tread', 'road', 'trail', 'walk', 'hike'].map((k) => <li key={k}><i className={`msw msw--${k}`} aria-hidden="true" />{({ tread: 'Treadmill run', road: 'Outdoor run', trail: 'Trail run', walk: 'Walk', hike: 'Hike' })[k]}</li>)}
               </ul>
               <HBars
                 aria={`Firsts on foot: ${F.map((f) => `${f.title}, ${fmtDay(f.date)}`).join('; ')}.`}
-                rows={F.map((f) => ({ key: f.mode, label: f.title, sub: `${f.detail} · day ${n0(dayOf(f.date))}`, value: dayOf(f.date), display: fmtMon(f.date) }))}
-              /></>
+                rows={F.slice(-5).map((f) => ({ key: f.mode, label: f.title, sub: `${f.detail} · day ${n0(dayOf(f.date))}`, value: dayOf(f.date), display: fmtMon(f.date) }))}
+              />
+              {F.length > 5 ? <p className="sgrid__note">Before them came {F.slice(0, -5).map((f) => f.title.replace(/^First /, 'the first ')).join(', ').replace(/, ([^,]*)$/, ' and $1')}, all by {fmtMon(F[F.length - 6].date)}.</p> : null}</>
             ),
           }}
           right={{
@@ -259,7 +260,7 @@ export default function Timeline() {
             ),
           }}
           read={[
-              'Each bar is one first on foot, and its length is how many days into my log it came. The colour shows how I did it, and the line under each name gives the detail and the day of the log.',
+              'Each bar is one of my five latest firsts on foot, and its length is how many days into my log it came; the earlier ones are named under the chart. The colour shows how I did it, and the line under each name gives the detail and the day of the log.',
               'The number of firsts in each year. Years with none are grey.',
             ]}
           story={[

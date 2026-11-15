@@ -74,7 +74,7 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
   }))
 
   // ---- the top of each list ----
-  const longest = foot.slice().sort((a, b) => b.km - a.km).slice(0, 10)
+  const longest = foot.slice().sort((a, b) => b.km - a.km).slice(0, 5)
   const climbs = foot.slice().sort((a, b) => b.elev - a.elev).slice(0, 10)
   const over30 = foot.filter((f) => f.km >= 30)
   const halfUp = foot.filter((f) => f.km >= 21.0975)
@@ -86,18 +86,18 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
     d.km += f.km; d.elev += f.elev; d.n++; d.min += f.min; d.modes.add(f.mode); byDay.set(f.date, d)
   }
   const days = [...byDay.values()]
-  const topDaysKm = days.slice().sort((a, b) => b.km - a.km).slice(0, 6)
+  const topDaysKm = days.slice().sort((a, b) => b.km - a.km).slice(0, 5)
   const topDaysClimb = days.slice().sort((a, b) => b.elev - a.elev).slice(0, 6)
   const wkOf = (iso) => Math.floor((dayIdx(iso) - 3) / 7) // weeks run Sunday to Saturday
   const byWeek = new Map()
   for (const f of foot) { const w = wkOf(f.date); const x = byWeek.get(w) || { w, km: 0, elev: 0, n: 0 }; x.km += f.km; x.elev += f.elev; x.n++; byWeek.set(w, x) }
   const weekStart = (w) => isoOf(w * 7 + 3)
-  const topWeeksKm = [...byWeek.values()].sort((a, b) => b.km - a.km).slice(0, 6).map((x) => ({ ...x, start: weekStart(x.w) }))
+  const topWeeksKm = [...byWeek.values()].sort((a, b) => b.km - a.km).slice(0, 5).map((x) => ({ ...x, start: weekStart(x.w) }))
   const byMonth = new Map()
   for (const f of foot) { const k = f.date.slice(0, 7); const x = byMonth.get(k) || { month: k, km: 0, elev: 0, n: 0 }; x.km += f.km; x.elev += f.elev; x.n++; byMonth.set(k, x) }
   const months = [...byMonth.values()]
   const topMonthsKm = months.slice().sort((a, b) => b.km - a.km).slice(0, 6)
-  const topMonthsClimb = months.slice().sort((a, b) => b.elev - a.elev).slice(0, 6)
+  const topMonthsClimb = months.slice().sort((a, b) => b.elev - a.elev).slice(0, 5)
   const monthName = (k) => `${MON[parseInt(k.slice(5, 7), 10) - 1]} ${k.slice(0, 4)}`
 
   // ---- milestones: kilometres and Everests ----
@@ -150,7 +150,7 @@ export function buildRecordReport(activities, geo = {}, kili = []) {
     walk: sOut(longestRun(daysOf((f) => f.sport === 'Walk'))),
     week: { len: wkBest.len, startISO: weekStart(wkBest.start), endISO: isoOf(wkBest.end * 7 + 9), current: weeks[weeks.length - 1] === wkOf(lastISO) ? (() => { let s = weeks.length - 1; while (s > 0 && weeks[s] - weeks[s - 1] === 1) s--; return weeks.length - s })() : 0 },
     longGap,
-    top: runsOf(allDays).slice(0, 8).map((r) => ({ len: r.len, startISO: isoOf(r.start), endISO: isoOf(r.end), current: r.end === lastDay })),
+    top: runsOf(allDays).slice(0, 5).map((r) => ({ len: r.len, startISO: isoOf(r.start), endISO: isoOf(r.end), current: r.end === lastDay })),
   }
 
   // ---- personal records (Strava segment bests) ----

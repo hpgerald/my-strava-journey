@@ -90,11 +90,11 @@ function useMatchHeight() {
 
 // the file of a case: the claim, what was tested and how, the results, the
 // chart and its reading. H is the heading level of its small titles.
-function CaseFile({ c, H = 'h3' }) {
+function CaseFile({ c, H = 'h3', claim = true }) {
   const [showRef, matchH] = useMatchHeight()
   return (
     <>
-      <Reveal as="p" className="sgrid__statement">{c.claim}</Reveal>
+      {claim ? <Reveal as="p" className="sgrid__statement">{c.claim}</Reveal> : null}
       <div className="ev-file">
         <div className="ev-file__col">
           <H className="ev-k">What I tested</H>
@@ -208,7 +208,8 @@ function Card({ c, holm, eras, open, onToggle }) {
           <span className="ev-card__go">{open ? 'Close the case' : 'Open the case'}<span className="ev-card__ico" aria-hidden="true" /></span>
         </button>
       </h3>
-      {open ? <div className="sgrid ev-dk__file" id={`${id}-file`}><CaseFile c={c} H="h4" /></div> : null}
+      {open ? <p className="ev-card__claim">{c.claim}</p> : null}
+      {open ? <div className="sgrid ev-dk__file" id={`${id}-file`}><CaseFile c={c} H="h4" claim={false} /></div> : null}
     </li>
   )
 }

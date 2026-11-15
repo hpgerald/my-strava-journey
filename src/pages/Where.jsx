@@ -43,6 +43,16 @@ function Ledger({ children }) {
   return <ol ref={ref} className={`wh-ledger${inView ? ' is-in' : ''}`}>{children}</ol>
 }
 
+const shortName = (r) => r.region.replace('Zanzibar Urban/West', 'Zanzibar').replace('Zanzibar Central/South', 'Zanzibar South')
+const restNames = (rows) => (rows.length > 3 ? `${rows.slice(0, 3).map(shortName).join(', ')} and ${rows.length - 3} more` : rows.map(shortName).join(', ').replace(/, ([^,]*)$/, ' and $1'))
+const sumOf = (rows, k) => rows.reduce((t, r) => t + (r[k] || 0), 0)
+// the regions past the first four, together in one row, named in the line under it
+const restRow = (rows, k, fmt, unit) => ({
+  key: 'rO', label: `${rows.length} other regions`,
+  sub: restNames(rows),
+  value: sumOf(rows, k), display: fmt(sumOf(rows, k)), unit,
+})
+
 export default function Where() {
   const book = useBook()
   const activities = useTable('activities')
@@ -80,8 +90,14 @@ export default function Where() {
   const steep = R.slice().filter((r) => r.n >= 30).sort((a, b) => b.mpk - a.mpk).slice(0, 2)
   const steepN = steep.reduce((s, r) => s + r.n, 0) / P.tzTot.n
   const steepE = steep.reduce((s, r) => s + r.elev, 0) / P.tzTot.elev
-  const pairRows = R.filter((r) => r.n >= 24).map((r) => ({ label: r.region.replace('Zanzibar Urban/West', 'Zanzibar West'), short: r.region.replace('Dar es Salaam', 'Dar').replace('Zanzibar Urban/West', 'Zanzibar'), a: r.n / P.tzTot.n, b: r.elev / P.tzTot.elev }))
+  // four regions by name (the busiest and the hilliest), the rest in one row
+  const pairTop = [...new Set([...R.slice(0, 2), ...R.slice().sort((a, b) => b.elev - a.elev).slice(0, 3)])].slice(0, 4)
+  const pairRest = R.filter((r) => !pairTop.includes(r))
+  const pairRows = [...pairTop.map((r) => ({ label: r.region, short: r.region.replace('Dar es Salaam', 'Dar'), a: r.n / P.tzTot.n, b: r.elev / P.tzTot.elev })),
+    ...(pairRest.length ? [{ label: `${pairRest.length} other regions`, short: `${pairRest.length} others`, a: sumOf(pairRest, 'n') / P.tzTot.n, b: sumOf(pairRest, 'elev') / P.tzTot.elev }] : [])]
   const gradeRows = R.filter((r) => r.n >= 8).sort((a, b) => b.mpk - a.mpk)
+  const gradeRest = { mpk: sumOf(gradeRows.slice(4), 'elev') / Math.max(1, sumOf(gradeRows.slice(4), 'km')) }
+  const byKm = R.slice().sort((a, b) => b.km - a.km)
   const tzMpk = P.tzTot.elev / Math.max(1, P.tzTot.km)
   const home = R[0]
 
@@ -167,7 +183,7 @@ export default function Where() {
             <figure className="sgrid__fig wh-africa__list">
               <figcaption className="sgrid__figtitle">Each country, busiest first</figcaption>
               <Ledger>
-                {[tzC, ...AB].map((c, i) => (
+                {[tzC, ...P.abroadShort].map((c, i) => (
                   <li key={c.country} className="wh-ledger__row" style={{ '--d': `${i * 80}ms` }}>
                     <span className="wh-ledger__n mono">{n0(c.n)}</span>
                     <span className="wh-ledger__c">
@@ -218,8 +234,8 @@ export default function Where() {
               <figcaption className="sgrid__figtitle">Outings by region</figcaption>
               <div className="sgrid__chart">
                 <HBars
-                  aria={`Outings by region: ${R.slice(0, 10).map((r) => `${r.region} ${r.n}`).join(', ')}.`}
-                  rows={R.slice(0, 10).map((r, i) => ({ key: i < 4 ? REG_KEYS[i] : 'rO', label: r.region, sub: `${n0(r.days)} days · since ${fmtMon(r.first)}`, value: r.n, display: n0(r.n) }))}
+                  aria={`Outings by region: ${R.slice(0, 4).map((r) => `${r.region} ${r.n}`).join(', ')}, and ${n0(sumOf(R.slice(4), 'n'))} in ${R.length - 4} other regions.`}
+                  rows={[...R.slice(0, 4).map((r, i) => ({ key: REG_KEYS[i], label: r.region, sub: `${n0(r.days)} days · since ${fmtMon(r.first)}`, value: r.n, display: n0(r.n) })), restRow(R.slice(4), 'n', (v) => n0(v), 'outings')]}
                 />
               </div>
             </figure>
@@ -227,15 +243,15 @@ export default function Where() {
               <figcaption className="sgrid__figtitle">Kilometres on foot by region</figcaption>
               <div className="sgrid__chart">
                 <HBars
-                  aria={`Kilometres on foot by region: ${R.slice().sort((a, b) => b.km - a.km).slice(0, 10).map((r) => `${r.region} ${n0(r.km)}`).join(', ')}.`}
-                  rows={R.slice().sort((a, b) => b.km - a.km).slice(0, 10).map((r) => ({ key: P.topRegions.includes(r.region) ? REG_KEYS[P.topRegions.indexOf(r.region)] : 'rO', label: r.region, sub: `${n0(r.elev)} m up`, value: r.km, display: `${n0(r.km)} km` }))}
+                  aria={`Kilometres on foot by region: ${byKm.slice(0, 4).map((r) => `${r.region} ${n0(r.km)}`).join(', ')}, and ${n0(sumOf(byKm.slice(4), 'km'))} km in ${byKm.length - 4} other regions.`}
+                  rows={[...byKm.slice(0, 4).map((r) => ({ key: P.topRegions.includes(r.region) ? REG_KEYS[P.topRegions.indexOf(r.region)] : 'rO', label: r.region, sub: `${n0(r.elev)} m up`, value: r.km, display: `${n0(r.km)} km` })), restRow(byKm.slice(4), 'km', (v) => `${n0(v)} km`, 'km')]}
                 />
               </div>
             </figure>
           </div>
           <BookRead items={[
-            ['Outings by region', 'My ten busiest regions by the number of outings that started there. The line under each name gives the days I went out there and the month of my first outing.', <HBars rows={R.slice(0, 10).map((r) => ({ key: 'x', sub: 1, value: r.n }))} />],
-            ['Kilometres on foot by region', 'The same regions ranked by the kilometres I covered on foot there. The line under each name gives the metres climbed.', <HBars rows={R.slice().sort((a, b) => b.km - a.km).slice(0, 10).map((r) => ({ key: 'x', sub: 1, value: r.km }))} />],
+            ['Outings by region', 'My four busiest regions by the number of outings that started there, and all the others together in the last row. The line under each name gives the days I went out there and the month of my first outing.', <HBars rows={R.slice(0, 5).map((r) => ({ key: 'x', sub: 1, value: r.n }))} />],
+            ['Kilometres on foot by region', 'The regions ranked by the kilometres I covered on foot there, with the rest together in the last row. The line under each name gives the metres climbed.', <HBars rows={byKm.slice(0, 5).map((r) => ({ key: 'x', sub: 1, value: r.km }))} />],
           ]} />
           <BookStory>{[
             `The map above is shaded by outings, so the darker a region, the more often I went out there. ${home.region}, Dar es Salaam and Kilimanjaro stand out, and most of the country is still pale or empty.`,
@@ -294,14 +310,14 @@ export default function Where() {
             node: (
               <HBars
                 refLine={{ value: tzMpk, label: `Tanzania average · ${k1(tzMpk)} m` }}
-                aria={`Metres climbed per kilometre on foot: ${gradeRows.map((r) => `${r.region} ${k1(r.mpk)}`).join(', ')}.`}
-                rows={gradeRows.map((r) => ({ key: r.mpk > tzMpk * 2 ? 'trail' : r.mpk > tzMpk ? 'road' : 'quiet', label: r.region, sub: `${n0(r.km)} km · ${n0(r.n)} outings`, value: r.mpk, display: `${k1(r.mpk)} m` }))}
+                aria={`Metres climbed per kilometre on foot: ${gradeRows.slice(0, 4).map((r) => `${r.region} ${k1(r.mpk)}`).join(', ')}, and ${k1(gradeRest.mpk)} in the other regions together.`}
+                rows={[...gradeRows.slice(0, 4).map((r) => ({ key: r.mpk > tzMpk * 2 ? 'trail' : r.mpk > tzMpk ? 'road' : 'quiet', label: r.region, sub: `${n0(r.km)} km · ${n0(r.n)} outings`, value: r.mpk, display: `${k1(r.mpk)} m` })), { key: 'quiet', label: `${gradeRows.length - 4} other regions`, sub: restNames(gradeRows.slice(4)), value: gradeRest.mpk, display: `${k1(gradeRest.mpk)} m` }]}
               />
             ),
           }}
           read={[
               'Each region has two bars: the first is its share of my outings in Tanzania, the second its share of my climbing. The number at the end is the gap. A region with more climb than outings is hilly ground.',
-              'The metres I climbed for every kilometre on foot in each region, steepest at the top. The dashed line is the average for all of Tanzania. Regions with fewer than eight outings are left out.',
+              'The metres I climbed for every kilometre on foot in each region, steepest at the top, with the flatter regions together in the last row. The dashed line is the average for all of Tanzania. Regions with fewer than eight outings are left out.',
             ]}
           story={[
               `${gradeRows[0].region} is the steepest region in my log, but I have been out there only ${word(gradeRows[0].n) || n0(gradeRows[0].n)} times. Morogoro is the steep region I know well, with ${n0(reg('Morogoro').n)} outings.`,

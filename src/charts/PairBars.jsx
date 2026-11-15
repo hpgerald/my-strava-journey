@@ -20,7 +20,9 @@ export default function PairBars({ rows, aLabel, bLabel, aShort, bShort, aria, H
   const W = Math.max(300, width)
   const narrow = W < 520
   const H = fitH(pairH, narrow ? 300 : Hd)
-  const sorted = [...rows].sort((p, q) => (q.b - q.a) - (p.b - p.a))
+  // a row that gathers the rest ("4 other regions") always sits last
+  const isRest = (r) => /\bother/i.test(r.label)
+  const sorted = [...rows].sort((p, q) => (isRest(p) - isRest(q)) || ((q.b - q.a) - (p.b - p.a)))
   const m = { t: 50, b: 14, l: narrow ? 110 : 140, r: narrow ? 42 : 56 }
   const room = narrow ? 34 : 40 // space for a value label past the last guide
   const max = Math.max(...rows.flatMap((r) => [r.a, r.b]))

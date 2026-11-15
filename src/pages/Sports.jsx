@@ -151,7 +151,7 @@ export default function Sports() {
   const trailRank = BY.slice().sort((a, b) => b.km.TrailRun - a.km.TrailRun).findIndex((b) => b.year === LY) + 1
   const binAt = (k) => (r.treadBins.find((b) => b.km === k) || {}).count || 0
   const kudosYear = (y) => { const xs = activities.filter((a) => Number(a.year) === y); return xs.length ? xs.reduce((t, a) => t + (Number(a.kudos) || 0), 0) / xs.length : 0 }
-  const trail2023 = r.climbs.filter((c) => c.mode === 'trail' && c.date.startsWith('2023') && c.elev >= 1000).length
+  const trail2023 = r.rows.filter((c) => c.mode === 'trail' && String(c.date).startsWith('2023') && c.elev >= 1000).length
   const hikeTop = r.climbs.slice(0, 3).every((c) => c.mode === 'hike')
   const ORDW = ['', 'first', 'second', 'third', 'fourth', 'fifth']
 
