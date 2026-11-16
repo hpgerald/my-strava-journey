@@ -3,10 +3,10 @@ import { PHOTOS } from '../lib/photos.js'
 // A photograph in the story, full width of its column, with a caption line.
 // While the picture has not arrived the plate holds its place and says what
 // belongs there, so the page keeps its rhythm and the slot is easy to fill.
-export default function Plate({ slot, caption, ratio = '3 / 2' }) {
+export default function Plate({ slot, caption, ratio = '3 / 2', hero = false }) {
   const p = PHOTOS[slot] || {}
   return (
-    <figure className={`plate${p.file ? '' : ' plate--empty'}${p.bw ? ' plate--bw' : ''}`} style={{ '--ratio': ratio }}>
+    <figure className={`plate${p.file ? '' : ' plate--empty'}${p.bw ? ' plate--bw' : ''}${hero ? ' plate--hero' : ''}`} style={{ '--ratio': ratio }}>
       {p.file ? (
         <img className="plate__img" src={`./photos/${p.file}`} alt={p.alt || ''} loading="lazy" decoding="async" />
       ) : (

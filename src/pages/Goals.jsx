@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { buildCountdown } from '../lib/countdown.js'
+import { buildLoad, loadOn } from '../lib/load.js'
 import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
 import { useLocation } from 'react-router-dom'
@@ -155,6 +156,15 @@ export default function Goals() {
 
   // ---- the countdown before the last edition: k days out, k km in one outing (never under 5) ----
   const countdown = last && last.date ? buildCountdown(activities, String(last.date).slice(0, 10)) : null
+  // form on the morning of each edition, from time on the move (lib/load.js)
+  const raceForm = (() => {
+    if (!race.length || !activities.length) return []
+    const first = race.reduce((m, r) => (String(r.date) < m ? String(r.date) : m), String(race[0].date)).slice(0, 10)
+    const L = buildLoad(activities, `${Number(first.slice(0, 4)) - 1}-11-01`)
+    return race.map((r) => { const m = loadOn(L, String(r.date).slice(0, 10)); return m ? { year: String(r.year), form: m.ctl - m.atl, ref: r } : null }).filter(Boolean)
+  })()
+  const freshest = raceForm.length ? raceForm.reduce((b, r) => (r.form > b.form ? r : b), raceForm[0]) : null
+  const tiredest = raceForm.length ? raceForm.reduce((b, r) => (r.form < b.form ? r : b), raceForm[0]) : null
 
   // ---- Ras Kilomoni ----
   const rk = G.rk
@@ -422,6 +432,19 @@ export default function Goals() {
                   </figure>
                   <BookRead items={[[`The countdown to race day, ${last.year}`, 'Each column is one of the 21 days before the race, with race day at the end. The coloured part is the longest outing of the day, in the colour of how I moved; the grey part above it is the rest of that day on foot. The black steps are the countdown: the kilometres I set out to cover that day.', <RaceCountdown />]]} />
                 </>
+              ) : null}
+              {raceForm.length >= 2 ? (
+                <figure className="sgrid__fig kh-fig kform-fig">
+                  <figcaption className="sgrid__figtitle">Form on race morning</figcaption>
+                  <div className="sgrid__chart">
+                    <ColBars
+                      items={raceForm.map((r) => ({ label: r.year, value: Math.abs(r.form), display: `${r.form > 0 ? '+' : r.form < 0 ? '−' : ''}${n0(Math.abs(r.form))}`, tone: r === freshest ? 'big' : 'mid' }))}
+                      ticks={[0, 25, 50, 75, 100].filter((t) => t <= Math.max(...raceForm.map((r) => Math.abs(r.form))) * 1.2)} yCap="minutes a day below my usual &uarr;" H={260} Hn={220}
+                      aria={`Form on the morning of each Kilimanjaro Half, fitness minus fatigue in minutes a day: ${raceForm.map((r) => `${r.year} ${n0(r.form)}`).join(', ')}.`}
+                    />
+                  </div>
+                  <p className="sgrid__note">Form is my six-week fitness minus my one-week fatigue, in minutes on the move a day. {raceForm.every((r) => r.form < 0) ? 'Every edition started below zero, carrying more than I was used to. ' : ''}{freshest.year} was the freshest start{freshest.ref === quick ? ', and my quickest race' : ''}; {tiredest.year} the most tired.{countdown && freshest.ref === last && Math.abs(freshest.form) < 10 ? ' The countdown ended on short days of 5 km, and I came to the start nearly rested.' : ''}</p>
+                </figure>
               ) : null}
             </StorySection>
           </>

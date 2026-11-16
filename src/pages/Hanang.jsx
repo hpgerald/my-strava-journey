@@ -115,7 +115,7 @@ export default function Hanang() {
           <p>The rain did not stop. Halfway down we waited for other friends to reach us, so we could all go down together. I had no lamp of my own, so I used a friend’s torch first and then the torch on my phone.</p>
         </Scene>
         <BigNumber value={k1(HN.out / 60)} unit="hours">On my feet, stops included.</BigNumber>
-        <Plate slot="hanang-night" ratio="16 / 9" caption="The way down, after dark" />
+        <Plate slot="hanang-night" ratio="3 / 2" caption="The way down, after dark" />
         <Saying sw="Subira huvuta heri">, patience brings good things.</Saying>
       </Band>
 
@@ -157,7 +157,7 @@ export default function Hanang() {
             <p>The forest reserve on Hanang runs an adventure race, and I went back for it in {races.map((t) => t.date.slice(0, 4)).join(' and ')}. It goes about halfway up and then turns to a place called Little Ngorongoro, shaped like a crater. There is camping too, and for me it is time away from the busy city. After the race in 2026 I walked all the way down to the bus stand.</p>
           </> : null}
         </Scene>
-        <Plate slot="hanang-race" ratio="21 / 9" caption="The Mount Hanang adventure race" />
+        <Plate slot="hanang-race" ratio="2 / 1" caption="The Mount Hanang adventure race" />
       </Band>
     </Mountain>
   )

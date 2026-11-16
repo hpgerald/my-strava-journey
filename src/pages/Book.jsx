@@ -329,7 +329,7 @@ function Epilogue({ F }) {
       <p>
         <span lang="sw">Mvumilivu hula mbivu</span>, the patient one eats the ripe fruit. The biggest lesson in this book is a plain one: the days
         matter more than the distance. When the distance came back, the days were already there to build on.
-        {F.lastISO < '2027-01-01' ? ' My first target for this streak is 31 December 2026, without a zero day.' : ''}
+        {F.goal && F.goal.met ? ' I reached my first target for this streak, 31 December 2026, without a zero day. The next is 31 December 2028.' : F.lastISO < '2027-01-01' ? ' My first target for this streak is 31 December 2026, without a zero day.' : ''}
       </p>
       <p>I will be out tomorrow.</p>
       <p className="bk-sign">Gerald Tesha</p>

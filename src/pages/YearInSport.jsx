@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { numOf } from '../lib/chapters.js'
 import Eyebrow from '../components/Eyebrow.jsx'
+import ShareLink from '../components/ShareLink.jsx'
 import { useParams, Link } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import { useBook } from '../components/BookContext.js'
@@ -20,6 +21,7 @@ import { useSectionPaging } from '../lib/sections.js'
 import { computeYearStats, YEAR_THEME, YEAR_REPORT } from '../lib/yearStats.js'
 import { buildYearReport } from '../lib/yearReport.js'
 import { yearChapters } from '../lib/yearChapters.jsx'
+import { soFar } from '../lib/streakTarget.js'
 import { buildUluguru } from '../lib/mountains.js'
 import { fmtInt, toNum } from '../lib/format.js'
 import { isNamedCountry } from '../lib/geo.js'
@@ -124,7 +126,7 @@ export default function YearInSport({ year: bookYear } = {}) {
     { label: 'Kudos', cur: Math.round(s.kudos), prev: Math.round(ps.kudos), same: psSame && Math.round(psSame.kudos) },
     { label: 'PRs', cur: Math.round(s.prs), prev: Math.round(ps.prs), same: psSame?.prs },
   ] : null
-  const theme = YEAR_THEME[Y] || `${Y} in sport`
+  const theme = soFar(YEAR_THEME[Y] || `${Y} in sport`, isPartial)
   const span = Math.round((Date.parse(r.endISO) - Date.parse(r.startISO)) / 864e5) + 1
   const pctDays = r.activeShare
   const rankOf = (f) => 1 + allStats.filter((x) => f(x) > f(s)).length
@@ -224,7 +226,7 @@ export default function YearInSport({ year: bookYear } = {}) {
         {/* ===== the opener ===== */}
         <section className="sgrid yis-top" aria-labelledby={idp('yis-title')}>
           <div className="sgrid__head">
-            <Eyebrow>{Y}{isPartial ? ' · still running' : ''}</Eyebrow>
+            <Eyebrow>{Y}{isPartial ? ' · still running' : ''}<ShareLink slug={`year-${Y}`} title={`${Y} · Year in Sport · Showing Up`} className="share--k" /></Eyebrow>
             <h2 id={idp('yis-title')} className="section-head__title">{theme}.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">{CH.open || (YEAR_REPORT[Y] ? YEAR_REPORT[Y](s) : '')}</Reveal>
@@ -268,7 +270,8 @@ export default function YearInSport({ year: bookYear } = {}) {
         {/* ===== the closing: every day, where, and against the other years ===== */}
         {(() => {
           // every day and every hour: the ring of days beside the 24-hour clock
-          const o = NOTE.ring || {}, oh = NOTE.hours || {}
+          const o0 = NOTE.ring || {}, oh = NOTE.hours || {}
+          const o = { t: o0.t && soFar(o0.t, isPartial), p: o0.p && o0.p.map((t) => soFar(t, isPartial)) }
           const am = s.hours24.slice(0, 10).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
           const pm = s.hours24.slice(16, 21).reduce((t, v) => t + v, 0) / Math.max(1, s.n)
           const peak = s.hours24.indexOf(Math.max(...s.hours24))

@@ -392,3 +392,57 @@ a.slesson__t:focus-visible { outline: 2px solid var(--accent); outline-offset: 4
   .voice__body { margin-top: 0; padding-top: 2.4rem; }
   .voice__head:where(:not(.book *)) { position: sticky; top: calc(var(--nav-h, 4rem) + 1rem); }
 }
+
+/* ---- this week: the last full week, Sunday to Saturday, under the cold open ---- */
+.tw { margin: var(--sp-5) 0 0; }
+.tw__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2) var(--grid-gap); align-items: baseline; padding: var(--sp-4) 0; border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--rule-faint); color: var(--ink); text-decoration: none; }
+.tw__in:hover .tw__go, .tw__in:focus-visible .tw__go { color: var(--accent-ink); }
+.tw__in:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.tw__k { margin: 0; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.tw__nums { display: flex; flex-wrap: wrap; gap: 0.35rem 1.4rem; margin: 0; padding: 0; list-style: none; font-size: 0.942rem; color: var(--fg-muted); }
+.tw__nums b { font-family: var(--font-display); font-weight: 600; font-size: 1.236rem; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tw__nums li.is-hot b { color: var(--accent-ink); }
+.tw__x { color: var(--ink); font-weight: 500; }
+.tw__x::before { content: ''; display: inline-block; width: 0.45rem; height: 0.45rem; margin-right: 0.45rem; border-radius: 50%; background: var(--accent); vertical-align: 0.12em; }
+.tw__line { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.128rem, 1rem + 0.5vw, 1.435rem); letter-spacing: -0.01em; }
+.tw__go { font-size: 0.835rem; font-weight: 600; color: var(--fg-muted); white-space: nowrap; }
+@media (min-width: 64rem) {
+  .tw__in { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .tw__line { grid-column: 2; }
+  .tw__go { grid-column: 3; grid-row: 1; }
+}
+
+/* ---- any day: the lookup on the Timeline ---- */
+.aday { margin-top: var(--sp-5); }
+.aday__pick { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); padding-bottom: var(--sp-4); border-bottom: 1.5px solid var(--ink); }
+.aday__date input { font: inherit; font-size: 1.05rem; font-variant-numeric: tabular-nums; color: var(--ink); background: transparent; border: 1px solid var(--rule); padding: 0.5rem 0.7rem; border-radius: 0; min-height: 2.75rem; }
+.aday__b, .aday__r { font: inherit; font-size: 0.942rem; font-weight: 600; color: var(--ink); background: transparent; border: 1px solid var(--rule); min-width: 2.75rem; min-height: 2.75rem; padding: 0 0.9rem; cursor: pointer; }
+.aday__b:disabled { opacity: 0.35; cursor: default; }
+.aday__b:hover:not(:disabled), .aday__r:hover { border-color: var(--accent); color: var(--accent-ink); }
+.aday__b:focus-visible, .aday__r:focus-visible, .aday__date input:focus-visible, .aday__week button:focus-visible, .aday__years button:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.aday__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); padding-top: var(--sp-5); }
+@media (min-width: 56rem) { .aday__grid { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); } }
+.aday__t { margin: 0 0 var(--sp-4); font-family: var(--font-display); font-weight: 600; font-size: clamp(1.618rem, 1.2rem + 1.5vw, 2.618rem); letter-spacing: -0.03em; line-height: 1.05; }
+.aday__list { margin: 0; padding: 0; list-style: none; }
+.aday__list li { display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; align-items: baseline; padding: 0.6rem 0; border-top: 1px solid var(--rule-faint); font-size: 1rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.aday__list li b { min-width: 7.5rem; font-weight: 600; color: var(--ink); text-transform: capitalize; }
+.aday__none { margin: 0; font-size: 1.05rem; color: var(--fg-muted); }
+.aday__run { margin: var(--sp-4) 0 0; padding-top: var(--sp-3); border-top: 1px solid var(--rule-faint); font-size: 1.05rem; }
+.aday__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: var(--sp-4) 0 0; font-size: 0.942rem; font-weight: 600; }
+.aday__links a { color: var(--accent-ink); }
+.aday__k { margin: 0 0 var(--sp-3); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
+.aday__week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 0 0 var(--sp-5); padding: 0; list-style: none; }
+.aday__week button { width: 100%; display: flex; flex-direction: column; align-items: stretch; gap: 0.3rem; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: var(--fg-muted); }
+.aday__bar { height: 4.5rem; display: flex; align-items: flex-end; background: var(--grey-06); }
+.aday__bar i { display: block; width: 100%; background: var(--grey-55); }
+.aday__bar i.is-other { height: 6% !important; background: var(--grey-25); }
+.aday__week li.is-on .aday__bar i { background: var(--accent); }
+.aday__week li.is-on .aday__d { color: var(--accent-ink); font-weight: 700; }
+.aday__week li.is-out { opacity: 0.35; }
+.aday__d { font-size: 0.8125rem; text-align: center; }
+.aday__years { margin: 0; padding: 0; list-style: none; }
+.aday__years button { width: 100%; display: flex; gap: 0.8rem; align-items: baseline; text-align: left; background: none; border: 0; border-top: 1px solid var(--rule-faint); padding: 0.5rem 0; cursor: pointer; font: inherit; font-size: 0.942rem; color: var(--ink); }
+.aday__years button:hover { color: var(--accent-ink); }
+.aday__years b { min-width: 3rem; font-variant-numeric: tabular-nums; }
+.aday__years li.is-none button { color: var(--fg-muted); }
+.aday__k--wk { margin-top: var(--sp-5); }

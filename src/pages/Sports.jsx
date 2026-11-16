@@ -19,6 +19,8 @@ import HBars from '../charts/HBars.jsx'
 import FitScatter from '../charts/FitScatter.jsx'
 import ColBars from '../charts/ColBars.jsx'
 import TwoLines from '../charts/TwoLines.jsx'
+import LoadLines from '../charts/LoadLines.jsx'
+import { buildLoad } from '../lib/load.js'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
@@ -58,6 +60,8 @@ function RecordCard({ kicker, value = 0, unit, label, sub, decimals = 0, tone })
 export default function Sports() {
   const book = useBook()
   const activities = useTable('activities')
+  const tripRowsL = useTable('mountain_trips')
+  const kiliRowsL = useTable('kili_half')
   useSectionJump()
   const { prev, next } = useSectionPaging('/sports')
   const r = useMemo(() => (activities.length ? buildFootReport(activities) : null), [activities])
@@ -774,6 +778,86 @@ export default function Sports() {
     </>
   )
 
+  // ===== 10b. fitness and fatigue =====
+  const sec_load = () => {
+    const comeback = (() => { const ds = [...new Set(activities.map((a) => (a.date || '').slice(0, 10)))].sort(); let best = { len: 0, back: ds[0] }; for (let i = 1; i < ds.length; i++) { const g = (Date.parse(ds[i]) - Date.parse(ds[i - 1])) / 864e5 - 1; if (g > best.len) best = { len: g, back: ds[i] } } return best.back })()
+    const L = buildLoad(activities, comeback)
+    if (L.length < 60) return null
+    const yrs = [...new Set(L.map((r) => r.iso.slice(0, 4)))]
+    const avgY = yrs.map((y) => { const xs = L.filter((r) => r.iso.startsWith(y)); return { y, v: xs.reduce((t, r) => t + r.ctl, 0) / xs.length } })
+    const best = avgY.reduce((b, r) => (r.v > b.v ? r : b), avgY[0]), low = avgY.slice(1).reduce((b, r) => (r.v < b.v ? r : b), avgY[1] || avgY[0])
+    const peak = L.reduce((b, r) => (r.ctl > b.ctl ? r : b), L[0])
+    const after = L.filter((r) => r.iso >= `${Number(comeback.slice(0, 4)) + 1}-01-01`)
+    const trough = after.reduce((b, r) => (r.ctl < b.ctl ? r : b), after[0])
+    const MF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const monY = (iso) => `${MF[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
+    const trips = tripRowsL.map((t) => ({ iso: t.date, label: t.label }))
+    const races = kiliRowsL.map((k) => ({ iso: String(k.date).slice(0, 10), label: `Kilimanjaro Half ${k.year}` }))
+    const marks = [...trips, ...races].filter((m2) => m2.iso >= comeback)
+    const peakTrip = tripRowsL.find((t) => Math.abs(Date.parse(t.date) - Date.parse(peak.iso)) <= 7 * 864e5)
+    // a check against Strava's Relative Effort where it is complete
+    const reCheck = (() => {
+      const out = []
+      for (const y of yrs) {
+        const xs = activities.filter((a) => (a.date || '').startsWith(y))
+        if (!xs.length || xs.filter((a) => a.relative_effort !== '').length / xs.length < 0.8) continue
+        const wk = new Map()
+        for (const a of xs) { const t = Date.parse(a.date.slice(0, 10)); const k = Math.floor((t / 864e5 + 4) / 7); const o = wk.get(k) || [0, 0]; o[0] += Number(a.moving_time_min) || 0; o[1] += Number(a.relative_effort) || 0; wk.set(k, o) }
+        const v = [...wk.values()], mx = v.reduce((t, p) => t + p[0], 0) / v.length, my = v.reduce((t, p) => t + p[1], 0) / v.length
+        const cov = v.reduce((t, p) => t + (p[0] - mx) * (p[1] - my), 0), sx = Math.sqrt(v.reduce((t, p) => t + (p[0] - mx) ** 2, 0)), sy = Math.sqrt(v.reduce((t, p) => t + (p[1] - my) ** 2, 0))
+        out.push({ y, r: sx && sy ? cov / (sx * sy) : 0 })
+      }
+      return out
+    })()
+    return (
+    <>
+        <hr className="rule rule--faint" />
+        <StorySection
+          id="sp-load"
+          eyebrow={`${num()} · Fitness and fatigue`}
+          title={best.y === yrs[yrs.length - 1] ? `Fitter than ever, in ${best.y}.` : `Fittest in ${best.y}.`}
+          statement={<>
+            Fitness here is simply the time I have been on the move lately. Over six weeks it shows what my body is used to; over one week,
+            what it is carrying now. By that measure {best.y} is my fittest year, about {n0(best.v)} minutes a day, and {low.y} my lowest
+            since the comeback, at {n0(low.v)}. The highest point came in {monY(peak.iso)}{peakTrip ? `, the week of ${peakTrip.label.toLowerCase().startsWith('the ') ? peakTrip.label.charAt(0).toLowerCase() + peakTrip.label.slice(1) : peakTrip.label}` : ''}.
+          </>}
+          odds={{
+            title: 'Fitness, in minutes on the move a day',
+            items: [
+              { book: true, num: best.v, unit: ' min', label: `a day on average in ${best.y}`, tone: 'move' },
+              { book: true, num: low.v, unit: ' min', label: `in ${low.y}, the lowest since the comeback`, tone: 'rest' },
+              { book: true, num: peak.ctl, unit: ' min', label: `the peak, ${monY(peak.iso)}`, tone: 'move' },
+              { book: true, num: trough.ctl, unit: ' min', label: `the lowest point, ${monY(trough.iso)}`, tone: 'rest' },
+            ],
+          }}
+          left={{
+            title: 'Fitness and fatigue since the comeback',
+            node: <LoadLines rows={L} marks={marks} aria={`Fitness and fatigue in minutes on the move a day, from ${monY(L[0].iso)} to ${monY(L[L.length - 1].iso)}: the peak ${n0(peak.ctl)} minutes in ${monY(peak.iso)}.`} />,
+          }}
+          right={{
+            title: 'Fitness, year by year',
+            node: (
+              <ColBars
+                items={avgY.map((r) => ({ label: r.y, short: `'${r.y.slice(2)}`, value: r.v, display: n0(r.v), tone: r.y === best.y ? 'big' : r.y === low.y ? 'quiet' : 'mid' }))}
+                ticks={[0, 25, 50, 75, 100, 125].filter((t) => t <= best.v * 1.15)} yCap="minutes a day &uarr;"
+                aria={`Average fitness each year, in minutes on the move a day: ${avgY.map((r) => `${r.y} ${n0(r.v)}`).join(', ')}.`}
+              />
+            ),
+          }}
+          read={[
+            'The orange line is fitness: my minutes on the move a day, averaged over about six weeks with the latest days counting most. The grey line is fatigue, the same over about one week. Where the grey line runs above the orange one, I was doing more than I was used to. The small ticks under the chart are the Kilimanjaro Halfs and the mountain days.',
+            'The average of the orange line for each year since the comeback. The first bar starts at the comeback in June, so it begins from nothing.',
+          ]}
+          story={[
+            `I use time on the move, not Strava\u2019s Relative Effort, because every outing has a time and many have no heart-rate reading. ${reCheck.length ? `Where Relative Effort is nearly complete (${reCheck.map((r) => r.y).join(' and ')}), the weeks with more time also scored more effort, though not week for week.` : ''}`,
+            `The lowest point since the comeback came in ${monY(trough.iso)}, at ${n0(trough.ctl)} minutes a day. From there it climbed back, and ${best.y} ${best.y === yrs[yrs.length - 1] ? 'is' : 'was'} the highest year of all.`,
+          ]}
+          source="Activity Log · moving time of every outing, all sports"
+        />
+    </>
+    )
+  }
+
   // ===== 11. the maths =====
   const sec_maths = () => (
     <>
@@ -899,6 +983,7 @@ export default function Sports() {
             {sec_when()}
             {sec_dbl()}
             {sec_effort()}
+            {sec_load()}
             {sec_maths()}
             {sec_edges()}
             {sec_each()}
@@ -920,6 +1005,7 @@ export default function Sports() {
             {sec_climb()}
             {sec_long()}
             {sec_effort()}
+            {sec_load()}
             {sec_edges()}
             {sec_each()}
           </>

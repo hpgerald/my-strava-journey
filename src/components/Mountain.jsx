@@ -78,7 +78,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
           </Container>
         </header>
         {gauge ? <Gauge {...gauge} /> : null}
-        {hero ? <Band><Plate slot={hero} ratio="16 / 9" caption={heroCaption} /></Band> : null}
+        {hero ? <Band><Plate slot={hero} ratio="16 / 9" hero caption={heroCaption} /></Band> : null}
         {children}
         <nav className="mtn-next" aria-label="More of the mountains">
           <Container>

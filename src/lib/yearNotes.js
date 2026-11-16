@@ -55,3 +55,27 @@ export const YEAR_NOTES = {
 // One photo for each year, shown under the opening. Empty until I add them:
 //   2023: { src: 'photos/years/2023.jpg', alt: 'what the photo shows', cap: 'a line under it' },
 export const YEAR_PHOTOS = {}
+
+// The opening words of each year's page (and of its share card).
+export const YEAR_OPEN = {
+  2019: 'I heard about Strava and decided to give it a try, with a new watch on my wrist. Most of that first year was runs indoors, and by December I had run my first half marathon.',
+  2020: 'The year began early in the morning, before work, and by June I was going out more than ever. Then life moved: a new job, a new town and COVID-19, and the log went quiet for almost a year.',
+  2021: 'A check-up sent me back out in June, and this time I stayed. In six months I went further than in any year before, often twice a day, and found my first hill and my first trail.',
+  2022: 'My fullest year: more outings than any other, a marathon in May and the first real mountains. It was also the year the walks began to pass the runs.',
+  2023: 'I began the year knowing nothing about climbing. By the end of April I had run my first Kilimanjaro Half, reached Uhuru Peak and climbed Hanang.',
+  2024: 'A remote job and a few consultancies took me across borders, and the shoes always came along. The distance fell, the days held, and from the end of October I went out every day.',
+  2025: 'A hard year in work. The habit held all the same: my running moved outside, the hills came back, and in the last days of December I decided to stop missing days.',
+  2026: 'No zero day, on purpose. A countdown and my quickest Kilimanjaro Half, fifty trips to Ras Kilomoni, and a year of trails from Kalambo to Kitulo.',
+}
+
+// The moments numbered on each year's band (shown only when the log has an outing that day).
+export const YEAR_EVENTS = {
+  2019: [['2019-08-18', 'First runs, indoors, testing the watch'], ['2019-08-19', 'First 10 km'], ['2019-10-12', 'First walks outside, in Dar es Salaam'], ['2019-12-06', 'A new longest run, 15.2 km'], ['2019-12-09', 'First half marathon, indoors']],
+  2020: [['2020-01-11', 'First outing of the year, at dawn'], ['2020-03-22', '23.2 km, a new longest run'], ['2020-05-14', 'Walks in Dar es Salaam'], ['2020-06-24', 'A run that began at 2:46am'], ['2020-07-04', 'The last run before the layoff']],
+  2021: [['2021-06-27', 'The comeback, 10 km'], ['2021-08-14', 'First 30 km, indoors'], ['2021-08-25', 'The 109-day streak begins'], ['2021-09-26', 'First big climb, in Morogoro'], ['2021-12-13', '30 km on two days in a row'], ['2021-12-19', 'First trail run, Lake Duluti'], ['2021-12-30', '30 km on two days in a row, again']],
+  2022: [['2022-02-06', 'A week with one day out'], ['2022-03-06', 'First outings in Zanzibar'], ['2022-05-01', 'The marathon, indoors'], ['2022-06-23', 'First trip to Bondwa Peak'], ['2022-08-20', 'Trail run in Morogoro, 92 kudos'], ['2022-12-10', 'Kenya, Naivasha and the Masai Mara']],
+  2023: [['2023-01-21', 'Two days on the trails in Morogoro'], ['2023-02-26', 'The first Kilimanjaro Half'], ['2023-03-06', 'Kilimanjaro, up to Uhuru Peak'], ['2023-03-24', 'The four-day challenge begins'], ['2023-04-30', 'Mount Hanang'], ['2023-08-19', 'The Selous Trail Marathon day']],
+  2024: [['2024-01-13', 'Up to Mweka Gate'], ['2024-02-25', 'The second Kilimanjaro Half'], ['2024-04-27', 'South Africa'], ['2024-05-28', 'Kenya, the first of four trips'], ['2024-08-18', 'Rwanda'], ['2024-10-20', 'Malawi'], ['2024-10-31', 'A streak begins']],
+  2025: [['2025-02-19', 'Mweka Gate and down through Kibosho'], ['2025-02-23', 'The third Kilimanjaro Half'], ['2025-03-29', 'Bondwa Peak in the rain'], ['2025-05-31', 'The Hanang adventure race'], ['2025-08-23', 'Trail run in Morogoro'], ['2025-12-29', 'The streak begins, on purpose']],
+  2026: [['2026-02-14', 'The Kalambo Falls festival race'], ['2026-03-01', 'The countdown begins'], ['2026-03-22', 'My quickest Kilimanjaro Half'], ['2026-04-11', 'The Ngong Hills'], ['2026-04-19', '31 km with a friend'], ['2026-06-20', 'The trails of Kitulo'], ['2026-07-12', 'The Hanang adventure race'], ['2026-08-28', 'Trip L, and outing 2,000']],
+}

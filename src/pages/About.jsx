@@ -46,9 +46,6 @@ export default function About() {
       subtitle="Who I am, what counts and how it is made"
     >
       <section style={{ paddingTop: 'var(--sp-6)' }}>
-        <Plate slot="portrait" ratio="21 / 9" caption="Gerald Tesha" />
-      </section>
-      <section style={{ paddingTop: 'var(--sp-6)' }}>
         <div className="grid grid--2" style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)' }}>
           <div className="stack">
             <p>
@@ -106,10 +103,9 @@ export default function About() {
 
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <hr className="rule" />
-        <div
-          className="grid grid--2"
-          style={{ alignItems: 'start', gap: 'var(--sp-6) var(--sp-8)', paddingTop: 'var(--sp-6)' }}
-        >
+        <div className="about-touch">
+          <Plate slot="portrait" ratio="4 / 5" caption="Gerald Tesha" />
+          <div className="about-touch__words">
           <div>
             <h2 className="display" style={{ fontSize: 'var(--fs-lg)' }}>
               Get in touch
@@ -139,6 +135,7 @@ export default function About() {
               </Contact>
             </dl>
           </aside>
+          </div>
         </div>
       </section>
       <section className="about-data" aria-labelledby="about-data" style={{ paddingTop: 'var(--sp-8)' }}>

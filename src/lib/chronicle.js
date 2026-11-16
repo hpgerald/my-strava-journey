@@ -114,6 +114,16 @@ export function buildChronicle(activities, geoRows = [], gearRows = [], extra = 
   const MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   const say = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MO[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
   for (const s of streaks) if (s.len >= 45) events.push({ lane: 'streak', date: s.start, title: `${s.len} days in a row`, sub: s.current ? 'and still going' : `to ${say(s.end)}`, key: 'road', streak: s })
+  // a year of days in a row, and a calendar year with no zero day
+  for (const s of streaks) if (s.len >= 365) events.push({ lane: 'streak', date: isoOf(dayIdx(s.start) + 364), title: '365 days in a row', sub: 'a whole year without a zero day', key: 'road' })
+  const daySet = new Set(days)
+  for (let y = Number(isoOf(days[0]).slice(0, 4)); y <= Number(lastISO.slice(0, 4)); y++) {
+    const a = dayIdx(`${y}-01-01`), b = dayIdx(`${y}-12-31`)
+    if (b > lastDay) continue
+    let full = true
+    for (let i = a; i <= b; i++) if (!daySet.has(i)) { full = false; break }
+    if (full) events.push({ lane: 'streak', date: `${y}-12-31`, title: 'A year with no zero day', sub: `every day of ${y}`, key: 'road' })
+  }
   for (const b of breaks) if (b.len >= 60) events.push({ lane: 'streak', date: b.start, title: b.len >= 300 ? `${b.len} days away` : `${b.len} days with nothing`, sub: b.len >= 300 ? `a new job, a move and COVID-19, then back on ${say(isoOf(dayIdx(b.end) + 1))}` : `back out on ${say(isoOf(dayIdx(b.end) + 1))}`, key: 'quiet', silence: true })
 
   // the longest break inside each year, and the longest since the habit began

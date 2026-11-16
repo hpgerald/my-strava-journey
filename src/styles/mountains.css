@@ -126,7 +126,8 @@ html[data-mtn-dark]:not(.is-scrolled) .snav:not(.is-open) .snav__btn { backgroun
 .plate__f { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.04em; color: var(--fg-faint); }
 .plate__cap { margin-top: var(--sp-3); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); }
 .mtn-plates { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); }
-@media (min-width: 48rem) { .mtn-plates { grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr); align-items: end; } .mtn-plates > .plate:last-child { --ratio: 4 / 5 !important; } }
+/* a 3:2 photo beside a 4:5 one: widths 1.875 : 1 make the two the same height */
+@media (min-width: 48rem) { .mtn-plates { grid-template-columns: minmax(0, 1.875fr) minmax(0, 1fr); align-items: end; } .mtn-plates > .plate:first-child { --ratio: 3 / 2 !important; } .mtn-plates > .plate:last-child { --ratio: 4 / 5 !important; } }
 @media (max-width: 40rem) { .plate__hold, .plate__img { aspect-ratio: 4 / 5; } .mtn-plates > .plate .plate__hold { aspect-ratio: 3 / 2; } }
 
 /* ---- the route map ---- */
@@ -239,9 +240,16 @@ html.motion .relief__area { opacity: 0; animation: reliefRise 1.6s var(--ease-ou
 }
 @media (prefers-reduced-motion: reduce) { .gauge, .gauge__fill, .gauge__mark { transition: none !important; } }
 
-/* a photograph still to come holds a modest place, not a full screen */
-.plate--empty .plate__hold { max-height: 16rem; aspect-ratio: auto; min-height: 9rem; height: min(16rem, 30vw); }
-@media (max-width: 40rem) { .plate--empty .plate__hold { aspect-ratio: auto; height: 11rem; } }
+/* a photograph still to come takes the shape its photo will have, so the page
+   looks the same before and after it arrives; a tall one never passes most of
+   the screen */
+.plate__hold, .plate__img { width: 100%; max-height: var(--plate-max, 75vh); }
+.plate--hero { --plate-max: 80vh; }
+.about-touch { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6) var(--grid-gap); padding-top: var(--sp-6); align-items: stretch; }
+.about-touch__words { display: flex; flex-direction: column; justify-content: space-between; gap: var(--sp-6); }
+.about-touch > .plate { align-self: start; }
+@media (min-width: 48rem) { .about-touch { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); } }
+@media (max-width: 47.999rem) { .about-touch > .plate { max-width: 26rem; } }
 
 /* wide screens: the words and the figure share the first row and end level; the
    ledger or bars under the words run across both columns as a strip of their own */

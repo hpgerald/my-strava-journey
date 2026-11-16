@@ -12,6 +12,8 @@ import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildChronicle } from '../lib/chronicle.js'
+import AnyDay from '../components/AnyDay.jsx'
+import { useBook } from '../components/BookContext.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -64,6 +66,8 @@ export default function Timeline() {
     const top = new Date(Date.parse(r.date.slice(0, 10) + 'T00:00:00Z') + 86400000).toISOString().slice(0, 10)
     return [{ lane: 'first', date: top, title: 'Uhuru Peak', sub: 'the top of Kilimanjaro, first attempt', key: 'trail' }]
   }, [kx])
+  const geoMap = useMemo(() => Object.fromEntries(geoRows.map((g) => [g.activity_key, g])), [geoRows])
+  const book = useBook()
   const C = useMemo(() => (activities.length ? buildChronicle(activities, geoRows, gearRows, summit) : null), [activities, geoRows, gearRows, summit])
 
   const frame = { crumbs: [{ label: 'Home', to: '/' }, { label: 'Timeline' }], number: numOf('/timeline'), title: 'Timeline', subtitle: 'From my first upload to now', prev, next }
@@ -269,6 +273,21 @@ export default function Timeline() {
             ]}
           source="Activity Log · the first outing on foot to pass each mark"
         />
+
+        {/* ===== any day ===== */}
+        {!book && (
+          <>
+            <hr className="rule rule--faint" />
+            <section className="sgrid" aria-labelledby="tl-day">
+              <div className="sgrid__head">
+                <Eyebrow>{num()} · Any day</Eyebrow>
+                <h2 id="tl-day" className="section-head__title">Pick a day, any&nbsp;day.</h2>
+              </div>
+              <p className="sgrid__statement">Every day from my first upload to the latest refresh: what I did, where the day sat in the habit, and the same date in the other years.</p>
+              <AnyDay acts={activities} geo={geoMap} />
+            </section>
+          </>
+        )}
 
         {/* ===== 3. every moment ===== */}
         <hr className="rule rule--faint" />

@@ -52,19 +52,47 @@ const climbIn = (region, pred = () => true) => foot.filter((a) => (geo[a.activit
 const kenya = foot.filter((a) => (geo[a.activity_key] || {}).country === 'Kenya').reduce((b, a) => Math.max(b, Number(a.elevation_gain_m) || 0), 0)
 const longestOut = foot.filter((a) => !(a.sport_type === 'TrailRun' && a.trainer === 'Yes')).reduce((b, a) => Math.max(b, Number(a.elapsed_time_min) || 0), 0)
 
+const { streakGoal } = await import('../src/lib/streakTarget.js')
+const goal = streakGoal(new Set(days))
+
 // ---------------------------------------------------------------- the cards
 const CARDS = [
   { slug: 'part-1', to: '#/?part=1', k: 'Part 1 · 2019 to mid 2021', t: 'Before the habit', l: `It did not look like a habit yet: ${n0(nYear('2019'))} outings in my first year, ${n0(nYear('2020'))} in my second.`, v: n0(gap.len), u: 'days with nothing in the log' },
   { slug: 'part-2', to: '#/?part=2', k: 'Part 2 · mid 2021 to 2022', t: 'The comeback', l: `From ${n0(nYear('2020'))} outings in a year to ${n0(nYear('2021'))}, then ${n0(nYear('2022'))}.`, v: n0(maxSince), u: 'days, my longest layoff since' },
   { slug: 'part-3', to: '#/?part=3', k: 'Part 3 · 2023', t: 'The mountains', l: 'The year the habit left the flat ground: Kilimanjaro in March, Hanang in April.', v: `${n0(elevYear('2023'))} m`, u: 'climbed on foot that year' },
   { slug: 'part-4', to: '#/?part=4', k: 'Part 4 · 2024', t: 'The road', l: 'Wherever I went that year, the shoes came with me.', v: n0(countriesIn('2024')), u: 'countries in one year' },
-  { slug: 'part-5', to: '#/?part=5', k: 'Part 5 · 2025 to 2026', t: 'No zero days', l: 'I started the streak on purpose. My first target is 31 December 2026.', v: n0(streak), u: 'days in a row, still going', hot: true },
+  { slug: 'part-5', to: '#/?part=5', k: 'Part 5 · 2025 to 2026', t: 'No zero days', l: goal.met ? 'A whole year, no zero day. The next target is 31 December 2028.' : 'I started the streak on purpose. My first target is 31 December 2026.', v: n0(streak), u: 'days in a row, still going', hot: true },
   { slug: 'part-6', to: '#/what-it-means', k: 'Part 6 · Looking back', t: 'What it taught me', l: 'About the time of a long lunch each day, kept up for years.', v: `${n0(movingSince / spanSince)} min`, u: 'a day since the comeback, zero days included' },
   { slug: 'kilimanjaro', to: '#/kilimanjaro', k: 'The mountains · Tanzania', t: 'Kilimanjaro', l: 'I went up Kilimanjaro knowing nothing about climbing it.', v: '5,895 m', u: 'Uhuru Peak, March 2023', ground: '#3b4a5c' },
   { slug: 'hanang', to: '#/hanang', k: 'The mountains · Tanzania', t: 'Mount Hanang', l: 'Coming down can take as long as going up.', v: `${(longestOut / 60).toFixed(1)} h`, u: 'my longest day out on foot', ground: '#6b5136' },
   { slug: 'uluguru', to: '#/uluguru', k: 'The mountains · Tanzania', t: 'Uluguru', l: 'A mountain you can reach becomes a habit of its own.', v: `${n0(climbIn('Morogoro'))} m`, u: 'my biggest climb in one outing', ground: '#35503d' },
   { slug: 'ngong', to: '#/ngong', k: 'The mountains · Kenya', t: 'Ngong Hills', l: 'You do not always get what you wanted.', v: `${n0(kenya)} m`, u: 'my biggest climb outside Tanzania', ground: '#4f5d63' },
 ]
+
+// one card for each year of the Year in Sport, with its four numbers
+const { YEAR_THEME } = await import('../src/lib/yearStats.js')
+const { YEAR_OPEN } = await import('../src/lib/yearNotes.js')
+const firstWords = (t) => {
+  const ss = String(t || '').match(/[^.!?]+[.!?]/g) || [String(t || '')]
+  let out = ss[0].trim()
+  if (out.length < 40 && ss[1] && (out + ' ' + ss[1].trim()).length <= 120) out += ' ' + ss[1].trim()
+  return out
+}
+const YEARS = [...new Set(acts.map((a) => a.date.slice(0, 4)))].sort().map((y) => {
+  const xs = acts.filter((a) => a.date.startsWith(y)), fx = xs.filter((a) => FOOT.has(a.sport_type))
+  const running = last.startsWith(y) && last.slice(5) < '12-31'
+  return {
+    slug: `year-${y}`, to: `#/numbers/${y}`, year: y, k: `Year in Sport · ${y}${running ? ' · still running' : ''}`,
+    t: running ? (YEAR_THEME[y] || `${y} in sport`) : String(YEAR_THEME[y] || `${y} in sport`).replace(/ so far/g, ''), l: firstWords(YEAR_OPEN[y]) || `${y} in sport.`,
+    nums: [
+      [n0(xs.length), 'outings'],
+      [n0(fx.reduce((t, a) => t + (Number(a.distance_km) || 0), 0)), 'km on foot'],
+      [n0(fx.reduce((t, a) => t + (Number(a.elevation_gain_m) || 0), 0)), 'metres climbed'],
+      [n0(new Set(xs.map((a) => a.date.slice(0, 10))).size), 'days out'],
+    ],
+  }
+})
+CARDS.push(...YEARS)
 
 fs.mkdirSync(OUT, { recursive: true })
 for (const c of CARDS) {
@@ -130,14 +158,19 @@ if (!chromium) {
       .num { display: flex; align-items: baseline; gap: 20px; border-top: 1px solid ${dark ? rule : '#d9d6ce'}; padding-top: 18px; }
       .num strong { font-family: Archivo; font-weight: 560; font-size: 60px; letter-spacing: -0.04em; line-height: 1; color: ${c.hot || dark ? '#fc4c02' : fg}; }
       .num span { font-size: 22px; color: ${muted}; }
+      .nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; border-top: 1px solid #d9d6ce; padding-top: 18px; }
+      .nums div { display: flex; flex-direction: column; gap: 6px; }
+      .nums strong { font-family: Archivo; font-weight: 560; font-size: 52px; letter-spacing: -0.04em; line-height: 1; }
+      .nums div:first-child strong { color: #fc4c02; }
+      .nums span { font-size: 20px; color: ${muted}; }
     </style></head><body>
       <div class="top"><span class="mark">Showing up<b>.</b></span><span class="k">${esc(c.k)}</span></div>
       <div class="mid"><p class="t">${esc(c.t)}</p><p class="l">${esc(c.l)}</p></div>
-      <div class="num"><strong>${esc(c.v)}</strong><span>${esc(c.u)}</span></div>
+      ${c.nums ? `<div class="nums">${c.nums.map(([v, u]) => `<div><strong>${esc(v)}</strong><span>${esc(u)}</span></div>`).join('')}</div>` : `<div class="num"><strong>${esc(c.v)}</strong><span>${esc(c.u)}</span></div>`}
     </body></html>`, { waitUntil: 'load' })
     await p.evaluate(() => document.fonts.ready)
     await p.screenshot({ path: path.join(OUT, `${c.slug}.png`) })
   }
   await b.close()
-  console.log(`share cards drawn for ${CARDS.length} parts and mountains`)
+  console.log(`share cards drawn for ${CARDS.length - YEARS.length} parts and mountains and ${YEARS.length} years`)
 }

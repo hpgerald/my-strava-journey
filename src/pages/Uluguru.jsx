@@ -103,7 +103,7 @@ export default function Uluguru() {
           <p>{wet ? `It rained hard that day, the air was at ${n0(best.humidity)}% humidity and everything was slippery. The scenery was beautiful all the same. ` : ''}{dip ? 'The path went up, came down and went up again: ' : 'The day was '}{k1(best.km)} km in {hm(best.out)} from start to finish.</p>
         </Scene>
         <BigNumber value={n0(best.climb)} unit="m">{U.bestIsRecord ? 'The most I have climbed in one outing.' : 'Climbed in one outing.'}</BigNumber>
-        <Plate slot="uluguru-rain" ratio="16 / 9" caption={`Bondwa Peak · ${fmtDay(best.date)}`} />
+        <Plate slot="uluguru-rain" ratio="3 / 2" caption={`Bondwa Peak · ${fmtDay(best.date)}`} />
       </Band>
 
       <Band>
@@ -125,7 +125,7 @@ export default function Uluguru() {
           <p>Morogoro has given me {n0(U.n)} outings on foot, {n0(U.km)} km and {n0(U.climb)} m of climbing. {cap(WORD[U.inTop20] || String(U.inTop20))} of my twenty biggest climbs are here.</p>
           <p>Not every trip goes to the top. In August 2023 I ran the Selous Trail Marathon here, on the route that goes halfway to Bondwa Peak, with a warm-up before it and a cool-down after: four outings and more than 2,000 m of climbing in one day, my biggest day of climb.</p>
         </Scene>
-        <Plate slot="uluguru-people" ratio="21 / 9" caption="On the way to Bondwa Peak" />
+        <Plate slot="uluguru-people" ratio="2 / 1" caption="On the way to Bondwa Peak" />
       </Band>
     </Mountain>
   )

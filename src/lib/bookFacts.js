@@ -1,3 +1,4 @@
+import { streakGoal } from './streakTarget.js'
 import { toNum } from './format.js'
 import { NAMED_COUNTRIES } from './geo.js'
 
@@ -43,7 +44,8 @@ export function buildBookFacts(activities, geo = []) {
   const regions = new Set(geo.filter((g) => g.country === 'Tanzania' && g.region).map((g) => g.region)).size
   const firstAct = acts[0]
 
-  return {
+  const goal = streakGoal(new Set(activities.map((a) => (a.date || '').slice(0, 10))))
+  return { goal,
     n: acts.length, firstISO, lastISO, days, footKm, footElev, hours, countries, regions,
     firstSport: firstAct.sport_type, firstKm: toNum(firstAct.distance_km) || 0,
     beforeSilence: acts.filter((a) => dayIdx(a.date) <= gapFrom).length,

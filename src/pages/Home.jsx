@@ -1,6 +1,8 @@
 import Layout from '../components/Layout.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
 import Container from '../components/Container.jsx'
+import ThisWeek from '../components/ThisWeek.jsx'
+import { streakGoal } from '../lib/streakTarget.js'
 import IndexHub from '../components/IndexHub.jsx'
 import RadialHours from '../charts/RadialHours.jsx'
 import TzShare from '../charts/TzShare.jsx'
@@ -1047,10 +1049,11 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
   // ---- the story: a cold open, then six parts in the order they happened ----
   // the cold open: three beats over the board, from the layoff to the streak
+  const goal = streakGoal(new Set(activityLog.map((a) => (a.date || '').slice(0, 10))))
   const heroBeats = heroGap ? [
     { k: 'The layoff', t: `A new job, a move, COVID-19: ${n0(heroGap.days)} days off.` },
     { k: 'The comeback', t: `A check-up sent me back: ${n0(preMonthAvg)} a month became ${n0(postMonthAvg)}.` },
-    { k: 'The streak', t: `Then I stopped missing days: ${n0(toNum(curStreak))} in a row.` },
+    { k: 'The streak', t: goal.met ? 'A whole year, no zero day.' : `Then I stopped missing days: ${n0(toNum(curStreak))} in a row.` },
   ] : []
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
   // the moments of the timeline, to be set inside the parts they belong to
@@ -1077,6 +1080,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   const monthOf = (ym) => `${MONTHS[parseInt(ym.slice(5, 7), 10) - 1]} ${ym.slice(0, 4)}`
 
+  const geoByKeyTW = Object.fromEntries(activityGeo.map((g) => [g.activity_key, g]))
   return (
     <Layout>
       {!book && (
@@ -1089,6 +1093,7 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       )}
       {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
       {homeReady && restOn && (<>
+      {!book && <Container><ThisWeek acts={activityLog} geo={geoByKeyTW} /></Container>}
       <Container>
         {/* ---- Type-led hero: headline left, key figures stacked right --- */}
         <section className="hero" aria-labelledby="hero-title">
@@ -1172,8 +1177,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
       </Part>
 
       <Part n="5" name="No zero days" years="2025 to 2026" spine="2025" from="2025-01" to={heroMonths.length ? heroMonths[heroMonths.length - 1].k : undefined}
-        line="The streak that is still going started in the last days of 2025."
-        story={['I started it on purpose. My first target is to reach 31 December 2026 without a zero day. After that the targets go up in odd numbers: three years, then five.']}>
+        line={goal.met ? 'The streak started in the last days of 2025, and 2026 went by without a zero day.' : 'The streak that is still going started in the last days of 2025.'}
+        story={[goal.met ? 'I started it on purpose. My first target was to reach 31 December 2026 without a zero day, and I reached it. The next is 31 December 2028, three calendar years, and after that five.' : 'I started it on purpose. My first target is to reach 31 December 2026 without a zero day. After that the targets go up in odd numbers: three years, then five.']}>
         {plates([2025, 2026])}
         <Container>
           {book ? <p className="spart-ref">{MOUNTAINS.filter((m) => m.part === 5).map((m) => `${m.name}, chapter ${Number(numOf(m.to))}`).join(' · ')}</p> : (

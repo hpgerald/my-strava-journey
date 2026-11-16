@@ -461,3 +461,8 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .ydh__facts { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
 .ydh__figs { margin-top: var(--sp-5); align-items: start; }
 .ydh__figs figure > .rh, .ydh__figs figure > div { margin-inline: auto; }
+.load__ctl { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.load__atl { fill: none; stroke: var(--grey-35); stroke-width: 1.2; stroke-linejoin: round; }
+.load__mk line { stroke: var(--ink); stroke-width: 1.5; }
+.load__l { font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
+.load__l--ctl { fill: var(--accent-ink); }

@@ -148,7 +148,7 @@ export default function Kilimanjaro() {
         </Scene>
       </Band>
 
-      <Band at={s[2].end}><Plate slot="kili-saddle" ratio="21 / 9" caption={`The saddle, on the way to Kibo Hut · ${n0(s[2].end)} m`} /></Band>
+      <Band at={s[2].end}><Plate slot="kili-saddle" ratio="2 / 1" caption={`The saddle, on the way to Kibo Hut · ${n0(s[2].end)} m`} /></Band>
 
       <Band night at={[s[2].end, KX_TOP]}>
         <Scene label="The summit night" title="The part my watch did not finish.">
@@ -157,7 +157,7 @@ export default function Kilimanjaro() {
           <p>My watch saw none of it. The cold and the power saver of the Samsung watch I had then stopped the recording at {n0(s[3].high)} m, about {n0(Math.round((KX_RIM - s[3].high) / 10) * 10)} m below Gilman’s Point, and the next point it logged was back at Kibo Hut. One day I will go back and record the whole way.</p>
         </Scene>
         <BigNumber value={n0(KX_TOP)} unit="m">Uhuru Peak. The last {n0(KX_TOP - s[3].high)} m are not in the log.</BigNumber>
-        <Plate slot="kili-summit" ratio="16 / 9" caption={`Uhuru Peak · ${n0(KX_TOP)} m · 9 March 2023`} />
+        <Plate slot="kili-summit" ratio="3 / 2" caption={`Uhuru Peak · ${n0(KX_TOP)} m · 9 March 2023`} />
         <Saying sw="Mwenda pole hajikwai">, the one who goes slowly does not stumble.</Saying>
       </Band>
 
@@ -166,7 +166,7 @@ export default function Kilimanjaro() {
           <Scene
             label="The road at its foot"
             title={faster ? 'Back every year, a little faster.' : 'Back every year.'}
-            fig={<Plate slot="kili-half" caption="The Kilimanjaro Half" />}
+            fig={<Plate slot="kili-half" ratio="4 / 5" caption="The Kilimanjaro Half" />}
             foot={<>
               <HBars
                 aria={`Time over the 21.1 km of the Kilimanjaro Half each year: ${half.map((h) => `${h.year}, ${hm(h.min)}`).join('; ')}.`}
