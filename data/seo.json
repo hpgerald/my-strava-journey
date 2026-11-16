@@ -1,9 +1,9 @@
 {
- "refreshed": "2026-11-09",
+ "refreshed": "2026-11-16",
  "routes": {
   "/": {
    "title": "Gerald Tesha · My Strava Journey · Seven years on foot",
-   "description": "Gerald Tesha's seven years on foot, mostly in Tanzania: 2,076 outings and 13,295 km from his Strava log, with maps, records, tested habits and a free book."
+   "description": "Gerald Tesha's seven years on foot, mostly in Tanzania: 2,084 outings and 13,326 km from his Strava log, with maps, records, tested habits and a free book."
   },
   "/kilimanjaro": {
    "title": "Kilimanjaro",
@@ -27,15 +27,15 @@
   },
   "/numbers": {
    "title": "Year in Sport",
-   "description": "Every year of my log as its own report, from 27 outings in 2019 to 338 in 2026 so far."
+   "description": "Every year of my log as its own report, from 27 outings in 2019 to 346 in 2026 so far."
   },
   "/sports": {
    "title": "Sports",
-   "description": "My four sports on foot: 9,132 km of running and 4,052 km of walking, with trail runs and hikes, and the treadmill kept apart from the road."
+   "description": "My four sports on foot: 9,137 km of running and 4,078 km of walking, with trail runs and hikes, and the treadmill kept apart from the road."
   },
   "/records": {
    "title": "Records",
-   "description": "My longest, highest and hardest days on foot: 42.7 km in one outing, 1,979 m of climbing in one outing, and a 315-day streak."
+   "description": "My longest, highest and hardest days on foot: 42.7 km in one outing, 1,979 m of climbing in one outing, and a 323-day streak."
   },
   "/where": {
    "title": "Where",
@@ -55,7 +55,7 @@
   },
   "/book": {
    "title": "My Book",
-   "description": "Showing Up, the whole story as a free book, with every chart drawn from the log up to 8 November 2026. Read it online or download the PDF."
+   "description": "Showing Up, the whole story as a free book, with every chart drawn from the log up to 16 November 2026. Read it online or download the PDF."
   },
   "/about": {
    "title": "About",
