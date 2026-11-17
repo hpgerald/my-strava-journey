@@ -5,6 +5,7 @@ export const CSV_FILES = [
   'activity_geo',
   'comparisons',
   'countries',
+  'data_cleaning',
   'fun_journey',
   'gear',
   'glossary',
@@ -30,4 +31,6 @@ export const CSV_FILES = [
   'weekday_patterns',
   'yearly_by_sport',
   'yearly_totals',
+  'weather_days',
+  'weather_months',
 ]

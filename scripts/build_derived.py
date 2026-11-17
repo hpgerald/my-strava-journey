@@ -113,7 +113,7 @@ t("2019-08-17","First Strava activity","Milestone","The first upload. Day one.",
 t(nth_date(500),"500th activity","Milestone","Five hundred logged.","Activity Log")
 t(nth_date(1000),"1,000th activity","Milestone","Into four figures.","Activity Log")
 t(nth_date(1500),"1,500th activity","Milestone","Fifteen hundred. Still building.","Activity Log")
-t(nth_date(2000),"2,000th activity","Milestone","Two thousand. Logged on home ground in Dar es Salaam.","Activity Log")
+t(nth_date(2000),"2,000th activity","Milestone","Two thousand.","Activity Log")
 t("2023-02-26","Most-kudoed activity","Record","A February 2023 run pulled 125 kudos. The all-time high.","Fun Stats")
 t("2025-03-29","Highest climb: 1,979 m","Record","The biggest single-activity ascent. 1,979 metres, straight up.","Personal Records")
 # international debuts

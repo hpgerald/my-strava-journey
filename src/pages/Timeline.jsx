@@ -134,7 +134,7 @@ export default function Timeline() {
               const lastMo = Math.round(span(ms[ms.length - 2].date, ms[ms.length - 1].date) / 30.44)
               return ` The first 500 outings took me ${firstYrs > 2.5 && firstYrs < 3 ? 'almost three years' : `${Math.round(firstYrs)} years`}. The last 500 took ${['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'][lastMo] || lastMo} months.`
             })()}
-            {' '}My 2,000th outing was also my fiftieth trip to Ras Kilomoni, the target I set for this year. I was happy
+            {' '}My fiftieth trip to Ras Kilomoni, the target I set for this year, was also my 2,000th activity on Strava. I was happy
             when the two landed on the same day, and I had waited patiently for Strava's badge for it. That milestone is why this site
             exists: I wanted to tell the story once I reached it.
           </Reveal>

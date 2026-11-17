@@ -597,7 +597,7 @@ function buildCases(E) {
         `${cap(word(c.pts.filter((x) => x[2]).length))} of those runs were trail runs, mixed in with road runs and races, and a single number for climb does not sort them out. I keep the walking result and let this belief go.`,
       ],
       plain: [
-        V.c9 === 'not' ? `The rank test finds no link at all${c.slope < 0 ? ', and the model’s slope points the wrong way' : ''}. I keep this case in on purpose. A chapter that only reports the claims that worked would not be honest about how the testing went.` : 'The rank test and the model agree.',
+        V.c9 === 'not' ? `The rank test finds no clear link${c.slope < 0 ? ', and the model’s slope points the wrong way' : ''}. I keep this case in on purpose. A chapter that only reports the claims that worked would not be honest about how the testing went.` : 'The rank test and the model agree.',
         V.c9 === 'not' ? `My ${n0(c.n)} outdoor runs mix road runs, trail runs and races, and climb per kilometre does not line up with their pace.` : '',
       ],
       limits: c.slope < 0 ? 'A small negative slope in one model and no rank correlation is a null result. It does not show that hills make me faster.' : 'The runs mix many kinds of outing, so the model carries a lot of spread.',

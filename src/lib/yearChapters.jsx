@@ -541,12 +541,12 @@ const BUILD = {
         ),
       } : null,
       rk && rk.length ? {
-        id: 'fifty', k: 'Fifty trips', t: rk.length >= 50 ? 'Trip L, and outing 2,000.' : `${rk.length} trips to Ras Kilomoni.`,
-        p: ['Going to Ras Kilomoni 50 times is no joke, given its terrain and the weather. I knew trip L would also be my 2,000th outing, and I had been waiting patiently for the badge Strava gives for it.', 'It was a beautiful day, and it is what pushed me to start this site and tell my story.'],
+        id: 'fifty', k: 'Fifty trips', t: rk.length >= 50 ? 'Trip L, and 2,000 on Strava.' : `${rk.length} trips to Ras Kilomoni.`,
+        p: ['Going to Ras Kilomoni 50 times is no joke, given its terrain and the weather. I knew trip L would also be my 2,000th activity on Strava, and I had been waiting patiently for the badge it gives.', 'It was a beautiful day, and it is what pushed me to start this site and tell my story.'],
         facts: [{ l: 'trips', v: n0(rk.length), hot: true }, { l: 'km on those trips', v: n0(rk.reduce((t, r) => t + r.km, 0)) }],
         cap: 'One tile is one trip, numbered in Roman numerals.', wide: true,
         more: more('/goals', 'Ras Kilomoni on Goals →'),
-        node: <RasKilomoni rows={rk} mark={rkLast && rk.length >= 50 ? { n: 50, note: 'trip L, my 2,000th outing' } : null} aria={`${rk.length} tiles, one for each trip to Ras Kilomoni.`} />,
+        node: <RasKilomoni rows={rk} mark={rkLast && rk.length >= 50 ? { n: 50, note: 'trip L, my 2,000th on Strava' } : null} aria={`${rk.length} tiles, one for each trip to Ras Kilomoni.`} />,
       } : null,
       trails.length ? {
         id: 'trails', k: 'Trails, trails and more trails', t: `${n0(trailDays)} days on trails and hills.`,

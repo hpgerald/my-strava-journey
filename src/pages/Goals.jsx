@@ -464,7 +464,7 @@ export default function Goals() {
                 the trips in Roman numerals, {rk[0].roman} to {rkLast.roman}, {rkWalks} walks and {rk.length - rkWalks} runs. For the first
                 three months I kept a steady count. Then {MONTH[parseInt(rkTop.k.slice(5, 7), 10) - 1]} came with {rkTop.n} trips, and after
                 that the target was within reach. The route runs from the beach to the headland, through baobab trees and then on hard
-                gravel. It misses the morning traffic and the heat of Dar es Salaam, and the gravel made it a good test of endurance.{rkOuting === 2000 ? ` I knew trip ${rkLast.roman} would also be my 2,000th outing. Fifty times on that ground is no small thing, and it was a beautiful, happy day.` : ''}
+                gravel. It misses the morning traffic and the heat of Dar es Salaam, and the gravel made it a good test of endurance.{rk.length >= 50 && rkLast.date.slice(0, 10) === '2026-08-28' ? ` I knew trip ${rkLast.roman} would also be my 2,000th activity on Strava. Fifty times on that ground is no small thing, and it was a beautiful, happy day.` : ''}
               </>}
               odds={{
                 title: 'Ras Kilomoni',

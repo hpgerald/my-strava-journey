@@ -59,8 +59,8 @@ export default function About() {
               A habit, counted over time
             </h2>
             <p>
-              I am not a professional athlete. This is just my own record of showing up. I started this site after my 2,000th
-              outing, in August 2026: I wanted to tell the story once I reached that milestone. The streak keeps counting until
+              I am not a professional athlete. This is just my own record of showing up. I started this site after Strava counted my 2,000th
+              activity, in August 2026: I wanted to tell the story once I reached that milestone. The streak keeps counting until
               the day it breaks, and this year&rsquo;s totals are for a year that is not finished.
             </p>
 

@@ -4,7 +4,7 @@ Seven years of Strava activity, turned into a website anyone can read.
 
 **Live site:** https://hpgerald.github.io/my-strava-journey/
 
-This is a static, data-driven explainer built from a personal Strava export: **2,084 activities** logged between August 2019 and November 2026, across running, walking, trail running, hiking and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); all other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
+This is a static, data-driven explainer built from a personal Strava export: **2,064 activities** logged between August 2019 and November 2026, across running, walking, trail running, hiking and a few other sports, mostly around Tanzania with the occasional trip abroad. Distance and elevation are counted for foot sports only (running, walking, trail running and hiking); all other sports still count toward activity totals and every other metric. Every chart and figure on the site traces back to a CSV in `public/data/`, and the whole thing rebuilds from a fresh export each week.
 
 ---
 
@@ -33,11 +33,11 @@ At the last refresh (16 November 2026) the record covered:
 
 | Metric | Value |
 | --- | --- |
-| Activities | 2,084 |
-| Distance on foot | 13,326 km |
-| Moving time on foot | 2,127 hours |
-| Elevation gained on foot | 85,214 m (about 9.6 times Everest) |
-| Kudos received | 72,860 |
+| Activities | 2,064 |
+| Distance on foot | 13,198 km |
+| Moving time on foot | 2,104 hours |
+| Elevation gained on foot | 84,000 m (about 9.5 times Everest) |
+| Kudos received | 72,677 |
 | Longest active streak | 323 days, still going |
 | Longest week streak | 155 weeks (about 3 years), still going |
 | Countries | 5 |

@@ -229,7 +229,7 @@ export const YEAR_REPORT = {
   2023: (s) => `Fewer outings can still mean more. I went out a bit less than in 2022, but I went to the hills more. In March alone I climbed more than 5,000 m, most of it in Kilimanjaro, and over the year I ran ${num0(s.trailKm)} km on trails.`,
   2024: (s) => `Even in a low year, the days can hold. It was my travel year, with outings in ${w(s.countriesNamed)} countries, and my lowest distance since the habit started. Still, I went out on ${s.activeDays} days.`,
   2025: (s) => `Walking became my main thing. It was ${Math.round(s.walkShare * 100)}% of my outings, and in February I walked 30 km in one go, my longest walk. For the third year in a row I logged about three hundred activities.`,
-  2026: () => `Going every day has made it simpler. I have not missed a day this year, and in August my fiftieth trip to Ras Kilomoni was also my 2,000th outing. I am thankful the body has carried me this far.`,
+  2026: () => `Going every day has made it simpler. I have not missed a day this year, and in August my fiftieth trip to Ras Kilomoni was also my 2,000th activity on Strava. I am thankful the body has carried me this far.`,
 }
 
 export function buildYearSummaries(acts, geo) {

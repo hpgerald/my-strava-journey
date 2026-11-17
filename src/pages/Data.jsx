@@ -2,12 +2,19 @@ import { Navigate } from 'react-router-dom'
 import { useData, useTables } from '../context/DataContext.jsx'
 import { CSV_FILES } from '../data/registry.js'
 
+const SPORT = { Walk: 'walk', Run: 'run', TrailRun: 'trail run', Hike: 'hike' }
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const fmtDay = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
+const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
+const word = (n) => WORD[n] || String(n)
+
 const GROUPS = [
   {
     title: 'Activity data',
     items: [
       ['activities', 'Every activity, one row each. Everything else is built from this.'],
       ['activity_geo', 'The country and region each activity started in.'],
+      ['data_cleaning', 'The activities left out: saved twice on two devices, or not mine.'],
     ],
   },
   {
@@ -43,6 +50,8 @@ const GROUPS = [
     items: [
       ['countries', 'Outings, distance and climb by country.'],
       ['tanzania_regions', 'The same for each region of Tanzania.'],
+      ['weather_days', 'Each day, its place and the rain and heat at the middle of that region.'],
+      ['weather_months', 'The rain of each place, month by month.'],
     ],
   },
   {
@@ -72,6 +81,8 @@ export function DataBody() {
   const { data } = useData()
   useTables(CSV_FILES)
   const rowCount = (name) => (data && data[name] ? data[name].length : '–')
+  const clean = (data && data.data_cleaning) || []
+  const notMine = clean.filter((c) => c.kind === 'Not mine').length
   // activities that carry GPS = all located countries (everything but the indoor bucket)
   const gpsCount = (data && data.countries
     ? data.countries.filter((c) => c.country && !/Indoor/.test(c.country)).reduce((s, c) => s + (Number(c.activities) || 0), 0)
@@ -101,6 +112,34 @@ export function DataBody() {
           </ul>
         </section>
       ))}
+
+      {clean.length ? (
+        <section style={{ paddingTop: 'var(--sp-7)' }} aria-labelledby="ds-clean">
+          <p className="eyebrow" id="ds-clean" style={{ marginBottom: 'var(--sp-3)' }}>
+            Data cleaning
+          </p>
+          <div className="measure stack">
+            <p>
+              Strava keeps everything I upload, including a few outings my devices saved twice and {word(notMine)} that{' '}
+              {notMine === 1 ? 'was' : 'were'} not mine. They stay in Strava, and I leave all {word(clean.length)} out of every table and chart here. The
+              copy I keep is the one with the race name or the full recording.
+            </p>
+          </div>
+          <ul style={{ listStyle: 'none', margin: 'var(--sp-4) 0 0', padding: 0 }}>
+            {clean.map((c) => (
+              <li key={c.date} className="ds-row">
+                <span className="mono" style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{fmtDay(c.date)}</span>
+                <span className="text-muted" style={{ fontSize: 'var(--fs-sm)' }}>
+                  {c.reason}{c.kept ? ` Kept: ${c.kept}.` : ''}
+                </span>
+                <span className="source" style={{ whiteSpace: 'nowrap' }}>
+                  {SPORT[c.sport] || 'another activity'}{Number(c.distance_km) ? `, ${Number(c.distance_km).toFixed(1)} km` : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section style={{ paddingTop: 'var(--sp-7)' }}>
         <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>

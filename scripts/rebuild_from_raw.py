@@ -75,7 +75,19 @@ rows = [build_row(r) for r in csv.DictReader(open(RAW))]
 rows.sort(key=lambda r: r['date'])
 for i, r in enumerate(rows, 1):
     r['activity_key'] = f"a{i:04d}"
-print("total activities:", len(rows))
+print("total activities in the export:", len(rows))
+
+# ---- data cleaning: activities saved twice, or not mine, stay in Strava but
+# leave every table here. data_cleaning.csv lists them by start time and
+# distance; keys are given before they leave, so every other key stays put.
+CLEAN = os.path.join(OUT, "data_cleaning.csv")
+if os.path.exists(CLEAN):
+    drop = {(c['date'], round(float(c['distance_km'] or 0), 3)) for c in csv.DictReader(open(CLEAN, encoding="utf-8"))}
+    hit = [r for r in rows if (r['date'], round(float(r['distance_km'] or 0), 3)) in drop]
+    if len(hit) != len(drop):
+        print(f"  WARNING: data_cleaning.csv lists {len(drop)} activities, {len(hit)} found in the export")
+    rows = [r for r in rows if (r['date'], round(float(r['distance_km'] or 0), 3)) not in drop]
+    print(f"left out by data cleaning: {len(hit)}; activities kept: {len(rows)}")
 
 def num(x):
     try: return float(str(x).replace(",", ""))
@@ -90,10 +102,12 @@ def read(name): return list(csv.DictReader(open(os.path.join(OUT, name))))
 
 # ---- validate order/transform vs current public (existing rows) ----
 pub = read("activities.csv")
+by_key = {r['activity_key']: r for r in rows}
+pub = [pr for pr in pub if pr['activity_key'] in by_key]
 n_existing = len(pub)
 mism = 0
 for i, pr in enumerate(pub):
-    br = rows[i]
+    br = by_key[pr['activity_key']]
     # kudos is intentionally excluded: kudos counts drift upward between exports
     # and are not a transform/order signal. date is compared day-level on both sides.
     for f in ["date", "sport_type", "distance_km", "moving_time_min", "elevation_gain_m", "trainer", "year", "weekday", "time_bucket"]:
@@ -107,7 +121,8 @@ for i, pr in enumerate(pub):
             mism += 1
 print(f"order/transform mismatches on first {n_existing}:", mism)
 assert mism <= 2, "unexpected transform mismatches - order may differ"
-new = rows[n_existing:]
+pub_keys = {pr['activity_key'] for pr in pub}
+new = [r for r in rows if r['activity_key'] not in pub_keys]
 print("new activities:", len(new))
 
 # ============ GEO ============
