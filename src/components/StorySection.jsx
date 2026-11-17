@@ -3,7 +3,7 @@ import Eyebrow from './Eyebrow.jsx'
 import Words from './Words.jsx'
 import OddsRow from './OddsRow.jsx'
 import Verdict from './Verdict.jsx'
-import BookStory, { BookRead } from './BookStory.jsx'
+import BookStory, { BookRead, ChartRead } from './BookStory.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { PairH } from '../charts/pairHeight.js'
 import { plotOf, queuePairMeasure, addsElement } from '../lib/alignPairs.js'
@@ -84,16 +84,18 @@ export default function StorySection({ id, eyebrow, title, sub, statement, odds,
         <figure className="sgrid__fig sgrid__fig--chart">
           <figcaption className="sgrid__figtitle">{left.title}</figcaption>
           <div className="sgrid__chart"><PairH.Provider value={pairH}>{left.node}</PairH.Provider></div>
+          <ChartRead title={left.title} text={read && read[0]} />
         </figure>
         <figure className="sgrid__fig sgrid__fig--mx">
           <figcaption className="sgrid__figtitle">{right.title}</figcaption>
           <div className="sgrid__chart"><PairH.Provider value={pairH}>{right.node}</PairH.Provider></div>
+          <ChartRead title={right.title} text={read && read[1]} />
         </figure>
         {leftNote ? <p className="sgrid__note sgrid__note--chart">{leftNote}</p> : null}
         {rightNote ? <p className="sgrid__note sgrid__note--mx">{rightNote}</p> : null}
       </div>
 
-      <BookRead items={[[left.title, read && read[0], left.lesson || left.node], [right.title, read && read[1], right.lesson || right.node]]} />
+      <BookRead items={[[left.title, read && read[0], left.lesson || left.node], [right.title, read && read[1], right.lesson || right.node]]} site={false} />
 
       {children}
       <BookStory>{story}</BookStory>

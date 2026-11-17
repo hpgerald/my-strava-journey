@@ -13,7 +13,7 @@ import { PairH } from '../charts/pairHeight.js'
 import { useSectionPaging } from '../lib/sections.js'
 import { lenisRef } from '../motion/env.js'
 
-// The Habit on Trial: twelve things I believe about my habit,
+// The Habit on Trial: thirteen things I believe about my habit,
 // each tested against the log with more than one method. Every number, chart
 // and verdict comes from data/evidence.json, which scripts/build_evidence.py
 // writes at each weekly update, so the words follow the results.
@@ -22,7 +22,7 @@ const DAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', '
 const DAY3 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen']
 const word = (n) => WORD[n] || String(n)
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
 const VLABEL = { proven: 'Proven', supported: 'Supported', not: 'Not proven' }
@@ -155,14 +155,14 @@ const CASE_TESTS = {
   6: ['5 km on the treadmill', '10 km on the treadmill', '15 km on the treadmill', '21.1 km on the treadmill'],
   7: ['Treadmill pace trend', 'Treadmill 2026 against 2025'], 8: ['Climb and walking pace'], 9: ['Climb and running pace'],
   10: ['Running and walking', 'Running and walking, week to week'], 11: ['Out the day after a long day', 'Distance the day after a long day'],
-  12: ['Kudos, trail run against walk'],
+  12: ['Kudos, trail run against walk'], 13: ['Rain and going out'],
 }
 // how far a corrected p-value sits past 1, on a log scale capped at 10^-20
 const CAP = 20
 const posOf = (p) => Math.min(CAP, -Math.log10(Math.max(p, 1e-300))) / CAP
 const LINE = posOf(0.05)
 // a result past the line that speaks against the claim
-const AGAINST = new Set(['Running and walking, week to week'])
+const AGAINST = new Set(['Running and walking, week to week', 'Rain and going out'])
 const at = (v) => `calc(0.4rem + ${v} * (100% - 0.8rem))`
 
 // the small chart of a card: each test is a dot, the line is p = 0.05
@@ -731,6 +731,57 @@ function buildCases(E) {
       limits: `Outings before 2022 are left out: their median kudos were ${list(c.medBefore.map((v) => n0(v)))} a year from ${y0} to 2021, against ${n0(c.medFrom[0])} to ${n0(c.medFrom[1])} from 2022 on, so they follow a different pattern.`,
     })
   }
+
+  // ---- 13. rain ----
+  if (E.c13) {
+    const c = E.c13, w = c.wet[0] / c.wet[1], d = c.dry[0] / c.dry[1], h = c.heavy[0] / c.heavy[1]
+    const pt = (v, k = 1) => f(v * 100, k)
+    const edge = !c.equiv && Math.min(Math.abs(c.lo90 + c.margin), Math.abs(c.hi90 - c.margin)) < 0.01
+    out.push({
+      n: 13, verdict: V.c13, short: 'Rain does not keep me in', key: `${pc(w)} vs ${pc(d)} out, wet and dry days`,
+      title: 'Rain does not keep me in.',
+      claim: `A day with rain is as likely to find me out as a dry day in the same month and the same place.`,
+      tested: `The opposite claim: rain keeps me in, so on a day with ${c.mm} mm of rain or more I go out less often than on a dry day. Each day got the rain that fell that day at the middle of the region where I was, from Open-Meteo's weather archive, and I compared the ${n0(c.n)} days from the comeback to ${fmtShort(c.to)}.`,
+      methods: [
+        'Linear probability model of going out on rain, with each month and each place held fixed, and errors clustered by week.',
+        `Cochran–Mantel–Haenszel test, comparing wet and dry days inside each of the ${c.strata} months.`,
+        `Equivalence test (two one-sided tests): is the difference smaller than ${Math.round(c.margin * 100)} points either way?`,
+        `The same model for days of ${c.heavyMm} mm or more, for the distance on a day out, and for the share of outings on the treadmill.`,
+      ],
+      results: [
+        ['Out on a day with rain', `${pc(w, 1)} (${n0(c.wet[0])}/${n0(c.wet[1])})`],
+        ['Out on a dry day', `${pc(d, 1)} (${n0(c.dry[0])}/${n0(c.dry[1])})`],
+        ['Difference, same month and place', `${sg(c.diff * 100, 1)} points (${pt(c.lo)} to ${pt(c.hi)}) · ${pEq(c.p)}`],
+        ['Mantel–Haenszel odds ratio', `${f(c.mhOr)} · ${pEq(c.mhP)}`],
+        [`90% interval against ±${Math.round(c.margin * 100)} points`, `${pt(c.lo90)} to ${pt(c.hi90)} · ${c.equiv ? 'inside' : edge ? 'just outside' : 'outside'}`],
+        [`Out on a day of ${c.heavyMm} mm or more`, `${pc(h, 1)} (${c.heavy[0]}/${c.heavy[1]}) · ${sg(c.heavyDiff * 100, 1)} points · ${pEq(c.heavyP)}`],
+        ['Km on foot on a day out', `${f(c.kmWet, 1)} vs ${f(c.kmDry, 1)} · held fixed ${sg(c.kmDiff, 1)} km · ${pEq(c.kmP)}`],
+        ['Share of outings on the treadmill', `${pc(c.inWet)} vs ${pc(c.inDry)} · held fixed ${sg(c.inDiff * 100, 1)} points · ${pEq(c.inP)}`],
+      ],
+      chart: {
+        title: 'A day with rain against a dry day',
+        node: (
+          <LongDayChart
+            groups={[
+              { title: 'out that day', max: 1, rows: [{ label: `a day with ${c.mm} mm of rain or more`, value: w, display: pc(w), tone: 'is-acc' }, { label: `a day with ${c.heavyMm} mm or more`, value: h, display: pc(h), tone: 'is-acc' }, { label: 'a dry day', value: d, display: pc(d), tone: 'is-grey' }] },
+              { title: 'km on foot on a day out', rows: [{ label: 'a day with rain', value: c.kmWet, display: `${f(c.kmWet, 1)} km`, tone: 'is-acc' }, { label: 'a dry day', value: c.kmDry, display: `${f(c.kmDry, 1)} km`, tone: 'is-grey' }] },
+            ]}
+            aria={`Out on ${pc(w)} of days with rain, ${pc(h)} of days with ${c.heavyMm} mm or more and ${pc(d)} of dry days. On a day out, ${f(c.kmWet, 1)} km when it rained and ${f(c.kmDry, 1)} km when it was dry.`}
+          />
+        ),
+        note: 'How often I went out, and how far I went on the days I did.',
+      },
+      take: [
+        'So the rainy season is no reason to slow down. In my record a wet day was an ordinary day out.',
+      ],
+      plain: [
+        `Rain barely moves me. I went out on ${pc(w)} of the days with rain and ${pc(d)} of the dry days. Held to the same month and the same place, the gap is ${pt(Math.abs(c.diff))} points, well within chance (${pEq(c.p)}). Heavy rain did not stop me either: I went out on ${c.heavy[0]} of the ${c.heavy[1]} days with ${c.heavyMm} mm or more.`,
+        `The rain did not send me indoors. On wet days ${pc(c.inWet)} of my outings on foot were on the treadmill, against ${pc(c.inDry)} on dry days, and with the month and the place held fixed the gap is chance (${pEq(c.inP)}). On a day out I covered ${f(c.kmWet, 1)} km when it rained and ${f(c.kmDry, 1)} km when it was dry, and ${c.kmP >= 0.05 ? 'that gap is chance too once the month and place are held fixed' : 'that gap holds once the month and place are held fixed'}.`,
+        c.equiv ? `The equivalence test puts the difference inside ${Math.round(c.margin * 100)} points either way, so I call the claim proven.` : `The equivalence test leaves the low end at ${pt(c.lo90)} points, ${edge ? 'just' : ''} past the ${Math.round(c.margin * 100)}-point line, so a small effect cannot be ruled out, and I call the claim ${VLABEL[V.c13].toLowerCase()}.`.replace('  ', ' '),
+      ],
+      limits: 'The rain is the day’s total at the middle of the region, from a weather model. It does not say whether it rained at the hour I went out, or on the road I took.',
+    })
+  }
   return out
 }
 
@@ -783,7 +834,7 @@ function glossary(E) {
     ]],
     ['Clustered errors and block bootstrap', [
       'Days in the same week are not independent: case 1 shows that one active day makes the next more likely. A test that treats every day as separate evidence then looks more certain than it should.',
-      'Clustered standard errors fix this by measuring the spread from whole weeks instead of single days, which widens the error bars. The block bootstrap does the same by resampling: it draws whole weeks at random, with replacement, recomputes the result 2,000 times, and reads the 95% interval from the middle of those results. I used both in case 4, and clustered errors again in case 5, so the weekday and season results are not inflated by the habit’s own memory.',
+      'Clustered standard errors fix this by measuring the spread from whole weeks instead of single days, which widens the error bars. The block bootstrap does the same by resampling: it draws whole weeks at random, with replacement, recomputes the result 2,000 times, and reads the 95% interval from the middle of those results. I used both in case 4, and clustered errors again in cases 5 and 13, so the weekday, season and rain results are not inflated by the habit’s own memory.',
     ]],
     ['χ² tests', [
       'A χ² test compares the counts in a table with the counts expected if there were no pattern. Each cell adds the squared gap between observed and expected, divided by expected, and the total is checked against the χ² distribution.',
@@ -825,6 +876,16 @@ function glossary(E) {
       'A test for a two-by-two table, here a long day or not against out the next day or not. It works out the exact probability of every table with the same row and column totals and asks how unusual the observed one is, without the large-sample shortcut of the χ² test.',
       `It also reports an odds ratio. In case 11, ${c11.or.toFixed(2)} means the odds of going out after a day of ${c11.km} km or more were about ${c11.or >= 1.9 && c11.or <= 2.1 ? 'twice' : `${c11.or.toFixed(1)} times`} those after an ordinary day out.`,
     ]],
+    ...(E.c13 ? [
+      ['Cochran–Mantel–Haenszel test', [
+        'A way to compare two groups when a third thing could mix them up. Rain falls mostly in some months, and I go out more in some months than others, so a plain comparison of wet and dry days would partly compare seasons.',
+        `The test builds one two-by-two table for each month, wet or dry against out or not, and pools the tables into one odds ratio, so wet days are only ever compared with dry days of the same month. In case 13 it used ${E.c13.strata} months and gave an odds ratio of ${E.c13.mhOr.toFixed(2)}, where 1 means rain makes no difference.`,
+      ]],
+      ['Equivalence test', [
+        'A usual test can only fail to find a difference, and failing to find one is not the same as showing there is none. An equivalence test turns the question round. I set a margin first, a difference small enough not to matter, and the test asks whether the true difference sits inside it.',
+        `It runs two one-sided tests, one against each edge of the margin, which is the same as asking whether the 90% interval lies wholly inside it. In case 13 the margin was ${Math.round(E.c13.margin * 100)} points either way, and the interval ran from ${(E.c13.lo90 * 100).toFixed(1).replace('-', '−')} to ${(E.c13.hi90 * 100).toFixed(1).replace('-', '−')} points.`,
+      ]],
+    ] : []),
   ]
 }
 
@@ -874,11 +935,11 @@ export default function Evidence() {
       <section className="sgrid ev-intro" aria-labelledby="ev-intro-t">
         <div className="sgrid__head">
           <Eyebrow>How I tested</Eyebrow>
-          <h2 id="ev-intro-t" className="section-head__title"><Words>{tie('Twelve claims, on trial.')}</Words></h2>
+          <h2 id="ev-intro-t" className="section-head__title"><Words>{tie(`${cap(word(cases.length))} claims, on trial.`)}</Words></h2>
         </div>
         <Reveal as="p" className="sgrid__statement">
           <span lang="sw">Haraka haraka haina baraka</span>, hurry hurry has no blessing. The other chapters say what my log shows.
-          This one tries to prove it. I took twelve things I believe about my habit and tested each one against the {n0(M.n)} outings
+          This one tries to prove it. I took {word(cases.length)} things I believe about my habit and tested each one against the {n0(M.n)} outings
           in my log, with more than one method for each, so that no single test decides. {cap(list(summary))}.
         </Reveal>
         <div className="ev-how">
@@ -980,7 +1041,7 @@ export default function Evidence() {
           {glossary(E).map(([k, ps]) => <div key={k}><h3>{k}</h3>{ps.map((t, i) => <p key={i}>{t}</p>)}</div>)}
         </div>
         <p className="ev-colophon">
-          All results come from my public activity log (activities.csv) and were run in Python with scipy, statsmodels, scikit-learn,
+          All results come from my public activity log (activities.csv), with the daily rain for case 13 from Open-Meteo’s weather archive (weather_days.csv), and were run in Python with scipy, statsmodels, scikit-learn,
           ruptures and lifelines. Random steps (shuffles, bootstraps, mixtures) use fixed seeds, so every number can be reproduced. The
           script runs again with every weekly update, and the verdicts above follow whatever it finds.
         </p>

@@ -16,6 +16,7 @@ import ColBars from '../charts/ColBars.jsx'
 import StackCols from '../charts/StackCols.jsx'
 import PairBars from '../charts/PairBars.jsx'
 import CumLine from '../charts/CumLine.jsx'
+import RainMonths from '../charts/RainMonths.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
@@ -57,6 +58,8 @@ export default function Where() {
   const book = useBook()
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
+  const wxDays = useTable('weather_days')
+  const wxMonths = useTable('weather_months')
   useSectionJump()
   const { prev, next } = useSectionPaging('/where')
   const P = useMemo(() => (activities.length && geoRows.length ? buildPlaceReport(activities, geoRows) : null), [activities, geoRows])
@@ -124,6 +127,41 @@ export default function Where() {
   // ---- indoors ----
   const iy = P.byYear.map((y) => ({ year: y.year, share: y.n ? y.indoor / y.n : 0 }))
   const iFirst = iy[0], iLast = iy[iy.length - 1]
+
+  // ---- the rain ----
+  const WX = (() => {
+    if (!wxDays.length || !wxMonths.length) return null
+    // the comeback: the first outing after the longest run of zero days
+    const on = [...new Set(activities.map((a) => (a.date || '').slice(0, 10)))].sort()
+    let cb = on[0], gap = 0
+    for (let i = 1; i < on.length; i++) { const g = (tOf(on[i]) - tOf(on[i - 1])) / 864e5; if (g > gap) { gap = g; cb = on[i] } }
+    const since = wxDays.filter((d) => d.date >= cb)
+    const mm = (d) => Number(d.rain_mm) || 0
+    const isOut = (d) => Number(d.outings) > 0
+    const wet = since.filter((d) => mm(d) >= 1), heavy = since.filter((d) => mm(d) >= 10)
+    const wettest = since.filter((d) => isOut(d) && Number(d.km_foot) > 0).sort((a, b) => mm(b) - mm(a)).slice(0, 5)
+    const places = R.slice(0, 3).map((r) => r.region)
+    const rows = places.map((place) => ({
+      place,
+      months: Array.from({ length: 12 }, (_, i) => {
+        const m = i + 1, w = wxMonths.find((x) => x.place === place && Number(x.month) === m) || {}
+        const mine = since.filter((d) => d.place === place && Number(d.date.slice(5, 7)) === m)
+        return { m, mm: Number(w.rain_mm) || 0, wet: Number(w.wet_share) || 0, out: mine.filter(isOut).length, days: mine.length }
+      }),
+    }))
+    const dryOf = (r) => r.months.filter((x) => x.mm < 10).map((x) => x.m)
+    const dryRow = rows.slice().sort((a, b) => dryOf(b).length - dryOf(a).length)[0]
+    const dry = dryOf(dryRow)
+    const run = dry.length && dry[dry.length - 1] - dry[0] + 1 === dry.length
+    const wetRows = rows.filter((r) => !dryOf(r).length)
+    const peak = (r) => r.months.reduce((b, x) => (x.mm > b.mm ? x : b), r.months[0]).m
+    const peaks = [...new Set(wetRows.map(peak))]
+    // out in the wet months (50 mm or more) against the drier ones, in these places
+    const cells = rows.flatMap((r) => r.months)
+    const shareOf = (xs) => { const d = xs.reduce((t, x) => t + x.days, 0); return d ? xs.reduce((t, x) => t + x.out, 0) / d : 0 }
+    const inWet = shareOf(cells.filter((x) => x.mm >= 50)), inDry = shareOf(cells.filter((x) => x.mm < 50))
+    return { cb, n: since.length, wet, heavy, wetOut: wet.filter(isOut).length, heavyOut: heavy.filter(isOut).length, wettest, rows, dryRow, dry, run, wetRows, peaks, inWet, inDry, mm }
+  })()
 
   // ---- the maths ----
   const eff = P.byYear.filter((y) => y.tzN >= 50)
@@ -528,7 +566,61 @@ export default function Where() {
           source="Activity Log · outings without a GPS start point"
         />
 
-        {/* ===== 7. the maths ===== */}
+        {/* ===== 7. the rain ===== */}
+        {WX && WX.wettest.length ? (
+          <>
+            <hr className="rule rule--faint" />
+            <StorySection
+              id="wh-rain"
+              eyebrow={`${num()} · Rain`}
+              title="Out in the rain too."
+              cases={[13]}
+              statement={<>
+                The rain has not changed how often I go out, and my places get their rain at different times.
+                {WX.dry.length >= 3 && WX.run ? ` ${WX.dryRow.place} is almost dry from ${MONTH[WX.dry[0] - 1]} to ${MONTH[WX.dry[WX.dry.length - 1] - 1]}, ${word(WX.dry.length)} months with less than 10 mm, and then the rain comes all at once.` : ''}
+                {WX.wetRows.length ? ` ${andList(WX.wetRows.map((r) => r.place))} ${WX.wetRows.length > 1 ? 'have' : 'has'} no month that dry${WX.peaks.length === 1 ? `, and the most rain falls in ${MONTH[WX.peaks[0] - 1]}` : ''}.` : ''}
+              </>}
+              odds={{
+                title: 'Rain, since the comeback',
+                items: [
+                  { num: WX.wetOut, unit: '', label: 'days out on a day with rain', tone: 'move' },
+                  { num: WX.heavyOut, unit: '', label: `of my ${n0(WX.heavy.length)} days with 10 mm or more, out`, tone: 'move' },
+                  { value: WX.wet.length / Math.max(1, WX.n), label: 'of my days since the comeback had rain', tone: 'rest' },
+                  { num: WX.dry.length, unit: ' months', label: `of almost no rain in ${WX.dryRow.place}`, tone: 'rest' },
+                ],
+              }}
+              left={{
+                title: 'The rains in my three places, month by month',
+                node: (
+                  <RainMonths
+                    rows={WX.rows}
+                    aria={`Average rain each month and the share of my days out, in ${andList(WX.rows.map((r) => r.place))}: ${WX.rows.map((r) => `${r.place} ${r.months.map((x) => `${MON[x.m - 1]} ${Math.round(x.mm)} mm${x.days >= 10 ? `, out ${pc(x.out / x.days)}%` : ''}`).join('; ')}`).join('. ')}.`}
+                  />
+                ),
+              }}
+              right={{
+                title: 'The wettest days I went out',
+                node: (
+                  <HBars
+                    aria={`The five wettest days I went out: ${WX.wettest.map((d) => `${Math.round(WX.mm(d))} mm in ${d.place}, ${fmtMon(d.date)}, ${k1(Number(d.km_foot))} km on foot`).join('; ')}.`}
+                    rows={WX.wettest.map((d, i) => ({ key: i ? 'quiet' : 'road', label: d.place, sub: `${fmtMon(d.date)} · ${k1(Number(d.km_foot))} km on foot`, value: WX.mm(d), display: `${Math.round(WX.mm(d))} mm` }))}
+                  />
+                ),
+              }}
+              read={[
+                'One row for each of my three busiest regions and one cell for each month. The darker the cell, the more rain falls there in that month, on average over the years of the record. The orange dot is the share of my days there in that month when I went out, so a big dot in a dark cell is a wet month I still went out in.',
+                'The five days with the most rain on which I still went out on foot, with the region, the month and how far I went that day.',
+              ]}
+              story={[
+                `The wettest of them was ${fmtDay(WX.wettest[0].date)} in ${WX.wettest[0].place}, with ${Math.round(WX.mm(WX.wettest[0]))} mm of rain, and I still covered ${k1(Number(WX.wettest[0].km_foot))} km on foot that day.`,
+                Math.abs(WX.inWet - WX.inDry) < 0.05 ? `Across my three places I went out on ${pc(WX.inWet)}% of my days in the months with 50 mm of rain or more and ${pc(WX.inDry)}% in the drier months. The rainy season did not cut my days out.` : '',
+              ]}
+              source="Open-Meteo weather archive, the middle of each region · Activity Log"
+            />
+          </>
+        ) : null}
+
+        {/* ===== 8. the maths ===== */}
         <hr className="rule rule--faint" />
         <StorySection
           id="wh-maths"

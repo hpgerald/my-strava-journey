@@ -259,3 +259,6 @@ html.motion .ev-dk__file { animation: evOpen 0.6s var(--ease-out, ease) both; }
 .ev-eras__b:first-child { background: var(--grey-35, #b9b6ae); }
 @media (prefers-reduced-motion: reduce) { .ev-card__ico::before, .ev-card__ico::after { transition: none; } }
 .sgrid.ev-dk__file:where(:not(.book *)) { padding-top: 0; }
+/* a last card alone in its row takes the whole row, so nothing hangs */
+@media (min-width: 40rem) and (max-width: 63.999rem) { .ev-card:last-child:nth-child(2n+1) { grid-column: 1 / -1; } }
+@media (min-width: 64rem) { .ev-card:last-child:nth-child(3n+1) { grid-column: 1 / -1; } }

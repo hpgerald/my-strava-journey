@@ -93,7 +93,7 @@ const routes = {
   '/where': { title: 'Where', description: `Where I go out: ${word(F.countries)} African countries and ${word(F.regions)} regions of Tanzania, mapped from where each outing started.` },
   '/timeline': { title: 'Timeline', description: `${cap(word(years))} years in the order they happened: milestones, firsts on foot, trips, streaks and breaks.` },
   '/goals': { title: 'Goals', description: 'The same three targets held against every year: 1,000 km of walking, 1,000 km of running and 24,000 m of climbing on foot.' },
-  '/on-trial': { title: 'The Habit on Trial', description: E ? `Twelve things I believe about my habit, tested with statistics against the log: ${word(vc('proven'))} proven, ${word(vc('supported'))} supported and ${word(vc('not'))} not proven.` : 'Twelve things I believe about my habit, tested with statistics against the log.' },
+  '/on-trial': { title: 'The Habit on Trial', description: E ? `Thirteen things I believe about my habit, tested with statistics against the log: ${word(vc('proven'))} proven, ${word(vc('supported'))} supported and ${word(vc('not'))} not proven.` : 'Thirteen things I believe about my habit, tested with statistics against the log.' },
   '/book': { title: 'My Book', description: `Showing Up, the whole story as a free book, with every chart drawn from the log up to ${fmtDay(last)}. Read it online or download the PDF.` },
   '/about': { title: 'About', description: 'How this site was made, what the data covers and how to reach me.' },
   '/data': { title: 'The Data', description: 'Every table behind the site, what it holds and where it comes from.' },

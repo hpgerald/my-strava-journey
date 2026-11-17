@@ -264,6 +264,35 @@ med_k = A.groupby(A.dt.dt.year).kudos.median()
 E["c12"] = {"n": int(len(K)), "r2": R(mk.rsquared, 3), "effects": kud, "medBefore": [R(med_k.get(yy, 0), 0) for yy in range(int(first.year), 2022)],
             "medFrom": [R(med_k[med_k.index >= 2022].min(), 0), R(med_k[med_k.index >= 2022].max(), 0)]}
 
+# ---- 13. rain (needs weather_days.csv from scripts/build_weather_days.py) ----
+WX = os.path.join("public", "data", "weather_days.csv")
+if os.path.exists(WX):
+    from statsmodels.stats.contingency_tables import StratifiedTable
+    Wd = pd.read_csv(WX); Wd["day"] = pd.to_datetime(Wd["date"]); Wd = Wd[Wd.day >= COMEBACK].set_index("day")
+    Wd["wet"] = (Wd.rain_mm >= 1).astype(int); Wd["heavy"] = (Wd.rain_mm >= 10).astype(int); Wd["out"] = (Wd.outings > 0).astype(int)
+    Wd["ym"] = Wd.index.strftime("%Y-%m"); Wd["wk"] = week_start(Wd.index).astype("int64")
+    cl = {"cov_type": "cluster", "cov_kwds": {"groups": Wd["wk"]}}
+    mo = smf.ols("out ~ wet + C(ym) + C(place)", Wd).fit(**cl)
+    se = mo.bse["wet"]; d90 = (mo.params["wet"] - 1.645 * se, mo.params["wet"] + 1.645 * se)
+    mh = smf.ols("out ~ heavy + C(ym) + C(place)", Wd).fit(**cl)
+    tabs = [np.array([[((g.wet == 1) & (g.out == 1)).sum(), ((g.wet == 1) & (g.out == 0)).sum()], [((g.wet == 0) & (g.out == 1)).sum(), ((g.wet == 0) & (g.out == 0)).sum()]]) for _, g in Wd.groupby("ym")]
+    tabs = [t for t in tabs if t[0].sum() and t[1].sum()]
+    st = StratifiedTable(tabs)
+    On = Wd[Wd.out == 1]; clo = {"cov_type": "cluster", "cov_kwds": {"groups": On["wk"]}}
+    mk = smf.ols("km_foot ~ wet + C(ym) + C(place)", On).fit(**clo)
+    Fo = Wd[(Wd.outdoor_foot + Wd.indoor_foot) > 0].copy(); Fo["inshare"] = Fo.indoor_foot / (Fo.outdoor_foot + Fo.indoor_foot)
+    mi = smf.ols("inshare ~ wet + C(ym) + C(place)", Fo).fit(cov_type="cluster", cov_kwds={"groups": Fo["wk"]})
+    rate = lambda m: [int(Wd[m].out.sum()), int(m.sum())]
+    MARGIN = 0.05
+    E["c13"] = {"n": int(len(Wd)), "from": str(Wd.index.min().date()), "to": str(Wd.index.max().date()), "mm": 1, "heavyMm": 10,
+                "wet": rate(Wd.wet == 1), "dry": rate(Wd.wet == 0), "heavy": rate(Wd.heavy == 1),
+                "diff": R(mo.params["wet"], 4), "lo": R(mo.conf_int().loc["wet", 0], 4), "hi": R(mo.conf_int().loc["wet", 1], 4), "p": P(mo.pvalues["wet"]),
+                "lo90": R(d90[0], 4), "hi90": R(d90[1], 4), "margin": MARGIN, "equiv": bool(d90[0] > -MARGIN and d90[1] < MARGIN),
+                "mhOr": R(st.oddsratio_pooled, 2), "mhP": P(st.test_null_odds().pvalue), "strata": int(len(tabs)),
+                "heavyDiff": R(mh.params["heavy"], 4), "heavyP": P(mh.pvalues["heavy"]),
+                "kmWet": R(On[On.wet == 1].km_foot.mean(), 1), "kmDry": R(On[On.wet == 0].km_foot.mean(), 1), "kmDiff": R(mk.params["wet"], 2), "kmP": P(mk.pvalues["wet"]),
+                "inWet": R(Fo[Fo.wet == 1].inshare.mean(), 3), "inDry": R(Fo[Fo.wet == 0].inshare.mean(), 3), "inDiff": R(mi.params["wet"], 3), "inP": P(mi.pvalues["wet"])}
+
 # ---- correction for many tests, and verdicts ----
 H = [("Habit memory, likelihood ratio", E["c1"]["lrP"]), ("Runs test", E["c1"]["runsP"]), ("Streak momentum", E["c2"]["streakP"]),
      ("Rust after breaks", E["c2"]["gapP"]), ("Weekday, clustered", E["c4"]["waldP"]), ("Season, clustered", E["c5"]["waldP"])]
@@ -271,6 +300,7 @@ H += [(f"{t[0]:g} km on the treadmill", t[4]) for t in E["c6"]["heap"]]
 H += [("Treadmill pace trend", E["c7"]["tauP"]), (f"Treadmill {cy} against {py}", E["c7"]["mwuP"] or 1.0), ("Climb and walking pace", E["c8"]["p"]),
       ("Climb and running pace", E["c9"]["rhoP"]), ("Running and walking", E["c10"]["p"]), ("Running and walking, week to week", E["c10"]["pDiff"]), ("Out the day after a long day", E["c11"]["p"]),
       ("Distance the day after a long day", E["c11"]["kmP"]), ("Kudos, trail run against walk", next((k[4] for k in kud if k[0] == "Trail run against a walk"), 1.0))]
+if "c13" in E: H += [("Rain and going out", E["c13"]["p"])]
 rej, padj, _, _ = multipletests([h[1] for h in H], method="holm")
 E["holm"] = [[h[0], h[1], P(min(1, pa)), bool(r)] for h, pa, r in zip(H, padj, rej)]
 adj = {h[0]: (P(min(1, pa)), bool(r)) for h, pa, r in zip(H, padj, rej)}
@@ -291,6 +321,9 @@ V["c10"] = "not" if (ok("Running and walking, week to week") and c["c10"]["rhoDi
 V["c11"] = "proven" if ok("Out the day after a long day") and ok("Distance the day after a long day") else "supported" if ok("Distance the day after a long day") or ok("Out the day after a long day") else "not"
 kd = {k[0]: k for k in kud}
 V["c12"] = "proven" if ok("Kudos, trail run against walk") and kd["Twice the distance"][4] >= 0.05 and kd["Twice the climb"][4] >= 0.05 else "supported" if ok("Kudos, trail run against walk") else "not"
+if "c13" in E:
+    c13 = c["c13"]
+    V["c13"] = "not" if ok("Rain and going out") and c13["diff"] < 0 else "proven" if c13["equiv"] and c13["kmP"] >= 0.05 else "supported"
 E["verdicts"] = V
 E["holmAdj"] = {k: v[0] for k, v in adj.items()}
 

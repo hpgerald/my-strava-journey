@@ -58,7 +58,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | 06 | **Timeline** | The whole record as one chronicle: milestones every 250 outings, the firsts on foot, trips abroad and new regions, every pair of shoes, the streaks and silences, the pace of the habit, and every moment written out year by year. |
 | 07 | **Goals** | The same three targets (1,000 km walking, 1,000 km running, 24,000 m of foot climbing) held against every year: each year raced against the calendar, the rings year by year, the odds that the open climbing ring closes (a resampling of the year's days), the Kilimanjaro Half with all editions raced at once, the fifty trips to Ras Kilomoni as a tally, the unbroken run of months, and a goal book. |
 | 08 | **What It Means** | The record read back as lessons, in the first person: what the habit costs in time (a clock per year), counting days before kilometres, the small days that kept it going, the weekly floor, how long days arrive in blocks, and the two levers of a yearly total. |
-| 09 | **The Habit on Trial** | Twelve claims about the habit, each tested with two to four statistical methods (logistic and hazard models, survival fits, changepoints, harmonic regression, rank tests, bootstraps) and a Holm correction across all tests, with a verdict for each: proven, supported or not proven. `scripts/build_evidence.py` writes every number to `public/data/evidence.json`. |
+| 09 | **The Habit on Trial** | Thirteen claims about the habit, each tested with two to four statistical methods (logistic and hazard models, survival fits, changepoints, harmonic regression, rank tests, bootstraps) and a Holm correction across all tests, with a verdict for each: proven, supported or not proven. `scripts/build_evidence.py` writes every number to `public/data/evidence.json`. |
 | 10 | **My Book** | The whole site set as one sports memoir, *Showing Up*: cover, contents, prologue, six parts and an epilogue, with every chapter drawn live from the data. Prints as an A4 book; `scripts/book_pdf.mjs` renders the downloadable PDF into `public/book/` (re-run it after each data refresh). |
 
 Supporting pages: **About** (method, limits and contact), **Data** (every source table documented), and per-item detail pages for individual sports and places.
@@ -163,10 +163,11 @@ Because the site is data-driven, a refresh is mostly a data swap:
 
 1. Regenerate the CSVs in `public/data/` from a new Strava export using the scripts in `scripts/`.
 2. Set `STRAVA_SOURCE` to the private workbook path before running `python scripts/extract_workbook.py`. The geo pass additionally reads `STRAVA_GEO_RAW` and `STRAVA_CITIES`; all scripts default their output to `public/data/` and can be redirected with `STRAVA_OUTPUT`.
-3. Run `python3 scripts/build_evidence.py` to re-run the statistical tests behind chapter 09 (`public/data/evidence.json`).
-4. Run `npm run seo` to rewrite the search and sharing data (title, description, JSON-LD, sitemap and the share image) with the new numbers.
-5. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
-6. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
+3. Weather: run `python scripts/build_weather.py` on a computer with open internet (it fetches the daily rain and heat for the middle of each region from Open-Meteo into `public/data/weather_daily.csv`), then `python3 scripts/build_weather_days.py` to give each day its place and rain (`weather_days.csv`, `weather_months.csv`).
+4. Run `python3 scripts/build_evidence.py` to re-run the statistical tests behind chapter 09 (`public/data/evidence.json`).
+5. Run `npm run seo` to rewrite the search and sharing data (title, description, JSON-LD, sitemap and the share image) with the new numbers.
+6. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
+7. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
 

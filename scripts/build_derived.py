@@ -149,7 +149,7 @@ nav=[
  ["10","Where","Five countries. Seventeen regions.","/where","record","authored"],
  ["11","Timeline","From my first upload to now","/timeline","record","authored"],
  ["12","Goals","What I aim for each year","/goals","record","authored"],
- ["13","The Habit on Trial","Twelve claims, tested","/on-trial","record","authored"],
+ ["13","The Habit on Trial","Thirteen claims, tested","/on-trial","record","authored"],
  ["14","My Book","The whole story, as a book","/book","book","authored"],
 ]
 write("nav_index.csv",["number","title","subtitle","route","category","source_page"],nav)

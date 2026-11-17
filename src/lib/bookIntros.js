@@ -69,7 +69,7 @@ export const BOOK_INTROS = {
   },
   '/on-trial': {
     paras: [
-      'A habit is easy to tell stories about, so this chapter checks mine. I took twelve claims that the book makes, or that I believed about myself, and put each one on trial with a statistical test that could prove it wrong.',
+      'A habit is easy to tell stories about, so this chapter checks mine. I took thirteen claims that the book makes, or that I believed about myself, and put each one on trial with a statistical test that could prove it wrong.',
       'Each case has the same parts: the claim, what I tested, the methods, the results, a chart, a plain reading of what it shows and its limits. Some claims are proven, some are supported, and some are not proven. The ones that failed are printed as fully as the ones that passed.',
       'Ukweli ni mchungu, the truth is bitter. At the end, the tests are corrected for the fact that many were run at once, and each method is explained in full.',
     ],

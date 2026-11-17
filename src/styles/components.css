@@ -2598,3 +2598,32 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 
 /* a lone number takes the width of two, so its row does not look half empty */
 .odds__row > .odds__cell:only-child { grid-column: 1 / span 2; }
+
+/* ---- how to read a chart, folded on the site (ChartRead) ---- */
+.cread { margin-top: auto; padding-top: var(--sp-2); }
+.sgrid__fig > .cread { margin-top: auto; }
+.sgrid__fig > .sgrid__chart + .cread { padding-top: var(--sp-3); }
+.cread__b {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; width: 100%; min-height: 2.75rem;
+  margin: 0; padding: 0.55rem 0; border: 0; border-top: 1px solid var(--rule-faint); background: none; color: var(--ink);
+  font: inherit; text-align: left; cursor: pointer;
+}
+.cread__k { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; letter-spacing: var(--tr-wide); text-transform: uppercase; }
+.cread__of { font-weight: 500; color: var(--fg-muted); }
+.cread__ico { position: relative; flex: none; width: 0.8rem; height: 0.8rem; }
+.cread__ico::before, .cread__ico::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: var(--accent); transition: transform 0.4s var(--ease); }
+.cread__ico::after { transform: rotate(90deg); }
+.cread.is-open .cread__ico::after { transform: rotate(0deg); }
+.cread__b:hover .cread__k, .cread__b:focus-visible .cread__k { color: var(--accent-ink); }
+.cread__b:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cread__in { padding: 0 0 var(--sp-2); animation: cread-in 0.45s var(--ease) both; }
+.cread__in p { margin: 0; font-size: var(--fs-sm); line-height: 1.55; color: var(--fg); text-wrap: pretty; max-width: 68ch; }
+.cread__in p + p { margin-top: var(--sp-2); }
+@keyframes cread-in { from { opacity: 0; transform: translateY(-0.35rem); } to { opacity: 1; transform: none; } }
+.cread-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--grid-gap); align-items: start; }
+.cread-row--1 { grid-template-columns: minmax(0, 1fr); }
+.cread-row .cread { margin-top: 0; }
+@media (min-width: 60rem) { .cread-row--2 .cread__of { display: none; } }
+@media (max-width: 59.999rem) { .cread-row { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .cread__in { animation: none; } .cread__ico::before, .cread__ico::after { transition: none; } }
+.book .cread, .book .cread-row { display: none; }

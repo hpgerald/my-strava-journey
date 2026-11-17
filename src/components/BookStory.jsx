@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { routeOf } from '../lib/chapters.js'
 import { useBook } from './BookContext.js'
 import { getLessons } from '../lib/lessonsRegistry.js'
@@ -24,10 +24,25 @@ export default function BookStory({ children, title = 'The story' }) {
 // How to read each chart of a section, printed only in My Book, one note under
 // each chart, with the design lesson the chart teaches under its note (see
 // lib/vizLessons.jsx). items: [[chart title, text, chart node?], ...]
-export function BookRead({ items }) {
+// On the site the same notes stay folded: a "How to read" line with a plus
+// under each chart, opened by the reader (see ChartRead). site={false} leaves
+// them out where the charts carry their own (StorySection).
+export function BookRead({ items, site = true }) {
   const book = useBook()
   const L = getLessons()
-  if (!book || !items || !L) return null
+  if (!book) {
+    if (!site || !items || !items.some((x) => x && x[1])) return null
+    // one chart with more than one note: the notes open together
+    if (items.length > 1 && items.slice(1).every((x) => x && x[2] == null)) {
+      return <div className="cread-row cread-row--1"><ChartRead title={items[0][0]} text={items.map((x) => x && x[1]).filter(Boolean)} /></div>
+    }
+    return (
+      <div className={`cread-row cread-row--${items.length}`}>
+        {items.map((x, i) => (x && x[1] ? <ChartRead key={i} title={x[0]} text={x[1]} named /> : <div key={i} />))}
+      </div>
+    )
+  }
+  if (!items || !L) return null
   const { lessonKeysFor, LessonSlot } = L
   const rows = items.map((x) => (x ? { t: x[0], text: x[1], keys: x[2] ? lessonKeysFor(x[2]) : [] } : null))
   if (!rows.some((r) => r && (r.text || r.keys.length))) return null
@@ -40,6 +55,29 @@ export function BookRead({ items }) {
           {r.keys.length ? <LessonSlot keys={r.keys} /> : <span />}
         </div>
       ) : <div key={i} />))}
+    </div>
+  )
+}
+
+// How to read one chart, folded on the site: a title with a plus, and the note
+// opens under it, pushing the page down to make room. `named` adds the chart's
+// title to the line, for a row of notes that stacks under both charts on a
+// phone.
+export function ChartRead({ title, text, named = false }) {
+  const book = useBook()
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  if (book || !text) return null
+  const paras = (Array.isArray(text) ? text : [text]).filter(Boolean)
+  return (
+    <div className={`cread${open ? ' is-open' : ''}`}>
+      <button type="button" className="cread__b" aria-expanded={open} aria-controls={id} onClick={() => setOpen((o) => !o)}>
+        <span className="cread__k">How to read{named && title ? <span className="cread__of"> · {title}</span> : null}</span>
+        <span className="cread__ico" aria-hidden="true" />
+      </button>
+      <div className="cread__body" id={id} role="region" aria-label={`How to read${title ? `: ${title}` : ''}`} hidden={!open}>
+        <div className="cread__in">{paras.map((p, i) => <p key={i}>{p}</p>)}</div>
+      </div>
     </div>
   )
 }

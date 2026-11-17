@@ -48,7 +48,7 @@ const PARTS = [
   { n: 'II', name: 'Part two', title: 'The mountains', line: 'Four mountains, told from my memory and from the line my watch drew on each.', chapters: MOUNTAINS.map((m) => ch(m.to)) },
   { n: 'III', name: 'Part three', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [ch('/what-it-means')] },
   { n: 'IV', name: 'Part four', title: 'The Record', line: 'Each year on its own, my sports, my records, the places I went, the timeline and my goals.', chapters: ['/numbers', '/sports', '/records', '/where', '/timeline', '/goals'].map(ch) },
-  { n: 'V', name: 'Part five', title: 'The proof', line: 'Twelve things I believe about my habit, each one tested against the log.', chapters: [ch('/on-trial')] },
+  { n: 'V', name: 'Part five', title: 'The proof', line: 'Thirteen things I believe about my habit, each one tested against the log.', chapters: [ch('/on-trial')] },
 ]
 
 // glossary terms for measures this book never uses
