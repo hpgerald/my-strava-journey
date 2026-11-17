@@ -8,10 +8,11 @@ record. Run it in the weekly refresh after rebuild_from_raw.py:
 
     python3 scripts/build_weather.py
 
-It needs network access to archive-api.open-meteo.com. Output columns:
+It needs network access to archive-api.open-meteo.com, so it can also be run
+on your own computer (Windows: python scripts\build_weather.py). Output columns:
 region, date, rain_mm, tmax_c, source_page
 """
-import csv, json, os, sys, urllib.request, urllib.parse
+import csv, datetime, json, os, sys, urllib.request, urllib.parse
 
 OUT = "public/data/weather_daily.csv"
 API = "https://archive-api.open-meteo.com/v1/archive"
@@ -33,14 +34,15 @@ def centroid(geom):
 
 
 def main():
-    acts = list(csv.DictReader(open("public/data/activities.csv")))
-    geo = {g["activity_key"]: g for g in csv.DictReader(open("public/data/activity_geo.csv"))}
+    acts = list(csv.DictReader(open("public/data/activities.csv", encoding="utf-8")))
+    geo = {g["activity_key"]: g for g in csv.DictReader(open("public/data/activity_geo.csv", encoding="utf-8"))}
     first = min(a["date"][:10] for a in acts)
-    last = max(a["date"][:10] for a in acts)
+    # the archive runs about five days behind today, so stop a week back
+    last = min(max(a["date"][:10] for a in acts), (datetime.date.today() - datetime.timedelta(days=7)).isoformat())
     regions = sorted({g["region"] for g in geo.values() if g.get("country") == "Tanzania" and g.get("region")})
     countries = sorted({g["country"] for g in geo.values() if g.get("country") and g["country"] not in ("Tanzania", "Other", "Indoor / no GPS")})
-    tz = json.load(open("public/data/tz_regions.geojson"))
-    af = json.load(open("public/data/africa.geojson"))
+    tz = json.load(open("public/data/tz_regions.geojson", encoding="utf-8"))
+    af = json.load(open("public/data/africa.geojson", encoding="utf-8"))
     places = {}
     for f in tz["features"]:
         if f["properties"]["region"] in regions:
@@ -58,7 +60,7 @@ def main():
             rows.append({"region": name, "date": day, "rain_mm": "" if rain is None else round(rain, 1),
                          "tmax_c": "" if tmax is None else round(tmax, 1), "source_page": "Open-Meteo archive, middle of the region"})
         print(f"  {name:28s} {len(d['time'])} days")
-    with open(OUT, "w", newline="") as fh:
+    with open(OUT, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["region", "date", "rain_mm", "tmax_c", "source_page"], lineterminator="\n")
         w.writeheader(); w.writerows(rows)
     print(f"wrote {OUT}: {len(rows)} rows for {len(places)} places, {first} to {last}")
