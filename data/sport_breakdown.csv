@@ -1,6 +1,6 @@
 sport,activities,distance_km,moving_time_h,elevation_m,calories,avg_distance_km,source_page
-Walk,869,4078.2,965.8,37034,504608,4.69,Overview
-Run,783,8293.2,919.9,11393,916971,10.59,Overview
+Walk,863,4046.2,958.9,36817,501435,4.69,Overview
+Run,774,8215.9,909,11348,907497,10.61,Overview
 TrailRun,80,844.2,201.9,27665,136588,10.55,Overview
-Hike,13,110.4,39,9122,16134,8.49,Overview
-Other,339,2805.5,282.1,20457,119229,8.3,Overview
+Hike,12,92,34.1,8170,11514,7.66,Overview
+Other,335,2784.9,258.9,20273,108171,8.3,Overview

@@ -1,9 +1,9 @@
 {
- "refreshed": "2026-11-16",
+ "refreshed": "2026-11-17",
  "routes": {
   "/": {
    "title": "Gerald Tesha · My Strava Journey · Seven years on foot",
-   "description": "Gerald Tesha's seven years on foot, mostly in Tanzania: 2,084 outings and 13,326 km from his Strava log, with maps, records, tested habits and a free book."
+   "description": "Gerald Tesha's seven years on foot, mostly in Tanzania: 2,064 outings and 13,198 km from his Strava log, with maps, records, tested habits and a free book."
   },
   "/kilimanjaro": {
    "title": "Kilimanjaro",
@@ -27,11 +27,11 @@
   },
   "/numbers": {
    "title": "Year in Sport",
-   "description": "Every year of my log as its own report, from 27 outings in 2019 to 346 in 2026 so far."
+   "description": "Every year of my log as its own report, from 23 outings in 2019 to 345 in 2026 so far."
   },
   "/sports": {
    "title": "Sports",
-   "description": "My four sports on foot: 9,137 km of running and 4,078 km of walking, with trail runs and hikes, and the treadmill kept apart from the road."
+   "description": "My four sports on foot: 9,060 km of running and 4,046 km of walking, with trail runs and hikes, and the treadmill kept apart from the road."
   },
   "/records": {
    "title": "Records",

@@ -1,0 +1,21 @@
+date,sport,distance_km,elevation_gain_m,kind,reason,kept,decided,source_page
+2019-08-20 18:11:08,Run,10.01,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 10.01 km, with heart rate",2026-11-17,Data cleaning
+2019-08-24 08:57:13,Run,10.01,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 10.01 km, with heart rate",2026-11-17,Data cleaning
+2019-09-14 16:03:54,Run,10.01,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 10.38 km, with heart rate",2026-11-17,Data cleaning
+2019-09-22 07:41:49,Run,10.02,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 10.14 km, with heart rate",2026-11-17,Data cleaning
+2020-05-26 17:03:59,Run,2.897,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 2.89 km, with heart rate",2026-11-17,Data cleaning
+2020-06-05 05:32:27,Run,6.19,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 6.19 km, with heart rate",2026-11-17,Data cleaning
+2020-06-11 05:37:32,Run,7.08,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 7.08 km, with heart rate",2026-11-17,Data cleaning
+2020-06-24 02:46:14,Run,10.07,0,Same run saved twice,"The same treadmill run saved twice. This copy has only the totals, with no recording, and sits earlier in the day.","Run, 10.07 km, with heart rate",2026-11-17,Data cleaning
+2023-03-06 14:50:43,Other,0.0,0,Two devices,"My watch saved the first day of the Kilimanjaro climb a second time, with no distance or route.","Trail run, 8.48 km, 825 m",2026-11-17,Data cleaning
+2023-03-07 08:25:29,Other,0.0,0,Two devices,"My watch saved the second day of the Kilimanjaro climb a second time, with no distance or route.","Trail run, 12.60 km, 1,037 m",2026-11-17,Data cleaning
+2023-03-08 09:07:16,Other,0.0,0,Two devices,"My watch saved the third day of the Kilimanjaro climb a second time, with no distance or route.","Trail run, 9.30 km, 1,017 m",2026-11-17,Data cleaning
+2023-07-23 06:25:59,Walk,10.243,84,Two devices,"The NBC Marathon 10 km saved on a second device, one minute apart.","Run, 10.30 km",2026-11-17,Data cleaning
+2023-08-13 06:34:23,Walk,10.015,20,Two devices,"The CRDB Marathon saved on a second device, one minute apart.","Run, 10.08 km",2026-11-17,Data cleaning
+2023-08-19 06:34:45,Hike,18.39,952,Two devices,"The Selous Marathon saved on a second device, two minutes apart, so the day's climb was counted twice.","Trail run, 18.75 km, 1,060 m",2026-11-17,Data cleaning
+2023-08-26 22:13:52,Run,11.011,45,Two devices,"The Dar Night Run saved on a second device, two minutes apart.","Run, 11.26 km",2026-11-17,Data cleaning
+2024-04-22 12:18:59,Walk,1.992,32,Two devices,"The same walk saved twice with the same moving time. This copy's GPS sits outside Africa, and I was in Dodoma.","Walk, 1.91 km",2026-11-17,Data cleaning
+2024-12-14 09:20:41,Other,20.631,184,Two devices,"The same morning at the Lilongwe club saved twice. This copy reached 25 km/h, so it holds time in a cart.","Walk, 8.51 km",2026-11-17,Data cleaning
+2024-12-15 07:56:25,Walk,7.549,42,Two devices,"The same forest walk in Lilongwe saved on a second device, one minute apart.","Walk, 6.06 km",2026-11-17,Data cleaning
+2025-08-01 16:39:53,Walk,0.225,4,Not mine,"A three-minute test recording outside Africa, between two indoor runs with no trip around them.",,2026-11-17,Data cleaning
+2026-06-04 08:50:25,Walk,2.035,36,Not mine,A walk outside Africa that began two hours after my walk in Dar es Salaam ended. I could not have been there.,,2026-11-17,Data cleaning
