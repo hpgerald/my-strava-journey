@@ -7,6 +7,13 @@ const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', '
 const fmtDay = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${MONTH[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}`
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
 const word = (n) => WORD[n] || String(n)
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1)
+// the three kinds of data cleaning, each with one line that explains all its rows
+const CLEAN_KINDS = [
+  { kind: 'Two devices', title: 'Saved on two devices', why: true, lede: 'One outing saved twice, on two devices or twice by the watch. I keep the copy with the race name or the full route.' },
+  { kind: 'Same run saved twice', title: 'Treadmill runs saved twice', why: false, lede: 'In 2019 and 2020 some treadmill runs were saved twice: once as totals only, with no recording, and once in full with heart rate, a little later the same day. I keep the full one.' },
+  { kind: 'Not mine', title: 'Not mine', why: true, lede: 'Two activities sit in places I could not have been at that time.' },
+]
 
 const GROUPS = [
   {
@@ -91,11 +98,9 @@ export function DataBody() {
   return (
     <>
       {GROUPS.map((g) => (
-        <section key={g.title} style={{ paddingTop: 'var(--sp-6)' }}>
-          <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>
-            {g.title}
-          </p>
-          <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+        <section key={g.title} className="ds-sec">
+          <p className="eyebrow">{g.title}</p>
+          <ul className="ds-list">
             {g.items.map(([name, desc]) => (
               <li key={name} className="ds-row">
                 <span className="mono" style={{ fontWeight: 600 }}>
@@ -114,50 +119,54 @@ export function DataBody() {
       ))}
 
       {clean.length ? (
-        <section style={{ paddingTop: 'var(--sp-7)' }} aria-labelledby="ds-clean">
-          <p className="eyebrow" id="ds-clean" style={{ marginBottom: 'var(--sp-3)' }}>
-            Data cleaning
+        <section className="ds-sec ds-sec--major" aria-labelledby="ds-clean">
+          <p className="eyebrow" id="ds-clean">Data cleaning</p>
+          <p className="ds-lede">
+            Strava keeps everything I upload, including a few outings saved twice and {word(notMine)}{' '}
+            {notMine === 1 ? 'activity that was' : 'that were'} not mine. They stay in Strava, and I leave all {word(clean.length)} out of every table and chart here.
           </p>
-          <div className="measure stack">
-            <p>
-              Strava keeps everything I upload, including a few outings my devices saved twice and {word(notMine)} that{' '}
-              {notMine === 1 ? 'was' : 'were'} not mine. They stay in Strava, and I leave all {word(clean.length)} out of every table and chart here. The
-              copy I keep is the one with the race name or the full recording.
-            </p>
-          </div>
-          <ul style={{ listStyle: 'none', margin: 'var(--sp-4) 0 0', padding: 0 }}>
-            {clean.map((c) => (
-              <li key={c.date} className="ds-row">
-                <span className="mono" style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{fmtDay(c.date)}</span>
-                <span className="text-muted" style={{ fontSize: 'var(--fs-sm)' }}>
-                  {c.reason}{c.kept ? ` Kept: ${c.kept}.` : ''}
-                </span>
-                <span className="source" style={{ whiteSpace: 'nowrap' }}>
-                  {SPORT[c.sport] || 'another activity'}{Number(c.distance_km) ? `, ${Number(c.distance_km).toFixed(1)} km` : ''}
-                </span>
-              </li>
-            ))}
-          </ul>
+          {CLEAN_KINDS.map((k) => {
+            const rows = clean.filter((c) => c.kind === k.kind)
+            if (!rows.length) return null
+            return (
+              <div key={k.kind} className="dc">
+                <p className="dc__k">{k.title} · {rows.length}</p>
+                <p className="dc__lede">{k.lede}</p>
+                <div className={`dc__t${k.why ? '' : ' dc__t--3'}`} role="table" aria-label={k.title}>
+                  <div className="dc__r dc__r--h" role="row">
+                    <span role="columnheader">Date</span>
+                    <span role="columnheader">Left out</span>
+                    <span role="columnheader">Kept</span>
+                    {k.why ? <span role="columnheader">Why</span> : null}
+                  </div>
+                  {rows.map((c) => (
+                    <div key={c.date} className="dc__r" role="row">
+                      <span role="cell" className="dc__d">{fmtDay(c.date)}</span>
+                      <span role="cell">{cap(SPORT[c.sport] || 'another activity')}{Number(c.distance_km) ? `, ${Number(c.distance_km).toFixed(1)} km` : ''}</span>
+                      <span role="cell">{c.kept || 'nothing that day'}</span>
+                      {k.why ? <span role="cell" className="dc__w">{c.reason}</span> : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </section>
       ) : null}
 
-      <section style={{ paddingTop: 'var(--sp-7)' }}>
-        <p className="eyebrow" style={{ marginBottom: 'var(--sp-3)' }}>
-          Method, in brief
+      <section className="ds-sec ds-sec--major">
+        <p className="eyebrow">Method, in brief</p>
+        <p className="ds-lede">
+          Every week I pull my latest activities from Strava through an MCP server into one raw
+          file. Python scripts rebuild every table above from it. The geographic files place each
+          activity&rsquo;s GPS start point with offline boundary and place data, and activity names
+          and exact locations are removed before anything is published.
         </p>
-        <div className="measure stack">
-          <p>
-            Every week I pull my latest activities from Strava through an MCP server into one raw
-            file. Python scripts rebuild every table above from it. The geographic files place each
-            activity&rsquo;s GPS start point with offline boundary and place data, and activity names
-            and exact locations are removed before anything is published.
-          </p>
-          <p>
-            I did not make up any number. If a value was not available, I left it blank. The country and region totals
-            cover the {gpsCount.toLocaleString()} activities with GPS, because indoor sessions do not have any. The maps
-            are close but not exact, especially near borders.
-          </p>
-        </div>
+        <p className="ds-lede">
+          I did not make up any number. If a value was not available, I left it blank. The country and region totals
+          cover the {gpsCount.toLocaleString()} activities with GPS, because indoor sessions do not have any. The maps
+          are close but not exact, especially near borders.
+        </p>
       </section>
     </>
   )

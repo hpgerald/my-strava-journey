@@ -2627,3 +2627,26 @@ body[data-chapter] .chapter__ghost { color: color-mix(in srgb, var(--chapter-hue
 @media (max-width: 59.999rem) { .cread-row { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .cread__in { animation: none; } .cread__ico::before, .cread__ico::after { transition: none; } }
 .book .cread, .book .cread-row { display: none; }
+
+/* ---- the data section on About: one rhythm, full width ---- */
+.ds-sec { padding-top: var(--sp-6); }
+.ds-sec--major { padding-top: var(--sp-7); }
+.ds-sec > .eyebrow { margin: 0 0 var(--sp-3); }
+.ds-list { list-style: none; margin: 0; padding: 0; }
+.ds-lede { margin: 0; max-width: none; font-size: var(--fs-base); line-height: 1.6; color: var(--fg); text-wrap: pretty; }
+.ds-lede + .ds-lede { margin-top: var(--sp-3); }
+.dc { margin-top: var(--sp-5); }
+.dc__k { margin: 0; font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 700; letter-spacing: var(--tr-caps); text-transform: uppercase; color: var(--accent-ink); }
+.dc__lede { margin: var(--sp-2) 0 0; max-width: none; font-size: var(--fs-sm); line-height: 1.55; color: var(--fg-muted); }
+.dc__t { margin-top: var(--sp-3); border-bottom: 1px solid var(--rule-faint); }
+.dc__r { display: grid; grid-template-columns: 10rem minmax(9rem, 1fr) minmax(11rem, 1.2fr) minmax(0, 3fr); gap: var(--sp-1) var(--sp-4); align-items: baseline; padding: var(--sp-2) 0; border-top: 1px solid var(--rule-faint); font-size: var(--fs-sm); line-height: 1.5; color: var(--fg); }
+.dc__t--3 .dc__r { grid-template-columns: 10rem minmax(9rem, 1fr) minmax(0, 4.2fr); }
+.dc__r--h { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: var(--tr-wide); text-transform: uppercase; color: var(--fg-muted); font-weight: 600; }
+.dc__d { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dc__w { color: var(--fg-muted); }
+@media (max-width: 47.999rem) {
+  .dc__r, .dc__t--3 .dc__r { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dc__r--h { display: none; }
+  .dc__d { grid-column: 1 / -1; }
+  .dc__w { grid-column: 1 / -1; }
+}

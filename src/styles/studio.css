@@ -421,9 +421,11 @@ html.is-scrolled .snav.is-open .snav__here:where(:not(.book *)) { opacity: 0; }
   .fieldnote__eyebrow:where(:not(.book *)) { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding-top: 0.9rem; }
   .fieldnote__quote:where(:not(.book *)), .fieldnote__by:where(:not(.book *)) { grid-column: 2; }
   /* hang the opening mark in the margin so the words line up with the titles */
-  .fieldnote__quote:where(:not(.book *))::before { position: absolute; right: 100%; top: 0; padding-right: 0.04em; }
+  .fieldnote__quote:where(:not(.book *))::before { position: static; padding-right: 0.04em; }
 }
 .fieldnote + .sturn:where(:not(.book *)) { margin-top: var(--sec-pad); }
+/* the quote that closes a page with no chapter turn after it keeps the same room below as above */
+.fieldnote:where(:not(.book *)):last-child { padding-bottom: var(--sec-pad); }
 @media (max-width: 40rem) {
   .shero__in:where(:not(.book *)) { min-height: min(60svh, 30rem); }
 }

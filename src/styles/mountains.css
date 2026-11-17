@@ -262,3 +262,19 @@ html.motion .relief__area { opacity: 0; animation: reliefRise 1.6s var(--ease-ou
   .mtn-scene:not(.mtn-scene--text):not(.book *) .mtn-scene__foot > .mtn-ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); column-gap: var(--grid-gap); }
   .mtn-scene:not(.mtn-scene--text):not(.book *) .mtn-scene__foot > .mtn-ledger div { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; padding: 0.7rem 0; border-bottom: 0; }
 }
+
+/* ---- About: one left edge, text at full width, the portrait beside the two fact sheets ---- */
+.about-sec { padding-top: var(--sp-6); }
+.about-sec--rule { margin-top: var(--sp-7); padding-top: var(--sp-6); border-top: 1px solid var(--rule); }
+.about-lede { margin: 0; max-width: none; font-size: var(--fs-md); line-height: 1.5; text-wrap: pretty; }
+.about-h { margin: var(--sp-5) 0 0; font-family: var(--font-display); font-size: var(--fs-lg); line-height: 1.15; letter-spacing: -0.02em; }
+.about-h--first { margin-top: 0; }
+.about-p { margin: var(--sp-2) 0 0; max-width: none; line-height: 1.6; text-wrap: pretty; }
+.about-note { margin: var(--sp-4) 0 0; max-width: none; font-size: var(--fs-sm); color: var(--fg-muted); }
+.about-touch { padding-top: 0; }
+.about-touch__words { justify-content: flex-start; gap: var(--sp-5); }
+.about-sheets { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); align-items: stretch; flex: 1; }
+.about-sheets .factsheet { position: static; }
+.about-sheets .factsheet > .eyebrow { margin: 0 0 var(--sp-3); }
+@media (min-width: 64rem) { .about-sheets { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.about-data .ds-lede { margin-top: var(--sp-3); }
