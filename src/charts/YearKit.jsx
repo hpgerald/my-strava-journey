@@ -252,7 +252,7 @@ export function SlopeCards({ items, flat = false, aria }) {
       {items.map((it) => {
         const w = 40 + 160 * ((it.km || 0) / maxK), h = 6 + 60 * ((it.elev || 0) / maxE)
         return (
-          <li key={it.iso + it.title} className={it.hot ? 'is-hot' : ''}>
+          <li key={(it.iso || '') + it.title} className={it.hot ? 'is-hot' : ''}>
             {flat ? null : (
               <svg viewBox="0 0 200 70" width="100%" height="70" preserveAspectRatio="none" aria-hidden="true" style={{ display: 'block' }}>
                 <polygon points={`${100 - w / 2},70 ${100 - w * 0.08},${70 - h} ${100 + w * 0.12},${70 - h * 0.92} ${100 + w / 2},70`} className="yslope__hill" />
@@ -260,7 +260,7 @@ export function SlopeCards({ items, flat = false, aria }) {
             )}
             {it.v != null ? <p className="yslope__v"><b>{it.v}</b> {it.u}</p> : <p className="yslope__v"><b>{it.km.toFixed(1)}</b> km{it.elev >= 10 ? <> · <b>{n0(it.elev)}</b> m up</> : null}</p>}
             <p className="yslope__t">{it.title}</p>
-            <p className="yslope__d">{dayLabel(it.iso)} {it.iso.slice(0, 4)}{it.note ? ` · ${it.note}` : ''}</p>
+            <p className="yslope__d">{it.iso ? `${dayLabel(it.iso)} ${it.iso.slice(0, 4)}` : ''}{it.iso && it.note ? ' · ' : ''}{it.note || ''}</p>
           </li>
         )
       })}
@@ -419,6 +419,162 @@ export function DotRows({ rows, aria }) {
           </svg>
         </div>
       ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- races
+// props: races [{ date, name, km, min, indoor, virtual }], year, aria. The year
+// as a line from January to December, a dot for each race (bigger for a longer
+// one), numbered, and the races listed under it with their numbers.
+export function RaceStrip({ races, year, aria }) {
+  const [ref, width] = useWidth(720)
+  const W = Math.max(280, width), narrow = W < 520
+  const H = 96, AX = 40
+  const t0 = tOf(`${year}-01-01`), t1 = tOf(`${year}-12-31`)
+  const x = (iso) => 14 + ((tOf(iso) - t0) / (t1 - t0)) * (W - 28)
+  const maxK = Math.max(1, ...races.map((r) => r.km))
+  const R = (r) => 4 + 9 * Math.sqrt(r.km / maxK)
+  const hm = (m) => { const t = Math.round(m); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}` }
+  // numbers sit above their dot; when races are close the next number goes below, then higher up
+  let lastX = -99, slot = 0
+  const pos = races.map((r) => { const cx = x(r.date); slot = cx - lastX < 24 ? (slot + 1) % 3 : 0; lastX = cx; return { cx, slot } })
+  return (
+    <div ref={ref} className="yrace" role="img" aria-label={aria}>
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={{ display: 'block' }}>
+        <line x1={14} x2={W - 14} y1={AX} y2={AX} className="ykb__axis" />
+        {MON.map((m, i) => { const iso = `${year}-${String(i + 1).padStart(2, '0')}-01`; return (!narrow || i % 3 === 0) ? <text key={m} x={x(iso)} y={H - 4} className="ykb__gl">{m}</text> : null })}
+        {races.map((r, i) => (
+          <g key={r.date}>
+            <circle cx={pos[i].cx} cy={AX} r={R(r)} className={`yrace__d${r.virtual || r.indoor ? ' is-away' : ''}`} />
+            <text x={pos[i].cx} y={pos[i].slot === 1 ? AX + R(r) + 14 : AX - R(r) - 6 - (pos[i].slot === 2 ? 13 : 0)} textAnchor="middle" className="yrace__n">{i + 1}</text>
+          </g>
+        ))}
+      </svg>
+      <ol className="yrace__list">
+        {races.map((r, i) => (
+          <li key={r.date}>
+            <span className="yrace__i">{i + 1}</span>
+            <span className="yrace__t">{r.name}</span>
+            <span className="yrace__m">{dayLabel(r.date)} · {r.km.toFixed(1)} km{r.min ? ` · ${hm(r.min)}` : ''}{r.virtual ? ' · virtual' : r.indoor ? ' · indoors' : ''}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- kudos
+// props: acts (the year's outings), year, aria. Every outing on foot as a dot
+// across the year, higher for more kudos; the most cheered one in orange.
+export function KudosDots({ acts, year, aria }) {
+  const [ref, width] = useWidth(720)
+  const W = Math.max(280, width), narrow = W < 520
+  const H = narrow ? 190 : 220
+  const m = { t: 30, r: 10, b: 26, l: 40 }
+  const foot = acts.filter((a) => FOOT.includes(a.sport_type))
+  if (!foot.length) return <div ref={ref} />
+  const kd = (a) => Number(a.kudos) || 0
+  const top = foot.reduce((b, a) => (kd(a) > kd(b) ? a : b), foot[0])
+  const max = Math.max(1, kd(top)) * 1.1
+  const t0 = tOf(`${year}-01-01`), t1 = tOf(`${year}-12-31`)
+  const x = (a) => m.l + ((tOf(a.date.slice(0, 10)) - t0) / (t1 - t0)) * (W - m.l - m.r)
+  const y = (v) => H - m.b - (v / max) * (H - m.t - m.b)
+  const step = max > 100 ? 50 : max > 40 ? 20 : max > 10 ? 5 : 1
+  const ticks = []
+  for (let v = 0; v <= max; v += step) ticks.push(v)
+  const tx = x(top), right = tx > W * 0.7
+  return (
+    <div ref={ref} className="ykud">
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block' }}>
+        {ticks.map((g) => <g key={g}><line x1={m.l} x2={W - m.r} y1={y(g)} y2={y(g)} className="ykb__grid" /><text x={m.l - 6} y={y(g) + 4} textAnchor="end" className="ykb__gl">{g}</text></g>)}
+        {MON.map((mo, i) => (!narrow || i % 3 === 0) ? <text key={mo} x={m.l + (i / 12) * (W - m.l - m.r)} y={H - 6} className="ykb__gl">{mo}</text> : null)}
+        {foot.filter((a) => a !== top).map((a, i) => <circle key={i} cx={x(a)} cy={y(kd(a))} r={2.4} className="ykud__d" />)}
+        <circle cx={tx} cy={y(kd(top))} r={6} className="ykud__me" />
+        <text x={tx + (right ? -10 : 10)} y={y(kd(top)) + 4} textAnchor={right ? 'end' : 'start'} className="ykud__l">{n0(kd(top))} kudos</text>
+        <text x={m.l} y={14} className="ykb__cap">kudos on one outing</text>
+      </svg>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- rain
+// props: days [{ iso, mm, kind: 'out' | 'in' | null }], aria. Each day a bar of
+// its rain; the mark under it says whether I went out on foot outside (orange),
+// stayed in (black), or had no outing.
+export function RainDays({ days, aria }) {
+  const [ref, width] = useWidth(720)
+  const W = Math.max(280, width), narrow = W < 520
+  const H = narrow ? 200 : 230
+  const m = { t: 30, r: 6, b: 46, l: 40 }
+  const max = Math.max(10, ...days.map((d) => d.mm)) * 1.08
+  const n = days.length
+  const slot = (W - m.l - m.r) / n, bw = Math.max(2, slot * 0.66)
+  const bx = (i) => m.l + slot * i + (slot - bw) / 2
+  const base = H - m.b
+  const y = (v) => base - (v / max) * (H - m.t - m.b)
+  const ticks = max > 40 ? [0, 25, 50] : [0, 10, 20]
+  const top = days.reduce((b, d) => (d.mm > b.mm ? d : b), days[0])
+  return (
+    <div ref={ref} className="yrain">
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block' }}>
+        {ticks.map((g) => <g key={g}><line x1={m.l} x2={W - m.r} y1={y(g)} y2={y(g)} className="ykb__grid" /><text x={m.l - 6} y={y(g) + 4} textAnchor="end" className="ykb__gl">{g}</text></g>)}
+        {days.map((d, i) => (
+          <g key={d.iso}>
+            <rect x={bx(i)} y={y(d.mm)} width={bw} height={Math.max(0, base - y(d.mm))} className="yrain__b" />
+            {d.kind ? <circle cx={bx(i) + bw / 2} cy={base + 12} r={Math.min(4, bw / 2 + 0.5)} className={`yrain__k yrain__k--${d.kind}`} /> : null}
+            {(i % (narrow ? 7 : 5) === 0) ? <text x={bx(i) + bw / 2} y={H - 8} textAnchor="middle" className="ykb__gl">{parseInt(d.iso.slice(8), 10)}</text> : null}
+          </g>
+        ))}
+        {top && top.mm > 0 ? <text x={bx(days.indexOf(top)) + bw / 2} y={y(top.mm) - 6} textAnchor="middle" className="ykb__v is-hot">{Math.round(top.mm)} mm</text> : null}
+        <line x1={m.l} x2={W - m.r} y1={base} y2={base} className="ykb__axis" />
+        <text x={m.l} y={14} className="ykb__cap">mm of rain</text>
+      </svg>
+      <p className="yset__key"><span><i className="yrain__sw yrain__sw--out" />out on foot, outside</span><span><i className="yrain__sw yrain__sw--in" />indoors only</span></p>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- marks
+// props: series [{ label, acts }], target, year, toISO, aria. Each series adds
+// up its kilometres through the year; a dot marks the day it passed the target.
+export function MarkLines({ series, target, year, toISO, aria }) {
+  const [ref, width] = useWidth(720)
+  const W = Math.max(280, width), narrow = W < 520
+  const H = narrow ? 230 : 270
+  const m = { t: 30, r: narrow ? 70 : 96, b: 26, l: 48 }
+  const t0 = tOf(`${year}-01-01`), t1 = tOf(`${year}-12-31`)
+  const x = (iso) => m.l + ((tOf(iso) - t0) / (t1 - t0)) * (W - m.l - m.r)
+  const lines = series.map((s) => {
+    let c = 0
+    const pts = [[`${year}-01-01`, 0]]
+    let hit = null
+    for (const a of s.acts.slice().sort((p, q) => (p.date < q.date ? -1 : 1))) { c += km(a); const d = a.date.slice(0, 10); pts.push([d, c]); if (!hit && c >= target) hit = d }
+    pts.push([toISO, c])
+    return { ...s, pts, hit, total: c }
+  })
+  const max = Math.max(target, ...lines.map((l) => l.total)) * 1.06
+  const y = (v) => H - m.b - (v / max) * (H - m.t - m.b)
+  const ticks = []
+  for (let v = 0; v <= max; v += max > 2400 ? 1000 : 500) ticks.push(v)
+  // the end labels, kept 14 px apart
+  const ly = lines.map((l, k) => ({ k, y: y(l.total) + 4 })).sort((p, q) => p.y - q.y)
+  for (let i = 1; i < ly.length; i++) if (ly[i].y - ly[i - 1].y < 16) ly[i].y = ly[i - 1].y + 16
+  const labY = {}; ly.forEach((o) => { labY[o.k] = o.y })
+  return (
+    <div ref={ref} className="ymark">
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} style={{ display: 'block' }}>
+        {ticks.map((g) => <g key={g}><line x1={m.l} x2={W - m.r} y1={y(g)} y2={y(g)} className={g === target ? 'ymark__goal' : 'ykb__grid'} /><text x={m.l - 6} y={y(g) + 4} textAnchor="end" className="ykb__gl">{n0(g)}</text></g>)}
+        {MON.map((mo, i) => (!narrow || i % 3 === 0) ? <text key={mo} x={m.l + (i / 12) * (W - m.l - m.r)} y={H - 6} className="ykb__gl">{mo}</text> : null)}
+        {lines.map((l, k) => (
+          <g key={l.label} className={`ymark__s ymark__s--${k}`}>
+            <path d={l.pts.map((p, i) => `${i ? 'L' : 'M'}${x(p[0]).toFixed(1)} ${y(p[1]).toFixed(1)}`).join('')} />
+            {l.hit ? <circle cx={x(l.hit)} cy={y(target)} r={5} /> : null}
+            <text x={x(toISO) + 6} y={labY[k]} className="ymark__l">{l.label}</text>
+          </g>
+        ))}
+        <text x={m.l} y={14} className="ykb__cap">km this year</text>
+      </svg>
     </div>
   )
 }

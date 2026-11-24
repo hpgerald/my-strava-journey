@@ -3,7 +3,9 @@ import RasKilomoni from '../charts/RasKilomoni.jsx'
 import BondwaClimbs from '../charts/BondwaClimbs.jsx'
 import { RaceCountdown } from '../charts/KiliHalf.jsx'
 import { BestDay } from '../charts/YearSet.jsx'
-import { YearMoments, Ladder, StreakCal, SlopeCards, DayStack, KitBars, Profile, SilenceBand, DotRows, dayLabel } from '../charts/YearKit.jsx'
+import { YearMoments, Ladder, StreakCal, SlopeCards, DayStack, KitBars, Profile, SilenceBand, DotRows, RaceStrip, KudosDots, RainDays, MarkLines, dayLabel } from '../charts/YearKit.jsx'
+import HBars from '../charts/HBars.jsx'
+import { racesOf } from './races.js'
 import { buildCountdown } from './countdown.js'
 import { streakGoal } from './streakTarget.js'
 import { isNamedCountry } from './geo.js'
@@ -84,7 +86,9 @@ export function yearChapters(ctx) {
   const has = new Set(all.map(d10))
   const events = (EVENTS[Y] || []).filter(([iso]) => has.has(iso)).map(([iso, label]) => ({ iso, label }))
   const build = BUILD[Y]
-  return { open: OPEN[Y] || null, events, chapters: build ? build({ ...ctx, has }).filter(Boolean) : [] }
+  const own = build ? build({ ...ctx, has }).filter(Boolean) : []
+  const common = [racesCh, shoesCh, weatherCh, cheerCh].map((f) => f({ ...ctx, has })).filter(Boolean)
+  return { open: OPEN[Y] || null, events, chapters: [...own, ...common] }
 }
 
 const BUILD = {
@@ -126,8 +130,8 @@ const BUILD = {
       } : null,
       walks.length ? {
         id: 'outside', k: 'First steps outside', t: 'Two walks in Dar es Salaam.',
-        p: ['In October I went for two walks in Dar es Salaam, two days in a row. They were the first outings on foot in my log with a place on the map.'],
-        facts: [{ l: 'km, the longer walk', v: k1(Math.max(...walks.map(kmOf))) }, { l: 'm climbed on those two days', v: n0(sumEl(walks)) }],
+        p: ['In October I went for two walks in Dar es Salaam, two days in a row. They were the first outings on foot in my log with a place on the map, and the longer one gave me my first climb.'],
+        facts: [{ l: 'km, the longer walk', v: k1(Math.max(...walks.map(kmOf))) }, { l: 'm up on it', v: n0(elOf(walks.reduce((b, a) => (kmOf(a) > kmOf(b) ? a : b), walks[0]))) }],
         cap: 'The walks of the year, with their distance and climb.',
         node: <SlopeCards items={walks.map((a, i) => slope(a, i ? 'The second walk' : 'The first walk outside'))} aria={`The walks of ${Y}.`} />,
       } : null,
@@ -135,7 +139,7 @@ const BUILD = {
   },
 
   // ================================================================ 2020
-  2020: ({ Y, acts, all }) => {
+  2020: ({ Y, acts, all, weather }) => {
     const foot = all.filter(isFoot)
     const steps = []
     let best = 0
@@ -152,6 +156,9 @@ const BUILD = {
     const wk = perWeek(acts, `${Y}-01-01`, d10(lastRun || lastAny), (xs) => sumKm(xs))
     const jun = acts.filter((a) => d10(a).slice(5, 7) === '06')
     const wkMax = Math.max(...wk.map((w) => w.v))
+    const may = rainDays(weather, all, `${Y}-05-01`, `${Y}-05-31`)
+    const mayWet = may.reduce((b, d) => (d.mm > b.mm ? d : b), may[0] || { mm: 0 })
+    const mayIn = acts.filter((a) => d10(a).slice(5, 7) === '05' && tread(a))
     return [
       top && top.hot ? {
         id: 'past21', k: 'Past 21 km', t: `${k1(top.km)} km, one step past the half.`,
@@ -159,6 +166,13 @@ const BUILD = {
         facts: [{ l: 'km, the new longest run', v: k1(top.km), hot: true }],
         cap: 'Each step is a new longest run since my first day. The orange step is this year.',
         node: <Ladder steps={ladder} aria={`Each new longest run since 2019: ${ladder.map((x) => `${dayLabel(x.iso)} ${x.iso.slice(0, 4)} ${k1(x.km)} km`).join(', ')}.`} />,
+      } : null,
+      may.length && mayWet.mm >= 20 ? {
+        id: 'rains', k: 'The long rains', t: 'When the rains came, I ran indoors.',
+        p: [`Having a loop indoors meant the rain did not decide my day. In May the long rains came to Dar es Salaam. I walked outside twice in the middle of the month, and every other outing was a run indoors, the ${parseInt(mayWet.iso.slice(8), 10)}th included, when ${n0(mayWet.mm)} mm of rain fell.`],
+        facts: [{ l: 'runs indoors in May', v: n0(mayIn.length), hot: true }, { l: 'mm of rain in May', v: n0(may.reduce((t, d) => t + d.mm, 0)) }],
+        cap: 'Each bar is a day of May and its rain. The dot under it is an outing.', wide: true,
+        node: <RainDays days={may} aria={`Rain each day of May ${Y} in Dar es Salaam, with my outings: ${n0(mayIn.length)} runs indoors and two walks outside.`} />,
       } : null,
       {
         id: 'june', k: 'June, the last good month', t: `June: ${n0(jun.length)} outings.`,
@@ -211,7 +225,7 @@ const BUILD = {
       },
       {
         id: 'august', k: `August, ${n0(sumKm(aug))} km`, t: 'My biggest month ever.',
-        p: ['I still had the drive to do as many kilometres a day as I could, to see quick results. That month I also took on a big one, the Athletic Brewing 70.3 challenge.', `Morning and evening sessions, and a push here and there: ${n0(augDoubles)} days of the month had two outings or more.`],
+        p: ['I still had the drive to do as many kilometres a day as I could, to see quick results. That month I also took on a big one, the Athletic Brewing 70.3 challenge.', `Morning and evening sessions, and a push here and there: ${n0(augDoubles)} days of the month had two outings or more. And every month from July to December went past ${n0(Math.floor(Math.min(...perMonth(acts, Y, sumKm, 6, 11).map((m) => m.v)) / 10) * 10)} km on foot.`],
         facts: [{ l: 'km on foot in August', v: n0(sumKm(aug)), hot: true }, { l: 'outings', v: n0(aug.length) }, { l: 'km, the longest day', v: k1(Math.max(...aug.filter(isFoot).map(kmOf))) }],
         cap: 'Each bar is a day of August, taller for more kilometres.', wide: true,
         node: <YearMoments acts={all} fromISO={`${Y}-08-01`} toISO={`${Y}-08-31`} events={[{ iso: `${Y}-08-14`, label: 'First 30 km, indoors' }, ...(big ? [{ iso: big.from, label: `The ${big.len}-day streak begins` }] : [])].filter((e) => e.iso.slice(5, 7) === '08')} aria={`Every day of August ${Y}: ${n0(sumKm(aug))} km on foot in ${aug.length} outings.`} />,
@@ -232,7 +246,7 @@ const BUILD = {
       },
       thirty.length >= 4 ? {
         id: 'thirty', k: 'Thirty, twice in a row', t: 'Two days of 30 km, twice.',
-        p: ['Twice in December I ran 30 km indoors on two days in a row: in the middle of the month, and again on the last two days of the year.'],
+        p: ['Twice in December I ran 30 km indoors on two days in a row: in the middle of the month, and again on the last two days of the year.', (() => { const eve = act(acts, `${Y}-12-24`, 'Run'); return `The month came to ${n0(sumKm(acts.filter((a) => d10(a).slice(5, 7) === '12')))} km on foot.${eve ? ` On Christmas Eve I ran ${k1(kmOf(eve))} km as part of a 300K endurance challenge.` : ''}` })()],
         facts: [{ l: 'km in those four days', v: n0(thirty.reduce((t, a) => t + kmOf(a), 0)), hot: true }],
         cap: 'The four days of 30 km, two pairs.',
         node: <KitBars items={thirty.map((a) => ({ label: dayLabel(d10(a)), value: kmOf(a), display: `${k1(kmOf(a))} km`, tone: 'big' }))} ticks={[0, 10, 20, 30]} yCap="km" aria={`Four runs of 30 km in December ${Y}: ${thirty.map((a) => dayLabel(d10(a))).join(', ')}.`} />,
@@ -265,6 +279,15 @@ const BUILD = {
     const zan = acts.filter((a) => /Zanzibar|Unguja|Pemba/.test((geo[a.activity_key] || {}).region || ''))
     const ken = acts.filter((a) => (geo[a.activity_key] || {}).country === 'Kenya')
     const hikes = [act(acts, `${Y}-05-14`, null, elOf), act(acts, `${Y}-06-23`, null, elOf), act(acts, `${Y}-08-20`, null, elOf)].filter(Boolean)
+    const isRun = (a) => a.sport_type === 'Run' || a.sport_type === 'TrailRun'
+    const runMo = perMonth(acts, Y, (xs) => xs.filter(isRun).reduce((t, a) => t + kmOf(a), 0))
+    const run300 = runMo.filter((m) => m.v >= 300)
+    const lastBig = run300.length ? run300[run300.length - 1] : null
+    const since = (() => { if (!lastBig) return null; const after = `${Y}-${String(lastBig.i + 1).padStart(2, '0')}`; const m = {}; all.filter((a) => isRun(a) && d10(a).slice(0, 7) > after).forEach((a) => { const k = d10(a).slice(0, 7); m[k] = (m[k] || 0) + kmOf(a) }); const e = Object.entries(m).sort((p, q) => q[1] - p[1])[0]; return e ? { ym: e[0], v: e[1] } : null })()
+    const runMax = Math.max(...runMo.map((m) => m.v))
+    const listOf = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}` : xs[0])
+    const south = [slope(act(acts, `${Y}-09-28`, 'Walk'), 'A walk in Iringa'), slope(act(acts, `${Y}-10-08`, 'TrailRun', elOf), 'The Lukwangule Plateau', { hot: true }), slope(act(acts, `${Y}-10-15`, 'TrailRun'), 'Mpanga Kipengere')].filter(Boolean)
+    const series = inRange(all, `${Y}-11-28`, `${Y + 1}-01-02`).filter(isFoot)
     return [
       {
         id: 'fullest', k: 'The fullest year', t: rankN === 1 ? 'More outings than any other year.' : `${n0(s.n)} outings.`,
@@ -288,9 +311,16 @@ const BUILD = {
         more: more('/records', 'The marathon among my records →'),
         node: <BestDay acts={acts} aria={`The marathon, ${k1(kmOf(mara))} km, against every other outing of ${Y}.`} />,
       } : null,
+      run300.length >= 2 ? {
+        id: 'run300', k: 'Months of 300 km', t: `${run300.length === 5 ? 'Five' : n0(run300.length)} months of 300 km running.`,
+        p: [`The running was at its height in the first half of the year. I ran 300 km or more in ${listOf(run300.map((m) => MONF[m.i]))}.`, since ? `${MONF[lastBig.i]} was the last month like that. No month since has reached 300 km of running, and the nearest was ${MONF[parseInt(since.ym.slice(5), 10) - 1]} ${since.ym.slice(0, 4)}, at ${n0(since.v)} km.` : ''],
+        facts: [{ l: 'km run, the biggest month', v: n0(runMax), hot: true }],
+        cap: 'Each bar is a month of running, trail runs included. The orange months passed 300 km.',
+        node: <KitBars items={runMo.map((m) => ({ label: MON[m.i], value: m.v, display: m.v === runMax ? `${n0(m.v)} km` : '', tone: m.v >= 300 ? 'big' : 'mid' }))} ticks={[0, 100, 200, 300]} yCap="km run" aria={`Kilometres run each month of ${Y}: ${runMo.map((m) => `${MONF[m.i]} ${n0(m.v)} km`).join(', ')}.`} />,
+      } : null,
       {
         id: 'hills', k: 'Into the hills', t: 'The first mountains.',
-        p: ['In May I climbed in Morogoro, and in June came my first hike and my first trip to Bondwa Peak, training for Kilimanjaro.', 'In August a trail run in Morogoro became my most cheered outing of the year.'],
+        p: ['In May I climbed in Morogoro, and in June came my first hike and my first trip to Bondwa Peak, training for Kilimanjaro.'],
         facts: hikes.map((a, i) => ({ l: `m up, ${dayLabel(d10(a))}`, v: n0(elOf(a)), hot: i === 1 })),
         cap: 'Each bar is a month, as tall as its climbing on foot. The named months had a mountain day.',
         node: <KitBars items={elMo.map((m) => ({ label: MON[m.i], value: m.v, display: named[m.i] && m.v >= 300 ? (m.v >= elMax * 0.99 ? `${n0(m.v)} m` : '') : '', tone: named[m.i] ? 'big' : 'mid' }))} ticks={ticksTo(elMax, elMax > 2000 ? 1000 : 500)} yCap="m climbed" keys={[{ tone: 'big', label: 'a month with a mountain day' }, { tone: 'mid', label: 'other months' }]} aria={`Climbing on foot each month of ${Y}: ${elMo.map((m) => `${MONF[m.i]} ${n0(m.v)} m`).join(', ')}.`} />,
@@ -302,11 +332,25 @@ const BUILD = {
         cap: 'Both lines add up through the year. Where the orange line passes the grey one, the walks took the lead.',
         node: <TwoLines years={MON} xLabels={MON} xCap="month" yCap="outings so far" a={{ label: 'Runs', values: R }} b={{ label: 'Walks', values: W }} cross={cross} crossLabel={cross >= 0 ? `walks ahead for good` : undefined} aria={`Walks and runs adding up through ${Y}: ${nW} walks and ${nR} runs by the end of the year.`} />,
       },
+      south.length >= 2 ? {
+        id: 'south', k: 'Iringa, the Uluguru and Mbeya', t: 'Further south and west.',
+        p: [`In the last days of September I walked in Iringa. In October I climbed the Lukwangule Plateau in the Uluguru, and ran a trail in Mpanga Kipengere in Mbeya region.`],
+        cap: 'Each shape is one outing: wider for more distance, taller for more climb.',
+        more: more('/uluguru', 'The Uluguru chapter →'),
+        node: <SlopeCards items={south} aria="A walk in Iringa, the Lukwangule Plateau and a trail run in Mpanga Kipengere." />,
+      } : null,
       zan.length || ken.length ? {
         id: 'away', k: 'Across the water and the border', t: 'Zanzibar, and a first trip to Kenya.',
         p: [zan.length ? 'In March I went out in Zanzibar for the first time, and I came back to the islands during the year.' : '', ken.length ? 'In December I went with a group to Naivasha and the Masai Mara, my first outings in Kenya.' : ''],
         cap: 'The trips of the year, with the date of the first outing there.',
         node: <SlopeCards flat items={[zan.length ? { iso: d10(zan[0]), title: 'Zanzibar', v: n0(zan.length), u: 'outings', note: `${n0(sumKm(zan))} km on foot` } : null, ken.length ? { iso: d10(ken[0]), title: 'Kenya, Naivasha and the Masai Mara', v: n0(ken.length), u: 'outings', hot: true } : null].filter(Boolean)} aria="The trips of the year." />,
+      } : null,
+      series.length >= 10 ? {
+        id: 'series', k: 'A series of walks', t: 'The year ended walking.',
+        p: ['I closed the year with a numbered series of fourteen outings, most of them evening walks of about 6 km, from the end of November into the first days of the new year. One of them was a walk on a trip to Iringa.'],
+        facts: [{ l: 'km on foot in December', v: n0(sumKm(acts.filter((a) => d10(a).slice(5, 7) === '12'))), hot: true }],
+        cap: 'Each bar is a day, taller for more kilometres.', wide: true,
+        node: <YearMoments acts={all} fromISO={`${Y}-11-27`} toISO={`${Y + 1}-01-03`} events={[{ iso: `${Y}-11-28`, label: 'The first of the series' }, { iso: `${Y}-12-02`, label: 'A walk in Iringa' }, { iso: `${Y + 1}-01-02`, label: 'The fourteenth' }]} aria={`Every day from the end of November ${Y} to the first days of ${Y + 1}, with the series of walks.`} />,
       } : null,
     ]
   },
@@ -327,6 +371,11 @@ const BUILD = {
     const prs = perMonth(acts, Y, (xs) => xs.reduce((t, a) => t + (Number(a.prs) || 0), 0))
     const prTot = prs.reduce((t, m) => t + m.v, 0), prMax = Math.max(...prs.map((m) => m.v))
     const lastPr = [...prs].reverse().find((m) => m.v > 0)
+    const strength = STRENGTH.filter(([iso]) => iso.startsWith(String(Y))).map(([iso, kind, half]) => {
+      const rs = onDay(acts, iso).filter((a) => a.sport_type === 'Run' && (!half || (half === 'am' ? Number(a.hour) < 12 : Number(a.hour) >= 12)))
+      return rs.length ? { kind, a: rs.sort((p, q) => kmOf(q) - kmOf(p))[0] } : null
+    }).filter(Boolean)
+    const strengthNext = STRENGTH.filter(([iso]) => iso.startsWith(String(Y + 1))).length
     const SELL = (a, i) => (i === 0 && kmOf(a) < 3 ? 'Warm-up' : kmOf(a) < 3 ? 'Cool-down' : a.sport_type === 'TrailRun' ? 'The race, on the trail' : `A ${a.sport_type === 'Hike' ? 'hike' : 'walk'} begun two minutes later`)
     return [
       {
@@ -352,6 +401,12 @@ const BUILD = {
         more: more('/kilimanjaro', 'The Kilimanjaro chapter →'),
         node: <YearMoments acts={all} fromISO={`${Y}-02-20`} toISO={`${Y}-04-30`} events={[{ iso: `${Y}-02-26`, label: 'The Kilimanjaro Half' }, { iso: `${Y}-03-06`, label: 'Kilimanjaro, four days' }, { iso: `${Y}-03-24`, label: 'The challenge, four days of 25 km' }, { iso: `${Y}-04-30`, label: 'Mount Hanang' }]} aria={`Every day from late February to the end of April ${Y}.`} />,
       },
+      strength.length >= 5 ? {
+        id: 'strength', k: 'Runs and strength', t: 'A short run, then 50 squats.',
+        p: [`From the middle of April I often finished a short run with 50 squats or 50 push-ups. There were ${n0(strength.length)} such runs on ${n0(new Set(strength.map((x) => d10(x.a))).size)} days of the year${strengthNext ? `, and the habit came back in ${Y + 1}, with ${n0(strengthNext)} more` : ''}.`],
+        cap: 'One dot is one run, bigger for a longer one, in the order they came.',
+        node: <DotRows rows={[{ label: 'with squats', acts: strength.filter((x) => x.kind === 'S').map((x) => x.a), hot: true }, { label: 'with push-ups', acts: strength.filter((x) => x.kind === 'P').map((x) => x.a) }, { label: 'with both', acts: strength.filter((x) => x.kind === 'B').map((x) => x.a) }]} aria={`Runs of ${Y} finished with squats or push-ups: ${strength.length} in all.`} />,
+      } : null,
       {
         id: 'breather', k: 'The breather', t: 'After the spring, a breather.',
         p: [`After so much in the spring, the rest of the year went quieter. ${MONF[light[0].i]} and ${MONF[light[1].i]} were my lightest months. Quiet months like these come naturally for me, a breather after the fatigue of the months before, and then I kick it back again.`],
@@ -412,7 +467,7 @@ const BUILD = {
       },
       st && st.fullLen >= 30 ? {
         id: 'streak', k: `${st.fullLen === 67 ? 'Sixty-seven' : n0(st.fullLen)} days`, t: `${n0(st.fullLen)} days in a row, into the new year.`,
-        p: [`From the last day of ${MONF[parseInt(st.from.slice(5, 7), 10) - 1]} I went out every day, much of it in Malawi, and the run of days carried on into ${Y + 1}.`],
+        p: [`From the last day of ${MONF[parseInt(st.from.slice(5, 7), 10) - 1]} I went out every day, much of it in Malawi, and the run of days carried on into ${Y + 1}.`, (() => { const h = act(acts, `${Y}-11-10`, 'Run'); return `In its first days I counted down to Poppy Day on 11 November, with a run every day${h && kmOf(h) >= 21 ? ` and a half marathon${tread(h) ? ' indoors' : ''} on the Sunday before` : ''}.` })()],
         facts: [{ l: 'days in a row', v: n0(st.fullLen), hot: true }, { l: `km on foot in ${MONF[10]}`, v: n0(sumKm(acts.filter((a) => d10(a).slice(5, 7) === '11'))) }],
         cap: 'Weeks run Sunday to Saturday, each day in the colour of its country; the palest days have no place on the map. The orange line is the streak.', wide: true,
         node: <StreakCal acts={all} fromISO={`${Y}-10-01`} toISO={st.fullTo > `${Y + 1}-01-31` ? st.fullTo : `${Y + 1}-01-31`} colorBy="country" geoByKey={geo} streak={{ fromISO: st.fullFrom, toISO: st.fullTo, label: `${st.fullLen} days in a row` }} aria={`Every day from October ${Y} to January ${Y + 1}, with the ${st.fullLen}-day streak.`} />,
@@ -440,6 +495,10 @@ const BUILD = {
     const outY = acts.filter((a) => a.sport_type === 'Run' && !tread(a)), prevOut = all.filter((a) => a.year === String(Y - 1) && a.sport_type === 'Run' && !tread(a))
     const runMax = Math.max(...runs.map((m) => m.v[0] + m.v[1]))
     const st = streaksIn(all, `${Y}-12-01`, `${Y}-12-31`).find((x) => x.to === `${Y}-12-31`)
+    const kmMo = perMonth(acts, Y, sumKm)
+    const bigMo = kmMo.reduce((b, m) => (m.v > b.v ? m : b), kmMo[0])
+    const nextMo = kmMo.filter((m) => m !== bigMo).reduce((b, m) => (m.v > b.v ? m : b), kmMo[0] === bigMo ? kmMo[1] : kmMo[0])
+    const jul = acts.filter((a) => d10(a).slice(5, 7) === '07')
     return [
       {
         id: 'hard', k: 'A hard year', t: 'The job ended, and the days held.',
@@ -470,6 +529,13 @@ const BUILD = {
         cap: 'My days on Hanang. Each shape is one outing: wider for more distance, taller for more climb.',
         more: more('/hanang', 'The Hanang chapter →'),
         node: <SlopeCards items={han.map((a) => slope(a, d10(a).startsWith(String(Y)) ? 'The adventure race' : d10(a) < `${Y}` ? 'The first day on Hanang' : 'The race again', { hot: d10(a).startsWith(String(Y)) }))} aria="My days on Hanang." />,
+      } : null,
+      bigMo.i === 6 ? {
+        id: 'july', k: 'The big July', t: 'July, my month of the year.',
+        p: [`July went furthest, ${n0(bigMo.v)} km on foot, against ${n0(nextMo.v)} in ${MONF[nextMo.i]}, the next best. In the middle of the month I also took on 10,000 steps a day for 21 days.`],
+        facts: [{ l: 'outings in July', v: n0(jul.length), hot: true }, { l: 'days out in July', v: n0(daysOut(jul)) }],
+        cap: 'Each bar is a month, as tall as its kilometres on foot.',
+        node: <KitBars items={kmMo.map((m) => ({ label: MON[m.i], value: m.v, display: m === bigMo || m === nextMo ? `${n0(m.v)} km` : '', tone: m === bigMo ? 'big' : 'mid' }))} ticks={ticksTo(bigMo.v, 100)} yCap="km on foot" aria={`Kilometres on foot each month of ${Y}: ${kmMo.map((m) => `${MONF[m.i]} ${n0(m.v)} km`).join(', ')}.`} />,
       } : null,
       {
         id: 'outside', k: 'Running goes outside', t: 'My running moved outside.',
@@ -517,6 +583,14 @@ const BUILD = {
     const firstTime = yrsBefore.every((y) => { const xs = all.filter((a) => Number(a.year) === y); return xs.filter((a) => a.sport_type === 'Walk').reduce((t, a) => t + kmOf(a), 0) <= xs.filter((a) => a.sport_type === 'Run').reduce((t, a) => t + kmOf(a), 0) })
     const wLead = Wk[Wk.length - 1] > Rk[Rk.length - 1]
     const rkLast = rk && rk.length ? rk[rk.length - 1] : null
+    const weru = act(acts, `${Y}-01-25`, 'TrailRun'), pande = act(acts, `${Y}-06-07`, 'TrailRun')
+    const water = [slope(act(acts, `${Y}-01-24`, 'Walk'), 'The Materuni Waterfalls'), slope(act(acts, `${Y}-06-17`, 'Walk'), 'Lake Ngosi', { hot: true }), slope(onDay(acts, `${Y}-06-17`).filter((a) => a.sport_type === 'Walk').sort((p, q) => kmOf(p) - kmOf(q))[0], 'The Kapologwe Waterfalls')].filter(Boolean)
+    const marks = [
+      { label: 'on foot', acts: acts.filter(isFoot) },
+      { label: 'running', acts: acts.filter((a) => a.sport_type === 'Run' || a.sport_type === 'TrailRun') },
+      { label: 'walking', acts: acts.filter((a) => a.sport_type === 'Walk') },
+    ].map((x) => { let c = 0; const hit = x.acts.find((a) => (c += kmOf(a)) >= 1000); return { ...x, hit: hit ? d10(hit) : null } })
+    const site = inRange(acts, `${Y}-10-06`, `${Y}-10-13`).filter(isFoot)
     return [
       st ? {
         id: 'everyday', k: 'Every day', t: goal.met ? 'The finish line.' : s.activeDays === Math.round((tOf(last) - tOf(`${Y}-01-01`)) / DAY) + 1 ? 'Every day, on purpose.' : `${n0(st.len)} days in a row.`,
@@ -542,7 +616,7 @@ const BUILD = {
       } : null,
       rk && rk.length ? {
         id: 'fifty', k: 'Fifty trips', t: rk.length >= 50 ? 'Trip L, and 2,000 on Strava.' : `${rk.length} trips to Ras Kilomoni.`,
-        p: ['Going to Ras Kilomoni 50 times is no joke, given its terrain and the weather. I knew trip L would also be my 2,000th activity on Strava, and I had been waiting patiently for the badge it gives.', 'It was a beautiful day, and it is what pushed me to start this site and tell my story.'],
+        p: ['Going to Ras Kilomoni 50 times is no joke, given its terrain and the weather. I knew trip L would also be my 2,000th activity on Strava, and I had been waiting patiently for the badge it gives.', 'It was a beautiful day, and it is what pushed me to start this site and tell my story.', act(acts, `${Y}-08-12`, 'Walk') ? 'Two weeks before it, I marked seven years on Strava with a short evening walk.' : ''],
         facts: [{ l: 'trips', v: n0(rk.length), hot: true }, { l: 'km on those trips', v: n0(rk.reduce((t, r) => t + r.km, 0)) }],
         cap: 'One tile is one trip, numbered in Roman numerals.', wide: true,
         more: more('/goals', 'Ras Kilomoni on Goals →'),
@@ -553,6 +627,18 @@ const BUILD = {
         p: ['Beyond the streak, the dream is trails: as many as I can, for the beauty of raw nature, especially in the rainy season.', 'In Rukwa I ran the Kalambo Falls festival race, 15 km that came to 17 km on my watch. In Njombe I finally went to Kitulo National Park, on my bucket list for years, and I will be back to spend more time on its trails.'],
         cap: 'Five trail days of the year. Each shape is one outing: wider for more distance, taller for more climb.', wide: true,
         node: <SlopeCards items={trails.map((t) => ({ ...t, hot: t.elev === Math.max(...trails.map((x) => x.elev)) }))} aria="Five trail days of the year." />,
+      } : null,
+      weru && pande ? {
+        id: 'longtrails', k: 'Two long trail days', t: 'The two longest trail days of the year.',
+        p: ['The longest was a survey of the Weruweru route in Kilimanjaro region in January, as I got ready for the Half. The second came in June, in the Pande Game Reserve.'],
+        cap: 'Each shape is one outing: wider for more distance, taller for more climb.',
+        node: <SlopeCards items={[slope(weru, 'The Weruweru route', { hot: true }), slope(pande, 'Pande Game Reserve')]} aria={`The two longest trail days of ${Y}: ${k1(kmOf(weru))} km and ${k1(kmOf(pande))} km.`} />,
+      } : null,
+      water.length === 3 ? {
+        id: 'water', k: 'Waterfalls and a crater lake', t: 'Three walks to the water.',
+        p: ['The first went to the Materuni Waterfalls in Kilimanjaro region in January. In June, in Mbeya region, I walked up to Lake Ngosi, a crater lake, in the morning, and to the Kapologwe Waterfalls in the evening.'],
+        cap: 'Each shape is one outing: wider for more distance, taller for more climb.',
+        node: <SlopeCards items={water} aria="Walks to the Materuni Waterfalls, Lake Ngosi and the Kapologwe Waterfalls." />,
       } : null,
       longRun ? {
         id: 'long', k: 'The long run', t: `${k1(kmOf(longRun))} km, my longest run outside.`,
@@ -575,9 +661,200 @@ const BUILD = {
         cap: 'Both lines add up through the year: walks in orange, runs on the road and indoors in grey.',
         node: <TwoLines years={MON.slice(0, lastMo + 1)} xLabels={MON.slice(0, lastMo + 1)} xCap="month" yCap={`km${SO}`} a={{ label: 'Runs', values: Rk }} b={{ label: 'Walks', values: Wk }} cross={cross} aria={`Kilometres walked and run adding up through ${Y}: ${n0(Wk[Wk.length - 1])} km walked and ${n0(Rk[Rk.length - 1])} km run on the road and indoors.`} />,
       } : null,
+      marks.every((x) => x.hit) ? {
+        id: 'thousand', k: 'Three times 1,000 km', t: '1,000 km, three times over.',
+        p: [`I passed 1,000 km on foot in ${MONF[parseInt(marks[0].hit.slice(5, 7), 10) - 1]}, 1,000 km of running, trail runs included, in ${MONF[parseInt(marks[1].hit.slice(5, 7), 10) - 1]}, and 1,000 km of walking in ${MONF[parseInt(marks[2].hit.slice(5, 7), 10) - 1]}.`, 'Walking 1,000 km was a goal I set for the year.'],
+        cap: 'Each line adds up its kilometres through the year. The dot is the day it passed 1,000 km.',
+        node: <MarkLines series={marks} target={1000} year={Y} toISO={last} aria={`Kilometres adding up through ${Y}: 1,000 km on foot by ${dayLabel(marks[0].hit)}, of running by ${dayLabel(marks[1].hit)}, of walking by ${dayLabel(marks[2].hit)}.`} />,
+      } : null,
+      site.length >= 4 ? {
+        id: 'site', k: 'Building this site', t: 'Building this site, and still going out.',
+        p: ['While I built this site I kept the streak going, often with a run late at night.'],
+        facts: [{ l: 'outings on foot, 6 to 13 October', v: n0(site.length), hot: true }, { l: 'km on foot', v: n0(sumKm(site)) }],
+        cap: 'Each bar is a day, taller for more kilometres.', wide: true,
+        node: <YearMoments acts={all} fromISO={`${Y}-10-04`} toISO={`${Y}-10-17`} events={[{ iso: `${Y}-10-06`, label: 'The week of building the site' }]} aria={`Every day from 4 to 17 October ${Y}, the days I built this site.`} />,
+      } : null,
     ]
   },
 }
 
 // the last day in the log
 function ctxLast(all) { return all.reduce((m, a) => (d10(a) > m ? d10(a) : m), '') }
+
+// The runs I finished with squats (S), push-ups (P) or both (B), from my own
+// titles: [day, kind, 'am' | 'pm' when the day had two runs]
+const STRENGTH = [
+  ['2023-04-16', 'S'], ['2023-04-20', 'B'], ['2023-04-21', 'P', 'am'], ['2023-04-21', 'S', 'pm'], ['2023-04-22', 'P'], ['2023-04-24', 'P', 'am'], ['2023-04-24', 'S', 'pm'],
+  ['2023-04-25', 'S', 'am'], ['2023-04-25', 'P', 'pm'], ['2023-05-02', 'S'], ['2023-09-03', 'S'], ['2023-11-01', 'S'], ['2023-11-14', 'S'], ['2023-12-03', 'B'],
+  ['2024-01-26', 'S'], ['2024-01-27', 'S'], ['2024-01-29', 'S'], ['2024-01-30', 'S'], ['2024-02-06', 'S'], ['2024-02-07', 'S'], ['2024-02-08', 'S'], ['2024-02-14', 'S'],
+  ['2024-09-02', 'S'], ['2024-09-03', 'S'], ['2024-12-12', 'S'], ['2024-12-19', 'S'], ['2024-12-20', 'S'],
+]
+
+// each day of a stretch with its rain where I was, and what I did that day:
+// 'out' a walk or run outside, 'in' indoors only, null no outing on foot
+function rainDays(weather, all, fromISO, toISO) {
+  const w = {}
+  for (const r of weather || []) w[r.date] = r
+  const out = []
+  for (let d = fromISO; d <= toISO; d = addDays(d, 1)) {
+    if (!w[d]) continue
+    const xs = onDay(all, d).filter(isFoot)
+    out.push({ iso: d, mm: Number(w[d].rain_mm) || 0, kind: xs.some((a) => !tread(a)) ? 'out' : xs.length ? 'in' : null })
+  }
+  return out
+}
+
+// ================================================================ every year
+// Four sections built for every year from the data: the races, the shoes, the
+// weather and the most cheered outing. The words for each year are below; a
+// year with none (2027) still gets the numbers, in plain words.
+const WORDN = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten']
+const ORDW = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth']
+const hm = (min) => hmin(min)
+const raceBy = (rs, iso) => rs.find((r) => r.date === iso)
+
+const RACE_NOTE = {
+  2021: (rs) => ({ k: 'My first races', t: 'Two races, both 10 km.', p: [
+    (() => { const a = raceBy(rs, '2021-11-07'); return a ? `My first race was the NBC Dodoma Marathon, 10 km with ${n0(a.prs)} PRs on the way.` : '' })(),
+    'Before it, in October, I ran a survey of a marathon route in the city. Four weeks after Dodoma came my second race, the UDSM Marathon in Dar es Salaam.',
+  ] }),
+  2022: (rs) => ({ k: 'Four races', t: 'Four races, and my first Selous.', p: [
+    (() => { const a = raceBy(rs, '2022-08-20'); return a ? `The Selous Trail Marathon in Morogoro was the biggest climb of them, ${n0(a.elev)} m up, and with ${n0(a.kudos)} kudos it became my most cheered outing of the year.` : '' })(),
+    'Before it came a virtual half marathon, indoors in May, then the NBC Marathon in Dodoma and the CRDB Marathon in Dar es Salaam, 10 km each, and I walked both.',
+  ], cheered: true }),
+  2023: () => ({ k: 'Race season', t: 'Five races in nine weeks.', p: [
+    'Racing took over the middle of the year. From the end of June to the end of August came the JKT Marathon and the NBC Marathon in Dodoma, 10 km each, the CRDB Marathon in Dar es Salaam, the Selous Trail Marathon in Morogoro, and a week after Selous the Dar Night Run.',
+    'Between them I took a short evening walk at Magoroto Lake in Tanga region, my first outing there.',
+  ] }),
+  2024: (rs, ctx) => ({ k: 'Three races', t: 'Three races, one of them in the rain.', p: [
+    (() => { const a = raceBy(rs, '2024-02-25'), prev = (ctx.kili || []).find((k) => String(k.year) === '2023'); return a ? `The second Kilimanjaro Half went better than the first${prev && Number(prev.moving_min) > a.min ? `, ${n0(Number(prev.moving_min) - a.min)} minutes quicker` : ''}, with ${n0(a.prs)} PRs on the way.` : '' })(),
+    (() => { const w = (ctx.weather || []).filter((r) => Number(r.outdoor_foot) > 0); const d = w.find((r) => r.date === '2024-05-05'); const top = w.reduce((b, r) => (Number(r.rain_mm) > Number(b.rain_mm) ? r : b), w[0] || {}); return `The Dar City Marathon in May fell on ${d && top && top.date === d.date ? 'the wettest day I have ever gone out in' : 'one of the wettest days I have gone out in'}, and I walked its 10 km all the same. In July I walked the NBC Dodoma Marathon, 10 km again.` })(),
+  ] }),
+  2025: (rs) => ({ k: 'Five races', t: 'Two halves in two months.', p: [
+    (() => { const a = raceBy(rs, '2025-07-27'), b = raceBy(rs, '2025-09-28'); return a && b ? `The longer races came in the second half of the year. I ran the NBC Dodoma Half in July${a.indoor ? ' indoors' : ''}, and in September I walked the Saifee Hospital Half Marathon in Dar es Salaam.` : '' })(),
+    (() => { const a = raceBy(rs, '2025-08-23'); return a ? `In between I went back to the Selous Trail for the third time, and climbed ${n0(a.elev)} m.` : '' })(),
+  ] }),
+  2026: (rs, ctx) => ({ k: 'Six races', t: 'Six races, two of them virtual.', p: [
+    (() => { const b = raceBy(rs, '2026-05-09'); return `A virtual race lets me race wherever I am. In April I ran the Pope's Africa Marathon 10 km on my own route in Dar es Salaam${b ? `, and in May a virtual half marathon in Dodoma` : ''}.` })(),
+    (() => { const a = raceBy(rs, '2026-08-29'); return a ? `The last race of the year${ctxLast(ctx.all) < '2026-12-31' ? ' so far' : ''} was the Dar Night Run, with ${n0(a.prs)} PRs, the day after my 2,000th activity on Strava.` : '' })(),
+  ] }),
+}
+
+function racesCh(ctx) {
+  const { Y, acts } = ctx
+  const rs = racesOf(Y, acts)
+  if (!rs.length) return null
+  const o = RACE_NOTE[Y] ? RACE_NOTE[Y](rs, ctx) : {}
+  const km = rs.reduce((t, r) => t + r.km, 0)
+  return {
+    id: 'races', k: o.k || `${WORDN[rs.length] || n0(rs.length)} ${rs.length === 1 ? 'race' : 'races'}`,
+    t: o.t || `${WORDN[rs.length] || n0(rs.length)} ${rs.length === 1 ? 'race' : 'races'}.`,
+    p: o.p || [`I took part in ${rs.map((r) => r.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`],
+    facts: [{ l: 'km raced', v: n0(km), hot: true }, { l: 'PRs on race days', v: n0(rs.reduce((t, r) => t + r.prs, 0)) }],
+    cap: `Each dot is a race, bigger for a longer one${rs.some((r) => r.virtual || r.indoor) ? '. The grey ones I ran away from the course' : ''}.`, wide: true,
+    node: <RaceStrip races={rs} year={Y} aria={`The races of ${Y}: ${rs.map((r) => `${r.name}, ${dayLabel(r.date)}, ${k1(r.km)} km`).join('; ')}.`} />,
+  }
+}
+
+const SHOE_NOTE = {
+  2021: (p) => ({ t: `${n0(p[0].km)} km in ${n0(p[0].days)} days.`, p: [`One pair did most of the work. The ${p[0].model} carried me from September to the end of November, and then the ${p[1] ? p[1].model : 'next pair'} took over and carried me to May 2023.`] }),
+  2023: () => ({ t: 'Three new pairs.', p: ['The Lunarglide 7 lasted until May, and the Lunarglide 5 took over. In November came my first shoes made for trails, the Zegama Trail and the Pegasus Trail.'] }),
+  2024: (p) => { const z = p.find((x) => /Zegama/.test(x.model)), pt = p.find((x) => /Pegasus Trail/.test(x.model)); return { t: 'One pair for the whole year.', p: [z ? `The Zegama Trail carried me from the first days of January to the last day of December, over ${n0(z.n)} outings.` : '', pt ? 'The Pegasus Trail came along in January and February, and the Kilimanjaro Half was its last outing.' : ''] } },
+  2025: (p) => ({ t: `${n0(p[0].km)} km in one pair.`, p: [`The ${p[0].model} did most of the work this year, over ${n0(p[0].n)} outings from February to October. Then the Everun XT 900 took over.`] }),
+  2026: (p) => { const w = p.find((x) => /Winflo/.test(x.model)), c = p.find((x) => /Comfort/.test(x.model)); return { t: 'A pair for each job.', p: [`Since the middle of April each pair has had its own job: the Comfort Footbed for my runs${c ? `, ${n0(c.runs)} of them` : ''}, and the Juniper Trail for the trails.`, w ? 'Before them the Winflo 5 carried me for eight weeks, from February to the middle of April.' : ''] } },
+}
+
+function shoesCh(ctx) {
+  const { Y, acts, gear } = ctx
+  const byId = {}
+  for (const g of gear || []) byId[String(g.gear_id).replace(/\.0$/, '')] = g
+  const m = {}
+  for (const a of acts.filter(isFoot)) {
+    const id = String(a.gear_id || '').replace(/\.0$/, '')
+    if (!id || !byId[id]) continue
+    const o = (m[id] = m[id] || { id, model: byId[id].model, km: 0, n: 0, runs: 0, from: d10(a), to: d10(a) })
+    o.km += kmOf(a); o.n += 1; if (a.sport_type === 'Run') o.runs += 1
+    if (d10(a) < o.from) o.from = d10(a)
+    if (d10(a) > o.to) o.to = d10(a)
+  }
+  const pairs = Object.values(m).sort((p, q) => (p.from < q.from ? -1 : 1))
+  const tot = pairs.reduce((t, x) => t + x.km, 0)
+  if (!pairs.length || tot < 300) return null
+  pairs.forEach((x) => { x.days = Math.round((tOf(x.to) - tOf(x.from)) / DAY) })
+  const byKm = pairs.slice().sort((p, q) => q.km - p.km)
+  const o = SHOE_NOTE[Y] ? SHOE_NOTE[Y](Y === 2021 || Y === 2025 ? byKm : pairs) : {}
+  const rows = pairs.slice(0, 5)
+  return {
+    id: 'shoes', k: 'The shoes', t: o.t || `${WORDN[pairs.length] || n0(pairs.length)} ${pairs.length === 1 ? 'pair' : 'pairs'} of shoes.`,
+    p: o.p || [`The ${byKm[0].model} went furthest, ${n0(byKm[0].km)} km.`],
+    cap: 'Each bar is one pair, as long as its kilometres on foot this year, in the order I started them.',
+    more: more('/sports', 'Every pair, on Sports →'),
+    node: <HBars rows={rows.map((x) => ({ key: x === byKm[0] ? 'ink' : 'quiet', label: x.model, value: x.km, display: `${n0(x.km)} km`, sub: `${dayLabel(x.from)} to ${dayLabel(x.to)}` }))} aria={`The shoes of ${Y}: ${rows.map((x) => `${x.model} ${n0(x.km)} km`).join(', ')}.`} />,
+  }
+}
+
+const WEATHER_NOTE = {
+  2021: 'The heat of Dodoma did not keep me in, and the wettest day I went out was race day in Dar es Salaam.',
+  2022: 'Both the hottest and the wettest days I went out came early in the year, in Dodoma, three weeks apart.',
+  2023: 'Morogoro gave me both ends of the weather. The wettest day was the first of my two days on its trails in January, and the hottest came a month later.',
+  2024: 'The hottest day I went out was in Malawi, in my first week there.',
+  2025: 'Both came in Morogoro: the wettest on the weekend of Bondwa in the rain, the hottest at the end of November.',
+  2026: 'April gave me both. The hottest day out was in Kenya, on the trip to the Ngong Hills, and the wettest came a week later in Dar es Salaam, the day of my long run.',
+}
+
+function weatherCh(ctx) {
+  const { Y, weather } = ctx
+  const w = (weather || []).filter((r) => r.date.startsWith(String(Y)) && Number(r.outdoor_foot) > 0)
+  if (w.length < 20) return null
+  const hot = w.reduce((b, r) => (Number(r.tmax_c) > Number(b.tmax_c) ? r : b), w[0])
+  const wet = w.reduce((b, r) => (Number(r.rain_mm) > Number(b.rain_mm) ? r : b), w[0])
+  const nWet = w.filter((r) => Number(r.rain_mm) >= 1).length
+  return {
+    id: 'weather', k: 'The weather', t: `Rain on ${pc(nWet / w.length)}% of my days outside.`,
+    p: [WEATHER_NOTE[Y] || `The hottest day I went out was in ${hot.place}, and the wettest in ${wet.place}.`],
+    cap: 'The weather at the middle of each region, from the Open-Meteo archive.',
+    more: more('/where', 'The rain, on Where →'),
+    node: <SlopeCards flat items={[
+      { iso: hot.date, title: 'The hottest day out', v: Number(hot.tmax_c).toFixed(1), u: '°C', note: hot.place, hot: true },
+      { iso: wet.date, title: 'The wettest day out', v: n0(Number(wet.rain_mm)), u: 'mm of rain', note: wet.place },
+    ]} aria={`The weather of my days outside in ${Y}: the hottest ${Number(hot.tmax_c).toFixed(1)} °C, the wettest ${n0(Number(wet.rain_mm))} mm of rain.`} />,
+  }
+}
+
+function cheerCh(ctx) {
+  const { Y, acts, all, s, kili } = ctx
+  if (Y === 2021 || Y === 2023 || (RACE_NOTE[Y] && RACE_NOTE[Y]([], ctx).cheered)) return null
+  const foot = acts.filter(isFoot)
+  if (!foot.length) return null
+  const kd = (a) => Number(a.kudos) || 0
+  const top = foot.reduce((b, a) => (kd(a) > kd(b) ? a : b), foot[0])
+  const halfDays = new Set((kili || []).map((k) => String(k.date).slice(0, 10)))
+  // how many years in a row the Half has been the most cheered outing
+  let run = 0
+  for (let y = Y; ; y--) {
+    const xs = all.filter((a) => Number(a.year) === y && isFoot(a))
+    if (!xs.length) break
+    const t = xs.reduce((b, a) => (kd(a) > kd(b) ? a : b), xs[0])
+    if (halfDays.has(d10(t))) run += 1; else break
+  }
+  const years = [...new Set(all.map((a) => Number(a.year)))]
+  const kudosOf = (y) => all.filter((a) => Number(a.year) === y).reduce((t, a) => t + kd(a), 0)
+  const most = years.reduce((b, y) => (kudosOf(y) > kudosOf(b) ? y : b), years[0])
+  let t, p
+  if (s.kudos < 50) {
+    t = Y === years[0] ? 'Almost nobody watching.' : 'Still few watching.'
+    p = [`The whole year brought ${n0(s.kudos)} kudos. By ${most}, my most cheered year, the same habit brought ${n0(kudosOf(most))}.`]
+    if (Y !== years[0]) p = [`The whole year brought ${n0(s.kudos)} kudos.`]
+  } else if (run >= 2) {
+    t = 'The most cheered, again.'
+    p = ['Race day on Kilimanjaro brings the most cheers.', `For the ${ORDW[run] || `${run}th`} year in a row, the Kilimanjaro Half was my most cheered outing.`]
+  } else {
+    t = 'The most cheered outing.'
+    p = [`My most cheered outing of the year came on ${dayLabel(d10(top))}, a ${({ Run: 'run', Walk: 'walk', TrailRun: 'trail run', Hike: 'hike' })[top.sport_type]} of ${k1(kmOf(top))} km.`]
+  }
+  return {
+    id: 'cheer', k: 'The most cheered outing', t, p,
+    cap: 'One dot is one outing on foot, higher for more kudos. The orange one is the most cheered.', wide: true,
+    node: <KudosDots acts={acts} year={Y} aria={`Kudos on each outing on foot in ${Y}, the most on ${dayLabel(d10(top))}: ${n0(kd(top))}.`} />,
+  }
+}

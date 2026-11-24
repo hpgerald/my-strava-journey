@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { numOf, CHAPTERS } from '../lib/chapters.js'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import Ngong from './Ngong.jsx'
@@ -64,7 +65,7 @@ const jump = (id) => (e) => {
 // numbers with their words, right-aligned, and "My Strava Journey" running
 // down beside them on a hairline. Drawn as one image so it can sit back as far
 // as the cover needs; its words are given in full to screen readers.
-function CoverSide({ rows }) {
+export function CoverSide({ rows }) {
   const pitch = 50.5
   return (
     <svg className="bk-cover__side" viewBox="0 0 160 190" role="img"
@@ -501,6 +502,7 @@ export default function Book() {
         ) : null}
         <button type="button" className={`bk-btn${pdf ? '' : ' bk-btn--main'}`} onClick={() => window.print()}>{pdf ? 'Print this book' : 'Print or save as PDF'}</button>
         <p className="bk-bar__note">A4 book{pdf ? '' : ': choose Save as PDF in the print dialog'}. Figures to {fmtDay(F.lastISO)}.</p>
+        <p className="bk-bar__note bk-bar__years">One year at a time: {years.map((y, i) => <span key={y}>{i ? ' · ' : ''}<Link to={`/book/${y}`}>{y}</Link></span>)}</p>
       </div>
 
       <BookContext.Provider value={{ bare: false }}>

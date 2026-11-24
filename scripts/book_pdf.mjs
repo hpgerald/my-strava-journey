@@ -11,11 +11,25 @@ import fs from 'fs'
 import path from 'path'
 import { execFileSync } from 'child_process'
 
-const URL = process.env.BOOK_URL || 'http://localhost:4173/#/book'
-const OUT = process.env.BOOK_OUT || 'public/book/showing-up-gerald-tesha.pdf'
+//
+// With --years it renders instead one small book a year, from #/book/<year>,
+// into public/book/showing-up-<year>.pdf (--year 2026 renders just that one).
+// Re-run --year for the running year after each weekly refresh.
+const BASE = process.env.BOOK_BASE || 'http://localhost:4173/'
 const exe = process.env.PW_CHROMIUM || (fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined)
+const argv = process.argv.slice(2)
+const one = argv.includes('--year') ? argv[argv.indexOf('--year') + 1] : null
+const JOBS = []
+if (argv.includes('--years') || one) {
+  const csv = fs.readFileSync('public/data/activities.csv', 'utf8').split('\n').slice(1)
+  const years = [...new Set(csv.map((l) => l.slice(l.indexOf(',') + 1, l.indexOf(',') + 5)).filter((y) => /^20\d\d$/.test(y)))].sort()
+  for (const y of years) if (!one || one === y) JOBS.push({ url: `${BASE}#/book/${y}`, out: `public/book/showing-up-${y}.pdf`, name: `${y} · Showing Up · Gerald Tesha` })
+} else {
+  JOBS.push({ url: process.env.BOOK_URL || `${BASE}#/book`, out: process.env.BOOK_OUT || 'public/book/showing-up-gerald-tesha.pdf', name: 'Showing Up · Gerald Tesha' })
+}
 
 const browser = await chromium.launch(exe ? { executablePath: exe } : {})
+for (const { url: URL, out: OUT, name: NAME } of JOBS) {
 // A4 is 210 mm wide; less 15 mm margins each side leaves 180 mm, about 680 px.
 // The page is laid out at 960 px, where the grid keeps its desktop columns, and
 // scaled down to fit (the print styles size the bleed pages with the same scale).
@@ -28,10 +42,10 @@ await page.evaluate(() => document.fonts.ready)
 // let every chart settle at its final state
 await page.waitForTimeout(5000)
 await page.evaluate((k) => { document.documentElement.classList.add('pdf-scaled'); document.documentElement.style.setProperty('--k', String(k)); window.dispatchEvent(new Event('resize')) }, 680 / 960)
-await page.evaluate(() => { document.title = 'Showing Up · Gerald Tesha' })
+await page.evaluate((t) => { document.title = t }, NAME)
 await page.waitForTimeout(500)
 
-const footer = `<div style="width:100%;padding:0 15mm;display:flex;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;font-size:7px;letter-spacing:0.08em;text-transform:uppercase;color:#6b6b6b;"><span>Showing Up &middot; Gerald Tesha</span><span class="pageNumber"></span></div>`
+const footer = `<div style="width:100%;padding:0 15mm;display:flex;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;font-size:7px;letter-spacing:0.08em;text-transform:uppercase;color:#6b6b6b;"><span>${NAME.replace(/·/g, '&middot;')}</span><span class="pageNumber"></span></div>`
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true })
 const opts = { printBackground: true, preferCSSPageSize: true, scale: SCALE, tagged: true, outline: true }
@@ -54,6 +68,8 @@ if (has('qpdf') && has('pdftotext')) {
   execFileSync('qpdf', args)
   fs.unlinkSync(plain); fs.unlinkSync(numbered)
 }
-await browser.close()
+await page.close()
 const mb = (fs.statSync(OUT).size / 1048576).toFixed(1)
 console.log(`wrote ${OUT} (${mb} MB)`)
+}
+await browser.close()

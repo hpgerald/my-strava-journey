@@ -10,6 +10,7 @@ import Home from './pages/Home.jsx'
 // The front page ships in the first script; every other chapter loads its own
 // code when it is first opened, so the first visit downloads and runs less.
 const YearInSport = lazy(() => import('./pages/YearInSport.jsx'))
+const YearBook = lazy(() => import('./pages/YearBook.jsx'))
 const Sports = lazy(() => import('./pages/Sports.jsx'))
 const Records = lazy(() => import('./pages/Records.jsx'))
 const Where = lazy(() => import('./pages/Where.jsx'))
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/what-it-means" element={<WhatItMeans />} />
         <Route path="/on-trial" element={<Evidence />} />
         <Route path="/book" element={<Book />} />
+        <Route path="/book/:year" element={<YearBook />} />
 
         {/* The mountain chapters */}
         <Route path="/kilimanjaro" element={<Kilimanjaro />} />

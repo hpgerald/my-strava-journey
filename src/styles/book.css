@@ -315,7 +315,7 @@
   html.pdf-scaled { --k: 0.7083; }
   html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .skip-link, .nav, .footer, .crumbs, .detail-head, .prevnext, .bk-bar,
+  .skip-link, .nav, .spine, .footer, .crumbs, .detail-head, .prevnext, .bk-bar,
   main > .container > .fieldnote, main > .container > hr.rule { display: none !important; }
   main > .container { max-width: none; padding: 0; }
   .book .fieldnote { break-inside: avoid; margin: var(--sp-4) 0 var(--sp-5); }
@@ -409,3 +409,12 @@ svg.bk-cover__side { display: block; width: 16cqw; height: auto; margin-bottom: 
 /* on a phone the number column takes a little more room, so its words stay readable */
 @media screen and (max-width: 40rem) { svg.bk-cover__side { width: 24cqw; } }
 @media (max-width: 47.999rem) { .bk-plate__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bk-refs { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- a one-year book: the year's ring on the cover, the year as its title ---- */
+.book--year .bk-cover__fig--ring { grid-template-rows: minmax(0, 1fr) auto; align-items: center; }
+.book--year .bk-cover__fig--ring > .yring { width: 100%; align-self: center; }
+.book--year .bk-cover .yring .yset__key, .book--year .bk-cover .yring__n, .book--year .bk-cover .yring__u { display: none; }
+.book--year .bk-cover__t { font-size: calc(100cqw / 3.05); }
+.bk-cover__theme { margin: 0.8cqw 0 0; font-family: var(--font-display); font-weight: 600; font-size: max(0.95rem, 5.2cqw); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; }
+.bk-bar__years { flex-basis: 100%; }
+.bk-bar__years a { color: var(--accent-ink); font-weight: 600; }

@@ -51,7 +51,7 @@ The site is organised as ten numbered sections plus supporting pages. Each secti
 | # | Section | What it shows |
 | --- | --- | --- |
 | 01 | **The Journey** (home) | The headline totals, an animated count-up, one dot for every activity, the July 2021 "switch" that turned a hobby into a habit, and how running owns the distance while walking owns the vertical. |
-| 02 | **Year in Sport** | Pick any year, 2019 through today, and the page rebuilds itself into an animated report of it: headline totals that count up, the shape of the months, how the year moved, every day drawn as a streak calendar, the biggest efforts, where it happened, and a signature "moment" unique to that year. |
+| 02 | **Year in Sport** | Pick any year, 2019 through today, and the page rebuilds itself into a report of it: the year's numbers as cards that slide up one by one with rolling digits, its own chapters, then the races, the shoes, the weather and the most cheered outing, every day and hour, and where it happened. Each year also downloads as a small book (`#/book/<year>`, PDFs in `public/book/`). |
 | 03 | **Sports** | A deep dive into the four sports on foot, with the treadmill kept apart from the road: every outing mapped by pace and climb, who does what, the mix by year, the treadmill's round numbers, pace, the walks growing longer, the long days, climb, hours and weekends, doubles, effort and kudos, and the maths of the feet. |
 | 04 | **Records** | Every record on foot and how it got there: the distance and climbing records as staircases, the longest outings, the biggest days, weeks and months, milestones, the Kilimanjaro expedition hut by hut up to Uhuru Peak (with the part of the summit night the watch missed marked as not recorded), the long day on Mount Hanang against the clock beside my longest days out, personal records, streaks, where the big climbs started, and how often a record breaks against chance. |
 | 05 | **Where** | The Africa and Tanzania maps, shaded from each outing's GPS start, with the country ledger, flat home regions against steep ones, the busiest region by year, the map growing, trips abroad, the outings with no place, and how widely the outings spread. |
@@ -167,7 +167,8 @@ Because the site is data-driven, a refresh is mostly a data swap:
 4. Run `python3 scripts/build_evidence.py` to re-run the statistical tests behind chapter 09 (`public/data/evidence.json`).
 5. Run `npm run seo` to rewrite the search and sharing data (title, description, JSON-LD, sitemap and the share image) with the new numbers.
 6. Run `npm run sanitize:data` to remove activity titles, Strava identifiers, exact timestamps and precise GPS coordinates from the public files.
-7. Run `npm run check`, then commit and push. The Action rebuilds and redeploys.
+7. Run `npm run check`, start `npx vite preview --port 4173`, then `node scripts/book_pdf.mjs` for My Book and `node scripts/book_pdf.mjs --year 2026` for the running year's small book (`--years` renders every year).
+8. Commit and push. The Action rebuilds and redeploys.
 
 The pipeline is incremental where it matters, so existing figures stay stable and only the rows a new export touches are recomputed.
 

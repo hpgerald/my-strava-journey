@@ -370,7 +370,7 @@
 .ymo__n { font-family: var(--font-sans); font-size: 12px; font-weight: 700; fill: var(--paper); font-variant-numeric: tabular-nums; }
 .ymo__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); gap: 0.55rem var(--grid-gap); margin: var(--sp-4) 0 0; padding: var(--sp-4) 0 0; list-style: none; border-top: 1px solid var(--rule-faint); }
 .ymo__list li { display: grid; grid-template-columns: 1.6rem 3.6rem minmax(0, 1fr); align-items: baseline; gap: 0 0.5rem; font-size: 0.9375rem; line-height: 1.4; }
-.ymo__list b { display: inline-grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 50%; background: var(--accent); color: var(--paper); font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; align-self: start; }
+.ymo__list b { display: inline-grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 50%; background: var(--accent); color: var(--ink); font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; align-self: start; }
 .ymo__d { font-size: 0.8125rem; font-weight: 600; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
 .ymo__l { color: var(--ink); text-wrap: pretty; }
 .yis-moments { padding-block: var(--r3, 1.618rem) var(--r3, 1.618rem); }
@@ -466,3 +466,108 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .load__mk line { stroke: var(--ink); stroke-width: 1.5; }
 .load__l { font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
 .load__l--ctl { fill: var(--accent-ink); }
+
+/* ---- races, kudos, rain and the 1,000 km marks ---- */
+.yrace__d { fill: var(--accent); stroke: var(--bg); stroke-width: 1.5; }
+.yrace__d.is-away { fill: var(--grey-35); }
+.yrace__n { font-family: var(--font-sans); font-size: 12px; font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.yrace__list { margin: var(--sp-4) 0 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+.yrace__list li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); column-gap: 0.6rem; align-items: baseline; padding-bottom: 0.45rem; border-bottom: 1px solid var(--rule-faint); }
+.yrace__i { grid-row: span 2; font-family: var(--font-display); font-weight: 600; font-size: 1.125rem; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.yrace__t { font-weight: 600; font-size: 0.9375rem; line-height: 1.35; color: var(--ink); }
+.yrace__m { font-size: 0.8125rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.ykud__d { fill: var(--grey-35); fill-opacity: 0.8; }
+.ykud__me { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.ykud__l { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: var(--accent-ink); }
+.yrain__b { fill: var(--grey-35); }
+.yrain__k--out { fill: var(--accent); }
+.yrain__k--in { fill: var(--ink); }
+.yrain__sw { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+.yrain__sw--out { background: var(--accent); }
+.yrain__sw--in { background: var(--ink); }
+.ymark__goal { stroke: var(--ink); stroke-dasharray: 4 3; }
+.ymark__s path { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+.ymark__s--0 path { stroke: var(--accent); } .ymark__s--0 circle { fill: var(--accent); } .ymark__s--0 .ymark__l { fill: var(--accent-ink); }
+.ymark__s--1 path { stroke: var(--ink); } .ymark__s--1 circle { fill: var(--ink); } .ymark__s--1 .ymark__l { fill: var(--ink); }
+.ymark__s--2 path { stroke: var(--grey-55); } .ymark__s--2 circle { fill: var(--grey-55); } .ymark__s--2 .ymark__l { fill: var(--fg-muted); }
+.ymark__s circle { stroke: var(--bg); stroke-width: 2; }
+.ymark__l { font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
+
+/* ---- the year's numbers as a deck of cards (site, motion only) ----
+   Each card slides up over the one before as the page scrolls (--q, 0 to 1,
+   written by YearDeck), and steps back a little as the next arrives (--next).
+   The number rolls in digit by digit and the picture draws itself. */
+.ydeck { grid-column: 1 / -1; position: relative; height: calc(100svh + (var(--cards) - 1) * 80svh); margin: var(--sp-4) 0 0; }
+.ydeck__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.ydeck__card {
+  position: absolute; left: 0; right: 0; top: calc(4.5rem + 2svh); bottom: 4svh;
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; gap: var(--sp-4);
+  padding: clamp(1.25rem, 1rem + 2.5vw, 3rem); border-radius: 20px; overflow: hidden;
+  transform: translate3d(0, calc((1 - var(--q, 1)) * 112%), 0) scale(calc(1 - var(--next, 0) * 0.05));
+  transform-origin: 50% 0; will-change: transform;
+}
+.ydeck__card::after { content: ''; position: absolute; inset: 0; background: #000; opacity: calc(var(--next, 0) * 0.28); pointer-events: none; }
+.ydeck__card--accent { background: var(--accent); color: var(--ink); }
+.ydeck__card--ink { background: var(--ink); color: var(--paper); }
+.ydeck__card--paper { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+.ydeck__k { display: flex; justify-content: space-between; margin: 0; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.ydeck__main { align-self: center; min-width: 0; }
+.ydeck__num { display: flex; align-items: baseline; flex-wrap: wrap; margin: 0; font-family: var(--font-display); font-weight: 760; font-size: clamp(4.2rem, 1.5rem + 13vw, 12rem); line-height: 0.86; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; }
+.ydeck__card--ink .ydeck__num { color: var(--accent); }
+.ydeck__card--paper .ydeck__num { color: var(--accent-strong); }
+.ydeck__u { margin-left: 0.12em; font-size: 0.34em; letter-spacing: -0.02em; }
+.ydeck__l, .ydeck__c { margin: 0; overflow: hidden; }
+.ydeck__l span, .ydeck__c span { display: inline-block; transform: translateY(110%); transition: transform 0.7s var(--ease-out); }
+.ydeck__l { margin-top: var(--sp-3); font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 1rem + 2.6vw, 3rem); line-height: 1.05; letter-spacing: -0.02em; }
+.ydeck__c { margin-top: var(--sp-2); font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); font-weight: 600; }
+.ydeck__card.is-on .ydeck__l span { transform: none; transition-delay: 0.45s; }
+.ydeck__card.is-on .ydeck__c span { transform: none; transition-delay: 0.65s; }
+.ydeck__art { justify-self: end; width: min(100%, 22rem); }
+@media (min-width: 48rem) {
+  .ydeck__card { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: auto 1fr; }
+  .ydeck__k { grid-column: 1 / -1; }
+  .ydeck__art { align-self: end; }
+}
+
+/* the rolling number: each digit a column of 0 to 9 */
+.odo { display: inline-flex; opacity: 0; transition: opacity 0.3s; }
+.is-on .odo { opacity: 1; }
+.odo__w { display: inline-block; height: 1em; line-height: 1; overflow: hidden; }
+.odo__c { display: flex; flex-direction: column; transform: translateY(calc(var(--n, 0) * -1em)); transition: transform 1.3s cubic-bezier(0.2, 0.9, 0.1, 1); }
+.odo__c span, .odo__s { display: block; height: 1em; line-height: 1; }
+
+/* the pictures */
+.dart { display: block; width: 100%; height: auto; overflow: visible; }
+.dart--bars rect { fill: currentColor; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 0.8s var(--ease-out); transition-delay: calc(0.3s + var(--i) * 50ms); }
+.is-on .dart--bars rect { transform: none; }
+.dart--line polyline { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-out) 0.3s; }
+.dart--line circle { fill: var(--accent); opacity: 0; transition: opacity 0.3s 1.7s; }
+.is-on .dart--line polyline { stroke-dashoffset: 0; }
+.is-on .dart--line circle { opacity: 1; }
+.dart--ridge path { fill: var(--ink); transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.is-on .dart--ridge path { transform: none; }
+.dart--clock { max-width: 14rem; margin-left: auto; }
+.dart--clock circle { fill: none; stroke: currentColor; stroke-width: 3; }
+.dart--clock line { stroke: currentColor; stroke-width: 5; stroke-linecap: round; opacity: 0; transition: opacity 0.4s; transition-delay: calc(0.3s + var(--i) * 40ms); }
+.is-on .dart--clock line { opacity: 1; }
+
+/* ---- each section of a year arrives in steps (site, motion only) ---- */
+html.motion .yis-report .yset.areveal { opacity: 1; transform: none; }
+html.motion .yis-report .yset .yset__k { clip-path: inset(0 100% 0 0); transition: clip-path 0.8s var(--ease-out); }
+html.motion .yis-report .yset .yset__t { opacity: 0; transform: translateY(0.5em); transition: opacity 0.7s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s; }
+html.motion .yis-report .yset .yset__p { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); transition-delay: 0.35s; }
+html.motion .yis-report .yset .yset__p + .yset__p { transition-delay: 0.5s; }
+html.motion .yis-report .yset .yset__p + .yset__p + .yset__p { transition-delay: 0.65s; }
+html.motion .yis-report .yset .yset__facts > div { opacity: 0; transform: translateY(18px); transition: opacity 0.6s var(--ease-out), transform 0.7s var(--ease-out); }
+html.motion .yis-report .yset .yset__facts > div:nth-child(1) { transition-delay: 0.55s; }
+html.motion .yis-report .yset .yset__facts > div:nth-child(2) { transition-delay: 0.68s; }
+html.motion .yis-report .yset .yset__facts > div:nth-child(3) { transition-delay: 0.81s; }
+html.motion .yis-report .yset .yset__fig { clip-path: inset(-20% 100% -20% -5%); transition: clip-path 1.2s cubic-bezier(0.65, 0, 0.2, 1) 0.25s; }
+html.motion .yis-report .yset.is-in .yset__k { clip-path: inset(0 -2% 0 0); }
+html.motion .yis-report .yset.is-in .yset__fig { clip-path: inset(-20% -5% -20% -5%); }
+html.motion .yis-report .yset.is-in .yset__t, html.motion .yis-report .yset.is-in .yset__p, html.motion .yis-report .yset.is-in .yset__facts > div { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ydeck__l span, .ydeck__c span, .odo__c, .dart * { transition: none !important; }
+}
+.yis-picker__book { flex: 0 0 auto; margin-left: auto; align-self: center; padding-left: var(--sp-4); font-size: 0.875rem; font-weight: 600; color: var(--accent-ink); white-space: nowrap; text-decoration: underline; text-underline-offset: 0.2em; }
+a.yis-cta__btn { display: inline-block; text-decoration: none; }

@@ -16,6 +16,8 @@ import RadialHours from '../charts/RadialHours.jsx'
 import TzShare from '../charts/TzShare.jsx'
 import YearVsPrev, { vsPrevTitle } from '../charts/YearVsPrev.jsx'
 import { Reveal } from '../components/Reveal.jsx'
+import YearDeck, { ArtMonths, ArtLine, ArtRidge, ArtClock } from '../components/YearDeck.jsx'
+import { motionOK } from '../motion/env.js'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { computeYearStats, YEAR_THEME, YEAR_REPORT } from '../lib/yearStats.js'
@@ -46,6 +48,8 @@ export default function YearInSport({ year: bookYear } = {}) {
   const rkRows = useTable('ras_kilomoni')
   const tripRows = useTable('mountain_trips')
   const profileRows = useTable('bondwa_profiles')
+  const weatherRows = useTable('weather_days')
+  const gearRows = useTable('gear')
   const { prev, next } = useSectionPaging('/numbers')
 
   const years = useMemo(
@@ -175,7 +179,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   let secN = 0
   const num = () => ++secN
   const NOTE = YEAR_NOTES[Y] || {}
-  const CH = yearChapters({ Y, acts: yearActs, all: activities, geo: geoByKey, s, allStats, kili: kiliRows, course: courseRows, rk, ulu })
+  const CH = yearChapters({ Y, acts: yearActs, all: activities, geo: geoByKey, s, allStats, kili: kiliRows, course: courseRows, rk, ulu, weather: weatherRows, gear: gearRows })
   const Sec = ({ n, id, k, title: title0, text: text0, facts, cap, wide, more, children }) => {
     const o = NOTE[id.replace(/^ys-/, '')] || {}
     const title = o.t || title0, text = (Array.isArray(o.p) ? o.p : null) || text0 || []
@@ -220,6 +224,7 @@ export default function YearInSport({ year: bookYear } = {}) {
             {y}
           </button>
         ))}
+        <Link className="yis-picker__book" to={`/book/${Y}`}>{Y} as a book, to download</Link>
       </div>}
 
       <div key={Y} className="yis-report">
@@ -230,15 +235,25 @@ export default function YearInSport({ year: bookYear } = {}) {
             <h2 id={idp('yis-title')} className="section-head__title">{theme}.</h2>
           </div>
           <Reveal as="p" className="sgrid__statement">{CH.open || (YEAR_REPORT[Y] ? YEAR_REPORT[Y](s) : '')}</Reveal>
-          <OddsRow
-            title={`${Y} in four numbers${ps ? `, against ${prevYear}` : ''}`}
-            items={[
-              { num: s.n, unit: '', label: `outings${ps ? `, ${chgTxt(chg(s.n, ps.n))}` : ''}`, tone: 'move' },
-              { num: s.footKm, unit: ' km', label: `on foot${ps ? `, ${chgTxt(chg(s.footKm, ps.footKm))}` : ''}`, tone: 'move' },
-              { num: s.elev, unit: ' m', label: `climbed${ps ? `, ${chgTxt(chg(s.elev, ps.elev))}` : ''}`, tone: 'move' },
-              { num: s.hours, unit: ' h', label: `moving${ps ? `, ${chgTxt(chg(s.hours, ps.hours))}` : ''}`, tone: 'move' },
-            ]}
-          />
+          {!book && motionOK() ? (() => {
+            const vs = (a, b) => { const c = chg(a, b); return c == null ? '' : c >= 2 ? `${Math.round(1 + c)} times ${prevYear}` : c >= 0 ? `up ${pc(c)}% on ${prevYear}` : `down ${pc(-c)}% on ${prevYear}` }
+            return <YearDeck label={`${Y} in four numbers${ps ? `, against ${prevYear}` : ''}`} cards={[
+              { tone: 'accent', k: `${Y}${isPartial ? ' so far' : ''}`, value: n0(s.n), label: 'outings', note: ps ? vs(s.n, ps.n) : 'the first year of my log', art: <ArtMonths values={s.monthsActivities} /> },
+              { tone: 'ink', k: `${Y}${isPartial ? ' so far' : ''}`, value: n0(s.footKm), unit: ' km', label: 'on foot', note: ps ? vs(s.footKm, ps.footKm) : '', art: <ArtLine values={s.monthsKm.reduce((a, v) => [...a, (a[a.length - 1] || 0) + v], [0])} /> },
+              { tone: 'paper', k: `${Y}${isPartial ? ' so far' : ''}`, value: n0(s.elev), unit: ' m', label: 'climbed', note: ps ? vs(s.elev, ps.elev) : '', art: <ArtRidge values={s.monthsElev} /> },
+              { tone: 'accent', k: `${Y}${isPartial ? ' so far' : ''}`, value: n0(s.hours), unit: ' h', label: 'moving', note: ps ? vs(s.hours, ps.hours) : '', art: <ArtClock hours={s.hours24} /> },
+            ]} />
+          })() : (
+            <OddsRow
+              title={`${Y} in four numbers${ps ? `, against ${prevYear}` : ''}`}
+              items={[
+                { num: s.n, unit: '', label: `outings${ps ? `, ${chgTxt(chg(s.n, ps.n))}` : ''}`, tone: 'move' },
+                { num: s.footKm, unit: ' km', label: `on foot${ps ? `, ${chgTxt(chg(s.footKm, ps.footKm))}` : ''}`, tone: 'move' },
+                { num: s.elev, unit: ' m', label: `climbed${ps ? `, ${chgTxt(chg(s.elev, ps.elev))}` : ''}`, tone: 'move' },
+                { num: s.hours, unit: ' h', label: `moving${ps ? `, ${chgTxt(chg(s.hours, ps.hours))}` : ''}`, tone: 'move' },
+              ]}
+            />
+          )}
           <BookStory>{[
             `${s.hours >= 48 ? `The ${n0(s.hours)} hours I spent moving in ${Y} come to about ${n0(s.hours / 24)} full days and nights. ` : ''}${Y} holds ${pc(s.footKm / allFootKm) || '<1'}% of all the kilometres I have covered on foot. ${kudosPer < 2 ? `Almost nobody followed me yet, and the whole year brought ${n0(s.kudos)} kudos.` : `The people who follow me gave ${n0(s.kudos)} kudos over the year, about ${n0(kudosPer)} for each outing${s.prs ? `, and I set ${n0(s.prs)} PRs on Strava segments` : ''}.`}`,
           ]}</BookStory>
@@ -408,6 +423,7 @@ export default function YearInSport({ year: bookYear } = {}) {
           <div className="yis-cta__row">
             {years.includes(Y - 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y - 1); scrollToTop() }}>&larr; {Y - 1}</button>}
             <button type="button" className="yis-cta__btn" onClick={scrollToTop}>Pick another year &uarr;</button>
+            <Link className="yis-cta__btn" to={`/book/${Y}`}>Download {Y} as a book</Link>
             {years.includes(Y + 1) && <button type="button" className="yis-cta__btn" onClick={() => { setPicked(Y + 1); scrollToTop() }}>{Y + 1} &rarr;</button>}
           </div>
         </Reveal>}

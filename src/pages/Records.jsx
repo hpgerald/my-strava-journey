@@ -530,7 +530,7 @@ export default function Records() {
           title={S.any.current === S.any.len ? `Every day since ${fmtMonth(S.any.startISO)}.` : `A ${n0(S.any.len)}-day streak.`}
           statement={<>
             I started this streak on purpose, and I do not take it for granted: the same record holds the long gap, from {fmtMonth(S.longGap.from)} to{' '}
-            {fmtMonth(S.longGap.to)}, when I did not go out at all.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, ${S.week.len % 52 ? 'more than ' : ''}${word(Math.floor(S.week.len / 52))} years now.` : ''}
+            {fmtMonth(S.longGap.to)}, when I did not go out at all.{S.week.current === S.week.len ? ` Every week since ${fmtMonth(S.week.startISO)} has had an outing, ${(() => { const y = (tOf(R.lastISO) - tOf(S.week.startISO)) / (365.25 * 864e5), n = Math.round(y); return `${y - n > 0.08 ? 'more than ' : n - y > 0.04 ? 'almost ' : ''}${word(n)} years now` })()}.` : ''}
           </>}
           odds={{
             title: 'In a row',
