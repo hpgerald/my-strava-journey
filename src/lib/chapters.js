@@ -8,7 +8,7 @@ export const CHAPTERS = [
   { n: '04', route: '/uluguru', title: 'Uluguru', group: 'story' },
   { n: '05', route: '/ngong', title: 'Ngong Hills', group: 'story' },
   { n: '06', route: '/what-it-means', title: 'What It Means', group: 'story' },
-  { n: '07', route: '/numbers', title: 'Year in Sport', group: 'record' },
+  { n: '07', route: '/year-in-sport', title: 'Year in Sport', group: 'record' },
   { n: '08', route: '/sports', title: 'Sports', group: 'record' },
   { n: '09', route: '/records', title: 'Records', group: 'record' },
   { n: '10', route: '/where', title: 'Where', group: 'record' },

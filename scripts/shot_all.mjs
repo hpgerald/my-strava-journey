@@ -3,7 +3,7 @@ import fs from 'fs'
 
 const BASE = 'http://localhost:4173/#'
 const PAGES = [
-  ['home', '/'], ['numbers', '/numbers'], ['sports', '/sports'],
+  ['home', '/'], ['numbers', '/year-in-sport'], ['sports', '/sports'],
   ['sport-run', '/sports/run'], ['records', '/records'], ['where', '/where'],
   ['timeline', '/timeline'],
   ['what-it-means', '/what-it-means'],

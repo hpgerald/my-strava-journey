@@ -143,7 +143,7 @@ nav=[
  ["04","Uluguru","The mountain I go back to","/uluguru","story","authored"],
  ["05","Ngong Hills","The ridge across the border","/ngong","story","authored"],
  ["06","What It Means","What I have learned from it","/what-it-means","story","authored"],
- ["07","Year in Sport","Pick a year and read it","/numbers","record","authored"],
+ ["07","Year in Sport","Pick a year and read it","/year-in-sport","record","authored"],
  ["08","Sports","My four sports on foot","/sports","record","authored"],
  ["09","Records","My longest, highest and hardest days","/records","record","authored"],
  ["10","Where","Five countries. Seventeen regions.","/where","record","authored"],

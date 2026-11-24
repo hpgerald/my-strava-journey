@@ -1,7 +1,7 @@
 import { chromium } from 'playwright-core'
 
 const BASE = 'http://localhost:4173/#'
-const ROUTES = ['/', '/numbers', '/sports', '/sports/run', '/records', '/where',
+const ROUTES = ['/', '/year-in-sport', '/sports', '/sports/run', '/records', '/where',
   '/timeline', '/what-it-means', '/about', '/design']
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' })

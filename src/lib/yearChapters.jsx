@@ -185,7 +185,7 @@ const BUILD = {
         id: 'silence', k: 'The silence', t: `${n0(gapLen)} days with nothing.`,
         p: ['Then life moved: a new job, a new town and COVID-19.', `There is not one outing in my log from the second week of July ${Y} until the end of June ${Y + 1}.`],
         cap: 'The empty band runs from the day after my last outing to the day before my comeback.', wide: true,
-        more: back ? more(`/numbers/${d10(back).slice(0, 4)}`, `How I came back, in ${d10(back).slice(0, 4)} →`) : null,
+        more: back ? more(`/year-in-sport/${d10(back).slice(0, 4)}`, `How I came back, in ${d10(back).slice(0, 4)} →`) : null,
         node: <SilenceBand fromISO={gapFrom} toISO={gapTo} aria={`${gapLen} days without an outing, from ${dayLabel(gapFrom)} ${gapFrom.slice(0, 4)} to ${dayLabel(gapTo)} ${gapTo.slice(0, 4)}.`} />,
       },
     ]
@@ -549,7 +549,7 @@ const BUILD = {
         p: ['In the last days of December I decided to stop missing days.', `The streak began on the ${parseInt(st.from.slice(8), 10)}th, and it ${st.fullTo >= ctxLast(all) ? 'has not stopped since' : `ran ${n0(st.fullLen)} days`}.`],
         facts: [{ l: st.fullTo >= ctxLast(all) ? 'days in a row, still going' : 'days in a row', v: n0(st.fullLen), hot: true }],
         cap: 'Weeks run Sunday to Saturday. The orange line is the streak, carrying on into the new year.', wide: true,
-        more: more(`/numbers/${Y + 1}`, `The streak in ${Y + 1} →`),
+        more: more(`/year-in-sport/${Y + 1}`, `The streak in ${Y + 1} →`),
         node: <StreakCal acts={all} fromISO={`${Y}-11-01`} toISO={`${Y + 1}-01-31`} streak={{ fromISO: st.fullFrom, toISO: `${Y + 1}-01-31`, label: 'the streak begins' }} aria={`Every day from November ${Y} to January ${Y + 1}, with the streak that began on ${dayLabel(st.from)}.`} />,
       } : null,
     ]

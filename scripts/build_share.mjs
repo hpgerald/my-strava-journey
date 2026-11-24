@@ -82,7 +82,7 @@ const YEARS = [...new Set(acts.map((a) => a.date.slice(0, 4)))].sort().map((y) =
   const xs = acts.filter((a) => a.date.startsWith(y)), fx = xs.filter((a) => FOOT.has(a.sport_type))
   const running = last.startsWith(y) && last.slice(5) < '12-31'
   return {
-    slug: `year-${y}`, to: `#/numbers/${y}`, year: y, k: `Year in Sport · ${y}${running ? ' · still running' : ''}`,
+    slug: `year-${y}`, to: `#/year-in-sport/${y}`, year: y, k: `Year in Sport · ${y}${running ? ' · still running' : ''}`,
     t: running ? (YEAR_THEME[y] || `${y} in sport`) : String(YEAR_THEME[y] || `${y} in sport`).replace(/ so far/g, ''), l: firstWords(YEAR_OPEN[y]) || `${y} in sport.`,
     nums: [
       [n0(xs.length), 'outings'],

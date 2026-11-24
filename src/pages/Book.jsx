@@ -48,7 +48,7 @@ const PARTS = [
   { n: 'I', name: 'Part one', title: 'The story', line: 'Seven years in the order they happened, from the quiet first months to the year with no zero day.', chapters: [ch('/')] },
   { n: 'II', name: 'Part two', title: 'The mountains', line: 'Four mountains, told from my memory and from the line my watch drew on each.', chapters: MOUNTAINS.map((m) => ch(m.to)) },
   { n: 'III', name: 'Part three', title: 'The lessons', line: 'What I think seven years of logging have taught me.', chapters: [ch('/what-it-means')] },
-  { n: 'IV', name: 'Part four', title: 'The Record', line: 'Each year on its own, my sports, my records, the places I went, the timeline and my goals.', chapters: ['/numbers', '/sports', '/records', '/where', '/timeline', '/goals'].map(ch) },
+  { n: 'IV', name: 'Part four', title: 'The Record', line: 'Each year on its own, my sports, my records, the places I went, the timeline and my goals.', chapters: ['/year-in-sport', '/sports', '/records', '/where', '/timeline', '/goals'].map(ch) },
   { n: 'V', name: 'Part five', title: 'The proof', line: 'Thirteen things I believe about my habit, each one tested against the log.', chapters: [ch('/on-trial')] },
 ]
 
@@ -531,10 +531,10 @@ export default function Book() {
           <WhatItMeans />
 
           <PartOpener p={PARTS[3]} />
-          <section className="bk-ch" id={`bk-ch-${numOf('/numbers')}`} aria-labelledby={`bk-ch-${numOf('/numbers')}-t`}>
+          <section className="bk-ch" id={`bk-ch-${numOf('/year-in-sport')}`} aria-labelledby={`bk-ch-${numOf('/year-in-sport')}-t`}>
             <div className="container">
-              <Opener number={numOf('/numbers')} title="Year in Sport" subtitle="One year at a time" />
-              <BookIntro number={numOf('/numbers')} />
+              <Opener number={numOf('/year-in-sport')} title="Year in Sport" subtitle="One year at a time" />
+              <BookIntro number={numOf('/year-in-sport')} />
             </div>
             {years.map((y) => (
               <div key={y} className="bk-yr">

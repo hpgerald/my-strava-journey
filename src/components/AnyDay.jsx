@@ -88,7 +88,7 @@ export default function AnyDay({ acts, geo }) {
   const links = [
     trip && MTN[trip.mountain] ? { to: MTN[trip.mountain], label: `${trip.label} →` } : null,
     half ? { to: '/goals', label: 'The Kilimanjaro Half →' } : null,
-    { to: `/numbers/${cur.slice(0, 4)}`, label: ev ? `${ev[1]}, in ${cur.slice(0, 4)} →` : `${cur.slice(0, 4)} in sport →` },
+    { to: `/year-in-sport/${cur.slice(0, 4)}`, label: ev ? `${ev[1]}, in ${cur.slice(0, 4)} →` : `${cur.slice(0, 4)} in sport →` },
   ].filter(Boolean)
 
   return (

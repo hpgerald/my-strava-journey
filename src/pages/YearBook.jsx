@@ -54,7 +54,7 @@ export default function YearBook() {
       <div className="bk-bar">
         {pdf ? <a className="bk-btn bk-btn--main" href={pdfUrl} download>Download the PDF</a> : null}
         <button type="button" className={`bk-btn${pdf ? '' : ' bk-btn--main'}`} onClick={() => window.print()}>{pdf ? 'Print this book' : 'Print or save as PDF'}</button>
-        <p className="bk-bar__note">A4 book{pdf ? '' : ': choose Save as PDF in the print dialog'}. Figures to {fmtDay(s.endISO)}. <Link to={`/numbers/${Y}`}>{Y} on the site</Link></p>
+        <p className="bk-bar__note">A4 book{pdf ? '' : ': choose Save as PDF in the print dialog'}. Figures to {fmtDay(s.endISO)}. <Link to={`/year-in-sport/${Y}`}>{Y} on the site</Link></p>
       </div>
       <BookContext.Provider value={{ bare: false }}>
         <article className="book book--year" aria-label={`${Y}, a book`}>

@@ -87,7 +87,7 @@ const routes = {
   '/uluguru': { title: 'Uluguru', description: 'Bondwa Peak in the Uluguru Mountains, the mountain I go back to: every trip drawn on one chart, and my biggest climb in one outing.' },
   '/ngong': { title: 'Ngong Hills', description: 'The Ngong Hills in Kenya, the ridge across the border: the GPS line out along the tops and back, the altitude of every top, and my biggest climb outside Tanzania.' },
   '/what-it-means': { title: 'What It Means', description: `What ${word(years)} years of logging taught me about keeping a habit, in my own words, with the numbers behind each lesson.` },
-  '/numbers': { title: 'Year in Sport', description: `Every year of my log as its own report, from ${n0(byYear[F.firstYear])} outings in ${F.firstYear} to ${n0(byYear[F.lastYear])} in ${F.lastYear}${last.slice(5) < '12-31' ? ' so far' : ''}.` },
+  '/year-in-sport': { title: 'Year in Sport', description: `Every year of my log as its own report, from ${n0(byYear[F.firstYear])} outings in ${F.firstYear} to ${n0(byYear[F.lastYear])} in ${F.lastYear}${last.slice(5) < '12-31' ? ' so far' : ''}.` },
   '/sports': { title: 'Sports', description: `My four sports on foot: ${n0(F.runKm)} km of running and ${n0(F.walkKm)} km of walking, with trail runs and hikes, and the treadmill kept apart from the road.` },
   '/records': { title: 'Records', description: `My longest, highest and hardest days on foot: ${F.longest.toFixed(1)} km in one outing, ${n0(F.climb)} m of climbing in one outing, and a ${n0(F.streak)}-day streak.` },
   '/where': { title: 'Where', description: `Where I go out: ${word(F.countries)} African countries and ${word(F.regions)} regions of Tanzania, mapped from where each outing started.` },

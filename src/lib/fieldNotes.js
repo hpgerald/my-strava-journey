@@ -59,7 +59,7 @@ function hash(str) {
 // The primary narrative pages, in a fixed order. A seeded permutation assigns
 // each a distinct note, so no two of these pages ever show the same line.
 const ORDER = [
-  '/', '/numbers', '/sports', '/records', '/where',
+  '/', '/year-in-sport', '/sports', '/records', '/where',
   '/timeline', '/goals', '/what-it-means', '/home',
 ]
 

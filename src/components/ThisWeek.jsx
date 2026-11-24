@@ -86,7 +86,7 @@ export default function ThisWeek({ acts, geo }) {
   const range = sameMonth ? `${parseInt(r.sun.slice(8), 10)} to ${dayMon(r.sat)}` : `${dayMon(r.sun)} to ${dayMon(r.sat)}`
   return (
     <section className="tw" aria-label={`My last full week, ${range}`}>
-      <Link to={`/numbers/${r.year}`} className="tw__in">
+      <Link to={`/year-in-sport/${r.year}`} className="tw__in">
         <p className="tw__k">This week · {range}</p>
         <ul className="tw__nums">
           <li><b>{r.days} of 7</b> days out</li>

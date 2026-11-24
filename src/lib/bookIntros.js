@@ -12,7 +12,7 @@ export const BOOK_INTROS = {
     ],
     design: 'The charts in this chapter set the visual rules for the whole book. Orange marks the thing a section is about and grey holds the context. Bars start at zero, values are printed on the marks, and every pair of charts shares one height so they can be read side by side. Under each pair there is a note on how to read the charts and a design lesson on why they were drawn that way.',
   },
-  '/numbers': {
+  '/year-in-sport': {
     paras: [
       'No two years of this record look alike, and the fair way to see that is to read them all the same way. This chapter goes through the record one year at a time, from the small beginning and the long layoff to the comeback and the years after it. Each year has its own short opening, then the same sections in the same order.',
       'Keeping the same order was a choice. A reader who has learned to read one year can read every other year at once, and what is left to see is the difference between them. The early years are thin, and their pages say so plainly. The later years are full, and the same charts carry far more marks.',

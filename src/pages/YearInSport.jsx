@@ -50,7 +50,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   const profileRows = useTable('bondwa_profiles')
   const weatherRows = useTable('weather_days')
   const gearRows = useTable('gear')
-  const { prev, next } = useSectionPaging('/numbers')
+  const { prev, next } = useSectionPaging('/year-in-sport')
 
   const years = useMemo(
     () => [...new Set(activities.map((a) => Number(a.year)).filter(Boolean))].sort((a, b) => a - b),
@@ -98,7 +98,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   }
 
   if (!s || !r) {
-    return <DetailFrame crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]} number={numOf('/numbers')} title="Year in Sport" subtitle="Pick a year. See the whole story." />
+    return <DetailFrame crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]} number={numOf('/year-in-sport')} title="Year in Sport" subtitle="Pick a year. See the whole story." />
   }
 
   const Y = activeYear
@@ -212,7 +212,7 @@ export default function YearInSport({ year: bookYear } = {}) {
   return (
     <DetailFrame
       crumbs={[{ label: 'Home', to: '/' }, { label: 'Year in Sport' }]}
-      number={numOf('/numbers')}
+      number={numOf('/year-in-sport')}
       title="Year in Sport"
       subtitle="Pick a year and read it."
       prev={prev}

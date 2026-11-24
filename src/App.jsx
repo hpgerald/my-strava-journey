@@ -1,5 +1,10 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useParams } from 'react-router-dom'
+
+function OldYear() {
+  const { year } = useParams()
+  return <Navigate to={`/year-in-sport/${year}`} replace />
+}
 import ScrollToTop from './components/ScrollToTop.jsx'
 import TitleManager from './components/TitleManager.jsx'
 import SmoothScroll from './motion/SmoothScroll.jsx'
@@ -39,9 +44,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        {/* Year in Sport report; /numbers/:year deep-links a year */}
-        <Route path="/numbers" element={<YearInSport />} />
-        <Route path="/numbers/:year" element={<YearInSport />} />
+        {/* Year in Sport report; /year-in-sport/:year deep-links a year. The old
+            /numbers addresses still work, for links shared before the rename */}
+        <Route path="/year-in-sport" element={<YearInSport />} />
+        <Route path="/year-in-sport/:year" element={<YearInSport />} />
+        <Route path="/numbers" element={<Navigate to="/year-in-sport" replace />} />
+        <Route path="/numbers/:year" element={<OldYear />} />
 
         {/* Section detail pages (Phase 5) */}
         <Route path="/sports" element={<Sports />} />

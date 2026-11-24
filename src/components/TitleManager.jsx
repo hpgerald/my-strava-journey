@@ -5,7 +5,7 @@ import { SITE_TITLE } from '../lib/siteTitle.js'
 const BASE = 'My Strava Journey'
 const STATIC = {
   '/': SITE_TITLE,
-  '/numbers': 'Year in Sport',
+  '/year-in-sport': 'Year in Sport',
   '/sports': 'Sports',
   '/records': 'Records',
   '/where': 'Where',
