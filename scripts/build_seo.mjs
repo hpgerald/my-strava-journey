@@ -195,7 +195,13 @@ fs.writeFileSync(path.join(ROOT, 'public', 'sitemap.xml'), `<?xml version="1.0" 
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-</urlset>
+${fs.readdirSync(path.join(ROOT, 'public', 'book')).filter((f) => /^showing-up-\d{4}\.pdf$/.test(f)).sort().map((f) => `  <url>
+    <loc>${SITE}book/${f}</loc>
+    <lastmod>${refreshed}</lastmod>
+    <changefreq>${f.includes(refreshed.slice(0, 4)) ? 'weekly' : 'yearly'}</changefreq>
+    <priority>0.6</priority>
+  </url>
+`).join('')}</urlset>
 `)
 
 // ---------------------------------------------------------------- the share image
