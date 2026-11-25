@@ -12,6 +12,7 @@ import ColBars from '../charts/ColBars.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildChronicle } from '../lib/chronicle.js'
+import { NumberDeck, ArtSpan, ArtMonths } from '../components/YearDeck.jsx'
 import AnyDay from '../components/AnyDay.jsx'
 import { useBook } from '../components/BookContext.js'
 
@@ -138,15 +139,27 @@ export default function Timeline() {
             when the two landed on the same day, and I had waited patiently for Strava's badge for it. That milestone is why this site
             exists: I wanted to tell the story once I reached it.
           </Reveal>
-          <OddsRow
-            title="The record in time"
-            items={[
-              { num: span, unit: ' days', label: 'from the first outing to the latest', tone: 'move' },
-              { book: true, num: C.n, unit: '', label: 'outings in that time', tone: 'move' },
-              { num: S.len, unit: ' days', label: `the silence, ${fmtMon(S.start)} to ${fmtMon(S.end)}`, tone: 'rest' },
-              { num: C.maxAfter, unit: ' days', label: 'the longest layoff since', tone: 'move' },
-            ]}
-          />
+          <NumberDeck label="The record in time" plain={(
+            <OddsRow
+              title="The record in time"
+              items={[
+                { num: span, unit: ' days', label: 'from the first outing to the latest', tone: 'move' },
+                { book: true, num: C.n, unit: '', label: 'outings in that time', tone: 'move' },
+                { num: S.len, unit: ' days', label: `the silence, ${fmtMon(S.start)} to ${fmtMon(S.end)}`, tone: 'rest' },
+                { num: C.maxAfter, unit: ' days', label: 'the longest layoff since', tone: 'move' },
+              ]}
+            />
+          )} cards={(() => {
+            const tq = (iso) => Date.parse(`${iso.slice(0, 10)}T12:00:00Z`)
+            const sh = (iso) => Math.max(0, Math.min(1, (tq(iso) - tq(C.firstISO)) / Math.max(1, tq(C.lastISO) - tq(C.firstISO))))
+            const gap = [sh(S.start), sh(S.end)]
+            return [
+              { tone: 'accent', k: 'The record in time', value: n0(span), unit: ' days', label: 'from the first outing to the latest', art: <ArtSpan mark={[0, 1]} gap={gap} /> },
+              { tone: 'ink', k: 'The record in time', value: n0(C.n), label: 'outings in that time', art: <ArtMonths values={C.monthly.map((m) => m.n)} /> },
+              { tone: 'grey', k: 'The record in time', value: n0(S.len), unit: ' days', label: `the silence, ${fmtMon(S.start)} to ${fmtMon(S.end)}`, art: <ArtSpan mark={gap} /> },
+              { tone: 'paper', k: 'The record in time', value: n0(C.maxAfter), unit: ' days', label: 'the longest layoff since', art: <ArtSpan mark={[gap[1], 1]} gap={gap} /> },
+            ]
+          })()} />
           <Chronicle
             data={C}
             aria={`Chronicle of the record from ${fmtDay(C.firstISO)} to ${fmtDay(C.lastISO)}: ${C.events.map((e) => `${fmtDay(e.date)}, ${e.title}`).join('; ')}.`}

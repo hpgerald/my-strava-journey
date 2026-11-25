@@ -44,6 +44,8 @@ import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
 import Marquee from '../motion/Marquee.jsx'
+import YearDeck, { ArtMonths, ArtLine, ArtRidge, ArtSpan } from '../components/YearDeck.jsx'
+import { motionOK } from '../motion/env.js'
 
 const NONE = []
 const NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
@@ -1081,6 +1083,34 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   const monthOf = (ym) => `${MONTHS[parseInt(ym.slice(5, 7), 10) - 1]} ${ym.slice(0, 4)}`
 
   const geoByKeyTW = Object.fromEntries(activityGeo.map((g) => [g.activity_key, g]))
+  // the record's four numbers as sliding cards under the cold open (site, motion on);
+  // without motion they stay along the foot of the board
+  const deckOn = !book && motionOK()
+  const deck = (() => {
+    if (!deckOn || !activityLog.length || !heroMonths.length) return null
+    const MON3 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const kmM = {}, elY = {}
+    for (const a of activityLog) {
+      if (!FOOT_HOME.has(a.sport_type)) continue
+      const m = (a.date || '').slice(0, 7), y = m.slice(0, 4)
+      kmM[m] = (kmM[m] || 0) + (toNum(a.distance_km) || 0)
+      elY[y] = (elY[y] || 0) + (toNum(a.elevation_gain_m) || 0)
+    }
+    let c = 0
+    const cum = heroMonths.map((m) => (c += kmM[m.k] || 0))
+    const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5)
+    const first = activityLog.reduce((m, a) => (!m || a.date < m ? a.date : m), '').slice(0, 10)
+    const last = activityLog.reduce((m, a) => (a.date > m ? a.date : m), '').slice(0, 10)
+    const span = Math.max(1, days(first, last))
+    const sh = (iso) => Math.max(0, Math.min(1, days(first, iso) / span))
+    const elev = Math.round(toNum(elevation) || 0)
+    return [
+      { tone: 'accent', k: 'The record so far', value: n0(activityLog.length), label: 'outings', note: `since ${MON3[parseInt(first.slice(5, 7), 10) - 1]} ${first.slice(0, 4)}`, art: <ArtMonths values={heroMonths.map((m) => m.n)} /> },
+      { tone: 'ink', k: 'The record so far', value: n0(Math.round(toNum(km) || 0)), unit: ' km', label: 'on foot', note: 'runs, walks, trail runs and hikes', art: <ArtLine values={cum} /> },
+      { tone: 'paper', k: 'The record so far', value: n0(elev), unit: ' m', label: 'climbed', note: `about ${(elev / 8849).toFixed(1)} times the height of Everest`, art: <ArtRidge values={Object.keys(elY).sort().map((y) => elY[y])} /> },
+      { tone: 'accent', k: 'The record so far', value: n0(Math.round(toNum(curStreak) || 0)), unit: ' days', label: 'in a row', note: 'and still going', art: <ArtSpan mark={edStreak.start ? [sh(edStreak.start.slice(0, 10)), 1] : null} gap={heroGap ? [sh(`${heroGap.from}-01`), sh(`${heroGap.back}-01`)] : null} /> },
+    ]
+  })()
   return (
     <Layout>
       {!book && (
@@ -1088,9 +1118,10 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
 
             months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
             gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}
-            nums={{ n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
+            nums={deckOn ? null : { n: activityLog.length, km: Math.round(toNum(km) || 0), elev: Math.round(toNum(elevation) || 0), streak: Math.round(toNum(curStreak) || 0) }}
         />
       )}
+      {deck ? <Container><YearDeck cards={deck} label="The record so far, in four numbers" /></Container> : null}
       {/* the sections wait for all their tables, so they arrive together and nothing below the front page jumps */}
       {homeReady && restOn && (<>
       {!book && <Container><ThisWeek acts={activityLog} geo={geoByKeyTW} /></Container>}

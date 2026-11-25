@@ -128,8 +128,8 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         </div>
       ) : <div className="hx__chart" />}
 
-      <div className="hx__foot">
-        <HeroNums nums={nums} go={inView} />
+      <div className={`hx__foot${nums ? '' : ' hx__foot--nonums'}`}>
+        {nums ? <HeroNums nums={nums} go={inView} /> : null}
         {beats.length ? (
           <ol className="hx__beats" aria-hidden="true">
             {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt"><span className="hx__btx">{b.t}</span></span></li>)}

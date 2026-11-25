@@ -18,6 +18,7 @@ import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging } from '../lib/sections.js'
 import { buildRecordReport } from '../lib/recordReport.js'
 import { MODE_NAME } from '../lib/footReport.js'
+import { NumberDeck, ArtDots, ArtMonths, ArtSpan } from '../components/YearDeck.jsx'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -180,20 +181,47 @@ export default function Records() {
     const d = Math.round((tOf(R.lastISO) - tOf(iso)) / 864e5)
     return d < 1 ? 'set on the last day in the log' : d < 60 ? `has stood ${d} days` : d < 730 ? `has stood ${Math.round(d / 30.44)} months` : `has stood ${(d / 365.25).toFixed(1)} years`
   }
+  // the same records as sliding cards on the site, each with a small picture
+  const goTo = (id) => (e) => { e.preventDefault(); const el = document.getElementById(id); const sec = el && el.closest('section'); if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+  const deckCards = (() => {
+    if (book) return []
+    const byDay = new Map(), byWeek = new Map(), byMonth = new Map()
+    for (const f of R.foot) {
+      byDay.set(f.date, (byDay.get(f.date) || 0) + f.elev)
+      const t = tOf(f.date), wkS = new Date(t - new Date(t).getUTCDay() * 864e5).toISOString().slice(0, 10)
+      byWeek.set(wkS, (byWeek.get(wkS) || 0) + f.km)
+      byMonth.set(f.date.slice(0, 7), (byMonth.get(f.date.slice(0, 7)) || 0) + f.km)
+    }
+    const sorted = (m) => [...m.keys()].sort().map((k) => m.get(k))
+    const span = Math.max(1, (tOf(R.lastISO) - tOf(R.foot[0].date)) / 864e5)
+    const sh = (iso) => Math.max(0, Math.min(1, (tOf(iso) - tOf(R.foot[0].date)) / 864e5 / span))
+    const how = (id) => ({ label: 'How it fell ↓', href: `#${id}`, onClick: goTo(id) })
+    const climbLabel = bigDayClimb.date.slice(0, 10) === '2023-03-08' ? `two stages of Kilimanjaro, ${k1(bigDayClimb.km)} km` : bigDayClimb.date.slice(0, 10) === '2023-08-19' ? `the Selous Trail Marathon in Morogoro, ${k1(bigDayClimb.km)} km` : `from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`
+    return [
+      { tone: 'accent', k: 'Longest outing', value: k1(dNow.km), unit: ' km', label: dNow.date.slice(0, 10) === '2022-05-01' ? 'a marathon indoors, on a loop' : an(lower(dNow.mode)), note: `${fmtDay(dNow.date)}, ${stoodSince(dNow.date)}`, link: how('rc-title'), art: <ArtDots values={R.foot.map((f) => f.km)} /> },
+      { tone: 'ink', k: 'Biggest climb', value: n0(cNow.elev), unit: ' m', label: `${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`, note: `${fmtDay(cNow.date)}, ${stoodSince(cNow.date)}`, link: how('rc-climb'), art: <ArtDots values={R.foot.map((f) => f.elev)} /> },
+      { tone: 'paper', k: 'Biggest day of climb', value: n0(bigDayClimb.elev), unit: ' m', label: climbLabel, note: `${fmtDay(bigDayClimb.date)}, ${stoodSince(bigDayClimb.date)}`, link: how('rc-climb'), art: <ArtDots values={[...byDay.values()]} /> },
+      { tone: 'accent', k: 'Biggest week', value: n0(wk.km), unit: ' km', label: wk.start.slice(0, 10) === '2026-03-01' ? 'the countdown to the Kilimanjaro Half' : `from ${word(wk.n)} outings`, note: `week of ${fmtDay(wk.start)}, ${stoodSince(wk.start)}`, link: how('rc-months'), art: <ArtMonths values={sorted(byWeek)} /> },
+      { tone: 'ink', k: 'Biggest month', value: n0(moKm.km), unit: ' km', label: `from ${moKm.n} outings`, note: `${fmtMonth(moKm.month)}, ${stoodSince(`${moKm.month}-28`)}`, link: how('rc-months'), art: <ArtMonths values={sorted(byMonth)} /> },
+      { tone: 'paper', k: 'Longest streak', value: n0(S.any.len), unit: ' days', label: S.any.current === S.any.len ? 'in a row, still going' : 'in a row', note: `from ${fmtDay(S.any.startISO)}`, link: how('rc-streaks'), art: <ArtSpan mark={[sh(S.any.startISO), sh(S.any.endISO || R.lastISO)]} gap={[sh(S.longGap.from), sh(S.longGap.to)]} /> },
+    ]
+  })()
   const hall = () => (
         <section className={`sgrid${book ? '' : ' yis-top'}`} aria-labelledby="rc-edges">
           <div className="sgrid__head">
             <Eyebrow>{book ? `${num()} · All my records` : 'The ledger'}</Eyebrow>
             <h2 id="rc-edges" className="section-head__title">My record&nbsp;book.</h2>
           </div>
-          <ul className={`yrecs${book ? '' : ' yrecs--ledger'}`}>
-            <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={dNow.date.slice(0, 10) === '2022-05-01' ? 'a marathon indoors, on a loop' : an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" stood={book ? null : stoodSince(dNow.date)} to={book ? null : 'rc-title'} />
-            <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" stood={book ? null : stoodSince(cNow.date)} to={book ? null : 'rc-climb'} />
-            <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={bigDayClimb.date.slice(0, 10) === '2023-03-08' ? `two stages of Kilimanjaro, ${k1(bigDayClimb.km)} km` : bigDayClimb.date.slice(0, 10) === '2023-08-19' ? `the Selous Trail Marathon in Morogoro, ${k1(bigDayClimb.km)} km` : `from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" stood={book ? null : stoodSince(bigDayClimb.date)} to={book ? null : 'rc-climb'} />
-            <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={wk.start.slice(0, 10) === '2026-03-01' ? 'the countdown to the Kilimanjaro Half' : `from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" stood={book ? null : stoodSince(wk.start)} to={book ? null : 'rc-months'} />
-            <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} stood={book ? null : stoodSince(`${moKm.month}-28`)} to={book ? null : 'rc-months'} />
-            <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} to={book ? null : 'rc-streaks'} />
-          </ul>
+          <NumberDeck label="My record book" cards={deckCards} plain={(
+            <ul className={`yrecs${book ? '' : ' yrecs--ledger'}`}>
+              <RecordCard kicker="Longest outing" value={dNow.km} decimals={1} unit="km" label={dNow.date.slice(0, 10) === '2022-05-01' ? 'a marathon indoors, on a loop' : an(lower(dNow.mode))} sub={fmtDay(dNow.date)} tone="hot" stood={book ? null : stoodSince(dNow.date)} to={book ? null : 'rc-title'} />
+              <RecordCard kicker="Biggest climb" value={cNow.elev} unit="m" label={`${an(cNow.sport === 'Hike' ? 'hike' : lower(cNow.mode))} of ${k1(cNow.km)} km`} sub={fmtDay(cNow.date)} tone="hot" stood={book ? null : stoodSince(cNow.date)} to={book ? null : 'rc-climb'} />
+              <RecordCard kicker="Biggest day of climb" value={bigDayClimb.elev} unit="m" label={bigDayClimb.date.slice(0, 10) === '2023-03-08' ? `two stages of Kilimanjaro, ${k1(bigDayClimb.km)} km` : bigDayClimb.date.slice(0, 10) === '2023-08-19' ? `the Selous Trail Marathon in Morogoro, ${k1(bigDayClimb.km)} km` : `from ${word(bigDayClimb.n)} outings, ${k1(bigDayClimb.km)} km`} sub={fmtDay(bigDayClimb.date)} tone="hot" stood={book ? null : stoodSince(bigDayClimb.date)} to={book ? null : 'rc-climb'} />
+              <RecordCard kicker="Biggest week" value={wk.km} unit="km" label={wk.start.slice(0, 10) === '2026-03-01' ? 'the countdown to the Kilimanjaro Half' : `from ${word(wk.n)} outings`} sub={`week of ${fmtDay(wk.start)}`} tone="hot" stood={book ? null : stoodSince(wk.start)} to={book ? null : 'rc-months'} />
+              <RecordCard kicker="Biggest month" value={moKm.km} unit="km" label={`from ${moKm.n} outings`} sub={fmtMonth(moKm.month)} stood={book ? null : stoodSince(`${moKm.month}-28`)} to={book ? null : 'rc-months'} />
+              <RecordCard kicker="Longest streak" value={S.any.len} unit="days" label={S.any.current === S.any.len ? 'in a row, still going' : 'in a row'} sub={`from ${fmtDay(S.any.startISO)}`} to={book ? null : 'rc-streaks'} />
+            </ul>
+          )} />
         </section>
   )
 

@@ -12,6 +12,8 @@ import { numOf } from '../lib/chapters.js'
 import { SITE_TITLE } from '../lib/siteTitle.js'
 import { SceneH } from './SceneContext.js'
 import ShareLink from './ShareLink.jsx'
+import YearDeck, { ArtProfile } from './YearDeck.jsx'
+import { motionOK } from '../motion/env.js'
 
 // The three mountain chapters share one frame and each has its own ground,
 // type and pace (styles/mountains.css). A chapter opens on a full screen in its
@@ -24,6 +26,14 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
   const i = MOUNTAINS.findIndex((m) => m.id === id)
   const me = MOUNTAINS[i]
   const others = MOUNTAINS.filter((m) => m.id !== id)
+  // the header numbers as sliding cards (site, motion on), each drawing the
+  // climb a little further: the highest of the relief's lines, as heights
+  const [deckOn] = useState(() => !book && motionOK())
+  const climbLine = (() => {
+    const lines = (relief && relief.props && relief.props.lines) || []
+    const top = lines.reduce((b, l) => (!b || Math.max(...l.map((p) => p.alt)) > Math.max(...b.map((p) => p.alt)) ? l : b), null)
+    return top ? top.map((p) => p.alt) : null
+  })()
   useEffect(() => {
     if (book) return undefined
     document.title = `${me.name}: ${me.line} · My Strava Journey`
@@ -68,7 +78,7 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
             <h1 id="mtn-title" className="mtn-open__t">{me.name}</h1>
             <p className="mtn-open__l">{me.line}</p>
             <p className="mtn-open__s">{standfirst}</p>
-            {facts.length ? (
+            {facts.length && !deckOn ? (
               <dl className="mtn-facts">
                 {facts.map((f) => (
                   <div key={f.label}><dt>{f.label}</dt><dd>{f.value}{f.unit ? <span> {f.unit}</span> : null}</dd></div>
@@ -77,6 +87,12 @@ export default function Mountain({ id, standfirst, facts = [], hero, heroCaption
             ) : null}
           </Container>
         </header>
+        {deckOn && facts.length ? (
+          <Container><YearDeck label={`${me.name} in ${facts.length} numbers`} cards={facts.map((f, k) => ({
+            tone: ['m-ground', 'm-tint', 'm-deep', 'm-tint', 'm-ground'][k % 5], k: me.name, value: String(f.value), unit: f.unit ? ` ${f.unit}` : '', label: f.label,
+            art: <ArtProfile alts={climbLine} upTo={(k + 1) / facts.length} />,
+          }))} /></Container>
+        ) : null}
         {gauge ? <Gauge {...gauge} /> : null}
         {hero ? <Band><Plate slot={hero} ratio="16 / 9" hero caption={heroCaption} /></Band> : null}
         {children}

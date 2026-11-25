@@ -1,6 +1,8 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { numOf } from '../lib/chapters.js'
 import { useBook } from '../components/BookContext.js'
+import { NumberDeck, ArtShapes, geoShapes } from '../components/YearDeck.jsx'
+import { motionOK } from '../motion/env.js'
 import { MOUNTAINS } from '../lib/mountainList.js'
 import MapStage from '../components/MapStage.jsx'
 import Eyebrow from '../components/Eyebrow.jsx'
@@ -56,6 +58,16 @@ const restRow = (rows, k, fmt, unit) => ({
 
 export default function Where() {
   const book = useBook()
+  // the place numbers as sliding cards (site, motion on), with the maps as pictures
+  const [deckOn] = useState(() => !book && motionOK())
+  const [shapes, setShapes] = useState({})
+  useEffect(() => {
+    if (!deckOn) return undefined
+    let live = true
+    const get = (f) => fetch(`${import.meta.env.BASE_URL}data/${f}`).then((x) => x.json()).then((j) => j.features).catch(() => [])
+    Promise.all([get('africa.geojson'), get('tz_regions.geojson')]).then(([af, tz]) => { if (live) setShapes({ af, tz }) })
+    return () => { live = false }
+  }, [deckOn])
   const activities = useTable('activities')
   const geoRows = useTable('activity_geo')
   const wxDays = useTable('weather_days')
@@ -199,15 +211,27 @@ export default function Where() {
             consultancies took me away.
             {P.othersN ? ` ${cap(word(P.othersN))} outings abroad I count as others.` : ''}
           </Reveal>
-          <OddsRow
-            title="The outings by place"
-            items={[
-              { num: nCountries, unit: '', label: 'countries with an outing', tone: 'move' },
-              { book: true, num: tzC.n, unit: '', label: 'outings in Tanzania', tone: 'move' },
-              { book: true, num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
-              { book: true, num: P.indoor, unit: '', label: 'outings with no GPS start', tone: 'rest' },
-            ]}
-          />
+          <NumberDeck label="The outings by place" plain={(
+            <OddsRow
+              title="The outings by place"
+              items={[
+                { num: nCountries, unit: '', label: 'countries with an outing', tone: 'move' },
+                { book: true, num: tzC.n, unit: '', label: 'outings in Tanzania', tone: 'move' },
+                { book: true, num: P.abroadN, unit: '', label: 'outings outside Tanzania', tone: 'move' },
+                { book: true, num: P.indoor, unit: '', label: 'outings with no GPS start', tone: 'rest' },
+              ]}
+            />
+          )} cards={(() => {
+            const af = shapes.af || [], tz = shapes.tz || []
+            const named = new Set(P.namedCountries.map((c) => c.country)), regs = new Set(R.map((r) => r.region))
+            const map = (fs, on) => <ArtShapes shapes={geoShapes(fs, on)} />
+            return [
+              { tone: 'accent', k: 'The outings by place', value: n0(nCountries), label: 'countries with an outing', art: af.length ? map(af, (f) => named.has(f.properties.name)) : null },
+              { tone: 'ink', k: 'The outings by place', value: n0(tzC.n), label: 'outings in Tanzania', art: af.length ? map(af, (f) => f.properties.name === 'Tanzania') : null },
+              { tone: 'paper', k: 'Inside Tanzania', value: n0(R.length), label: 'regions with an outing', art: tz.length ? map(tz, (f) => regs.has(f.properties.region)) : null },
+              { tone: 'accent', k: 'Inside Tanzania', value: `${Math.round((home.n / P.tzTot.n) * 100)}%`, label: `of the outings in ${home.region}`, art: tz.length ? map(tz, (f) => f.properties.region === home.region) : null },
+            ]
+          })()} />
           <div className="wh-africa">
             <figure className="sgrid__fig wh-africa__map">
               <figcaption className="sgrid__figtitle">Africa, by outings</figcaption>
@@ -251,8 +275,8 @@ export default function Where() {
           <OddsRow
             title="Inside Tanzania"
             items={[
-              { num: R.length, unit: '', label: 'regions with an outing', tone: 'move' },
-              { value: home.n / P.tzTot.n, label: `of the outings in ${home.region}`, tone: 'move' },
+              { book: deckOn, num: R.length, unit: '', label: 'regions with an outing', tone: 'move' },
+              { book: deckOn, value: home.n / P.tzTot.n, label: `of the outings in ${home.region}`, tone: 'move' },
               { book: true, value: reg('Kilimanjaro').elev / P.tzTot.elev, label: 'of the climb in Kilimanjaro', tone: 'move' },
               { book: true, num: P.tzTot.days, unit: ' days', label: 'out in Tanzania', tone: 'rest' },
             ]}

@@ -24,6 +24,7 @@ import { buildLoad } from '../lib/load.js'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging, useSectionJump } from '../lib/sections.js'
 import { slugify } from '../lib/slug.js'
+import { NumberDeck, ArtMonths } from '../components/YearDeck.jsx'
 import { buildFootReport, SPORTS, SPORT_NAME, MODES, MODE_NAME, MODE_SHORT, TREAD_MIN } from '../lib/footReport.js'
 
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -182,15 +183,24 @@ export default function Sports() {
             body stays active. It is flat, quick and always the same, so on this page I keep it apart, and in the chart below it sits
             alone on the left.
           </Reveal>
-          <OddsRow
-            title="The four sports on foot"
-            items={[
-              { num: T.n, unit: '', label: `outings on foot, of ${n0(T.all)} in all`, tone: 'move' },
-              { num: T.km, unit: ' km', label: 'covered on foot', tone: 'move' },
-              { num: T.elev, unit: ' m', label: 'climbed on foot', tone: 'move' },
-              { num: T.hours, unit: ' h', label: 'moving on foot', tone: 'move' },
-            ]}
-          />
+          <NumberDeck label="The four sports on foot" plain={(
+            <OddsRow
+              title="The four sports on foot"
+              items={[
+                { num: T.n, unit: '', label: `outings on foot, of ${n0(T.all)} in all`, tone: 'move' },
+                { num: T.km, unit: ' km', label: 'covered on foot', tone: 'move' },
+                { num: T.elev, unit: ' m', label: 'climbed on foot', tone: 'move' },
+                { num: T.hours, unit: ' h', label: 'moving on foot', tone: 'move' },
+              ]}
+            />
+          )} cards={[
+            { tone: 'accent', k: 'On foot, all four sports', value: n0(T.km), unit: ' km', label: 'covered on foot', note: `${n0(T.n)} outings, of ${n0(T.all)} in all`, art: <ArtMonths values={r.byYear.map((b) => SPORTS.reduce((t, sp) => t + b.km[sp], 0))} /> },
+            ...SPORTS.map((sp, k) => ({
+              tone: ['ink', 'paper', 'accent', 'ink'][k % 4], k: `${SPORT_NAME[sp]}s`, value: n0(r.sport[sp].km), unit: ' km', label: `in ${n0(r.sport[sp].n)} ${SPORT_NAME[sp].toLowerCase()}s`,
+              note: `${Math.round((r.sport[sp].km / Math.max(1, T.km)) * 100)}% of the distance, ${Math.round((r.sport[sp].elev / Math.max(1, T.elev)) * 100)}% of the climbing`,
+              art: <ArtMonths values={r.byYear.map((b) => b.km[sp])} />,
+            })),
+          ]} />
           <FootMap rows={r.rows} />
           <BookRead items={[
             ['Every outing on foot', 'Each dot is one outing on foot. Across is the pace, quicker to the left, and up is the climb for each kilometre. A bigger dot is a longer outing and the colour is the way of moving. Outings with no climb at all, such as every treadmill run, sit in a lane under the axis.', <FootMap />],

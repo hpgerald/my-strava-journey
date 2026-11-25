@@ -511,8 +511,8 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .ydeck__card--ink { background: var(--ink); color: var(--paper); }
 .ydeck__card--paper { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
 .ydeck__k { display: flex; justify-content: space-between; margin: 0; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-.ydeck__main { align-self: center; min-width: 0; }
-.ydeck__num { display: flex; align-items: baseline; flex-wrap: wrap; margin: 0; font-family: var(--font-display); font-weight: 760; font-size: clamp(4.2rem, 1.5rem + 13vw, 12rem); line-height: 0.86; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; }
+.ydeck__main { align-self: center; min-width: 0; container-type: inline-size; }
+.ydeck__num { display: flex; align-items: baseline; flex-wrap: nowrap; white-space: nowrap; margin: 0; font-family: var(--font-display); font-weight: 760; font-size: min(clamp(4.2rem, 1.5rem + 13vw, 12rem), calc(100cqw / (var(--chars, 4) * 0.6))); line-height: 0.86; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; }
 .ydeck__card--ink .ydeck__num { color: var(--accent); }
 .ydeck__card--paper .ydeck__num { color: var(--accent-strong); }
 .ydeck__u { margin-left: 0.12em; font-size: 0.34em; letter-spacing: -0.02em; }
@@ -552,22 +552,62 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .is-on .dart--clock line { opacity: 1; }
 
 /* ---- each section of a year arrives in steps (site, motion only) ---- */
-html.motion .yis-report .yset.areveal { opacity: 1; transform: none; }
-html.motion .yis-report .yset .yset__k { clip-path: inset(0 100% 0 0); transition: clip-path 0.8s var(--ease-out); }
-html.motion .yis-report .yset .yset__t { opacity: 0; transform: translateY(0.5em); transition: opacity 0.7s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s; }
-html.motion .yis-report .yset .yset__p { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); transition-delay: 0.35s; }
-html.motion .yis-report .yset .yset__p + .yset__p { transition-delay: 0.5s; }
-html.motion .yis-report .yset .yset__p + .yset__p + .yset__p { transition-delay: 0.65s; }
-html.motion .yis-report .yset .yset__facts > div { opacity: 0; transform: translateY(18px); transition: opacity 0.6s var(--ease-out), transform 0.7s var(--ease-out); }
-html.motion .yis-report .yset .yset__facts > div:nth-child(1) { transition-delay: 0.55s; }
-html.motion .yis-report .yset .yset__facts > div:nth-child(2) { transition-delay: 0.68s; }
-html.motion .yis-report .yset .yset__facts > div:nth-child(3) { transition-delay: 0.81s; }
-html.motion .yis-report .yset .yset__fig { clip-path: inset(-20% 100% -20% -5%); transition: clip-path 1.2s cubic-bezier(0.65, 0, 0.2, 1) 0.25s; }
-html.motion .yis-report .yset.is-in .yset__k { clip-path: inset(0 -2% 0 0); }
-html.motion .yis-report .yset.is-in .yset__fig { clip-path: inset(-20% -5% -20% -5%); }
-html.motion .yis-report .yset.is-in .yset__t, html.motion .yis-report .yset.is-in .yset__p, html.motion .yis-report .yset.is-in .yset__facts > div { opacity: 1; transform: none; }
+html.motion .yis-report .yset.areveal:where(:not(.book *)) { opacity: 1; transform: none; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__k { clip-path: inset(0 100% 0 0); transition: clip-path 0.8s var(--ease-out); }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__t { opacity: 0; transform: translateY(0.5em); transition: opacity 0.7s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__p { opacity: 0; transform: translateY(14px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); transition-delay: 0.35s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__p + .yset__p { transition-delay: 0.5s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__p + .yset__p + .yset__p { transition-delay: 0.65s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__facts > div { opacity: 0; transform: translateY(18px); transition: opacity 0.6s var(--ease-out), transform 0.7s var(--ease-out); }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__facts > div:nth-child(1) { transition-delay: 0.55s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__facts > div:nth-child(2) { transition-delay: 0.68s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__facts > div:nth-child(3) { transition-delay: 0.81s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yset__fig { clip-path: inset(-20% 100% -20% -5%); transition: clip-path 1.2s cubic-bezier(0.65, 0, 0.2, 1) 0.25s; }
+html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__k { clip-path: inset(0 -2% 0 0); }
+html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__fig { clip-path: inset(-20% -5% -20% -5%); }
+html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__t, html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__p, html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__facts > div { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .ydeck__l span, .ydeck__c span, .odo__c, .dart * { transition: none !important; }
 }
 .yis-picker__book { flex: 0 0 auto; margin-left: auto; align-self: center; padding-left: var(--sp-4); font-size: 0.875rem; font-weight: 600; color: var(--accent-ink); white-space: nowrap; text-decoration: underline; text-underline-offset: 0.2em; }
 a.yis-cta__btn { display: inline-block; text-decoration: none; }
+
+/* ---- more tones for the decks on other pages ---- */
+.ydeck__card--grey { background: var(--grey-15, #e4e2dc); color: var(--fg-muted); }
+.ydeck__card--grey .ydeck__num { color: var(--grey-55); }
+.ydeck__card--m-ground { background: var(--m-ground); color: var(--m-on); }
+.ydeck__card--m-ground .ydeck__num { color: var(--m-key); }
+.ydeck__card--m-tint { background: var(--m-tint); color: #111; }
+.ydeck__card--m-tint .ydeck__num { color: var(--m-deep); }
+.ydeck__card--m-deep { background: var(--m-deep); color: var(--m-tint, #fff); }
+.ydeck__card--m-deep .ydeck__num { color: var(--m-tint, #fff); }
+.ydeck__a { position: relative; z-index: 2; margin: var(--sp-3) 0 0; font-weight: 600; }
+.ydeck__a a { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+
+.dart--ring, .dart--day { max-width: 13rem; margin-left: auto; }
+.dart__track { fill: none; stroke: currentColor; stroke-opacity: 0.2; stroke-width: 12; }
+.dart--day .dart__track { stroke-width: 3; stroke-opacity: 0.35; }
+.dart__fill { fill: none; stroke: currentColor; stroke-width: 12; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.6s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.is-on .dart__fill { stroke-dashoffset: var(--to); }
+.dart__wedge { fill: currentColor; transform-origin: 60px 60px; transform: scale(0); transition: transform 1s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.is-on .dart__wedge { transform: none; }
+.dart__ghost { fill: none; stroke: currentColor; stroke-opacity: 0.2; stroke-width: 2; }
+.dart--prof .dart__line { fill: none; stroke: currentColor; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-out) 0.3s; }
+.is-on .dart--prof .dart__line { stroke-dashoffset: 0; }
+.dart__dot { fill: currentColor; opacity: 0; transition: opacity 0.3s 1.7s; }
+.is-on .dart__dot { opacity: 1; }
+.dart__band { fill: currentColor; fill-opacity: 0.25; }
+.dart__gap { fill: none; stroke: currentColor; stroke-dasharray: 3 3; }
+.dart__mark { fill: currentColor; transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.is-on .dart__mark { transform: none; }
+.dart--map path { stroke: currentColor; stroke-width: 0.6; stroke-opacity: 0.45; }
+.dart__off { fill: currentColor; fill-opacity: 0.12; }
+.dart__on { fill: currentColor; fill-opacity: 0.12; transition: fill-opacity 0.6s; transition-delay: calc(0.3s + var(--i) * 12ms); }
+.is-on .dart__on { fill-opacity: 1; }
+.ydeck__card--accent .dart__on, .ydeck__card--accent .dart--bars rect, .ydeck__card--paper .dart--bars rect { color: var(--ink); }
+.ydeck__card--grey .dart__band { fill-opacity: 0.4; }
+.dart__d { fill: currentColor; fill-opacity: 0.45; opacity: 0; transition: opacity 0.5s 0.3s; }
+.is-on .dart__d { opacity: 1; }
+.dart__big { fill: currentColor; transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0); transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.9s; }
+.is-on .dart__big { transform: none; }
+.dart__axis { stroke: currentColor; stroke-opacity: 0.4; }

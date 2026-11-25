@@ -10,6 +10,7 @@ import ColBars from '../charts/ColBars.jsx'
 import { DayClocks, TwoPaths, DayPile, WeekStrips, NextGrid, IsoKm } from '../charts/MeaningCharts.jsx'
 import { useTable } from '../context/DataContext.jsx'
 import { useSectionPaging, useSectionJump } from '../lib/sections.js'
+import { NumberDeck, ArtMonths, ArtDayFill } from '../components/YearDeck.jsx'
 import { buildMeaningReport, SMALL_KM, LONG_KM, LONG_RUN_KM } from '../lib/meaningReport.js'
 
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
@@ -115,15 +116,22 @@ export default function WhatItMeans() {
             The habit costs me about a long lunch break a day, and nothing about it is heavy: mostly walking, some easy running.
             The check-up asked for thirty minutes. I give it more than twice that.
           </Reveal>
-          <OddsRow
-            title="What it cost"
-            items={[
-              { num: hours, unit: ' hours', label: 'on the move since the first upload', tone: 'move' },
-              { book: true, num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
-              { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, zero days included`, tone: 'move' },
-              { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}`, tone: 'move' },
-            ]}
-          />
+          <NumberDeck label="What it cost" plain={(
+            <OddsRow
+              title="What it cost"
+              items={[
+                { num: hours, unit: ' hours', label: 'on the move since the first upload', tone: 'move' },
+                { book: true, num: hours / 24, unit: ' days', label: 'if those hours ran end to end', tone: 'rest' },
+                { num: habitPerDay, unit: ' min', label: `a day since ${habitYear}, zero days included`, tone: 'move' },
+                { num: cur.minPerDay, unit: ' min', label: `a day in ${cur.year}`, tone: 'move' },
+              ]}
+            />
+          )} cards={[
+            { tone: 'accent', k: 'What it cost', value: Math.round(hours).toLocaleString('en-US'), unit: ' hours', label: 'on the move since the first upload', art: <ArtMonths values={M.perYear.map((r) => r.minPerDay)} /> },
+            { tone: 'ink', k: 'What it cost', value: Math.round(hours / 24).toLocaleString('en-US'), unit: ' days', label: 'if those hours ran end to end', art: <ArtDayFill share={0.999} /> },
+            { tone: 'paper', k: 'What it cost', value: String(Math.round(habitPerDay)), unit: ' min', label: `a day since ${habitYear}, zero days included`, art: <ArtDayFill share={habitPerDay / 1440} /> },
+            { tone: 'accent', k: 'What it cost', value: String(Math.round(cur.minPerDay)), unit: ' min', label: `a day in ${cur.year}`, art: <ArtDayFill share={cur.minPerDay / 1440} /> },
+          ]} />
           <DayClocks
             years={M.perYear.map((r) => ({ year: r.year, minPerDay: r.minPerDay, partial: r.partial, quiet: r.year < habitYear }))}
             aria={`Minutes on the move per calendar day, each year: ${M.perYear.map((r) => `${r.year} ${n0(r.minPerDay)} minutes`).join(', ')}.`}

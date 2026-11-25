@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom'
 import DetailFrame from '../components/DetailFrame.jsx'
 import StorySection from '../components/StorySection.jsx'
 import OddsRow from '../components/OddsRow.jsx'
+import { NumberDeck, ArtRing } from '../components/YearDeck.jsx'
 import BookStory, { BookLesson, BookRead } from '../components/BookStory.jsx'
 import { Reveal, useInView, useCountUp } from '../components/Reveal.jsx'
 import GoalRace from '../charts/GoalRace.jsx'
@@ -23,6 +24,8 @@ import { buildGoalsReport, TARGETS } from '../lib/goalsReport.js'
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const n0 = (v) => Math.round(v || 0).toLocaleString('en-US')
+// a share of a target as a whole percent, never 100 before the target is met
+const pctOf = (sh) => (sh >= 1 ? Math.round(sh * 100) : Math.min(99, Math.round(sh * 100)))
 const k1 = (v) => (v || 0).toFixed(1)
 const fmtDay = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]} ${iso.slice(0, 4)}` : '')
 const fmtShort = (iso) => (iso ? `${parseInt(iso.slice(8, 10), 10)} ${MON[parseInt(iso.slice(5, 7), 10) - 1]}` : '')
@@ -219,15 +222,22 @@ export default function Goals() {
               ? ` My first running ring closed on ${fmtDayL(doy(closedYears('run')[0].year, closedYears('run')[0].run.closed))}, and ${word(closedYears('walk')[0].year - closedYears('run')[0].year)} years later, to the day, my first walking ring closed.`
               : ''}
           </Reveal>
-          <OddsRow
-            title={`${cur.year}${so}`}
-            items={[
-              { num: cur.walk.total, unit: ' km', label: `walked, ${Math.round(cur.walk.share * 100)}% of the target`, tone: cur.walk.closed != null ? 'move' : 'rest' },
-              { num: cur.run.total, unit: ' km', label: `run, ${Math.round(cur.run.share * 100)}% of the target`, tone: cur.run.closed != null ? 'move' : 'rest' },
-              { num: cur.elev.total, unit: ' m', label: `climbed on foot, ${Math.round(cur.elev.share * 100)}% of the target`, tone: cur.elev.closed != null ? 'move' : 'rest' },
-              { book: true, num: G.daysLeft, unit: ' days', label: `left in ${cur.year}`, tone: 'rest' },
-            ]}
-          />
+          <NumberDeck label={`${cur.year}${so}, against the targets`} plain={(
+            <OddsRow
+              title={`${cur.year}${so}`}
+              items={[
+                { num: cur.walk.total, unit: ' km', label: `walked, ${pctOf(cur.walk.share)}% of the target`, tone: cur.walk.closed != null ? 'move' : 'rest' },
+                { num: cur.run.total, unit: ' km', label: `run, ${pctOf(cur.run.share)}% of the target`, tone: cur.run.closed != null ? 'move' : 'rest' },
+                { num: cur.elev.total, unit: ' m', label: `climbed on foot, ${pctOf(cur.elev.share)}% of the target`, tone: cur.elev.closed != null ? 'move' : 'rest' },
+                { book: true, num: G.daysLeft, unit: ' days', label: `left in ${cur.year}`, tone: 'rest' },
+              ]}
+            />
+          )} cards={[
+            { tone: 'accent', k: `${cur.year}${so}`, value: n0(cur.walk.total), unit: ' km', label: 'walked', note: `${pctOf(cur.walk.share)}% of the target`, art: <ArtRing share={cur.walk.share} /> },
+            { tone: 'ink', k: `${cur.year}${so}`, value: n0(cur.run.total), unit: ' km', label: 'run', note: `${pctOf(cur.run.share)}% of the target`, art: <ArtRing share={cur.run.share} /> },
+            { tone: 'paper', k: `${cur.year}${so}`, value: n0(cur.elev.total), unit: ' m', label: 'climbed on foot', note: `${pctOf(cur.elev.share)}% of the target`, art: <ArtRing share={cur.elev.share} /> },
+            { tone: 'accent', k: `${cur.year}${so}`, value: n0(G.daysLeft), unit: ' days', label: `left in ${cur.year}`, art: <ArtRing share={1 - G.daysLeft / 365} /> },
+          ]} />
           <GoalRace
             byYear={G.byYear} targets={TARGETS} fromYear={habit[0].year}
             aria={`Running totals through each year against the three targets. ${TARGETS.map((t) => `${t.label}: ${habit.map((y) => `${y.year} ${unitOf(t, y[t.key].total)}`).join(', ')}`).join('. ')}.`}
@@ -256,7 +266,7 @@ export default function Goals() {
             target. As walking took over, running fell short in{' '}
             {list(habit.filter((y) => y.run.closed == null).map((y) => y.year))}, while my walking stayed under{' '}
             {n0(Math.ceil(Math.max(...habit.filter((y) => y !== cur).map((y) => y.walk.total)) / 100) * 100)} km a year until{' '}
-            {cur.year}. The climbing came closest in {bestOf('elev').year}, at {Math.round(bestOf('elev').elev.share * 100)}%.
+            {cur.year}. The climbing came closest in {bestOf('elev').year}, at {pctOf(bestOf('elev').elev.share)}%.
           </>}
           odds={{
             title: `Rings closed, ${habit[0].year} to ${cur.year}`,
@@ -276,7 +286,7 @@ export default function Goals() {
             node: (
               <CloseDots H={360}
                 rows={habit.map((y) => ({ year: y.year, ndays: y.ndays, upTo: y.upTo, marks: TARGETS.map((t) => ({ key: t.key, label: t.label, ring: t.ring, day: y[t.key].closed, share: y[t.key].share })) }))}
-                aria={`The day each target was crossed: ${habit.map((y) => `${y.year}: ${TARGETS.map((t) => (y[t.key].closed != null ? `${t.label.toLowerCase()} on ${fmtShort(doy(y.year, y[t.key].closed))}` : `${t.label.toLowerCase()} ${Math.round(y[t.key].share * 100)}%`)).join(', ')}`).join('; ')}.`}
+                aria={`The day each target was crossed: ${habit.map((y) => `${y.year}: ${TARGETS.map((t) => (y[t.key].closed != null ? `${t.label.toLowerCase()} on ${fmtShort(doy(y.year, y[t.key].closed))}` : `${t.label.toLowerCase()} ${pctOf(y[t.key].share)}%`)).join(', ')}`).join('; ')}.`}
               />
             ),
           }}
@@ -566,8 +576,8 @@ export default function Goals() {
             <GoalCard kicker="Running ring" value={closedYears('run').length} unit="times" label={`closed, best ${unitOf(R, bestOf('run').run.total)}`} sub={list(closedYears('run').map((y) => y.year))} tone="hot" />
             {closedYears('walk').length
               ? <GoalCard kicker="Walking ring" value={closedYears('walk').length} unit={closedYears('walk').length === 1 ? 'time' : 'times'} label={`closed, ${unitOf(W, bestOf('walk').walk.total)} in ${bestOf('walk').year}`} sub={`on ${fmtDay(doy(closedYears('walk')[0].year, closedYears('walk')[0].walk.closed))}`} tone="hot" />
-              : <GoalCard kicker="Walking ring" value={Math.round(cur.walk.share * 100)} unit="%" label={`of ${unitOf(W, W.target)} in ${cur.year}${so}${bestOf('walk') === cur ? ', my best walking year' : ''}`} sub={`${n0(W.target - cur.walk.total)} km to go`} />}
-            <GoalCard kicker="Climbing ring" value={Math.round(cur.elev.share * 100)} unit="%" label={`of ${unitOf(E, E.target)} in ${cur.year}${so}`} sub={S ? `${Math.round(S.hit * 100)}% chance it closes` : ''} />
+              : <GoalCard kicker="Walking ring" value={pctOf(cur.walk.share)} unit="%" label={`of ${unitOf(W, W.target)} in ${cur.year}${so}${bestOf('walk') === cur ? ', my best walking year' : ''}`} sub={`${n0(W.target - cur.walk.total)} km to go`} />}
+            <GoalCard kicker="Climbing ring" value={pctOf(cur.elev.share)} unit="%" label={`of ${unitOf(E, E.target)} in ${cur.year}${so}`} sub={S ? `${Math.round(S.hit * 100)}% chance it closes` : ''} />
             {G.marathon && <GoalCard id="marathon" kicker="The marathon" text={clock(G.marathon.min)} label={`${k1(G.marathon.dist)} km${G.marathon.min < 180 ? ' in under three hours' : ''}${G.marathon.trainer ? ', indoors on a loop' : ''}`} sub={fmtMonth(G.marathon.date)} tone="hot" />}
             {G.stage && <GoalCard id="stage-race" kicker="The four-day challenge" value={G.stage.km} decimals={1} unit="km" label={`in ${word(G.stage.days.length)} days back to back, ${k1(G.stage.km / G.stage.days.length)} km a day`} sub={`${fmtShort(G.stage.days[0].date)} to ${fmtDay(G.stage.days[G.stage.days.length - 1].date)}`} />}
             {race.length > 0 && <GoalCard kicker="Kilimanjaro Half" text={hmin(quick.moving)} label={`the quickest of ${word(race.length)}, ${n0(first.moving - last.moving)} min under ${first.year}`} sub={`${quick.year} edition`} />}
