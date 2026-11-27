@@ -36,7 +36,8 @@ const seal = 'SIKU KWA SIKU · DAY BY DAY · SIKU KWA SIKU · DAY BY DAY · '
 // beats: three short lines told over the board as the cold open scrolls, one
 //   for the layoff, one for the comeback, one for the streak; beat: which one
 //   is on (0 for none). Each beat lights its own stretch of the bars.
-// bare: only the title, the bars and the years (no seal, no notes, no moving sweep)
+// bare: only the title, low on the first screen, with a few soft flares of
+//   light behind it
 export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums, beats = [], beat = 0, bare = false }) {
   const [ref, inView] = useInView({ threshold: 0.05, rootMargin: '0px' })
   // fit the title to the column: measure it once at a known size, then scale,
@@ -78,6 +79,11 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
 
   return (
     <div ref={ref} className={`hx${bare ? ' hx--bare' : ''}${inView ? ' is-in' : ''}${beat ? ` is-beat is-beat${beat}` : ''}`}>
+      {bare ? (
+        <div className="hx__flares" aria-hidden="true">
+          <i className="hx__fl hx__fl--a" /><i className="hx__fl hx__fl--b" /><i className="hx__fl hx__fl--c" /><i className="hx__fl hx__fl--d" /><i className="hx__fl hx__fl--e" />
+        </div>
+      ) : null}
       <div className="hx__tw" ref={tw}>
         <p className="hx__t">
           {chars.map((ch, i) => (ch === ' '
@@ -87,7 +93,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         </p>
       </div>
 
-      {N ? (
+      {bare ? null : N ? (
         <div className="hx__chart">
           <div className="hx__plot">
           {bare ? null : <div className="hx__seal">
@@ -129,14 +135,16 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
         </div>
       ) : <div className="hx__chart" />}
 
-      <div className={`hx__foot${nums ? '' : ' hx__foot--nonums'}`}>
-        {nums ? <HeroNums nums={nums} go={inView} /> : null}
-        {beats.length ? (
-          <ol className="hx__beats" aria-hidden="true">
-            {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt"><span className="hx__btx">{b.t}</span></span></li>)}
-          </ol>
-        ) : null}
-      </div>
+      {bare ? null : (
+        <div className={`hx__foot${nums ? '' : ' hx__foot--nonums'}`}>
+          {nums ? <HeroNums nums={nums} go={inView} /> : null}
+          {beats.length ? (
+            <ol className="hx__beats" aria-hidden="true">
+              {beats.map((b, i) => <li key={i} className={beat === i + 1 ? 'is-on' : ''}><span className="hx__bk">{b.k}</span><span className="hx__bt"><span className="hx__btx">{b.t}</span></span></li>)}
+            </ol>
+          ) : null}
+        </div>
+      )}
     </div>
   )
 }

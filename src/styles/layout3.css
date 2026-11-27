@@ -453,3 +453,26 @@ html.is-scrolling .hx__ch, html.is-scrolling .hx__dot, html.is-scrolling .hx__ba
 html.motion .hx--bare .hx__bars i { animation: barUp 0.9s var(--ease-out) both; animation-delay: calc(0.8s + var(--j) * 10ms); }
 html.motion .hx--bare .hx__bars i.is-now::after { animation: none; }
 html.motion.pre-on .hx--bare .hx__bars i { animation-delay: calc(3s + var(--j) * 10ms); }
+/* the bare hero: the title alone, low on the first screen, with a few soft
+   flares of light behind it (decoration only) */
+.hx--bare { position: relative; isolation: isolate; overflow: hidden; justify-content: flex-end; padding-bottom: clamp(1.5rem, 6vh, 3.5rem); }
+.hx--bare .hx__tw { position: relative; z-index: 1; }
+.hx__flares { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hx__fl { position: absolute; display: block; }
+.hx__fl--a { width: 52vmax; height: 52vmax; right: -14vmax; top: -18vmax; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 26%, transparent) 0%, color-mix(in srgb, var(--accent) 8%, transparent) 38%, transparent 66%); }
+.hx__fl--b { width: 30vmax; height: 30vmax; left: -6vmax; top: 22%; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 11%, transparent) 0%, transparent 64%); }
+.hx__fl--c { width: min(62vw, 52rem); height: 1px; right: 4%; top: 30%; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 70%, transparent) 62%, transparent); transform: rotate(-14deg); transform-origin: 62% 50%; opacity: 0.55; }
+.hx__fl--d { width: 3.4rem; height: 3.4rem; right: calc(4% + min(62vw, 52rem) * 0.38 - 1.7rem); top: calc(30% - 1.7rem); border-radius: 50%; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.hx__fl--e { width: 0.55rem; height: 0.55rem; right: calc(4% + min(62vw, 52rem) * 0.38 - 0.275rem); top: calc(30% - 0.275rem); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0.45rem color-mix(in srgb, var(--accent) 14%, transparent), 0 0 2.2rem 0.6rem color-mix(in srgb, var(--accent) 30%, transparent); }
+html.motion .hx__fl--a { animation: flDrift 22s ease-in-out infinite alternate; }
+html.motion .hx__fl--b { animation: flDrift 28s ease-in-out -9s infinite alternate-reverse; }
+html.motion .hx__fl--c, html.motion .hx__fl--d, html.motion .hx__fl--e { animation: flIn 1.6s var(--ease-out) 1.1s both; }
+html.motion.pre-on .hx__fl--c, html.motion.pre-on .hx__fl--d, html.motion.pre-on .hx__fl--e { animation-delay: 3.3s; }
+@keyframes flDrift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-3vmax, 2vmax, 0) scale(1.08); } }
+@keyframes flIn { from { opacity: 0; } }
+@media (max-width: 640px) {
+  .hx__fl--c { top: 34%; width: 80vw; }
+  .hx__fl--d, .hx__fl--e { top: calc(34% - 1.7rem); right: calc(4% + 80vw * 0.38 - 1.7rem); }
+  .hx__fl--e { top: calc(34% - 0.275rem); right: calc(4% + 80vw * 0.38 - 0.275rem); }
+}
+@media (prefers-reduced-motion: reduce) { .hx__fl { animation: none !important; } }
