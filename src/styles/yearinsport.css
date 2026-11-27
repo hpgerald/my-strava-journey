@@ -611,3 +611,27 @@ a.yis-cta__btn { display: inline-block; text-decoration: none; }
 .dart__big { fill: currentColor; transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0); transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.9s; }
 .is-on .dart__big { transform: none; }
 .dart__axis { stroke: currentColor; stroke-opacity: 0.4; }
+
+/* ---- the Home cards' pictures: quiet textures that build up as the card arrives ---- */
+.ydeck__art--wide { width: 100%; max-width: 26rem; }
+.dart--field circle { fill: currentColor; opacity: 0; transition: opacity 0.5s ease-out; transition-delay: calc(0.25s + var(--i) * 28ms); }
+.is-on .dart--field circle { opacity: 0.85; }
+.dart__ground { fill: currentColor; opacity: 0; transition: opacity 0.8s ease-out 0.9s; }
+.is-on .dart__ground { opacity: 0.16; }
+.dart__curve { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.5s cubic-bezier(0.3, 0.7, 0.2, 1) 0.25s; }
+.is-on .dart__curve { stroke-dashoffset: 0; }
+.dart--peaks path { fill: currentColor; opacity: 0.9; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.2, 1); transition-delay: calc(0.25s + var(--i) * 90ms); }
+.dart--peaks path.is-part { opacity: 0.45; }
+.is-on .dart--peaks path { transform: none; }
+.dart--days rect { fill: currentColor; opacity: 0.14; }
+.dart--days rect.is-on { opacity: 0; transition: opacity 0.4s ease-out; transition-delay: calc(0.25s + var(--i) * 30ms); }
+.is-on .dart--days rect.is-on { opacity: 0.9; }
+.ydeck__card--ink .dart--area, .ydeck__card--ink .dart--field { color: var(--accent); }
+.ydeck__card--paper .dart--peaks { color: var(--ink); }
+.dart--towers rect { fill: currentColor; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; transform: translateY(4px); transition: opacity 0.4s ease-out, transform 0.5s ease-out; transition-delay: calc(0.25s + var(--i) * 22ms); }
+.is-on .dart--towers rect { opacity: 0.9; transform: none; }
+.dart--towers text { font-family: var(--font-sans); font-size: 7.5px; font-weight: 600; fill: currentColor; opacity: 0.75; }
+.dart--yfill text { font-family: var(--font-sans); font-size: 7.5px; font-weight: 600; fill: currentColor; opacity: 0.75; }
+.dart--yfill .dart__yt { fill: currentColor; opacity: 0.14; }
+.dart--yfill .dart__yf { fill: currentColor; opacity: 0.9; transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 0.8s var(--ease-out, ease-out); transition-delay: calc(0.25s + var(--i) * 90ms); }
+.is-on .dart--yfill .dart__yf { transform: none; }

@@ -36,7 +36,8 @@ const seal = 'SIKU KWA SIKU · DAY BY DAY · SIKU KWA SIKU · DAY BY DAY · '
 // beats: three short lines told over the board as the cold open scrolls, one
 //   for the layoff, one for the comeback, one for the streak; beat: which one
 //   is on (0 for none). Each beat lights its own stretch of the bars.
-export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums, beats = [], beat = 0 }) {
+// bare: only the title, the bars and the years (no seal, no notes, no moving sweep)
+export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, comebackKey, nums, beats = [], beat = 0, bare = false }) {
   const [ref, inView] = useInView({ threshold: 0.05, rootMargin: '0px' })
   // fit the title to the column: measure it once at a known size, then scale,
   // again whenever the column changes width or the fonts arrive
@@ -76,7 +77,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
   const stretch = (k) => (k >= streakFrom ? 'is-s3' : comebackKey && k >= comebackKey ? 'is-s2' : gap && k >= gap.fromKey ? 'is-s1' : 'is-s0')
 
   return (
-    <div ref={ref} className={`hx${inView ? ' is-in' : ''}${beat ? ` is-beat is-beat${beat}` : ''}`}>
+    <div ref={ref} className={`hx${bare ? ' hx--bare' : ''}${inView ? ' is-in' : ''}${beat ? ` is-beat is-beat${beat}` : ''}`}>
       <div className="hx__tw" ref={tw}>
         <p className="hx__t">
           {chars.map((ch, i) => (ch === ' '
@@ -89,7 +90,7 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
       {N ? (
         <div className="hx__chart">
           <div className="hx__plot">
-          <div className="hx__seal">
+          {bare ? null : <div className="hx__seal">
             <svg viewBox="0 0 200 200">
               <defs><path id="hx-ring" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
               <g className="hx__spin">
@@ -98,20 +99,20 @@ export default function HeroBoard({ months, streakFrom, streakSinceLabel, gap, c
               <circle cx="100" cy="100" r="58" className="hx__sealr" />
               <rect x="88" y="88" width="24" height="24" className="hx__sealdot" />
             </svg>
-          </div>
+          </div>}
           <div className="hx__bars" style={{ '--n': N }}>
             {months.map((m, i) => (
               <i key={m.k} className={`${m.k >= streakFrom ? 'is-now' : m.n ? '' : 'is-empty'} ${stretch(m.k)}`}
                 style={{ '--h': `${Math.max(m.n ? 3 : 0.8, (m.n / top) * 100).toFixed(1)}%`, '--j': i }} />
             ))}
           </div>
-          {gap && gap.days > 30 ? (
+          {!bare && gap && gap.days > 30 ? (
             <p className="hx__note hx__note--gap" style={{ left: pc(comebackKey ? at(comebackKey) : at(gap.fromKey)) }}><b>{fmt(gap.days)} days</b>the long layoff</p>
           ) : null}
-          {comebackKey ? (
+          {!bare && comebackKey ? (
             <p className="hx__note hx__note--back" style={{ left: pc(at(comebackKey)) }}><b>The comeback</b><span>a few outings a month became dozens</span></p>
           ) : null}
-          {sIdx < N ? (
+          {!bare && sIdx < N ? (
             <>
               <p className="hx__note hx__note--now"><b>The streak</b><span>every day since {streakSinceLabel}</span></p>
               <span className="hx__brk" style={{ left: pc(sIdx) }} />

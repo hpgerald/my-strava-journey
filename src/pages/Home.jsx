@@ -44,7 +44,7 @@ import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
 import Marquee from '../motion/Marquee.jsx'
-import YearDeck, { ArtMonths, ArtLine, ArtRidge, ArtRing } from '../components/YearDeck.jsx'
+import YearDeck, { ArtTowers, ArtArea, ArtPeaks, ArtYearFill } from '../components/YearDeck.jsx'
 import { motionOK } from '../motion/env.js'
 
 const NONE = []
@@ -1050,13 +1050,8 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
   )
 
   // ---- the story: a cold open, then six parts in the order they happened ----
-  // the cold open: three beats over the board, from the layoff to the streak
+  // the cold open: the board alone, the title and every month of the record
   const goal = streakGoal(new Set(activityLog.map((a) => (a.date || '').slice(0, 10))))
-  const heroBeats = heroGap ? [
-    { k: 'The layoff', t: `A new job, a move, COVID-19: ${n0(heroGap.days)} days off.` },
-    { k: 'The comeback', t: `A check-up sent me back: ${n0(preMonthAvg)} a month became ${n0(postMonthAvg)}.` },
-    { k: 'The streak', t: goal.met ? 'A whole year, no zero day.' : `Then I stopped missing days: ${n0(toNum(curStreak))} in a row.` },
-  ] : []
   const nOf = (y) => { const s = yearSummaries.find((x) => x.year === y); return s ? s.stats.n : 0 }
   // the moments of the timeline, to be set inside the parts they belong to
   const chron = activityLog.length ? buildChronicle(activityLog, activityGeo, [], []) : null
@@ -1104,17 +1099,22 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
     const span = Math.max(1, days(first, last))
     const elev = Math.round(toNum(elevation) || 0)
     const daysOut = new Set(activityLog.map((a) => (a.date || '').slice(0, 10))).size
+    const byYear = {}
+    for (const a of activityLog) { const y = (a.date || '').slice(0, 4); if (y) byYear[y] = (byYear[y] || 0) + 1 }
+    // the share of each year's days with an outing (the first and last years
+    // counted from the first outing and to the last)
+    const yearFill = (() => { const on = new Set(activityLog.map((a) => (a.date || '').slice(0, 10))); const by = {}; for (let t = Date.parse(first); t <= Date.parse(last); t += 864e5) { const d = new Date(t).toISOString(); const y = d.slice(0, 4); by[y] = by[y] || [0, 0]; by[y][1]++; if (on.has(d.slice(0, 10))) by[y][0]++ } return Object.keys(by).sort().map((y) => ({ label: `'${y.slice(2)}`, share: by[y][0] / by[y][1] })) })()
     return [
-      { tone: 'accent', k: 'The record so far', value: n0(activityLog.length), label: 'outings', note: `since ${MON3[parseInt(first.slice(5, 7), 10) - 1]} ${first.slice(0, 4)}`, art: <ArtMonths values={heroMonths.map((m) => m.n)} /> },
-      { tone: 'ink', k: 'The record so far', value: n0(Math.round(toNum(km) || 0)), unit: ' km', label: 'on foot', note: 'runs, walks, trail runs and hikes', art: <ArtLine values={cum} /> },
-      { tone: 'paper', k: 'The record so far', value: n0(elev), unit: ' m', label: 'climbed', note: `about ${(elev / 8849).toFixed(1)} times the height of Everest`, art: <ArtRidge values={Object.keys(elY).sort().map((y) => elY[y])} /> },
-      { tone: 'accent', k: 'The record so far', value: n0(daysOut), unit: ' days', label: 'with an outing', note: `of ${n0(span + 1)} since the first`, art: <ArtRing share={daysOut / (span + 1)} /> },
+      { tone: 'accent', k: 'The record so far', value: n0(activityLog.length), label: 'outings', note: `since ${MON3[parseInt(first.slice(5, 7), 10) - 1]} ${first.slice(0, 4)}`, wide: true, art: <ArtTowers years={Object.keys(byYear).sort().map((y) => ({ label: `'${y.slice(2)}`, n: byYear[y] }))} /> },
+      { tone: 'ink', k: 'The record so far', value: n0(Math.round(toNum(km) || 0)), unit: ' km', label: 'on foot', note: 'runs, walks, trail runs and hikes', wide: true, art: <ArtArea values={cum} /> },
+      { tone: 'paper', k: 'The record so far', value: n0(elev), unit: ' m', label: 'climbed', note: `about ${(elev / 8849).toFixed(1)} times the height of Everest`, wide: true, art: <ArtPeaks ratio={elev / 8849} /> },
+      { tone: 'accent', k: 'The record so far', value: n0(daysOut), unit: ' days', label: 'with an outing', note: `of ${n0(span + 1)} since the first`, wide: true, art: <ArtYearFill years={yearFill} /> },
     ]
   })()
   return (
     <Layout>
       {!book && (
-        <ColdOpen heroRef={heroRef} beats={heroBeats}
+        <ColdOpen heroRef={heroRef} beats={[]} bare
 
             months={heroMonths} streakFrom={heroStreakFrom} streakSinceLabel={heroStreakLabel}
             gap={heroGap ? { days: heroGap.days, fromKey: heroGap.from } : null} comebackKey={heroGap ? heroGap.back : null}

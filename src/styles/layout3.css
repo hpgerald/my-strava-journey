@@ -448,3 +448,8 @@ html.is-scrolling .hx__ch, html.is-scrolling .hx__dot, html.is-scrolling .hx__ba
 @media (max-width: 25rem) {
   .hx__note--gap { white-space: normal; max-width: 4.8rem; }
 }
+
+/* the bare hero: the bars rise once and then hold still */
+html.motion .hx--bare .hx__bars i { animation: barUp 0.9s var(--ease-out) both; animation-delay: calc(0.8s + var(--j) * 10ms); }
+html.motion .hx--bare .hx__bars i.is-now::after { animation: none; }
+html.motion.pre-on .hx--bare .hx__bars i { animation-delay: calc(3s + var(--j) * 10ms); }

@@ -76,7 +76,7 @@ export default function YearDeck({ cards, label }) {
                 {c.note ? <p className="ydeck__c"><span>{c.note}</span></p> : null}
                 {c.link && i === active ? <p className="ydeck__a">{c.link.to ? <Link to={c.link.to}>{c.link.label}</Link> : <a href={c.link.href} onClick={c.link.onClick}>{c.link.label}</a>}</p> : null}
               </div>
-              <div className="ydeck__art" aria-hidden="true">{c.art}</div>
+              <div className={`ydeck__art${c.wide ? ' ydeck__art--wide' : ''}`} aria-hidden="true">{c.art}</div>
             </article>
           )
         })}
@@ -230,6 +230,103 @@ export function ArtDots({ values }) {
       {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2" className="dart__d" />)}
       <circle cx={4 + 220 + 4} cy={98} r="9" className="dart__big" />
       <line x1="4" x2="236" y1="112" y2="112" className="dart__axis" />
+    </svg>
+  )
+}
+
+// one small dot for each item, row after row, appearing a row at a time
+export function ArtDotField({ count, cols = 60 }) {
+  const rows = Math.ceil(count / cols), step = 236 / cols, r = Math.max(0.7, step * 0.32)
+  const H = rows * step + 4
+  const dots = []
+  for (let i = 0; i < count; i++) dots.push(<circle key={i} cx={2 + (i % cols) * step + step / 2} cy={2 + Math.floor(i / cols) * step + step / 2} r={r} style={{ '--i': Math.floor(i / cols) }} />)
+  return <svg viewBox={`0 0 240 ${H.toFixed(1)}`} className="dart dart--field">{dots}</svg>
+}
+
+// a smooth line adding up, with the ground under it lightly filled
+export function ArtArea({ values }) {
+  const max = Math.max(1e-9, ...values), n = values.length
+  const pts = values.map((v, i) => [4 + (i / Math.max(1, n - 1)) * 232, 112 - (v / max) * 100])
+  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`
+  for (let i = 1; i < n; i++) {
+    const p0 = pts[i - 2] || pts[i - 1], p1 = pts[i - 1], p2 = pts[i], p3 = pts[i + 1] || p2
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6]
+    d += `C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`
+  }
+  const end = pts[n - 1]
+  return (
+    <svg viewBox="0 0 240 120" className="dart dart--area">
+      <path d={`${d}L${end[0].toFixed(1)} 116L4 116Z`} className="dart__ground" />
+      <path d={d} pathLength="1" className="dart__curve" />
+      <circle cx={end[0]} cy={end[1]} r="5" className="dart__dot" />
+    </svg>
+  )
+}
+
+// one peak for each Everest climbed, the last one as tall as the share left over
+export function ArtPeaks({ ratio }) {
+  // one small mountain for each Everest, side by side, the last one cut to
+  // the part that is left
+  const full = Math.floor(ratio), part = ratio - full, n = full + (part > 0.05 ? 1 : 0)
+  const step = 232 / Math.max(1, n), w = step * 0.9, H = w * 0.95
+  return (
+    <svg viewBox={`0 0 240 ${(H + 4).toFixed(1)}`} className="dart dart--peaks">
+      {Array.from({ length: n }, (_, i) => {
+        const h = (i < full ? 1 : part) * H, x = 4 + i * step + (step - w) / 2, b = H + 2
+        // the cut one keeps the slopes of a full mountain, with a flat top
+        const t = H - h, inset = (w / 2) * (t / H)
+        const d = i < full
+          ? `M${x.toFixed(1)} ${b.toFixed(1)}L${(x + w / 2).toFixed(1)} 2L${(x + w).toFixed(1)} ${b.toFixed(1)}Z`
+          : `M${x.toFixed(1)} ${b.toFixed(1)}L${(x + inset).toFixed(1)} ${(2 + t).toFixed(1)}L${(x + w - inset).toFixed(1)} ${(2 + t).toFixed(1)}L${(x + w).toFixed(1)} ${b.toFixed(1)}Z`
+        return <path key={i} d={d} style={{ '--i': i }} className={i >= full ? 'is-part' : ''} />
+      })}
+    </svg>
+  )
+}
+
+// every day as a small square, row after row, filled on a day with an outing
+export function ArtDayGrid({ days, cols = 70 }) {
+  const step = 236 / cols, s = step * 0.78, rows = Math.ceil(days.length / cols), H = rows * step + 4
+  return (
+    <svg viewBox={`0 0 240 ${H.toFixed(1)}`} className="dart dart--days">
+      {days.map((on, i) => <rect key={i} x={(2 + (i % cols) * step).toFixed(2)} y={(2 + Math.floor(i / cols) * step).toFixed(2)} width={s.toFixed(2)} height={s.toFixed(2)} className={on ? 'is-on' : ''} style={{ '--i': Math.floor(i / cols) }} />)}
+    </svg>
+  )
+}
+
+// a tower of small squares for each year, one square for `per` items, with the
+// year under it
+export function ArtTowers({ years, per = 25 }) {
+  const n = years.length, colW = 232 / n, s = Math.min(colW * 0.62, 7), gap = s * 0.35
+  const maxH = Math.max(...years.map((y) => Math.ceil(y.n / per)))
+  const H = maxH * (s + gap) + 18
+  return (
+    <svg viewBox={`0 0 240 ${H.toFixed(1)}`} className="dart dart--towers">
+      {years.map((y, k) => {
+        const cx = 4 + colW * k + colW / 2, m = Math.round(y.n / per) || (y.n ? 1 : 0)
+        return (
+          <g key={y.label}>
+            {Array.from({ length: m }, (_, j) => <rect key={j} x={(cx - s / 2).toFixed(2)} y={(H - 18 - (j + 1) * (s + gap) + gap).toFixed(2)} width={s.toFixed(2)} height={s.toFixed(2)} rx={(s * 0.2).toFixed(2)} style={{ '--i': k * 3 + j * 0.6 }} />)}
+            <text x={cx.toFixed(1)} y={(H - 4).toFixed(1)} textAnchor="middle">{y.label}</text>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+// one row for each year, filled for the share of its days that had an outing
+export function ArtYearFill({ years }) {
+  const rowH = 9, gap = 4, H = years.length * (rowH + gap)
+  return (
+    <svg viewBox={`0 0 240 ${H}`} className="dart dart--yfill">
+      {years.map((y, k) => (
+        <g key={y.label} style={{ '--i': k }}>
+          <text x="0" y={(k * (rowH + gap) + rowH - 1.5).toFixed(1)}>{y.label}</text>
+          <rect className="dart__yt" x="22" y={k * (rowH + gap)} width="214" height={rowH} rx="2" />
+          <rect className="dart__yf" x="22" y={k * (rowH + gap)} width={(214 * y.share).toFixed(1)} height={rowH} rx="2" />
+        </g>
+      ))}
     </svg>
   )
 }
