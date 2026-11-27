@@ -497,7 +497,7 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
    Each card slides up over the one before as the page scrolls (--q, 0 to 1,
    written by YearDeck), and steps back a little as the next arrives (--next).
    The number rolls in digit by digit and the picture draws itself. */
-.ydeck { grid-column: 1 / -1; position: relative; height: calc(100svh + (var(--cards) - 1) * 80svh); margin: var(--sp-4) 0 0; }
+.ydeck { grid-column: 1 / -1; position: relative; height: calc(100svh + (var(--cards) - 1) * 65svh); margin: var(--sp-4) 0 0; }
 .ydeck__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .ydeck__card {
   position: absolute; left: 0; right: 0; top: calc(4.5rem + 2svh); bottom: 4svh;
@@ -529,12 +529,12 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
   .ydeck__art { align-self: end; }
 }
 
-/* the rolling number: each digit a column of 0 to 9 */
-.odo { display: inline-flex; opacity: 0; transition: opacity 0.3s; }
-.is-on .odo { opacity: 1; }
-.odo__w { display: inline-block; height: 1em; line-height: 1; overflow: hidden; }
-.odo__c { display: flex; flex-direction: column; transform: translateY(calc(var(--n, 0) * -1em)); transition: transform 1.3s cubic-bezier(0.2, 0.9, 0.1, 1); }
-.odo__c span, .odo__s { display: block; height: 1em; line-height: 1; }
+/* the number: each figure rises into place from below its own line */
+.odo { display: inline-flex; }
+.odo__w { display: inline-block; overflow: hidden; line-height: 1.08; padding: 0.04em 0; margin: -0.04em 0; }
+.odo__g { display: inline-block; transform: translateY(110%); opacity: 0; transition: transform 0.75s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.4s ease-out; }
+.is-on .odo__g { transform: none; opacity: 1; }
+.odo__w--s .odo__g { transition-duration: 0.5s, 0.3s; }
 
 /* the pictures */
 .dart { display: block; width: 100%; height: auto; overflow: visible; }
@@ -567,7 +567,7 @@ html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__k { clip-path: i
 html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__fig { clip-path: inset(-20% -5% -20% -5%); }
 html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__t, html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__p, html.motion .yis-report .yset.is-in:where(:not(.book *)) .yset__facts > div { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .ydeck__l span, .ydeck__c span, .odo__c, .dart * { transition: none !important; }
+  .ydeck__l span, .ydeck__c span, .odo__g, .dart * { transition: none !important; }
 }
 .yis-picker__book { flex: 0 0 auto; margin-left: auto; align-self: center; padding-left: var(--sp-4); font-size: 0.875rem; font-weight: 600; color: var(--accent-ink); white-space: nowrap; text-decoration: underline; text-underline-offset: 0.2em; }
 a.yis-cta__btn { display: inline-block; text-decoration: none; }

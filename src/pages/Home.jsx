@@ -44,7 +44,7 @@ import { Reveal } from '../components/Reveal.jsx'
 import BookStory, { BookRead } from '../components/BookStory.jsx'
 import { useBook } from '../components/BookContext.js'
 import Marquee from '../motion/Marquee.jsx'
-import YearDeck, { ArtMonths, ArtLine, ArtRidge, ArtSpan } from '../components/YearDeck.jsx'
+import YearDeck, { ArtMonths, ArtLine, ArtRidge, ArtRing } from '../components/YearDeck.jsx'
 import { motionOK } from '../motion/env.js'
 
 const NONE = []
@@ -1102,13 +1102,13 @@ const HomeBody = memo(function HomeBody({ homeReady, restOn, metaRows, lifetime,
     const first = activityLog.reduce((m, a) => (!m || a.date < m ? a.date : m), '').slice(0, 10)
     const last = activityLog.reduce((m, a) => (a.date > m ? a.date : m), '').slice(0, 10)
     const span = Math.max(1, days(first, last))
-    const sh = (iso) => Math.max(0, Math.min(1, days(first, iso) / span))
     const elev = Math.round(toNum(elevation) || 0)
+    const daysOut = new Set(activityLog.map((a) => (a.date || '').slice(0, 10))).size
     return [
       { tone: 'accent', k: 'The record so far', value: n0(activityLog.length), label: 'outings', note: `since ${MON3[parseInt(first.slice(5, 7), 10) - 1]} ${first.slice(0, 4)}`, art: <ArtMonths values={heroMonths.map((m) => m.n)} /> },
       { tone: 'ink', k: 'The record so far', value: n0(Math.round(toNum(km) || 0)), unit: ' km', label: 'on foot', note: 'runs, walks, trail runs and hikes', art: <ArtLine values={cum} /> },
       { tone: 'paper', k: 'The record so far', value: n0(elev), unit: ' m', label: 'climbed', note: `about ${(elev / 8849).toFixed(1)} times the height of Everest`, art: <ArtRidge values={Object.keys(elY).sort().map((y) => elY[y])} /> },
-      { tone: 'accent', k: 'The record so far', value: n0(Math.round(toNum(curStreak) || 0)), unit: ' days', label: 'in a row', note: 'and still going', art: <ArtSpan mark={edStreak.start ? [sh(edStreak.start.slice(0, 10)), 1] : null} gap={heroGap ? [sh(`${heroGap.from}-01`), sh(`${heroGap.back}-01`)] : null} /> },
+      { tone: 'accent', k: 'The record so far', value: n0(daysOut), unit: ' days', label: 'with an outing', note: `of ${n0(span + 1)} since the first`, art: <ArtRing share={daysOut / (span + 1)} /> },
     ]
   })()
   return (

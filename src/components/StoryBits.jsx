@@ -64,7 +64,8 @@ export function HandOff({ n, name, years }) {
   )
 }
 
-// the fifty trips to Ras Kilomoni, told where 2026 is told
+// the fifty trips to Ras Kilomoni, told where 2026 is told: the wall of trips
+// on the left, the story beside it on the right, level with it
 export function RasPart() {
   const raw = useTable('ras_kilomoni')
   const rows = raw.map((r) => ({ n: Number(r.day), roman: r.roman, date: r.date, sport: r.sport, km: Number(r.distance_km) || 0 })).sort((a, b) => a.n - b.n)
@@ -72,23 +73,47 @@ export function RasPart() {
   const first = rows[0], last = rows[rows.length - 1]
   const runs = rows.filter((r) => r.sport === 'Run' || r.sport === 'TrailRun').length
   const days = Math.round((Date.parse(last.date) - Date.parse(first.date)) / 864e5) + 1
+  const km = rows.reduce((t, r) => t + r.km, 0)
+  const byMonth = {}
+  for (const r of rows) byMonth[r.date.slice(0, 7)] = (byMonth[r.date.slice(0, 7)] || 0) + 1
+  const top = Object.entries(byMonth).sort((a, b) => b[1] - a[1])[0]
+  const MONF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const mon = (ym) => MONF[parseInt(ym.slice(5, 7), 10) - 1]
+  const day = (iso) => `${parseInt(iso.slice(8, 10), 10)} ${mon(iso)}`
   const word = rows.length === 50 ? 'Fifty' : String(rows.length)
+  const n0 = (v) => Math.round(v).toLocaleString('en-US')
   return (
     <Container>
-      <section className="sgrid" aria-labelledby="part-ras">
+      <section className="sgrid ras-row" aria-labelledby="part-ras">
         <div className="sgrid__head">
           <Eyebrow>One place, again and again</Eyebrow>
           <h2 id="part-ras" className="section-head__title">{word} trips to Ras&nbsp;Kilomoni.</h2>
         </div>
-        <p className="sgrid__statement">
-          <span lang="sw">Bandu bandu humaliza gogo</span>, chip by chip finishes the log. I counted the trips to the headland in Roman
-          numerals, {first.roman} to {last.roman}, {rows.length - runs} walks and {runs} runs, over {days} days.
-        </p>
-        <figure className="sgrid__fig">
-          <figcaption className="sgrid__figtitle">Every trip, in the numbers I counted them</figcaption>
-          <div className="sgrid__chart"><RasKilomoni rows={rows} aria={`${word} tiles numbered ${first.roman} to ${last.roman}, one for each trip to Ras Kilomoni: ${rows.length - runs} walks and ${runs} runs.`} /></div>
-        </figure>
-        <p className="mtn-link"><Link to="/goals?s=ras-kilomoni">The trips month by month →</Link></p>
+        <div className="ras-row__grid">
+          <figure className="sgrid__fig ras-row__fig">
+            <figcaption className="sgrid__figtitle">Every trip, in the numbers I counted them</figcaption>
+            <div className="sgrid__chart"><RasKilomoni rows={rows} aria={`${word} tiles numbered ${first.roman} to ${last.roman}, one for each trip to Ras Kilomoni: ${rows.length - runs} walks and ${runs} runs.`} /></div>
+          </figure>
+          <div className="ras-row__words">
+            <p className="sgrid__statement">
+              <span lang="sw">Bandu bandu humaliza gogo</span>, chip by chip finishes the log. I set myself a target of {word.toLowerCase()} trips
+              to the headland, and counted them in Roman numerals, {first.roman} to {last.roman}.
+            </p>
+            <p className="ras-row__p">
+              The route runs from the beach to the headland, through baobab trees and then on hard gravel. It misses the morning traffic
+              and the heat of Dar&nbsp;es&nbsp;Salaam.
+            </p>
+            <p className="ras-row__p">
+              {mon(top[0])} was the busiest month, with {top[1]} trips, and trip {last.roman} came on {day(last.date)}, {days} days after the first.
+            </p>
+            <dl className="ras-row__facts">
+              <div><dt>walks</dt><dd>{rows.length - runs}</dd></div>
+              <div><dt>runs</dt><dd>{runs}</dd></div>
+              <div><dt>km there and back</dt><dd>{n0(km)}</dd></div>
+            </dl>
+            <p className="mtn-link"><Link to="/goals?s=ras-kilomoni">The trips month by month →</Link></p>
+          </div>
+        </div>
       </section>
     </Container>
   )

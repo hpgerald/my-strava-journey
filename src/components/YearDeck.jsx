@@ -15,23 +15,16 @@ import { motionOK } from '../motion/env.js'
 
 const DIG = '0123456789'
 
-// a number that rolls into place: every digit is a column of 0 to 9 that
-// slides to its digit, the columns a little after each other
+// a number that comes up into place: each figure rises from below its own
+// line, one a little after the other, and never two figures in one slot
 function Odometer({ text, on }) {
-  let d = 0
   return (
     <span className="odo" aria-hidden="true">
-      {[...text].map((ch, i) => {
-        if (!DIG.includes(ch)) return <span key={i} className="odo__s">{ch}</span>
-        const k = d++
-        return (
-          <span key={i} className="odo__w">
-            <span className="odo__c" style={{ '--n': on ? Number(ch) : 0, transitionDelay: on ? `${120 + k * 90}ms` : '0ms' }}>
-              {[...DIG].map((x) => <span key={x}>{x}</span>)}
-            </span>
-          </span>
-        )
-      })}
+      {[...text].map((ch, i) => (
+        <span key={i} className={`odo__w${DIG.includes(ch) ? '' : ' odo__w--s'}`}>
+          <span className="odo__g" style={{ transitionDelay: on ? `${100 + i * 70}ms` : '0ms' }}>{ch}</span>
+        </span>
+      ))}
     </span>
   )
 }
@@ -39,6 +32,9 @@ function Odometer({ text, on }) {
 export default function YearDeck({ cards, label }) {
   const ref = useRef(null)
   const [p, setP] = useState(0)
+  // the first card is in place from the start; its number rolls only once the
+  // deck has come well into view, so the roll is never spent below the screen
+  const [armed, setArmed] = useState(false)
   const n = cards.length
   useEffect(() => {
     const el = ref.current
@@ -49,6 +45,7 @@ export default function YearDeck({ cards, label }) {
       const r = el.getBoundingClientRect()
       const run = Math.max(1, r.height - window.innerHeight)
       setP(Math.min(1, Math.max(0, -r.top / run)))
+      setArmed(r.top < window.innerHeight * 0.45 && r.bottom > window.innerHeight * 0.3)
     }
     const on = () => { if (!raf) raf = requestAnimationFrame(read) }
     read()
@@ -64,7 +61,7 @@ export default function YearDeck({ cards, label }) {
       <div className="ydeck__stage">
         {cards.map((c, i) => {
           const q = at(i), next = i < n - 1 ? at(i + 1) : 0
-          const live = i <= active && (q >= 0.55 || i === 0)
+          const live = armed && i <= active && (q >= 0.55 || i === 0)
           return (
             <article key={c.label} className={`ydeck__card ydeck__card--${c.tone}${live ? ' is-on' : ''}`}
               style={{ '--q': q.toFixed(3), '--next': next.toFixed(3), zIndex: i + 1 }} aria-hidden={i > active ? 'true' : undefined}>
