@@ -250,12 +250,17 @@ export function SlopeCards({ items, flat = false, aria }) {
   return (
     <ul className={`yslope${flat ? ' yslope--flat' : ''}`} aria-label={aria}>
       {items.map((it) => {
-        const w = 40 + 160 * ((it.km || 0) / maxK), h = 6 + 60 * ((it.elev || 0) / maxE)
+        // one smooth hill on a shared scale: as wide as the distance, as tall
+        // as the climb, never stretched by the width of its column
+        const w = 48 + 148 * ((it.km || 0) / maxK), h = 6 + 62 * ((it.elev || 0) / maxE)
+        const x0 = 100 - w / 2, x1 = 100 + w / 2, top = 74 - h
+        const hill = `M${x0.toFixed(1)} 74C${(x0 + w * 0.3).toFixed(1)} 74 ${(100 - w * 0.17).toFixed(1)} ${top.toFixed(1)} 100 ${top.toFixed(1)}C${(100 + w * 0.17).toFixed(1)} ${top.toFixed(1)} ${(x1 - w * 0.3).toFixed(1)} 74 ${x1.toFixed(1)} 74Z`
         return (
           <li key={(it.iso || '') + it.title} className={it.hot ? 'is-hot' : ''}>
             {flat ? null : (
-              <svg viewBox="0 0 200 70" width="100%" height="70" preserveAspectRatio="none" aria-hidden="true" style={{ display: 'block' }}>
-                <polygon points={`${100 - w / 2},70 ${100 - w * 0.08},${70 - h} ${100 + w * 0.12},${70 - h * 0.92} ${100 + w / 2},70`} className="yslope__hill" />
+              <svg viewBox="0 0 200 76" className="yslope__svg" aria-hidden="true">
+                <path d={hill} className="yslope__hill" />
+                <line x1="0" x2="200" y1="74.5" y2="74.5" className="yslope__ground" />
               </svg>
             )}
             {it.v != null ? <p className="yslope__v"><b>{it.v}</b> {it.u}</p> : <p className="yslope__v"><b>{it.km.toFixed(1)}</b> km{it.elev >= 10 ? <> · <b>{n0(it.elev)}</b> m up</> : null}</p>}

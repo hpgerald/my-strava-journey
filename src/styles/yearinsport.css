@@ -393,7 +393,15 @@
 .yslope li { min-width: 0; padding-top: var(--sp-3); border-top: 1.5px solid var(--ink); }
 .yslope--flat li { padding-top: var(--sp-4); }
 .yslope li.is-hot { border-top-color: var(--accent); }
+.yslope__svg { display: block; width: 100%; max-width: 15rem; height: auto; overflow: visible; }
 .yslope__hill { fill: var(--grey-25); }
+.yslope__ground { stroke: var(--grey-35); stroke-width: 1; }
+html.motion .yis-report .yset:where(:not(.book *)) .yslope__hill { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.04); transition: transform 1.1s cubic-bezier(0.2, 0.9, 0.1, 1) 0.5s; }
+html.motion .yis-report .yset.is-in:where(:not(.book *)) .yslope__hill { transform: none; }
+html.motion .yis-report .yset:where(:not(.book *)) .yslope li:nth-child(2) .yslope__hill { transition-delay: 0.62s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yslope li:nth-child(3) .yslope__hill { transition-delay: 0.74s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yslope li:nth-child(4) .yslope__hill { transition-delay: 0.86s; }
+html.motion .yis-report .yset:where(:not(.book *)) .yslope li:nth-child(5) .yslope__hill { transition-delay: 0.98s; }
 .yslope li.is-hot .yslope__hill { fill: var(--accent); }
 .yslope__v { margin: var(--sp-3) 0 0; font-size: 0.9375rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
 .yslope__v b { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; letter-spacing: -0.02em; color: var(--ink); }
@@ -540,16 +548,7 @@ i.ykb__b--quiet { background: var(--grey-25); } i.ykb__b--mid { background: var(
 .dart { display: block; width: 100%; height: auto; overflow: visible; }
 .dart--bars rect { fill: currentColor; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 0.8s var(--ease-out); transition-delay: calc(0.3s + var(--i) * 50ms); }
 .is-on .dart--bars rect { transform: none; }
-.dart--line polyline { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-out) 0.3s; }
-.dart--line circle { fill: var(--accent); opacity: 0; transition: opacity 0.3s 1.7s; }
-.is-on .dart--line polyline { stroke-dashoffset: 0; }
-.is-on .dart--line circle { opacity: 1; }
-.dart--ridge path { fill: var(--ink); transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
-.is-on .dart--ridge path { transform: none; }
 .dart--clock { max-width: 14rem; margin-left: auto; }
-.dart--clock circle { fill: none; stroke: currentColor; stroke-width: 3; }
-.dart--clock line { stroke: currentColor; stroke-width: 5; stroke-linecap: round; opacity: 0; transition: opacity 0.4s; transition-delay: calc(0.3s + var(--i) * 40ms); }
-.is-on .dart--clock line { opacity: 1; }
 
 /* ---- each section of a year arrives in steps (site, motion only) ---- */
 html.motion .yis-report .yset.areveal:where(:not(.book *)) { opacity: 1; transform: none; }
@@ -589,28 +588,16 @@ a.yis-cta__btn { display: inline-block; text-decoration: none; }
 .dart--day .dart__track { stroke-width: 3; stroke-opacity: 0.35; }
 .dart__fill { fill: none; stroke: currentColor; stroke-width: 12; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.6s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
 .is-on .dart__fill { stroke-dashoffset: var(--to); }
-.dart__wedge { fill: currentColor; transform-origin: 60px 60px; transform: scale(0); transition: transform 1s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
-.is-on .dart__wedge { transform: none; }
-.dart__ghost { fill: none; stroke: currentColor; stroke-opacity: 0.2; stroke-width: 2; }
 .dart--prof .dart__line { fill: none; stroke: currentColor; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-out) 0.3s; }
 .is-on .dart--prof .dart__line { stroke-dashoffset: 0; }
 .dart__dot { fill: currentColor; opacity: 0; transition: opacity 0.3s 1.7s; }
-.is-on .dart__dot { opacity: 1; }
-.dart__band { fill: currentColor; fill-opacity: 0.25; }
-.dart__gap { fill: none; stroke: currentColor; stroke-dasharray: 3 3; }
-.dart__mark { fill: currentColor; transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
-.is-on .dart__mark { transform: none; }
 .dart--map path { stroke: currentColor; stroke-width: 0.6; stroke-opacity: 0.45; }
 .dart__off { fill: currentColor; fill-opacity: 0.12; }
 .dart__on { fill: currentColor; fill-opacity: 0.12; transition: fill-opacity 0.6s; transition-delay: calc(0.3s + var(--i) * 12ms); }
 .is-on .dart__on { fill-opacity: 1; }
 .ydeck__card--accent .dart__on, .ydeck__card--accent .dart--bars rect, .ydeck__card--paper .dart--bars rect { color: var(--ink); }
-.ydeck__card--grey .dart__band { fill-opacity: 0.4; }
-.dart__d { fill: currentColor; fill-opacity: 0.45; opacity: 0; transition: opacity 0.5s 0.3s; }
-.is-on .dart__d { opacity: 1; }
 .dart__big { fill: currentColor; transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0); transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.9s; }
 .is-on .dart__big { transform: none; }
-.dart__axis { stroke: currentColor; stroke-opacity: 0.4; }
 
 /* ---- the Home cards' pictures: quiet textures that build up as the card arrives ---- */
 .ydeck__art--wide { width: 100%; max-width: 26rem; }
@@ -635,3 +622,28 @@ a.yis-cta__btn { display: inline-block; text-decoration: none; }
 .dart--yfill .dart__yt { fill: currentColor; opacity: 0.14; }
 .dart--yfill .dart__yf { fill: currentColor; opacity: 0.9; transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 0.8s var(--ease-out, ease-out); transition-delay: calc(0.25s + var(--i) * 90ms); }
 .is-on .dart--yfill .dart__yf { transform: none; }
+
+/* ---- the pictures, drawn smooth (all cards) ---- */
+.dart__base { stroke: currentColor; stroke-opacity: 0.3; stroke-width: 1; }
+.dart--line { color: var(--accent); }
+.ydeck__card--accent .dart--line { color: var(--ink); }
+.dart--line .dart__ground, .dart--prof .dart__ground { transition-delay: 0.6s; }
+.dart__hill { fill: currentColor; opacity: 0.9; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.dart__rim { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; opacity: 0; transition: opacity 0.4s 1.2s; }
+.is-on .dart__hill { transform: none; }
+.is-on .dart__rim { opacity: 0.4; }
+.dart--dots .dart__hill { opacity: 0.35; }
+.dart--dots .dart__rim { stroke-width: 2.5; }
+.is-on .dart--dots .dart__rim { opacity: 1; }
+.dart--clock { max-width: 14rem; margin-left: auto; }
+.dart__dial { fill: none; stroke: currentColor; stroke-opacity: 0.3; stroke-width: 1; }
+.dart__hr { fill: currentColor; transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0); transition: transform 0.5s cubic-bezier(0.3, 1.5, 0.5, 1); transition-delay: calc(0.3s + var(--i) * 45ms); }
+.dart__hr.is-none { opacity: 0.35; }
+.is-on .dart__hr { transform: none; }
+.dart__tick { fill: currentColor; opacity: 0.55; }
+.dart--prof .dart__ghost { fill: none; stroke: currentColor; stroke-opacity: 0.3; stroke-width: 1.5; stroke-dasharray: 2 4; stroke-linecap: round; }
+.dart--span .dart__band { stroke: currentColor; stroke-opacity: 0.25; stroke-width: 10; stroke-linecap: round; }
+.dart--span .dart__gap { stroke: currentColor; stroke-opacity: 0.45; stroke-width: 2; stroke-dasharray: 1 5; stroke-linecap: round; }
+.dart--span .dart__mark { stroke: currentColor; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s cubic-bezier(0.2, 0.9, 0.1, 1) 0.3s; }
+.is-on .dart--span .dart__mark { stroke-dashoffset: 0; }
+.ydeck__card--grey .dart--span .dart__band { stroke-opacity: 0.4; }

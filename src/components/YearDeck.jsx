@@ -94,54 +94,85 @@ export function NumberDeck({ cards, label, plain }) {
 
 // ---- the small pictures, each drawn when its card arrives ----
 
-// twelve bars, one a month, rising one after the other
+// a smooth path through points that run left to right, never swinging past
+// a neighbour (so a curve that only climbs keeps climbing, and a hill never
+// dips below the ground)
+export function smoothPath(pts) {
+  const n = pts.length
+  if (n < 2) return ''
+  const dx = [], m = []
+  for (let i = 0; i < n - 1; i++) { dx.push(pts[i + 1][0] - pts[i][0]); m.push((pts[i + 1][1] - pts[i][1]) / (dx[i] || 1e-9)) }
+  const t = [m[0]]
+  for (let i = 1; i < n - 1; i++) t.push(m[i - 1] * m[i] <= 0 ? 0 : (3 * (dx[i - 1] + dx[i])) / ((2 * dx[i] + dx[i - 1]) / m[i - 1] + (dx[i] + 2 * dx[i - 1]) / m[i]))
+  t.push(m[n - 2])
+  const f = (v) => v.toFixed(1)
+  let d = `M${f(pts[0][0])} ${f(pts[0][1])}`
+  for (let i = 0; i < n - 1; i++) {
+    const h = dx[i] / 3
+    d += `C${f(pts[i][0] + h)} ${f(pts[i][1] + h * t[i])} ${f(pts[i + 1][0] - h)} ${f(pts[i + 1][1] - h * t[i + 1])} ${f(pts[i + 1][0])} ${f(pts[i + 1][1])}`
+  }
+  return d
+}
+// values lightly averaged with their neighbours, so a month of zero does not
+// cut the line to the ground
+const soften = (v) => v.map((x, i) => (2 * x + (v[i - 1] ?? x) + (v[i + 1] ?? x)) / 4)
+
+// one bar for each value, with rounded tops, rising one after the other
 export function ArtMonths({ values }) {
   const max = Math.max(1, ...values)
-  const step = 232 / values.length, w = Math.max(1.5, step * 0.72)
+  const step = 232 / values.length, w = Math.max(1.5, step * (values.length > 24 ? 0.7 : 0.62)), r = Math.min(w / 2, 4)
   return (
     <svg viewBox="0 0 240 120" className="dart dart--bars">
       {values.map((v, i) => {
-        const h = Math.max(v ? 2 : 0, (v / max) * 104)
-        return <rect key={i} x={4 + i * step} y={116 - h} width={w} height={h} style={{ '--i': values.length > 24 ? i / 4 : i }} />
+        const h = Math.max(v ? Math.max(2, r * 2) : 0, (v / max) * 104)
+        return <rect key={i} x={(4 + i * step + (step - w) / 2).toFixed(2)} y={(116 - h).toFixed(2)} width={w.toFixed(2)} height={h.toFixed(2)} rx={r.toFixed(2)} style={{ '--i': values.length > 24 ? i / 4 : i }} />
       })}
+      <line x1="4" x2="236" y1="117" y2="117" className="dart__base" />
     </svg>
   )
 }
 
-// the kilometres adding up through the year, drawn as one line
+// the kilometres adding up through the year: a smooth line over a light ground
 export function ArtLine({ values }) {
-  const max = Math.max(1, values[values.length - 1] || 1)
-  const pts = values.map((v, i) => `${(4 + (i / Math.max(1, values.length - 1)) * 232).toFixed(1)},${(116 - (v / max) * 108).toFixed(1)}`)
+  const max = Math.max(1, values[values.length - 1] || 1), n = values.length
+  const pts = values.map((v, i) => [4 + (i / Math.max(1, n - 1)) * 232, 112 - (v / max) * 100])
+  const d = smoothPath(pts), end = pts[n - 1]
   return (
     <svg viewBox="0 0 240 120" className="dart dart--line">
-      <polyline points={pts.join(' ')} pathLength="1" />
-      <circle cx={pts[pts.length - 1].split(',')[0]} cy={pts[pts.length - 1].split(',')[1]} r="6" />
+      <path d={`${d}L${end[0].toFixed(1)} 116L4 116Z`} className="dart__ground" />
+      <path d={d} pathLength="1" className="dart__curve" />
+      <circle cx={end[0].toFixed(1)} cy={end[1].toFixed(1)} r="5.5" className="dart__dot" />
     </svg>
   )
 }
 
-// the climbing of each month as a ridge that rises out of the ground
+// the climbing of each month as one smooth range of hills rising from the ground
 export function ArtRidge({ values }) {
-  const max = Math.max(1, ...values)
-  const step = 232 / Math.max(1, values.length - 1)
-  const d = values.map((v, i) => `${i ? 'L' : 'M'}${(4 + i * step).toFixed(1)} ${(116 - (v / max) * 104).toFixed(1)}`).join('')
+  const v = soften(values), max = Math.max(1, ...v)
+  const step = 232 / Math.max(1, v.length - 1)
+  const pts = v.map((x, i) => [4 + i * step, 114 - (x / max) * 100])
+  const d = smoothPath(pts)
   return (
     <svg viewBox="0 0 240 120" className="dart dart--ridge">
-      <path d={`${d}L236 118L4 118Z`} />
+      <path d={`${d}L236 116L4 116Z`} className="dart__hill" />
+      <path d={d} className="dart__rim" />
+      <line x1="4" x2="236" y1="116.5" y2="116.5" className="dart__base" />
     </svg>
   )
 }
 
-// the 24 hours of the day, a spoke for each hour, longer for more outings
+// the 24 hours of the day round a clock face, a dot at each hour, bigger at
+// the hours with more outings (midnight at the top)
 export function ArtClock({ hours }) {
   const max = Math.max(1, ...hours)
   return (
     <svg viewBox="0 0 120 120" className="dart dart--clock">
-      <circle cx="60" cy="60" r="16" />
+      <circle cx="60" cy="60" r="44" className="dart__dial" />
       {hours.map((v, h) => {
-        const a = (h / 24) * 2 * Math.PI - Math.PI / 2, r1 = 20, r2 = 20 + (v / max) * 38
-        return <line key={h} x1={60 + r1 * Math.cos(a)} y1={60 + r1 * Math.sin(a)} x2={60 + r2 * Math.cos(a)} y2={60 + r2 * Math.sin(a)} style={{ '--i': h }} />
+        const a = (h / 24) * 2 * Math.PI - Math.PI / 2
+        return <circle key={h} cx={(60 + 44 * Math.cos(a)).toFixed(1)} cy={(60 + 44 * Math.sin(a)).toFixed(1)} r={v ? (1.6 + 7.4 * Math.sqrt(v / max)).toFixed(2) : 1.2} className={v ? 'dart__hr' : 'dart__hr is-none'} style={{ '--i': h }} />
       })}
+      <circle cx="60" cy="60" r="3" className="dart__tick" />
     </svg>
   )
 }
@@ -157,43 +188,53 @@ export function ArtRing({ share }) {
   )
 }
 
-// a height line drawn from the start up to a share of the way (0 to 1)
+// a height line drawn from the start up to a share of the way (0 to 1), over
+// the whole line in a light shade
 export function ArtProfile({ alts, upTo = 1 }) {
   if (!alts || alts.length < 2) return null
-  const lo = Math.min(...alts), hi = Math.max(...alts)
-  const n = Math.max(2, Math.round(alts.length * upTo))
-  const pts = alts.map((a, i) => [4 + (i / (alts.length - 1)) * 232, 116 - ((a - lo) / Math.max(1, hi - lo)) * 104])
-  const d = (xs) => xs.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join('')
-  const end = pts[n - 1]
+  // thin the line to about 60 points and smooth it, so it reads as a slope
+  const k = Math.max(1, Math.floor(alts.length / 60))
+  const a = alts.filter((_, i) => i % k === 0 || i === alts.length - 1)
+  const lo = Math.min(...a), hi = Math.max(...a)
+  const pts = a.map((v, i) => [4 + (i / (a.length - 1)) * 232, 112 - ((v - lo) / Math.max(1, hi - lo)) * 100])
+  const n = Math.max(2, Math.round(pts.length * upTo)), end = pts[n - 1]
+  const full = smoothPath(pts), part = smoothPath(pts.slice(0, n))
   return (
     <svg viewBox="0 0 240 120" className="dart dart--prof">
-      <path d={d(pts)} className="dart__ghost" />
-      <path d={d(pts.slice(0, n))} pathLength="1" className="dart__line" />
-      <circle cx={end[0]} cy={end[1]} r="6" className="dart__dot" />
+      <path d={full} className="dart__ghost" />
+      <path d={`${part}L${end[0].toFixed(1)} 116L4 116Z`} className="dart__ground" />
+      <path d={part} pathLength="1" className="dart__line" />
+      <circle cx={end[0].toFixed(1)} cy={end[1].toFixed(1)} r="5.5" className="dart__dot" />
     </svg>
   )
 }
 
-// the record from its first day to its last as one band; `mark` [from, to] as
-// shares of the span, drawn in the card's own colour (a gap, a stretch)
+// the record from its first day to its last as one rounded band; `mark`
+// [from, to] as shares of the span, drawn solid (a stretch), and `gap` as a
+// break in the band (a long silence)
 export function ArtSpan({ mark, gap }) {
+  const x = (f) => 8 + f * 224
   return (
-    <svg viewBox="0 0 240 60" className="dart dart--span">
-      <rect x="4" y="24" width="232" height="12" className="dart__band" />
-      {gap ? <rect x={4 + gap[0] * 232} y="20" width={Math.max(2, (gap[1] - gap[0]) * 232)} height="20" className="dart__gap" /> : null}
-      {mark ? <rect x={4 + mark[0] * 232} y="18" width={Math.max(3, (mark[1] - mark[0]) * 232)} height="24" className="dart__mark" /> : null}
+    <svg viewBox="0 0 240 40" className="dart dart--span">
+      {gap ? (
+        <>
+          {gap[0] > 0.01 ? <line x1={x(0)} x2={Math.max(x(0), x(gap[0]) - 6)} y1="20" y2="20" className="dart__band" /> : null}
+          <line x1={x(gap[0]) + 2} x2={x(gap[1]) - 2} y1="20" y2="20" className="dart__gap" />
+          {gap[1] < 0.99 ? <line x1={Math.min(x(1), x(gap[1]) + 6)} x2={x(1)} y1="20" y2="20" className="dart__band" /> : null}
+        </>
+      ) : <line x1={x(0)} x2={x(1)} y1="20" y2="20" className="dart__band" />}
+      {mark ? <line x1={x(mark[0])} x2={Math.max(x(mark[0]) + 0.1, x(mark[1]))} y1="20" y2="20" pathLength="1" className="dart__mark" /> : null}
     </svg>
   )
 }
 
-// a day as a clock face, filled for the share of its 24 hours
+// a day as a ring, drawn round for the share of its 24 hours
 export function ArtDayFill({ share }) {
-  const f = Math.max(0.002, Math.min(0.999, share || 0)), a = f * 2 * Math.PI
-  const x = 60 + 50 * Math.sin(a), y = 60 - 50 * Math.cos(a)
+  const r = 46, c = 2 * Math.PI * r, f = Math.max(0, Math.min(1, share || 0))
   return (
     <svg viewBox="0 0 120 120" className="dart dart--day">
-      <circle cx="60" cy="60" r="50" className="dart__track" />
-      <path d={`M60 60L60 10A50 50 0 ${f > 0.5 ? 1 : 0} 1 ${x.toFixed(1)} ${y.toFixed(1)}Z`} className="dart__wedge" />
+      <circle cx="60" cy="60" r={r} className="dart__track" />
+      <circle cx="60" cy="60" r={r} className="dart__fill" style={{ '--len': c, '--to': c * (1 - f) }} transform="rotate(-90 60 60)" />
     </svg>
   )
 }
@@ -219,17 +260,21 @@ export function geoShapes(features, isOn) {
   }))
 }
 
-// every value as a small dot along one line, stacked where they crowd, with the
-// biggest drawn large at its end
+// all the values as one smooth hill of how often each size came up, with the
+// biggest set apart as a dot far out on the right
 export function ArtDots({ values }) {
-  const max = Math.max(1e-9, ...values)
-  const bins = new Map()
-  const dots = values.filter((v) => v > 0 && v < max).map((v) => { const k = Math.round((4 + (v / max) * 220) / 5); const n = bins.get(k) || 0; bins.set(k, n + 1); return [k * 5, 104 - Math.min(n, 16) * 5] })
+  const max = Math.max(1e-9, ...values), vs = values.filter((v) => v > 0)
+  const N = 48, bw = 0.06, dens = []
+  for (let i = 0; i <= N; i++) { const x = i / N; let t = 0; for (const v of vs) { const z = (v / max - x) / bw; t += Math.exp(-0.5 * z * z) } dens.push(t) }
+  const top = Math.max(1e-9, ...dens)
+  const pts = dens.map((t, i) => [4 + (i / N) * 216, 110 - (t / top) * 96])
+  const d = smoothPath(pts)
   return (
     <svg viewBox="0 0 240 120" className="dart dart--dots">
-      {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2" className="dart__d" />)}
-      <circle cx={4 + 220 + 4} cy={98} r="9" className="dart__big" />
-      <line x1="4" x2="236" y1="112" y2="112" className="dart__axis" />
+      <path d={`${d}L220 112L4 112Z`} className="dart__hill" />
+      <path d={d} className="dart__rim" />
+      <line x1="4" x2="236" y1="112.5" y2="112.5" className="dart__base" />
+      <circle cx="220" cy="105" r="7" className="dart__big" />
     </svg>
   )
 }
